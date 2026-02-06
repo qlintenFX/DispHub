@@ -1,12 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using KeyedColors.Constants;
+using KeyedColors.Services.Logging;
 
-namespace KeyedColors
+namespace KeyedColors.Services.Display
 {
     public class DisplayManager : IDisposable
     {
-        // Windows API declarations
         [DllImport("gdi32.dll")]
         private static extern bool SetDeviceGammaRamp(IntPtr hDC, ref RAMP ramp);
 
@@ -30,13 +31,8 @@ namespace KeyedColors
             public ushort[] Blue;
         }
 
-        // Default values
-        private const double DefaultGamma = 1.0;
-        private const double DefaultContrast = 1.0;
-
-        // Store original gamma to restore later
         private RAMP originalRamp;
-        private bool hasOriginalRamp = false;
+        private bool hasOriginalRamp;
         private bool apiAvailable = true;
         private readonly IVibranceService vibranceService;
 
@@ -49,28 +45,31 @@ namespace KeyedColors
 
             try
             {
-                // Initialize the original ramp values
                 originalRamp = new RAMP
                 {
-                    Red = new ushort[256],
-                    Green = new ushort[256],
-                    Blue = new ushort[256]
+                    Red = new ushort[AppConstants.GammaRampSize],
+                    Green = new ushort[AppConstants.GammaRampSize],
+                    Blue = new ushort[AppConstants.GammaRampSize]
                 };
 
-                // Store the original gamma settings
                 IntPtr hDC = GetDC(IntPtr.Zero);
                 if (hDC != IntPtr.Zero)
                 {
-                    if (GetDeviceGammaRamp(hDC, ref originalRamp))
+                    try
                     {
-                        hasOriginalRamp = true;
+                        if (GetDeviceGammaRamp(hDC, ref originalRamp))
+                        {
+                            hasOriginalRamp = true;
+                        }
+                        else
+                        {
+                            apiAvailable = false;
+                        }
                     }
-                    else
+                    finally
                     {
-                        // API call failed - might not have proper permissions
-                        apiAvailable = false;
+                        ReleaseDC(IntPtr.Zero, hDC);
                     }
-                    ReleaseDC(IntPtr.Zero, hDC);
                 }
                 else
                 {
@@ -79,19 +78,16 @@ namespace KeyedColors
 
                 if (!apiAvailable)
                 {
-                    MessageBox.Show("Unable to access display settings. The application might need to be run with administrator privileges.", 
-                        "Limited Functionality", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Logger.Log("Display API unavailable - application may need administrator privileges");
                 }
             }
             catch (Exception ex)
             {
                 apiAvailable = false;
-                MessageBox.Show($"Error initializing display settings: {ex.Message}", 
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Logger.LogError("Error initializing display settings", ex);
             }
         }
 
-        // Apply gamma and contrast settings
         public bool ApplySettings(double gamma, double contrast, int? vibrance = null)
         {
             if (!apiAvailable)
@@ -99,30 +95,25 @@ namespace KeyedColors
 
             try
             {
-                // Validate input
-                if (gamma < 0.30 || gamma > 2.80 || contrast < 0 || contrast > 1.0)
+                if (gamma < AppConstants.GammaMin || gamma > AppConstants.GammaMax ||
+                    contrast < AppConstants.ContrastMin || contrast > AppConstants.ContrastMax)
                     return false;
 
                 RAMP ramp = new RAMP
                 {
-                    Red = new ushort[256],
-                    Green = new ushort[256],
-                    Blue = new ushort[256]
+                    Red = new ushort[AppConstants.GammaRampSize],
+                    Green = new ushort[AppConstants.GammaRampSize],
+                    Blue = new ushort[AppConstants.GammaRampSize]
                 };
 
-                // Calculate gamma ramp values
-                for (int i = 0; i < 256; i++)
+                for (int i = 0; i < AppConstants.GammaRampSize; i++)
                 {
-                    // Apply gamma correction
-                    double value = Math.Pow(i / 255.0, 1.0 / gamma) * 65535.0;
+                    double value = Math.Pow(i / 255.0, 1.0 / gamma) * AppConstants.GammaRampMaxValue;
 
-                    // Apply contrast - scale from 0-1 to 0-2
-                    // 0   = minimum contrast (0.0)
-                    // 0.5 = normal contrast (1.0)
-                    // 1.0 = maximum contrast (2.0)
+                    // Contrast: 0 = min (0.0x), 0.5 = normal (1.0x), 1.0 = max (2.0x)
                     double adjustedContrast = contrast * 2.0;
-                    value = ((value / 65535.0) - 0.5) * adjustedContrast + 0.5;
-                    value = Math.Max(0, Math.Min(1, value)) * 65535.0;
+                    value = ((value / AppConstants.GammaRampMaxValue) - 0.5) * adjustedContrast + 0.5;
+                    value = Math.Max(0, Math.Min(1, value)) * AppConstants.GammaRampMaxValue;
 
                     ushort val = (ushort)Math.Round(value);
                     ramp.Red[i] = val;
@@ -130,26 +121,31 @@ namespace KeyedColors
                     ramp.Blue[i] = val;
                 }
 
-                // Apply the new settings
-                IntPtr hDC = GetDC(IntPtr.Zero);
                 bool success = false;
-                
+                IntPtr hDC = GetDC(IntPtr.Zero);
                 if (hDC != IntPtr.Zero)
                 {
-                    success = SetDeviceGammaRamp(hDC, ref ramp);
-                    ReleaseDC(IntPtr.Zero, hDC);
+                    try
+                    {
+                        success = SetDeviceGammaRamp(hDC, ref ramp);
+                    }
+                    finally
+                    {
+                        ReleaseDC(IntPtr.Zero, hDC);
+                    }
                 }
 
-                if (success && vibrance.HasValue)
+                // Apply vibrance independently of gamma ramp success
+                if (vibrance.HasValue)
                 {
-                    // Don't fail the entire operation if vibrance is unsupported.
                     vibranceService.ApplyVibrance(ClampVibrance(vibrance.Value));
                 }
 
                 return success;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.LogError("Failed to apply display settings", ex);
                 return false;
             }
         }
@@ -159,7 +155,6 @@ namespace KeyedColors
             return vibranceService.ApplyVibrance(ClampVibrance(vibrance));
         }
 
-        // Reset to original settings
         public bool ResetToDefault()
         {
             if (!apiAvailable || !hasOriginalRamp)
@@ -167,21 +162,26 @@ namespace KeyedColors
 
             try
             {
-                IntPtr hDC = GetDC(IntPtr.Zero);
                 bool success = false;
-                
+                IntPtr hDC = GetDC(IntPtr.Zero);
                 if (hDC != IntPtr.Zero)
                 {
-                    success = SetDeviceGammaRamp(hDC, ref originalRamp);
-                    ReleaseDC(IntPtr.Zero, hDC);
+                    try
+                    {
+                        success = SetDeviceGammaRamp(hDC, ref originalRamp);
+                    }
+                    finally
+                    {
+                        ReleaseDC(IntPtr.Zero, hDC);
+                    }
                 }
 
                 vibranceService.ResetVibrance();
-
                 return success;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.LogError("Failed to reset display to default", ex);
                 return false;
             }
         }
@@ -192,7 +192,6 @@ namespace KeyedColors
             int max = vibranceService.MaxValue;
             if (min > max)
             {
-                // Defensive fallback in case an implementation mis-reports bounds.
                 (min, max) = (0, 100);
             }
 
@@ -204,4 +203,4 @@ namespace KeyedColors
             vibranceService.Dispose();
         }
     }
-} 
+}

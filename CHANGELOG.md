@@ -2,7 +2,27 @@
 
 All notable changes to KeyedColors will be documented in this file.
 
-## [1.3.1] - 4-20-2025
+## [2.0.0] - 2026-02-06
+
+### Changed
+- Major project restructuring: organized source into `Services/`, `Models/`, `UI/`, `Constants/`, `NVIDIA/` directories
+- Renamed `Form1` to `MainForm` for clarity
+- Extracted NVIDIA types and API bindings into dedicated `NVIDIA/` module
+- Introduced `Logger`, `SettingsManager`, `AppConstants` for cleaner separation of concerns
+- Added `ProfileNameDialog` as standalone dialog
+
+### Added
+- Full xUnit test suite (`KeyedColors.Tests/`) with Moq and FluentAssertions
+- CI pipeline via GitHub Actions (build, test, publish verification)
+- NVIDIA vibrance service implementation (`NvidiaVibranceService`)
+- Vibrance slider in UI and Dynamic Controls (Shift+PageUp/PageDown)
+- Extensible vibrance service abstraction for future vendor APIs
+
+### Fixed
+- Fixed CultureNotFoundException when switching keyboard input languages
+- Changed InvariantGlobalization setting to support different cultures
+
+## [1.3.1] - 2025-04-20
 
 ### Fixed
 - Fixed CultureNotFoundException that occurred when switching keyboard input languages

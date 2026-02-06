@@ -1,6 +1,6 @@
 using System;
 
-namespace KeyedColors
+namespace KeyedColors.Services.Display
 {
     /// <summary>
     /// Abstraction for vendor-specific vibrance/saturation controls.

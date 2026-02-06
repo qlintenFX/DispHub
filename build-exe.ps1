@@ -15,9 +15,9 @@ try {
         Remove-Item -Path $publishDir -Recurse -Force
     }
 
-    # Build the application for Windows x64
+    # Build the application for Windows x86 (required for nvapi.dll 32-bit compatibility)
     Write-Host "Publishing application as self-contained executable..." -ForegroundColor Cyan
-    dotnet publish $csprojPath -c Release -r win-x64 --self-contained true -o $publishDir
+    dotnet publish $csprojPath -c Release -r win-x86 --self-contained -p:PublishSingleFile=true -o $publishDir
     
     # Check if build was successful
     if ($LASTEXITCODE -eq 0) {

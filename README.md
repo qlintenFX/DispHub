@@ -1,8 +1,6 @@
 # KeyedColors
 
-![KeyedColors Logo](logo.ico)
-
-![KeyedColors Application](KeyedColors%20image.png)
+![KeyedColors Logo](logo.png)
 
 A simple Windows application that allows users to create custom display profiles with gamma, contrast, and (experimental) vibrance adjustments. Each profile can be assigned a custom hotkey for quick access.
 
@@ -68,24 +66,10 @@ The UI now captures a vibrance percentage per profile and within Dynamic Control
 
 ## License
 
-This software is licensed under the GNU General Public License v3.0 (GPL-3.0). See the LICENSE file for details.
+This software is proprietary. All rights reserved.
 
-Copyright © 2025 qlintenFX
-
-## Support Development
-
-If you find KeyedColors useful, please consider supporting its development through a donation. This helps maintain the project and add new features.
-
-[![Support me on Ko-fi](kofi-promo.jpg)](https://ko-fi.com/qlintenfx)
-
-[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/qlintenfx)
-
-[![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://paypal.me/qlintenFX?country.x=BE&locale.x=nl_NL)
-
-## Contributing
-
-Contributions are welcome! See the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines.
+Copyright © 2025-2026 qlintenFX
 
 ## Acknowledgments
 
-- This application uses Windows API for display settings manipulation 
+- This application uses Windows API for display settings manipulation

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
+    <PlatformTarget>x86</PlatformTarget>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,31 +11,27 @@
     <Description>Simple display profile manager with hotkey support</Description>
     <Company>KeyedColors</Company>
     <ApplicationIcon>logo.ico</ApplicationIcon>
-    <Version>1.3.0</Version>
-    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
-    <PublishSingleFile>true</PublishSingleFile>
+    <Version>2.0.0</Version>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+    <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <DefaultItemExcludes>$(DefaultItemExcludes);KeyedColors.Tests\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="KeyedColors.Tests" />
+  </ItemGroup>
+
+  <!-- Publish-only settings: activated via dotnet publish -p:PublishSingleFile=true -->
+  <PropertyGroup Condition="'$(PublishSingleFile)' == 'true'">
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
-    <!-- Debug settings to help diagnose issues -->
-    <DebugType>embedded</DebugType>
-    <!-- Single-file specific options -->
-    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
-    <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
-    <InvariantGlobalization>false</InvariantGlobalization>
-    <!-- Publish readyToRun to optimize startup -->
     <PublishReadyToRun>true</PublishReadyToRun>
-    <!-- Ensure all resources are embedded -->
     <PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!-- Keep debugging information in Release build for diagnostics -->
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +39,7 @@
       <LogicalName>KeyedColors.logo.ico</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

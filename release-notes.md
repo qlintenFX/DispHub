@@ -1,15 +1,26 @@
-# KeyedColors v1.4.0 (Unreleased)
+# KeyedColors v2.0.0
 
 ## What's New
-Lays the foundation for GPU-level vibrance control and exposes the UI so profiles can capture the new setting.
+Major internal restructuring and the foundation for GPU-level vibrance control. The project is now organized into clean service layers, has a full test suite, and CI.
+
+### Changed
+- Complete project restructuring with `Services/`, `Models/`, `UI/`, `Constants/`, `NVIDIA/` directories
+- Renamed Form1 to MainForm
+- Extracted NVIDIA API bindings into dedicated module
 
 ### Added
-- New vibrance slider on the Profiles tab; values save with each profile and hotkey
-- Dynamic Controls now include a vibrance slider plus Shift+PageUp/PageDown hotkeys
-- Extensible vibrance service abstraction that will host vendor APIs (NVAPI/ADL/Intel) in upcoming builds
+- Full xUnit test suite with Moq and FluentAssertions
+- CI pipeline via GitHub Actions
+- NVIDIA vibrance service implementation
+- Vibrance slider on Profiles tab and Dynamic Controls (Shift+PageUp/PageDown)
+- Logger, SettingsManager, AppConstants for separation of concerns
+- ProfileNameDialog as standalone dialog component
+
+### Fixed
+- Fixed CultureNotFoundException when switching keyboard input languages
 
 ### Known Limitations
-- The vibrance slider is currently metadata-only until vendor integrations land; gamma and contrast behavior is unchanged
+- Vibrance control requires NVIDIA GPU with compatible drivers; AMD/Intel support coming in future builds
 
 ## Installation
 Download and run the executable. No installation required.

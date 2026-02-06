@@ -14,6 +14,9 @@ bld/
 # Visual Studio cache/options directory
 .vs/
 
+# VS Code
+.vscode/
+
 # .NET Core
 project.lock.json
 project.fragment.lock.json
@@ -36,4 +39,23 @@ artifacts/
 *.binlog
 
 # Local History for Visual Studio
-.localhistory/ 
+.localhistory/
+
+# Publish output
+publish-output/
+
+# Test results
+TestResults/
+*.trx
+coverage*/
+
+# AI tool artifacts
+.claude/
+.cursor/
+.copilot/
+tmpclaude-*
+nul
+
+# Promo / marketing images (not needed in repo)
+kofi-promo.jpg
+KeyedColors image.png

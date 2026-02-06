@@ -3,37 +3,37 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Forms;
+using KeyedColors.Constants;
+using KeyedColors.Models;
+using KeyedColors.Services.Logging;
 
-namespace KeyedColors
+namespace KeyedColors.Services.Profiles
 {
     public class ProfileManager
     {
         private List<Profile> profiles;
-        private string profilesFilePath;
-        
-        public List<Profile> Profiles => profiles;
+        private readonly string profilesFilePath;
+
+        public IReadOnlyList<Profile> Profiles => profiles;
 
         public ProfileManager()
         {
             profiles = new List<Profile>();
-            
-            // Set up profiles save path in AppData
+
             string appDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "KeyedColors");
-                
-            // Create directory if it doesn't exist
+                AppConstants.ProfilesFolderName);
+
             if (!Directory.Exists(appDataPath))
             {
                 Directory.CreateDirectory(appDataPath);
             }
-            
-            profilesFilePath = Path.Combine(appDataPath, "profiles.json");
-            
-            // Create default presets if no profiles exist
+
+            profilesFilePath = Path.Combine(appDataPath, AppConstants.ProfilesFileName);
+
             if (!File.Exists(profilesFilePath))
             {
-                CreateDefaultProfile();
+                CreateDefaultProfiles();
             }
             else
             {
@@ -69,17 +69,14 @@ namespace KeyedColors
         {
             try
             {
-                var options = new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                };
-                
+                var options = new JsonSerializerOptions { WriteIndented = true };
                 string jsonString = JsonSerializer.Serialize(profiles, options);
                 File.WriteAllText(profilesFilePath, jsonString);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving profiles: {ex.Message}", "Error", 
+                Logger.LogError("Failed to save profiles", ex);
+                MessageBox.Show($"Error saving profiles: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -92,37 +89,36 @@ namespace KeyedColors
                 {
                     string jsonString = File.ReadAllText(profilesFilePath);
                     var loadedProfiles = JsonSerializer.Deserialize<List<Profile>>(jsonString);
-                    
-                    if (loadedProfiles != null)
+
+                    if (loadedProfiles != null && loadedProfiles.Count > 0)
                     {
                         profiles = loadedProfiles;
                     }
                     else
                     {
-                        CreateDefaultProfile();
+                        CreateDefaultProfiles();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading profiles: {ex.Message}", "Error", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    
-                CreateDefaultProfile();
+                Logger.LogError("Failed to load profiles, creating defaults", ex);
+                MessageBox.Show($"Error loading profiles: {ex.Message}\r\nDefault profiles will be created.",
+                    "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CreateDefaultProfiles();
             }
         }
-        
-        private void CreateDefaultProfile()
+
+        private void CreateDefaultProfiles()
         {
-            // Create default presets
             profiles = new List<Profile>
             {
-                new Profile("Default", 1.0, 0.5, 50),
-                new Profile("Dark", 0.8, 0.5, 50),
-                new Profile("Night Vision", 2.8, 0.6, 65)
+                new Profile("Default", AppConstants.GammaDefault, AppConstants.ContrastDefault, AppConstants.VibranceDefault),
+                new Profile("Dark", 0.8, AppConstants.ContrastDefault, AppConstants.VibranceDefault),
+                new Profile("Night Vision", AppConstants.GammaMax, 0.6, 65)
             };
-            
+
             SaveProfiles();
         }
     }
-} 
+}
