@@ -44,4 +44,4 @@ jobs:
         fail-on-error: true
 
     - name: Verify publish (dry-run)
-      run: dotnet publish KeyedColors.csproj --configuration Release --runtime win-x86 -p:PublishSingleFile=true --output ./publish-verify --no-build
+      run: dotnet publish KeyedColors.csproj --configuration Release --runtime win-x86 -p:PublishSingleFile=true --output ./publish-verify
