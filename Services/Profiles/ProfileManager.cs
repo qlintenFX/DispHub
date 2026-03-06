@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Windows.Forms;
-using KeyedColors.Constants;
-using KeyedColors.Models;
-using KeyedColors.Services.Logging;
+using DisplayHub.Constants;
+using DisplayHub.Models;
+using DisplayHub.Services.Logging;
 
-namespace KeyedColors.Services.Profiles
+namespace DisplayHub.Services.Profiles
 {
     public class ProfileManager
     {
@@ -76,8 +75,8 @@ namespace KeyedColors.Services.Profiles
             catch (Exception ex)
             {
                 Logger.LogError("Failed to save profiles", ex);
-                MessageBox.Show($"Error saving profiles: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.MessageBox.Show($"Error saving profiles: {ex.Message}", "Error",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
 
@@ -103,8 +102,8 @@ namespace KeyedColors.Services.Profiles
             catch (Exception ex)
             {
                 Logger.LogError("Failed to load profiles, creating defaults", ex);
-                MessageBox.Show($"Error loading profiles: {ex.Message}\r\nDefault profiles will be created.",
-                    "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                System.Windows.MessageBox.Show($"Error loading profiles: {ex.Message}\r\nDefault profiles will be created.",
+                    "Load Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                 CreateDefaultProfiles();
             }
         }

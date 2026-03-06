@@ -5,23 +5,33 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <PlatformTarget>x86</PlatformTarget>
     <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Authors>KeyedColors</Authors>
-    <Description>Simple display profile manager with hotkey support</Description>
-    <Company>KeyedColors</Company>
+    <RootNamespace>DisplayHub</RootNamespace>
+    <AssemblyName>DisplayHub</AssemblyName>
+    <Authors>DisplayHub</Authors>
+    <Description>Modern display profile manager with hotkey support</Description>
+    <Company>DisplayHub</Company>
     <ApplicationIcon>logo.ico</ApplicationIcon>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <DebugType>embedded</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
     <InvariantGlobalization>false</InvariantGlobalization>
     <DefaultItemExcludes>$(DefaultItemExcludes);KeyedColors.Tests\**</DefaultItemExcludes>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="KeyedColors.Tests" />
+    <InternalsVisibleTo Include="DisplayHub.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WPF-UI" Version="4.2.0" />
+    <PackageReference Include="WPF-UI.Tray" Version="4.2.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
 
   <!-- Publish-only settings: activated via dotnet publish -p:PublishSingleFile=true -->
@@ -36,24 +46,12 @@
 
   <ItemGroup>
     <EmbeddedResource Include="logo.ico">
-      <LogicalName>KeyedColors.logo.ico</LogicalName>
+      <LogicalName>DisplayHub.logo.ico</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 
-
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Resource Include="logo.png" />
   </ItemGroup>
 
   <!-- Make sure logo.ico is not published as a separate file -->

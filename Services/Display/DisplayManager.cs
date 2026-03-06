@@ -1,10 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using KeyedColors.Constants;
-using KeyedColors.Services.Logging;
+using DisplayHub.Constants;
+using DisplayHub.Services.Logging;
 
-namespace KeyedColors.Services.Display
+namespace DisplayHub.Services.Display
 {
     public class DisplayManager : IDisposable
     {

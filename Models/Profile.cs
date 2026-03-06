@@ -1,9 +1,8 @@
 using System;
 using System.Text.Json.Serialization;
-using System.Windows.Forms;
-using KeyedColors.Constants;
+using DisplayHub.Constants;
 
-namespace KeyedColors.Models
+namespace DisplayHub.Models
 {
     [Serializable]
     public class Profile
@@ -37,22 +36,24 @@ namespace KeyedColors.Models
             set => vibrance = Math.Clamp(value, AppConstants.VibranceMin, AppConstants.VibranceMax);
         }
 
+        /// <summary>Virtual key code for the hotkey (0 = None).</summary>
         [JsonIgnore]
-        public Keys HotKey { get; set; }
+        public int HotKey { get; set; }
 
+        /// <summary>Modifier key flags (0 = None).</summary>
         [JsonIgnore]
-        public Keys HotKeyModifier { get; set; }
+        public int HotKeyModifier { get; set; }
 
         public int HotKeyValue
         {
-            get => (int)HotKey;
-            set => HotKey = (Keys)value;
+            get => HotKey;
+            set => HotKey = value;
         }
 
         public int HotKeyModifierValue
         {
-            get => (int)HotKeyModifier;
-            set => HotKeyModifier = (Keys)value;
+            get => HotKeyModifier;
+            set => HotKeyModifier = value;
         }
 
         public int HotkeyId { get; set; }
@@ -63,8 +64,8 @@ namespace KeyedColors.Models
             Gamma = AppConstants.GammaDefault;
             Contrast = AppConstants.ContrastDefault;
             Vibrance = AppConstants.VibranceDefault;
-            HotKey = Keys.None;
-            HotKeyModifier = Keys.None;
+            HotKey = 0;
+            HotKeyModifier = 0;
             HotkeyId = -1;
         }
 
@@ -74,8 +75,8 @@ namespace KeyedColors.Models
             Gamma = gamma;
             Contrast = contrast;
             Vibrance = vibrance;
-            HotKey = Keys.None;
-            HotKeyModifier = Keys.None;
+            HotKey = 0;
+            HotKeyModifier = 0;
             HotkeyId = -1;
         }
 
@@ -95,7 +96,7 @@ namespace KeyedColors.Models
         /// <summary>
         /// Returns a new Profile with an updated hotkey binding.
         /// </summary>
-        public Profile WithHotkey(Keys key, Keys modifier, int id)
+        public Profile WithHotkey(int key, int modifier, int id)
         {
             return new Profile(Name, Gamma, Contrast, Vibrance)
             {
@@ -107,8 +108,8 @@ namespace KeyedColors.Models
 
         public override string ToString()
         {
-            string hotkeyText = HotKey != Keys.None
-                ? $"{HotKeyModifier}+{HotKey}"
+            string hotkeyText = HotKey != 0
+                ? $"Modifier+VK{HotKey}"
                 : "No hotkey";
 
             return $"{Name} (Gamma: {Gamma:F2}, Contrast: {Contrast * 100:F0}%, Vibrance: {Vibrance}%, Hotkey: {hotkeyText})";

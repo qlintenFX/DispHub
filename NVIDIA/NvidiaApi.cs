@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using KeyedColors.Services.Logging;
+using DisplayHub.Services.Logging;
 
-namespace KeyedColors.NVIDIA;
+namespace DisplayHub.NVIDIA;
 
 /// <summary>
 /// Direct NVAPI wrapper using nvapi_QueryInterface.

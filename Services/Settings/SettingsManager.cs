@@ -1,8 +1,8 @@
 using Microsoft.Win32;
-using KeyedColors.Constants;
-using KeyedColors.Services.Logging;
+using DisplayHub.Constants;
+using DisplayHub.Services.Logging;
 
-namespace KeyedColors.Services.Settings;
+namespace DisplayHub.Services.Settings;
 
 /// <summary>
 /// Manages application settings persisted in the Windows Registry.
@@ -18,7 +18,7 @@ public interface ISettingsManager
 }
 
 /// <summary>
-/// Registry-based settings persistence for KeyedColors.
+/// Registry-based settings persistence for DisplayHub.
 /// </summary>
 public class SettingsManager : ISettingsManager
 {
@@ -52,9 +52,12 @@ public class SettingsManager : ISettingsManager
 
             if (enabled)
             {
-                string appPath = Application.ExecutablePath;
-                key.SetValue(AppConstants.ApplicationName, appPath);
-                Logger.Log($"Added to Windows startup: {appPath}");
+                string? exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                if (exePath != null)
+                {
+                    key.SetValue(AppConstants.ApplicationName, exePath);
+                    Logger.Log($"Added to Windows startup: {exePath}");
+                }
             }
             else
             {

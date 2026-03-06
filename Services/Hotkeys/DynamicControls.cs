@@ -1,12 +1,19 @@
 using System;
-using System.Windows.Forms;
-using KeyedColors.Constants;
-using KeyedColors.Services.Display;
+using DisplayHub.Constants;
+using DisplayHub.Services.Display;
 
-namespace KeyedColors.Services.Hotkeys
+namespace DisplayHub.Services.Hotkeys
 {
     public class DynamicControls
     {
+        // Virtual key codes (matching Windows API values)
+        private const int VK_UP = 0x26;
+        private const int VK_DOWN = 0x28;
+        private const int VK_LEFT = 0x25;
+        private const int VK_RIGHT = 0x27;
+        private const int VK_PRIOR = 0x21; // Page Up
+        private const int VK_NEXT = 0x22;  // Page Down
+
         public double Gamma { get; private set; }
         public double Contrast { get; private set; }
         public int Vibrance { get; private set; }
@@ -100,12 +107,12 @@ namespace KeyedColors.Services.Hotkeys
         {
             UnregisterHotkeys(hotkeyManager);
 
-            hotkeyIdGammaUp = hotkeyManager.RegisterRawHotkey(Keys.Up, AppConstants.MOD_SHIFT);
-            hotkeyIdGammaDown = hotkeyManager.RegisterRawHotkey(Keys.Down, AppConstants.MOD_SHIFT);
-            hotkeyIdContrastUp = hotkeyManager.RegisterRawHotkey(Keys.Right, AppConstants.MOD_SHIFT);
-            hotkeyIdContrastDown = hotkeyManager.RegisterRawHotkey(Keys.Left, AppConstants.MOD_SHIFT);
-            hotkeyIdVibranceUp = hotkeyManager.RegisterRawHotkey(Keys.PageUp, AppConstants.MOD_SHIFT);
-            hotkeyIdVibranceDown = hotkeyManager.RegisterRawHotkey(Keys.PageDown, AppConstants.MOD_SHIFT);
+            hotkeyIdGammaUp = hotkeyManager.RegisterRawHotkey(VK_UP, AppConstants.MOD_SHIFT);
+            hotkeyIdGammaDown = hotkeyManager.RegisterRawHotkey(VK_DOWN, AppConstants.MOD_SHIFT);
+            hotkeyIdContrastUp = hotkeyManager.RegisterRawHotkey(VK_RIGHT, AppConstants.MOD_SHIFT);
+            hotkeyIdContrastDown = hotkeyManager.RegisterRawHotkey(VK_LEFT, AppConstants.MOD_SHIFT);
+            hotkeyIdVibranceUp = hotkeyManager.RegisterRawHotkey(VK_PRIOR, AppConstants.MOD_SHIFT);
+            hotkeyIdVibranceDown = hotkeyManager.RegisterRawHotkey(VK_NEXT, AppConstants.MOD_SHIFT);
         }
 
         public void UnregisterHotkeys(HotkeyManager hotkeyManager)

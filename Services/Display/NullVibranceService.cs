@@ -1,6 +1,6 @@
 using System;
 
-namespace KeyedColors.Services.Display
+namespace DisplayHub.Services.Display
 {
     /// <summary>
     /// No-op vibrance implementation used when no GPU vendor API is available.

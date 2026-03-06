@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace KeyedColors.NVIDIA;
+namespace DisplayHub.NVIDIA;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct NvDisplayDvcInfo

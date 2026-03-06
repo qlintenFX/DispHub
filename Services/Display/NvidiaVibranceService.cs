@@ -1,8 +1,8 @@
-using KeyedColors.Constants;
-using KeyedColors.NVIDIA;
-using KeyedColors.Services.Logging;
+using DisplayHub.Constants;
+using DisplayHub.NVIDIA;
+using DisplayHub.Services.Logging;
 
-namespace KeyedColors.Services.Display;
+namespace DisplayHub.Services.Display;
 
 /// <summary>
 /// NVIDIA vibrance control via direct NVAPI calls (no vibranceDLL dependency).

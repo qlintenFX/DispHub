@@ -1,16 +1,16 @@
-namespace KeyedColors.Constants;
+namespace DisplayHub.Constants;
 
 /// <summary>
-/// Centralized constants for the KeyedColors application.
+/// Centralized constants for the DisplayHub application.
 /// </summary>
 public static class AppConstants
 {
-    public const string ApplicationName = "KeyedColors";
-    public const string Version = "2.0.0";
+    public const string ApplicationName = "DisplayHub";
+    public const string Version = "3.0.0";
 
     // Registry Keys
     public const string StartupRegistryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-    public const string SettingsRegistryKey = @"SOFTWARE\KeyedColors";
+    public const string SettingsRegistryKey = @"SOFTWARE\DisplayHub";
     public const string MinimizeToTrayValue = "MinimizeToTray";
     public const string DynamicControlsEnabledValue = "DynamicControlsEnabled";
 
@@ -50,10 +50,10 @@ public static class AppConstants
     public const uint MOD_WIN = 0x0008;
 
     // Logging
-    public const string DefaultLogFileName = "keyedcolors.log";
-    public const string ErrorLogFileName = "keyedcolors_error.log";
+    public const string DefaultLogFileName = "displayhub.log";
+    public const string ErrorLogFileName = "displayhub_error.log";
 
     // Profile Persistence
-    public const string ProfilesFolderName = "KeyedColors";
+    public const string ProfilesFolderName = "DisplayHub";
     public const string ProfilesFileName = "profiles.json";
 }

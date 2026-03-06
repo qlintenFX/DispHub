@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace KeyedColors.Services.Logging;
+namespace DisplayHub.Services.Logging;
 
 /// <summary>
 /// Thread-safe application-wide logger with fallback path resolution.
@@ -14,7 +14,7 @@ public static class Logger
     /// Initializes the logger with a writable log file path.
     /// Call once at application startup.
     /// </summary>
-    public static void Initialize(string filename = "keyedcolors.log")
+    public static void Initialize(string filename = "displayhub.log")
     {
         _logPath = GetWritableLogPath(filename);
     }
@@ -54,13 +54,13 @@ public static class Logger
     /// <summary>
     /// Returns the resolved log file path (for error dialogs).
     /// </summary>
-    public static string LogPath => _logPath ?? "keyedcolors.log";
+    public static string LogPath => _logPath ?? "displayhub.log";
 
     private static void WriteToLog(string entry)
     {
         lock (_lock)
         {
-            string path = _logPath ?? GetWritableLogPath("keyedcolors.log");
+            string path = _logPath ?? GetWritableLogPath("displayhub.log");
 
             try
             {
@@ -71,7 +71,7 @@ public static class Logger
                 // Try temp directory as last resort
                 try
                 {
-                    string altPath = Path.Combine(Path.GetTempPath(), "keyedcolors.log");
+                    string altPath = Path.Combine(Path.GetTempPath(), "displayhub.log");
                     File.AppendAllText(altPath, entry + "\r\n");
                     _logPath = altPath;
                 }
@@ -88,11 +88,15 @@ public static class Logger
         string[] candidates =
         {
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename),
-            Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? "", filename),
+            Path.Combine(
+                System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName != null
+                    ? Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName) ?? ""
+                    : "",
+                filename),
             Path.Combine(Path.GetTempPath(), filename),
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "KeyedColors",
+                "DisplayHub",
                 filename),
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),

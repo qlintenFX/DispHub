@@ -1,6 +1,6 @@
-using KeyedColors.Services.Logging;
+using DisplayHub.Services.Logging;
 
-namespace KeyedColors.Services.Display;
+namespace DisplayHub.Services.Display;
 
 /// <summary>
 /// Selects the best available vibrance implementation for the current system.
@@ -12,7 +12,7 @@ public static class VibranceServiceFactory
         // Try NVIDIA first
         try
         {
-            var nvidiaService = new KeyedColors.Services.Display.NvidiaVibranceService();
+            var nvidiaService = new NvidiaVibranceService();
             if (nvidiaService.IsSupported)
             {
                 Logger.Log("Using NVIDIA vibrance service");

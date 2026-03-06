@@ -1,58 +1,89 @@
-namespace KeyedColors.UI.Dialogs;
+using System.Windows;
+
+namespace DisplayHub.UI.Dialogs;
 
 /// <summary>
-/// Reusable dialog for entering a profile name.
+/// WPF dialog for entering a profile name.
 /// </summary>
 public static class ProfileNameDialog
 {
-    /// <summary>
-    /// Shows a modal dialog prompting the user for a profile name.
-    /// Returns the entered name, or null if the user cancelled.
-    /// </summary>
-    public static string? Show(IWin32Window owner, string defaultName = "New Profile", string title = "New Profile")
+    public static string? Show(Window? owner, string defaultName = "New Profile", string title = "New Profile")
     {
-        using var form = new Form
+        var dialog = new Window
         {
-            Text = title,
-            ClientSize = new Size(350, 100),
-            FormBorderStyle = FormBorderStyle.FixedDialog,
-            StartPosition = FormStartPosition.CenterParent,
-            MaximizeBox = false,
-            MinimizeBox = false
+            Title = title,
+            Width = 380,
+            Height = 160,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = owner,
+            ResizeMode = ResizeMode.NoResize,
+            WindowStyle = WindowStyle.ToolWindow
         };
 
-        var label = new Label
+        var grid = new System.Windows.Controls.Grid();
+        grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+        grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+
+        var inputPanel = new System.Windows.Controls.StackPanel
         {
-            Left = 20,
-            Top = 20,
+            Orientation = System.Windows.Controls.Orientation.Horizontal,
+            Margin = new Thickness(16, 20, 16, 16)
+        };
+
+        var label = new System.Windows.Controls.TextBlock
+        {
             Text = "Profile Name:",
-            AutoSize = true
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 12, 0)
         };
 
-        var textBox = new TextBox
+        var textBox = new System.Windows.Controls.TextBox
         {
-            Left = 120,
-            Top = 20,
-            Width = 200,
-            Text = defaultName
+            Width = 220,
+            Text = defaultName,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        textBox.SelectAll();
+
+        inputPanel.Children.Add(label);
+        inputPanel.Children.Add(textBox);
+        System.Windows.Controls.Grid.SetRow(inputPanel, 0);
+        grid.Children.Add(inputPanel);
+
+        var buttonPanel = new System.Windows.Controls.StackPanel
+        {
+            Orientation = System.Windows.Controls.Orientation.Horizontal,
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+            Margin = new Thickness(16, 0, 16, 16)
         };
 
-        var confirmButton = new Button
+        var okButton = new System.Windows.Controls.Button
         {
-            Text = "OK",
-            Left = 140,
+            Content = "OK",
             Width = 80,
-            Top = 60,
-            DialogResult = DialogResult.OK
+            Margin = new Thickness(0, 0, 8, 0),
+            IsDefault = true
         };
 
-        form.AcceptButton = confirmButton;
-        form.Controls.Add(label);
-        form.Controls.Add(textBox);
-        form.Controls.Add(confirmButton);
+        var cancelButton = new System.Windows.Controls.Button
+        {
+            Content = "Cancel",
+            Width = 80,
+            IsCancel = true
+        };
 
-        if (form.ShowDialog(owner) != DialogResult.OK)
-            return null;
+        bool confirmed = false;
+        okButton.Click += (s, e) => { confirmed = true; dialog.Close(); };
+
+        buttonPanel.Children.Add(okButton);
+        buttonPanel.Children.Add(cancelButton);
+        System.Windows.Controls.Grid.SetRow(buttonPanel, 1);
+        grid.Children.Add(buttonPanel);
+
+        dialog.Content = grid;
+        dialog.ShowDialog();
+
+        if (!confirmed) return null;
 
         string name = textBox.Text.Trim();
         return string.IsNullOrEmpty(name) ? defaultName : name;

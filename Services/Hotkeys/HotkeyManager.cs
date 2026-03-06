@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using KeyedColors.Constants;
-using KeyedColors.Models;
+using DisplayHub.Constants;
+using DisplayHub.Models;
 
-namespace KeyedColors.Services.Hotkeys
+namespace DisplayHub.Services.Hotkeys
 {
     public class HotkeyManager
     {
@@ -17,7 +16,7 @@ namespace KeyedColors.Services.Hotkeys
 
         private int nextHotkeyId = 1;
         private readonly Dictionary<int, Profile> registeredHotkeys = new();
-        private readonly IntPtr formHandle;
+        private IntPtr formHandle;
 
         public event EventHandler<HotkeyEventArgs>? HotkeyPressed;
 
@@ -28,18 +27,25 @@ namespace KeyedColors.Services.Hotkeys
             this.formHandle = formHandle;
         }
 
+        /// <summary>
+        /// Updates the window handle (needed for WPF where handle is obtained after construction).
+        /// </summary>
+        public void SetHandle(IntPtr handle)
+        {
+            formHandle = handle;
+        }
+
         public int RegisterHotkey(Profile profile)
         {
-            if (profile.HotKey == Keys.None)
+            if (profile.HotKey == 0)
                 return -1;
 
             uint modifiers = 0;
-            if ((profile.HotKeyModifier & Keys.Alt) == Keys.Alt)
-                modifiers |= AppConstants.MOD_ALT;
-            if ((profile.HotKeyModifier & Keys.Control) == Keys.Control)
-                modifiers |= AppConstants.MOD_CONTROL;
-            if ((profile.HotKeyModifier & Keys.Shift) == Keys.Shift)
-                modifiers |= AppConstants.MOD_SHIFT;
+            int mod = profile.HotKeyModifier;
+            // WinForms Keys.Alt = 0x40000, Keys.Control = 0x20000, Keys.Shift = 0x10000
+            if ((mod & 0x40000) != 0) modifiers |= AppConstants.MOD_ALT;
+            if ((mod & 0x20000) != 0) modifiers |= AppConstants.MOD_CONTROL;
+            if ((mod & 0x10000) != 0) modifiers |= AppConstants.MOD_SHIFT;
 
             uint key = (uint)profile.HotKey;
 
@@ -58,10 +64,10 @@ namespace KeyedColors.Services.Hotkeys
         /// Registers a raw hotkey without associating it to a profile.
         /// Used by DynamicControls for directional adjustment hotkeys.
         /// </summary>
-        public int RegisterRawHotkey(Keys key, uint modifiers)
+        public int RegisterRawHotkey(int vkCode, uint modifiers)
         {
             int id = nextHotkeyId++;
-            if (RegisterHotKey(formHandle, id, modifiers, (uint)key))
+            if (RegisterHotKey(formHandle, id, modifiers, (uint)vkCode))
             {
                 return id;
             }
