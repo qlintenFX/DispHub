@@ -1,70 +1,51 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using DisplayHub.Constants;
 using DisplayHub.Models;
 using DisplayHub.Services.Logging;
 using DisplayHub.UI.Dialogs;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace DisplayHub.UI.Pages;
 
-public partial class ProfilesPage : Page
+public partial class ProfilesPage : Page, INavigationAware
 {
-    private readonly MainWindow mainWindow;
+    private MainWindow MainWindow => (System.Windows.Application.Current.MainWindow as MainWindow)!;
     private bool suppressSliderEvents;
-    private bool isInitializing;
 
-    public ProfilesPage(MainWindow mainWindow)
+    public ProfilesPage()
     {
-        this.mainWindow = mainWindow;
         InitializeComponent();
-        Loaded += ProfilesPage_Loaded;
     }
 
-    private void ProfilesPage_Loaded(object sender, RoutedEventArgs e)
+    public Task OnNavigatedToAsync()
     {
         LoadProfilesToUI();
         UpdateSliderLabels();
+        return Task.CompletedTask;
     }
+
+    public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
     private void LoadProfilesToUI()
     {
-        if (mainWindow.ProfileManager == null) return;
+        var mw = MainWindow;
+        if (mw.ProfileManager == null) return;
 
-        isInitializing = true;
-        try
-        {
-            var selectedProfile = ProfileListBox.SelectedItem as Profile;
-            ProfileListBox.Items.Clear();
+        var selectedProfile = ProfileListBox.SelectedItem as Profile;
+        ProfileListBox.Items.Clear();
 
-            foreach (Profile profile in mainWindow.ProfileManager.Profiles)
-                ProfileListBox.Items.Add(profile);
+        foreach (Profile profile in mw.ProfileManager.Profiles)
+            ProfileListBox.Items.Add(profile);
 
-            if (selectedProfile != null && ProfileListBox.Items.Contains(selectedProfile))
-                ProfileListBox.SelectedItem = selectedProfile;
-            else if (ProfileListBox.Items.Count > 0)
-                ProfileListBox.SelectedIndex = 0;
-        }
-        finally
-        {
-            isInitializing = false;
-        }
+        if (selectedProfile != null && ProfileListBox.Items.Contains(selectedProfile))
+            ProfileListBox.SelectedItem = selectedProfile;
+        else if (ProfileListBox.Items.Count > 0)
+            ProfileListBox.SelectedIndex = 0;
 
-        mainWindow.UpdateTrayProfilesMenu();
-    }
-
-    internal void OnProfileApplied(Profile profile)
-    {
-        if (ProfileListBox.Items.Contains(profile))
-            ProfileListBox.SelectedItem = profile;
-
-        suppressSliderEvents = true;
-        GammaSlider.Value = (int)(profile.Gamma * 100);
-        ContrastSlider.Value = (int)(profile.Contrast * 100);
-        VibranceSlider.Value = profile.Vibrance;
-        suppressSliderEvents = false;
-        UpdateSliderLabels();
+        mw.UpdateTrayProfilesMenu();
     }
 
     // ─── Profile List Events ───────────────────────────────────────────
@@ -73,7 +54,6 @@ public partial class ProfilesPage : Page
     {
         if (ProfileListBox.SelectedItem is not Profile selected) return;
 
-        // Load selected profile's values into sliders (no display change)
         suppressSliderEvents = true;
         GammaSlider.Value = (int)(selected.Gamma * 100);
         ContrastSlider.Value = (int)(selected.Contrast * 100);
@@ -84,10 +64,6 @@ public partial class ProfilesPage : Page
         HotkeyLabel.Text = string.IsNullOrEmpty(selected.HotkeyDisplayText)
             ? "Hotkey: None"
             : $"Hotkey: {selected.HotkeyDisplayText}";
-
-        // Only auto-apply during normal interaction, not during initialization/reload
-        if (!isInitializing)
-            mainWindow.ApplyProfile(selected);
     }
 
     private void ProfileListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -100,16 +76,7 @@ public partial class ProfilesPage : Page
     private void ProfileSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (suppressSliderEvents) return;
-
         UpdateSliderLabels();
-
-        // Live-preview changes without committing to the profile
-        if (mainWindow.DisplayManager != null)
-        {
-            double gamma = GammaSlider.Value / 100.0;
-            double contrast = ContrastSlider.Value / 100.0;
-            mainWindow.DisplayManager.ApplySettings(gamma, contrast, (int)VibranceSlider.Value);
-        }
     }
 
     private void UpdateSliderLabels()
@@ -122,20 +89,18 @@ public partial class ProfilesPage : Page
 
     // ─── Button Events ─────────────────────────────────────────────────
 
-    private void ApplyProfile_Click(object sender, RoutedEventArgs e)
-    {
-        ApplySelectedProfile();
-    }
+    private void ApplyProfile_Click(object sender, RoutedEventArgs e) => ApplySelectedProfile();
 
     private void ApplySelectedProfile()
     {
         if (ProfileListBox.SelectedItem is not Profile selected) return;
-        mainWindow.ApplyProfile(selected);
+        MainWindow.ApplyProfile(selected);
     }
 
     private void AddProfile_Click(object sender, RoutedEventArgs e)
     {
-        if (mainWindow.ProfileManager == null) return;
+        var mw = MainWindow;
+        if (mw.ProfileManager == null) return;
 
         string? name = ProfileNameDialog.Show(Window.GetWindow(this));
         if (name == null) return;
@@ -143,7 +108,7 @@ public partial class ProfilesPage : Page
         double gamma = GammaSlider.Value / 100.0;
         double contrast = ContrastSlider.Value / 100.0;
         var newProfile = new Profile(name, gamma, contrast, (int)VibranceSlider.Value);
-        mainWindow.ProfileManager.AddProfile(newProfile);
+        mw.ProfileManager.AddProfile(newProfile);
 
         LoadProfilesToUI();
         ProfileListBox.SelectedItem = newProfile;
@@ -151,90 +116,85 @@ public partial class ProfilesPage : Page
 
     private void UpdateProfile_Click(object sender, RoutedEventArgs e)
     {
-        if (mainWindow.ProfileManager == null || ProfileListBox.SelectedItem is not Profile selected) return;
+        var mw = MainWindow;
+        if (mw.ProfileManager == null || ProfileListBox.SelectedItem is not Profile selected) return;
 
         selected.Gamma = GammaSlider.Value / 100.0;
         selected.Contrast = ContrastSlider.Value / 100.0;
         selected.Vibrance = (int)VibranceSlider.Value;
-        mainWindow.ProfileManager.SaveProfiles();
+        mw.ProfileManager.SaveProfiles();
 
-        int selectedIndex = ProfileListBox.SelectedIndex;
+        int idx = ProfileListBox.SelectedIndex;
         LoadProfilesToUI();
-        if (selectedIndex < ProfileListBox.Items.Count)
-            ProfileListBox.SelectedIndex = selectedIndex;
+        if (idx < ProfileListBox.Items.Count) ProfileListBox.SelectedIndex = idx;
     }
 
     private void DeleteProfile_Click(object sender, RoutedEventArgs e)
     {
-        if (mainWindow.ProfileManager == null || ProfileListBox.SelectedItem is not Profile selected) return;
+        var mw = MainWindow;
+        if (mw.ProfileManager == null || ProfileListBox.SelectedItem is not Profile selected) return;
 
         var result = System.Windows.MessageBox.Show(
-            $"Delete profile '{selected.Name}'?",
-            "Confirm Delete",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+            $"Delete profile '{selected.Name}'?", "Confirm Delete",
+            MessageBoxButton.YesNo, MessageBoxImage.Question);
 
         if (result != MessageBoxResult.Yes) return;
 
         if (selected.HotkeyId > 0)
-            mainWindow.HotkeyManager?.UnregisterHotkey(selected.HotkeyId);
+            mw.HotkeyManager?.UnregisterHotkey(selected.HotkeyId);
 
-        int index = ProfileListBox.SelectedIndex;
-        mainWindow.ProfileManager.RemoveProfile(index);
+        int idx = ProfileListBox.SelectedIndex;
+        mw.ProfileManager.RemoveProfile(idx);
         LoadProfilesToUI();
 
-        if (index >= ProfileListBox.Items.Count)
-            index = ProfileListBox.Items.Count - 1;
-        if (index >= 0)
-            ProfileListBox.SelectedIndex = index;
+        if (idx >= ProfileListBox.Items.Count) idx = ProfileListBox.Items.Count - 1;
+        if (idx >= 0) ProfileListBox.SelectedIndex = idx;
     }
 
     private void SetHotkey_Click(object sender, RoutedEventArgs e)
     {
+        var mw = MainWindow;
         if (ProfileListBox.SelectedItem is not Profile selected) return;
-        if (mainWindow.HotkeyManager == null || mainWindow.ProfileManager == null) return;
+        if (mw.HotkeyManager == null || mw.ProfileManager == null) return;
 
         var dialog = new HotkeyDialog(selected.HotKey, selected.HotKeyModifier) { Owner = Window.GetWindow(this) };
-
         if (dialog.ShowDialog() != true) return;
 
-        int vkCode = dialog.ResultVkCode;
-        int modifiers = dialog.ResultModifiers;
+        if (dialog.ResultVkCode == 0)
+        {
+            // Cleared
+            if (selected.HotkeyId > 0) mw.HotkeyManager.UnregisterHotkey(selected.HotkeyId);
+            selected.HotKey = 0; selected.HotKeyModifier = 0; selected.HotkeyId = -1;
+            mw.ProfileManager.SaveProfiles();
+            HotkeyLabel.Text = "Hotkey: None";
+            return;
+        }
 
-        if (vkCode == 0) return;
+        if (selected.HotkeyId > 0) mw.HotkeyManager.UnregisterHotkey(selected.HotkeyId);
+        selected.HotKey = dialog.ResultVkCode;
+        selected.HotKeyModifier = dialog.ResultModifiers;
 
-        if (selected.HotkeyId > 0)
-            mainWindow.HotkeyManager.UnregisterHotkey(selected.HotkeyId);
-
-        selected.HotKey = vkCode;
-        selected.HotKeyModifier = modifiers;
-
-        int id = mainWindow.HotkeyManager.RegisterHotkey(selected);
+        int id = mw.HotkeyManager.RegisterHotkey(selected);
         if (id > 0)
         {
             selected.HotkeyId = id;
-            mainWindow.ProfileManager.SaveProfiles();
+            mw.ProfileManager.SaveProfiles();
             HotkeyLabel.Text = $"Hotkey: {selected.HotkeyDisplayText}";
-
-            int selectedIndex = ProfileListBox.SelectedIndex;
+            int savedIdx = ProfileListBox.SelectedIndex;
             LoadProfilesToUI();
-            ProfileListBox.SelectedIndex = selectedIndex;
+            ProfileListBox.SelectedIndex = savedIdx;
         }
         else
         {
             System.Windows.MessageBox.Show(
                 "Failed to register the hotkey. It may be in use by another application.",
-                "Hotkey Registration Failed",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+                "Hotkey Registration Failed", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
     private void ResetButton_Click(object sender, RoutedEventArgs e)
     {
-        if (mainWindow.DisplayManager == null) return;
-
-        mainWindow.DisplayManager.ResetToDefault();
+        MainWindow.DisplayManager?.ResetToDefault();
         suppressSliderEvents = true;
         GammaSlider.Value = 100;
         ContrastSlider.Value = 50;

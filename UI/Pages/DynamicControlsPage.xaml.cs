@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -6,30 +7,39 @@ using DisplayHub.Constants;
 using DisplayHub.Models;
 using DisplayHub.Services.Logging;
 using DisplayHub.UI.Dialogs;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace DisplayHub.UI.Pages;
 
-public partial class DynamicControlsPage : Page
+public partial class DynamicControlsPage : Page, INavigationAware
 {
-    private readonly MainWindow mainWindow;
+    private MainWindow MainWindow => (System.Windows.Application.Current.MainWindow as MainWindow)!;
     private bool suppressSliderEvents;
+    private bool subscribed;
 
-    public DynamicControlsPage(MainWindow mainWindow)
+    public DynamicControlsPage()
     {
-        this.mainWindow = mainWindow;
         InitializeComponent();
-        Loaded += Page_Loaded;
     }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+    public Task OnNavigatedToAsync()
     {
-        if (mainWindow.DynamicControls != null)
+        var mw = MainWindow;
+        if (mw.DynamicControls != null && !subscribed)
         {
-            mainWindow.DynamicControls.ValuesChanged += DynamicControls_ValuesChanged;
-            DynamicToggle.IsChecked = mainWindow.DynamicControls.IsEnabled;
+            mw.DynamicControls.ValuesChanged += DynamicControls_ValuesChanged;
+            subscribed = true;
+        }
+
+        if (mw.DynamicControls != null)
+        {
+            DynamicToggle.IsChecked = mw.DynamicControls.IsEnabled;
             UpdateSlidersFromDynamic();
         }
+        return Task.CompletedTask;
     }
+
+    public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
     private void DynamicControls_ValuesChanged(object? sender, EventArgs e)
     {
@@ -38,12 +48,13 @@ public partial class DynamicControlsPage : Page
 
     private void UpdateSlidersFromDynamic()
     {
-        if (mainWindow.DynamicControls == null) return;
+        var dc = MainWindow.DynamicControls;
+        if (dc == null) return;
 
         suppressSliderEvents = true;
-        DynamicGammaSlider.Value = (int)(mainWindow.DynamicControls.Gamma * 100);
-        DynamicContrastSlider.Value = (int)(mainWindow.DynamicControls.Contrast * 100);
-        DynamicVibranceSlider.Value = mainWindow.DynamicControls.Vibrance;
+        DynamicGammaSlider.Value = (int)(dc.Gamma * 100);
+        DynamicContrastSlider.Value = (int)(dc.Contrast * 100);
+        DynamicVibranceSlider.Value = dc.Vibrance;
         suppressSliderEvents = false;
         UpdateSliderLabels();
     }
@@ -58,79 +69,76 @@ public partial class DynamicControlsPage : Page
 
     private void DynamicToggle_Changed(object sender, RoutedEventArgs e)
     {
-        if (mainWindow.DynamicControls == null || mainWindow.HotkeyManager == null || mainWindow.DisplayManager == null) return;
+        var mw = MainWindow;
+        if (mw.DynamicControls == null || mw.HotkeyManager == null || mw.DisplayManager == null) return;
 
         bool isEnabled = DynamicToggle.IsChecked == true;
 
         try
         {
             Logger.Log($"Dynamic controls toggled: {isEnabled}");
-            mainWindow.DynamicControls.IsEnabled = isEnabled;
+            mw.DynamicControls.IsEnabled = isEnabled;
 
             if (isEnabled)
             {
-                mainWindow.HotkeyManager.UnregisterAllHotkeys();
-
+                mw.HotkeyManager.UnregisterAllHotkeys();
                 var helper = new WindowInteropHelper(Window.GetWindow(this)!);
-                mainWindow.DynamicControls.RegisterHotkeys(mainWindow.HotkeyManager, helper.Handle);
-                mainWindow.DynamicControls.SetValues(
-                    mainWindow.DynamicControls.Gamma,
-                    mainWindow.DynamicControls.Contrast,
-                    mainWindow.DynamicControls.Vibrance);
+                mw.DynamicControls.RegisterHotkeys(mw.HotkeyManager, helper.Handle);
+                mw.DynamicControls.SetValues(mw.DynamicControls.Gamma, mw.DynamicControls.Contrast, mw.DynamicControls.Vibrance);
             }
             else
             {
-                mainWindow.DynamicControls.UnregisterHotkeys(mainWindow.HotkeyManager);
-                mainWindow.RegisterAllHotkeys();
+                mw.DynamicControls.UnregisterHotkeys(mw.HotkeyManager);
+                mw.RegisterAllHotkeys();
 
-                if (mainWindow.CurrentProfile != null)
-                    mainWindow.ApplyProfile(mainWindow.CurrentProfile);
+                if (mw.CurrentProfile != null)
+                    mw.ApplyProfile(mw.CurrentProfile);
                 else
-                    mainWindow.DisplayManager.ResetToDefault();
+                    mw.DisplayManager.ResetToDefault();
             }
 
-            mainWindow.SettingsManager.SetDynamicControlsEnabled(isEnabled);
-            mainWindow.UpdateTrayProfilesMenu();
+            mw.SettingsManager.SetDynamicControlsEnabled(isEnabled);
+            mw.UpdateTrayProfilesMenu();
         }
         catch (Exception ex)
         {
             Logger.LogError("Failed to toggle dynamic controls", ex);
-            System.Windows.MessageBox.Show($"Failed to toggle dynamic controls: {ex.Message}", "Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-
-            DynamicToggle.IsChecked = mainWindow.DynamicControls.IsEnabled;
+            System.Windows.MessageBox.Show($"Failed to toggle dynamic controls: {ex.Message}",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            DynamicToggle.IsChecked = mw.DynamicControls.IsEnabled;
         }
     }
 
     private void DynamicSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (suppressSliderEvents || mainWindow.DynamicControls == null) return;
+        var dc = MainWindow.DynamicControls;
+        if (suppressSliderEvents || dc == null) return;
 
-        double gamma = DynamicGammaSlider.Value / 100.0;
-        double contrast = DynamicContrastSlider.Value / 100.0;
-        int vibrance = (int)DynamicVibranceSlider.Value;
-        mainWindow.DynamicControls.SetValues(gamma, contrast, vibrance);
+        dc.SetValues(
+            DynamicGammaSlider.Value / 100.0,
+            DynamicContrastSlider.Value / 100.0,
+            (int)DynamicVibranceSlider.Value);
         UpdateSliderLabels();
     }
 
     private void DynamicReset_Click(object sender, RoutedEventArgs e)
     {
-        mainWindow.DynamicControls?.SetValues(AppConstants.GammaDefault, AppConstants.ContrastDefault, AppConstants.VibranceDefault);
+        MainWindow.DynamicControls?.SetValues(AppConstants.GammaDefault, AppConstants.ContrastDefault, AppConstants.VibranceDefault);
         UpdateSlidersFromDynamic();
     }
 
     private void SaveToProfile_Click(object sender, RoutedEventArgs e)
     {
-        if (mainWindow.DynamicControls == null || mainWindow.ProfileManager == null || !mainWindow.DynamicControls.IsEnabled) return;
+        var mw = MainWindow;
+        if (mw.DynamicControls == null || mw.ProfileManager == null || !mw.DynamicControls.IsEnabled) return;
 
         string? name = ProfileNameDialog.Show(Window.GetWindow(this), "Dynamic Profile", "Save as Profile");
         if (name == null) return;
 
-        var newProfile = new Profile(name, mainWindow.DynamicControls.Gamma,
-            mainWindow.DynamicControls.Contrast, mainWindow.DynamicControls.Vibrance);
-        mainWindow.ProfileManager.AddProfile(newProfile);
+        var newProfile = new Profile(name, mw.DynamicControls.Gamma, mw.DynamicControls.Contrast, mw.DynamicControls.Vibrance);
+        mw.ProfileManager.AddProfile(newProfile);
 
-        System.Windows.MessageBox.Show($"Dynamic settings saved as profile '{name}'", "Profile Saved",
-            MessageBoxButton.OK, MessageBoxImage.Information);
+        System.Windows.MessageBox.Show($"Dynamic settings saved as profile '{name}'.",
+            "Profile Saved", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 }

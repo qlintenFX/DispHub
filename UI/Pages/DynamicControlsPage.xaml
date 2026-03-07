@@ -13,7 +13,7 @@
 
             <!-- Enable Toggle -->
             <ui:CardControl Margin="0,0,0,8"
-                            Icon="{ui:SymbolIcon ToggleRight20}">
+                            Icon="{ui:SymbolIcon ArrowCircleRight20}">
                 <ui:CardControl.Header>
                     <StackPanel>
                         <TextBlock Text="Enable Dynamic Controls" FontWeight="Medium"/>
@@ -27,7 +27,7 @@
 
             <!-- Sliders -->
             <ui:CardExpander Header="Live Settings" IsExpanded="True" Margin="0,0,0,8"
-                             Icon="{ui:SymbolIcon Brightness20}">
+                             Icon="{ui:SymbolIcon BrightnessHigh20}">
                 <StackPanel>
                     <!-- Gamma -->
                     <TextBlock Text="Gamma" FontWeight="Medium" Margin="0,0,0,4"/>
@@ -74,7 +74,7 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
                         <ui:Button Content="Reset" Icon="{ui:SymbolIcon ArrowReset20}" Margin="0,0,8,0"
                                    Click="DynamicReset_Click"/>
-                        <ui:Button Content="Save as Profile" Icon="{ui:SymbolIcon Save20}"
+                        <ui:Button Content="Save as Profile" Icon="{ui:SymbolIcon BookmarkAdd20}"
                                    Appearance="Primary" Click="SaveToProfile_Click"/>
                     </StackPanel>
                 </StackPanel>
@@ -114,3 +114,4 @@
         </StackPanel>
     </ScrollViewer>
 </Page>
+

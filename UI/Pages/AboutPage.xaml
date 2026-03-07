@@ -27,7 +27,7 @@
             <!-- Features -->
             <TextBlock Text="Features" FontSize="16" FontWeight="SemiBold" Margin="0,16,0,8"/>
 
-            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon Brightness20}">
+            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon BrightnessHigh20}">
                 <ui:CardControl.Header>
                     <StackPanel>
                         <TextBlock Text="Display Controls" FontWeight="Medium"/>
@@ -98,3 +98,4 @@
         </StackPanel>
     </ScrollViewer>
 </Page>
+

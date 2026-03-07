@@ -1,39 +1,43 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using DisplayHub.Services.Logging;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace DisplayHub.UI.Pages;
 
-public partial class SettingsPage : Page
+public partial class SettingsPage : Page, INavigationAware
 {
-    private readonly MainWindow mainWindow;
+    private MainWindow MainWindow => (System.Windows.Application.Current.MainWindow as MainWindow)!;
 
-    public SettingsPage(MainWindow mainWindow)
+    public SettingsPage()
     {
-        this.mainWindow = mainWindow;
         InitializeComponent();
-        Loaded += Page_Loaded;
     }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+    public Task OnNavigatedToAsync()
     {
-        StartupToggle.IsChecked = mainWindow.SettingsManager.GetStartWithWindows();
-        MinimizeToTrayToggle.IsChecked = mainWindow.SettingsManager.GetMinimizeToTray();
+        var mw = MainWindow;
+        StartupToggle.IsChecked = mw.SettingsManager.GetStartWithWindows();
+        MinimizeToTrayToggle.IsChecked = mw.SettingsManager.GetMinimizeToTray();
+        return Task.CompletedTask;
     }
+
+    public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
     private void StartupToggle_Changed(object sender, RoutedEventArgs e)
     {
         try
         {
-            mainWindow.SettingsManager.SetStartWithWindows(StartupToggle.IsChecked == true);
+            MainWindow.SettingsManager.SetStartWithWindows(StartupToggle.IsChecked == true);
         }
         catch (Exception ex)
         {
             Logger.LogError("Failed to update startup setting", ex);
-            System.Windows.MessageBox.Show($"Failed to update startup setting: {ex.Message}", "Settings Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-            StartupToggle.IsChecked = mainWindow.SettingsManager.GetStartWithWindows();
+            System.Windows.MessageBox.Show($"Failed to update startup setting: {ex.Message}",
+                "Settings Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            StartupToggle.IsChecked = MainWindow.SettingsManager.GetStartWithWindows();
         }
     }
 
@@ -41,14 +45,14 @@ public partial class SettingsPage : Page
     {
         try
         {
-            mainWindow.SettingsManager.SetMinimizeToTray(MinimizeToTrayToggle.IsChecked == true);
+            MainWindow.SettingsManager.SetMinimizeToTray(MinimizeToTrayToggle.IsChecked == true);
         }
         catch (Exception ex)
         {
             Logger.LogError("Failed to update minimize to tray setting", ex);
-            System.Windows.MessageBox.Show($"Failed to update minimize to tray setting: {ex.Message}", "Settings Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-            MinimizeToTrayToggle.IsChecked = mainWindow.SettingsManager.GetMinimizeToTray();
+            System.Windows.MessageBox.Show($"Failed to update minimize to tray setting: {ex.Message}",
+                "Settings Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MinimizeToTrayToggle.IsChecked = MainWindow.SettingsManager.GetMinimizeToTray();
         }
     }
 }

@@ -11,11 +11,10 @@ using DisplayHub.Services.Logging;
 using DisplayHub.Services.Profiles;
 using DisplayHub.Services.Settings;
 using DisplayHub.UI.Pages;
-using Wpf.Ui.Controls;
 
 namespace DisplayHub.UI;
 
-public partial class MainWindow : FluentWindow
+public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 {
     internal ProfileManager? ProfileManager { get; private set; }
     internal DisplayManager? DisplayManager { get; private set; }
@@ -30,12 +29,6 @@ public partial class MainWindow : FluentWindow
     private bool minimizeToTray = true;
     private bool resourcesCleaned;
     private HwndSource? hwndSource;
-
-    // Page instances (reused)
-    private ProfilesPage? profilesPage;
-    private DynamicControlsPage? dynamicControlsPage;
-    private SettingsPage? settingsPage;
-    private AboutPage? aboutPage;
 
     public MainWindow()
     {
@@ -70,7 +63,8 @@ public partial class MainWindow : FluentWindow
             RegisterAllHotkeys();
             LoadSettings();
 
-            NavigateToPage("profiles");
+            // Navigate to Profiles page on startup (WPF-UI handles page lifetime)
+            NavigationView.Navigate(typeof(ProfilesPage));
 
             Logger.Log("MainWindow initialization completed");
         }
@@ -81,7 +75,7 @@ public partial class MainWindow : FluentWindow
                 $"Error loading the application: {ex.Message}",
                 "DisplayHub Error",
                 System.Windows.MessageBoxButton.OK,
-                MessageBoxImage.Error);
+                System.Windows.MessageBoxImage.Error);
         }
     }
 
@@ -94,7 +88,6 @@ public partial class MainWindow : FluentWindow
         {
             DynamicControls.IsEnabled = true;
 
-            // Restore last-used DC values instead of resetting to defaults
             double gamma = SettingsManager.GetDynamicGamma();
             double contrast = SettingsManager.GetDynamicContrast();
             int vibrance = SettingsManager.GetDynamicVibrance();
@@ -117,37 +110,6 @@ public partial class MainWindow : FluentWindow
         SettingsManager.SetDynamicVibrance(DynamicControls.Vibrance);
     }
 
-    // ─── Navigation ────────────────────────────────────────────────────
-
-    private void NavigationView_SelectionChanged(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
-    {
-        if (sender.SelectedItem is Wpf.Ui.Controls.NavigationViewItem item && item.Tag is string tag)
-            NavigateToPage(tag);
-    }
-
-    private void NavigateToPage(string tag)
-    {
-        switch (tag)
-        {
-            case "profiles":
-                profilesPage ??= new ProfilesPage(this);
-                ContentFrame.Navigate(profilesPage);
-                break;
-            case "dynamic":
-                dynamicControlsPage ??= new DynamicControlsPage(this);
-                ContentFrame.Navigate(dynamicControlsPage);
-                break;
-            case "settings":
-                settingsPage ??= new SettingsPage(this);
-                ContentFrame.Navigate(settingsPage);
-                break;
-            case "about":
-                aboutPage ??= new AboutPage();
-                ContentFrame.Navigate(aboutPage);
-                break;
-        }
-    }
-
     // ─── Hotkey Handling (WndProc) ─────────────────────────────────────
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -156,11 +118,8 @@ public partial class MainWindow : FluentWindow
         {
             if (DynamicControls is { IsEnabled: true })
             {
-                if (DynamicControls.ProcessHotkey(wParam))
-                {
-                    handled = true;
-                    return IntPtr.Zero;
-                }
+                DynamicControls.ProcessHotkey(wParam);
+                handled = true;
                 return IntPtr.Zero;
             }
 
@@ -175,7 +134,7 @@ public partial class MainWindow : FluentWindow
     {
         if (DynamicControls is { IsEnabled: true })
         {
-            Logger.Log("Profile hotkey ignored - Dynamic Controls active");
+            Logger.Log("Profile hotkey ignored — Dynamic Controls active");
             return;
         }
 
@@ -196,9 +155,7 @@ public partial class MainWindow : FluentWindow
 
             int id = HotkeyManager.RegisterHotkey(profile);
             if (id > 0)
-            {
                 profile.HotkeyId = id;
-            }
             else
             {
                 profile.HotKey = 0;
@@ -214,8 +171,7 @@ public partial class MainWindow : FluentWindow
 
         CurrentProfile = profile;
         DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
-
-        profilesPage?.OnProfileApplied(profile);
+        Logger.Log($"Applied profile: {profile.Name}");
     }
 
     // ─── System Tray ───────────────────────────────────────────────────
@@ -250,11 +206,11 @@ public partial class MainWindow : FluentWindow
             trayContextMenu.Items.Add(trayProfilesMenu);
             UpdateTrayProfilesMenu();
             trayContextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            trayContextMenu.Items.Add("Show", null, (s, e) => ShowWindow());
-            trayContextMenu.Items.Add("Exit", null, (s, e) => ExitApplication());
+            trayContextMenu.Items.Add("Show", null, (s, _) => ShowWindow());
+            trayContextMenu.Items.Add("Exit", null, (s, _) => ExitApplication());
 
             trayIcon.ContextMenuStrip = trayContextMenu;
-            trayIcon.MouseDoubleClick += (s, e) => ShowWindow();
+            trayIcon.MouseDoubleClick += (s, _) => ShowWindow();
         }
         catch (Exception ex)
         {
@@ -274,7 +230,7 @@ public partial class MainWindow : FluentWindow
             var item = new System.Windows.Forms.ToolStripMenuItem(profile.Name) { Tag = profile };
             item.Click += (s, _) =>
             {
-                if (s is System.Windows.Forms.ToolStripMenuItem menuItem && menuItem.Tag is Profile p)
+                if (s is System.Windows.Forms.ToolStripMenuItem mi && mi.Tag is Profile p)
                     ApplyProfile(p);
             };
             trayProfilesMenu.DropDownItems.Add(item);
