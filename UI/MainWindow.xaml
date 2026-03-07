@@ -24,27 +24,36 @@
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
-        <!-- Navigation View -->
-        <ui:NavigationView x:Name="NavigationView"
-                           Grid.Row="1"
-                           PaneDisplayMode="Left"
-                           IsBackButtonVisible="Collapsed"
-                           IsPaneToggleVisible="False"
-                           OpenPaneLength="180"
-                           SelectionChanged="NavigationView_SelectionChanged">
+        <!-- Use a nested Grid with columns so the Frame aligns to NavigationView's content area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="Profiles" Icon="{ui:SymbolIcon ColorLine20}" Tag="profiles"/>
-                <ui:NavigationViewItem Content="Dynamic" Icon="{ui:SymbolIcon Gauge20}" Tag="dynamic"/>
-                <ui:NavigationViewItem Content="Settings" Icon="{ui:SymbolIcon Settings20}" Tag="settings"/>
-            </ui:NavigationView.MenuItems>
+            <ui:NavigationView x:Name="NavigationView"
+                               Grid.Column="0" Grid.ColumnSpan="2"
+                               PaneDisplayMode="Left"
+                               IsBackButtonVisible="Collapsed"
+                               IsPaneToggleVisible="False"
+                               OpenPaneLength="180"
+                               SelectionChanged="NavigationView_SelectionChanged">
 
-            <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info20}" Tag="about"/>
-            </ui:NavigationView.FooterMenuItems>
+                <ui:NavigationView.MenuItems>
+                    <ui:NavigationViewItem Content="Profiles" Icon="{ui:SymbolIcon ColorLine20}" Tag="profiles"/>
+                    <ui:NavigationViewItem Content="Dynamic" Icon="{ui:SymbolIcon Gauge20}" Tag="dynamic"/>
+                    <ui:NavigationViewItem Content="Settings" Icon="{ui:SymbolIcon Settings20}" Tag="settings"/>
+                </ui:NavigationView.MenuItems>
 
-        </ui:NavigationView>
+                <ui:NavigationView.FooterMenuItems>
+                    <ui:NavigationViewItem Content="About" Icon="{ui:SymbolIcon Info20}" Tag="about"/>
+                </ui:NavigationView.FooterMenuItems>
 
-        <Frame x:Name="ContentFrame" Grid.Row="1" Margin="180,0,0,0" NavigationUIVisibility="Hidden"/>
+            </ui:NavigationView>
+
+            <!-- Frame occupies column 1 — aligned to NavigationView content area without hardcoded margin -->
+            <Frame x:Name="ContentFrame" Grid.Column="1" NavigationUIVisibility="Hidden"/>
+        </Grid>
+
     </Grid>
 </ui:FluentWindow>

@@ -15,6 +15,18 @@ public interface ISettingsManager
     void SetMinimizeToTray(bool enabled);
     bool GetDynamicControlsEnabled();
     void SetDynamicControlsEnabled(bool enabled);
+
+    /// <summary>Gets the last-used Dynamic Controls gamma value.</summary>
+    double GetDynamicGamma();
+    void SetDynamicGamma(double value);
+
+    /// <summary>Gets the last-used Dynamic Controls contrast value.</summary>
+    double GetDynamicContrast();
+    void SetDynamicContrast(double value);
+
+    /// <summary>Gets the last-used Dynamic Controls vibrance value.</summary>
+    int GetDynamicVibrance();
+    void SetDynamicVibrance(int value);
 }
 
 /// <summary>
@@ -92,6 +104,24 @@ public class SettingsManager : ISettingsManager
         SetDwordSetting(AppConstants.DynamicControlsEnabledValue, enabled);
     }
 
+    public double GetDynamicGamma() =>
+        GetDoubleSetting(AppConstants.DynamicGammaValue, AppConstants.GammaDefault);
+
+    public void SetDynamicGamma(double value) =>
+        SetDoubleSetting(AppConstants.DynamicGammaValue, value);
+
+    public double GetDynamicContrast() =>
+        GetDoubleSetting(AppConstants.DynamicContrastValue, AppConstants.ContrastDefault);
+
+    public void SetDynamicContrast(double value) =>
+        SetDoubleSetting(AppConstants.DynamicContrastValue, value);
+
+    public int GetDynamicVibrance() =>
+        GetIntSetting(AppConstants.DynamicVibranceValue, AppConstants.VibranceDefault);
+
+    public void SetDynamicVibrance(int value) =>
+        SetIntSetting(AppConstants.DynamicVibranceValue, value);
+
     private bool GetDwordSetting(string valueName, bool defaultValue)
     {
         try
@@ -129,6 +159,69 @@ public class SettingsManager : ISettingsManager
         {
             Logger.LogError($"Failed to save setting '{valueName}'", ex);
             throw;
+        }
+    }
+
+    private int GetIntSetting(string valueName, int defaultValue)
+    {
+        try
+        {
+            using RegistryKey? key = Registry.CurrentUser.OpenSubKey(AppConstants.SettingsRegistryKey, false);
+            if (key == null) return defaultValue;
+            object? value = key.GetValue(valueName);
+            return value != null ? Convert.ToInt32(value) : defaultValue;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to read int setting '{valueName}'", ex);
+            return defaultValue;
+        }
+    }
+
+    private void SetIntSetting(string valueName, int value)
+    {
+        try
+        {
+            using RegistryKey? key = Registry.CurrentUser.CreateSubKey(AppConstants.SettingsRegistryKey, true);
+            key?.SetValue(valueName, value, RegistryValueKind.DWord);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to save int setting '{valueName}'", ex);
+        }
+    }
+
+    private double GetDoubleSetting(string valueName, double defaultValue)
+    {
+        try
+        {
+            using RegistryKey? key = Registry.CurrentUser.OpenSubKey(AppConstants.SettingsRegistryKey, false);
+            if (key == null) return defaultValue;
+            var raw = key.GetValue(valueName) as string;
+            return raw != null && double.TryParse(raw, System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out double result)
+                ? result
+                : defaultValue;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to read double setting '{valueName}'", ex);
+            return defaultValue;
+        }
+    }
+
+    private void SetDoubleSetting(string valueName, double value)
+    {
+        try
+        {
+            using RegistryKey? key = Registry.CurrentUser.CreateSubKey(AppConstants.SettingsRegistryKey, true);
+            key?.SetValue(valueName,
+                value.ToString("G17", System.Globalization.CultureInfo.InvariantCulture),
+                RegistryValueKind.String);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to save double setting '{valueName}'", ex);
         }
     }
 }

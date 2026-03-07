@@ -1,16 +1,14 @@
 using FluentAssertions;
-using KeyedColors.Constants;
+using DisplayHub.Constants;
 using Xunit;
 
-namespace KeyedColors.Tests.Constants;
+namespace DisplayHub.Tests.Constants;
 
 public class AppConstantsTests
 {
     [Fact]
-    public void GammaRange_MinLessThanMax()
-    {
+    public void GammaRange_MinLessThanMax() =>
         AppConstants.GammaMin.Should().BeLessThan(AppConstants.GammaMax);
-    }
 
     [Fact]
     public void GammaDefault_WithinRange()
@@ -20,10 +18,8 @@ public class AppConstantsTests
     }
 
     [Fact]
-    public void ContrastRange_MinLessThanMax()
-    {
+    public void ContrastRange_MinLessThanMax() =>
         AppConstants.ContrastMin.Should().BeLessThan(AppConstants.ContrastMax);
-    }
 
     [Fact]
     public void ContrastDefault_WithinRange()
@@ -33,10 +29,8 @@ public class AppConstantsTests
     }
 
     [Fact]
-    public void VibranceRange_MinLessThanMax()
-    {
+    public void VibranceRange_MinLessThanMax() =>
         AppConstants.VibranceMin.Should().BeLessThan(AppConstants.VibranceMax);
-    }
 
     [Fact]
     public void VibranceDefault_WithinRange()
@@ -45,53 +39,18 @@ public class AppConstantsTests
         AppConstants.VibranceDefault.Should().BeLessThanOrEqualTo(AppConstants.VibranceMax);
     }
 
-    [Fact]
-    public void GammaStep_IsPositive()
-    {
-        AppConstants.GammaStep.Should().BeGreaterThan(0);
-    }
+    [Fact] public void GammaStep_IsPositive() => AppConstants.GammaStep.Should().BeGreaterThan(0);
+    [Fact] public void ContrastStep_IsPositive() => AppConstants.ContrastStep.Should().BeGreaterThan(0);
+    [Fact] public void VibranceStep_IsPositive() => AppConstants.VibranceStep.Should().BeGreaterThan(0);
 
     [Fact]
-    public void ContrastStep_IsPositive()
-    {
-        AppConstants.ContrastStep.Should().BeGreaterThan(0);
-    }
-
-    [Fact]
-    public void VibranceStep_IsPositive()
-    {
-        AppConstants.VibranceStep.Should().BeGreaterThan(0);
-    }
-
-    [Fact]
-    public void NvidiaVibranceRange_MinLessThanMax()
-    {
+    public void NvidiaVibranceRange_MinLessThanMax() =>
         AppConstants.NvidiaVibranceMin.Should().BeLessThan(AppConstants.NvidiaVibranceMax);
-    }
 
-    [Fact]
-    public void GammaRampSize_Is256()
-    {
-        AppConstants.GammaRampSize.Should().Be(256);
-    }
-
-    [Fact]
-    public void WM_HOTKEY_IsCorrectValue()
-    {
-        AppConstants.WM_HOTKEY.Should().Be(0x0312);
-    }
-
-    [Fact]
-    public void Version_Is2_0_0()
-    {
-        AppConstants.Version.Should().Be("2.0.0");
-    }
-
-    [Fact]
-    public void ApplicationName_IsKeyedColors()
-    {
-        AppConstants.ApplicationName.Should().Be("KeyedColors");
-    }
+    [Fact] public void GammaRampSize_Is256() => AppConstants.GammaRampSize.Should().Be(256);
+    [Fact] public void WM_HOTKEY_IsCorrectValue() => AppConstants.WM_HOTKEY.Should().Be(0x0312);
+    [Fact] public void Version_Is3_0_0() => AppConstants.Version.Should().Be("3.0.0");
+    [Fact] public void ApplicationName_IsDisplayHub() => AppConstants.ApplicationName.Should().Be("DisplayHub");
 
     [Fact]
     public void HotkeyModifiers_AreDistinct()

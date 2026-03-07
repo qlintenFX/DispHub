@@ -14,6 +14,7 @@ namespace DisplayHub.Services.Hotkeys
         [DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
+        private readonly HashSet<int> _rawHotkeyIds = new();
         private int nextHotkeyId = 1;
         private readonly Dictionary<int, Profile> registeredHotkeys = new();
         private IntPtr formHandle;
@@ -69,18 +70,18 @@ namespace DisplayHub.Services.Hotkeys
             int id = nextHotkeyId++;
             if (RegisterHotKey(formHandle, id, modifiers, (uint)vkCode))
             {
+                _rawHotkeyIds.Add(id);
                 return id;
             }
             return -1;
         }
 
-        /// <summary>
-        /// Unregisters a raw hotkey by ID (not associated with a profile).
-        /// </summary>
         public bool UnregisterRawHotkey(int id)
         {
             if (id <= 0) return false;
-            return UnregisterHotKey(formHandle, id);
+            bool result = UnregisterHotKey(formHandle, id);
+            if (result) _rawHotkeyIds.Remove(id);
+            return result;
         }
 
         public bool UnregisterHotkey(int id)
@@ -99,10 +100,13 @@ namespace DisplayHub.Services.Hotkeys
         public void UnregisterAllHotkeys()
         {
             foreach (int id in registeredHotkeys.Keys)
-            {
                 UnregisterHotKey(formHandle, id);
-            }
             registeredHotkeys.Clear();
+
+            // Also unregister raw hotkeys (e.g. Dynamic Controls directional adjustments)
+            foreach (int id in _rawHotkeyIds)
+                UnregisterHotKey(formHandle, id);
+            _rawHotkeyIds.Clear();
         }
 
         public void ProcessHotkey(IntPtr wParam)

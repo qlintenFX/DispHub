@@ -7,7 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Dark"/>
+                <ui:ThemesDictionary Theme="Unknown"/><!-- ApplicationThemeManager sets theme at runtime -->
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 

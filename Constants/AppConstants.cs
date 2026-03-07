@@ -56,4 +56,9 @@ public static class AppConstants
     // Profile Persistence
     public const string ProfilesFolderName = "DisplayHub";
     public const string ProfilesFileName = "profiles.json";
+
+    // Dynamic Controls Persistence (registry value names under SettingsRegistryKey)
+    public const string DynamicGammaValue = "DynamicGamma";
+    public const string DynamicContrastValue = "DynamicContrast";
+    public const string DynamicVibranceValue = "DynamicVibrance";
 }

@@ -1,75 +1,67 @@
-# KeyedColors
+# DisplayHub
 
-![KeyedColors Logo](logo.png)
+<p align="center">
+  <img src="logo.png" width="96" alt="DisplayHub logo"/>
+</p>
 
-A simple Windows application that allows users to create custom display profiles with gamma, contrast, and (experimental) vibrance adjustments. Each profile can be assigned a custom hotkey for quick access.
+<p align="center">
+  <strong>Modern display profile manager for Windows</strong><br/>
+  Gamma · Contrast · NVIDIA Vibrance · Global Hotkeys · Dynamic Controls
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="GPL-3.0"/></a>
+  <img src="https://img.shields.io/badge/.NET-8.0-purple" alt=".NET 8"/>
+  <img src="https://img.shields.io/badge/WPF--UI-4.2-blueviolet" alt="WPF-UI"/>
+</p>
+
+---
 
 ## Features
 
-- Create and manage multiple display profiles
-- Adjust gamma, contrast, and (preview) vibrance settings
-- Assign custom hotkeys to profiles for quick access
-- System tray integration for easy access
-- Dedicated Settings tab for application preferences
-- Option to start automatically with Windows
-- Configurable behavior when closing the application
-- Profiles are saved automatically and persist between sessions
-- Comes with three default presets:
-   - **Default**: Standard display (Gamma: 1.0, Contrast: 50%, Vibrance: 50%)
-   - **Dark**: Reduced brightness for low-light environments (Gamma: 0.8, Contrast: 50%, Vibrance: 50%)
-   - **Night Vision**: Enhanced visibility in dark environments (Gamma: 2.8, Contrast: 60%, Vibrance: 65%)
-
-## Usage
-
-1. **Create a Profile**:
-   - Adjust the gamma, contrast, and vibrance sliders to your preferred settings
-   - Click "Add" to create a new profile
-   - Enter a name for the profile
-
-2. **Manage Profiles**:
-   - Select a profile from the list to activate it
-   - Click "Update" to save changes to an existing profile
-   - Click "Del" to delete a profile
-
-3. **Set Hotkeys**:
-   - Select a profile
-   - Click "Set Hotkey"
-   - Press a key combination (e.g., Ctrl+Alt+1)
-   - Click OK to save the hotkey
-
-4. **Configure Settings / Dynamic Controls**:
-   - Navigate to the Settings tab
-   - Toggle "Start with Windows" to launch the app automatically with Windows
-   - Toggle "Minimize to tray when closed" to control whether the app minimizes to the system tray or fully closes when clicking the X button
-   - Use the Dynamic Controls tab for real-time gamma/contrast/vibrance tweaks driven by hotkeys (Shift+Arrows/PageUp/PageDown)
-
-5. **System Tray**:
-   - The application can minimize to the system tray when closed (configurable in Settings)
-   - Double-click the tray icon to restore the window
-   - Right-click the tray icon for a menu of profiles and options
+- 🎨 **Display Profiles** — Save and switch between gamma, contrast, and NVIDIA vibrance presets
+- ⌨️ **Global Hotkeys** — Register per-profile system-wide keyboard shortcuts
+- 🎛️ **Dynamic Controls** — Fine-tune display settings in real time with Shift+Arrow keys
+- 🌙 **System Theme** — Follows Windows light/dark mode automatically
+- 🔔 **System Tray** — Runs in the background, apply profiles from the tray menu
 
 ## Requirements
 
-- Windows 10 or later
-- .NET 8.0 Desktop Runtime or later
+- Windows 10 / 11 (x86 or x64)
+- .NET 8 Desktop Runtime
+- NVIDIA GPU (for vibrance support; gamma/contrast work on all GPUs)
 
-## Vibrance Preview (Experimental)
+## Installation
 
-The UI now captures a vibrance percentage per profile and within Dynamic Controls. KeyedColors routes those values through a pluggable vibrance service so upcoming builds can integrate NVIDIA/AMD/Intel APIs. Until those vendor-specific services are implemented, changing the vibrance slider only updates profile metadata; it does not yet modify GPU saturation.
+Download the latest release from [Releases](https://github.com/qlintenFX/DisplayHub/releases) and run the executable.
 
 ## Building from Source
 
-1. Clone the repository
-2. Open the solution in Visual Studio 2022 or later
-3. Build the solution
-4. Run the application
+```bash
+git clone https://github.com/qlintenFX/DisplayHub.git
+cd DisplayHub
+dotnet build DisplayHub.sln
+```
+
+Run tests:
+
+```bash
+dotnet test DisplayHub.Tests/DisplayHub.Tests.csproj
+```
+
+## Usage
+
+1. **Profiles tab** — Adjust the sliders to your desired display settings, enter a name, and click **Add**.
+2. **Apply** — Select a profile and click **Apply** (or double-click it).
+3. **Hotkeys** — Select a profile and click **Set Hotkey** to assign a global shortcut.
+4. **Dynamic Controls** — Enable on the Dynamic tab; use Shift+Arrow keys to fine-tune on the fly.
+
+## Acknowledgements
+
+- **UI design** inspired by [FluentFlyout](https://github.com/unchihugo/FluentFlyout) by **Hugo Li** (GPL-3.0)
+- **WPF-UI** Fluent 2 component library by [Leszek Pomianowski](https://github.com/lepoco/wpfui) (MIT)
+- Based on the original [KeyedColors](https://github.com/qlintenFX/KeyedColors) WinForms app
 
 ## License
 
-This software is proprietary. All rights reserved.
-
-Copyright © 2025-2026 qlintenFX
-
-## Acknowledgments
-
-- This application uses Windows API for display settings manipulation
+DisplayHub is licensed under the [GNU General Public License v3.0](LICENSE).

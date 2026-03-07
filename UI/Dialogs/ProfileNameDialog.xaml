@@ -1,0 +1,33 @@
+<ui:FluentWindow x:Class="DisplayHub.UI.Dialogs.ProfileNameDialog"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="Profile Name"
+                 Width="380" Height="180"
+                 WindowStartupLocation="CenterOwner"
+                 ResizeMode="NoResize"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="Mica">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Title="Profile Name" Grid.Row="0"/>
+
+        <StackPanel Grid.Row="1" Margin="16,8,16,8">
+            <TextBlock Text="Enter a name for this profile:" Opacity="0.8" Margin="0,0,0,8"/>
+            <ui:TextBox x:Name="NameTextBox" PlaceholderText="Profile name..."
+                        KeyDown="NameTextBox_KeyDown"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right"
+                    Margin="16,0,16,16">
+            <ui:Button Content="Cancel" Margin="0,0,8,0" IsCancel="True"/>
+            <ui:Button Content="OK" Appearance="Primary" IsDefault="True" Click="OkButton_Click"/>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

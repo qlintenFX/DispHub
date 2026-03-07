@@ -1,11 +1,11 @@
 using FluentAssertions;
-using KeyedColors.Constants;
-using KeyedColors.Services.Display;
-using KeyedColors.Services.Hotkeys;
+using DisplayHub.Constants;
+using DisplayHub.Services.Display;
+using DisplayHub.Services.Hotkeys;
 using Moq;
 using Xunit;
 
-namespace KeyedColors.Tests.Services.Hotkeys;
+namespace DisplayHub.Tests.Services.Hotkeys;
 
 public class DynamicControlsTests
 {
@@ -38,22 +38,18 @@ public class DynamicControlsTests
     public void AdjustGamma_WhenDisabled_DoesNothing()
     {
         _sut.IsEnabled = false;
-        double originalGamma = _sut.Gamma;
-
+        double original = _sut.Gamma;
         _sut.AdjustGamma(AppConstants.GammaStep);
-
-        _sut.Gamma.Should().Be(originalGamma);
+        _sut.Gamma.Should().Be(original);
     }
 
     [Fact]
     public void AdjustGamma_WhenEnabled_AdjustsValue()
     {
         _sut.IsEnabled = true;
-        double originalGamma = _sut.Gamma;
-
+        double original = _sut.Gamma;
         _sut.AdjustGamma(AppConstants.GammaStep);
-
-        _sut.Gamma.Should().Be(originalGamma + AppConstants.GammaStep);
+        _sut.Gamma.Should().Be(original + AppConstants.GammaStep);
     }
 
     [Fact]
@@ -61,9 +57,7 @@ public class DynamicControlsTests
     {
         _sut.IsEnabled = true;
         _sut.SetValues(AppConstants.GammaMax, AppConstants.ContrastDefault, AppConstants.VibranceDefault);
-
         _sut.AdjustGamma(AppConstants.GammaStep);
-
         _sut.Gamma.Should().Be(AppConstants.GammaMax);
     }
 
@@ -72,9 +66,7 @@ public class DynamicControlsTests
     {
         _sut.IsEnabled = true;
         _sut.SetValues(AppConstants.GammaMin, AppConstants.ContrastDefault, AppConstants.VibranceDefault);
-
         _sut.AdjustGamma(-AppConstants.GammaStep);
-
         _sut.Gamma.Should().Be(AppConstants.GammaMin);
     }
 
@@ -82,22 +74,18 @@ public class DynamicControlsTests
     public void AdjustContrast_WhenDisabled_DoesNothing()
     {
         _sut.IsEnabled = false;
-        double originalContrast = _sut.Contrast;
-
+        double original = _sut.Contrast;
         _sut.AdjustContrast(AppConstants.ContrastStep);
-
-        _sut.Contrast.Should().Be(originalContrast);
+        _sut.Contrast.Should().Be(original);
     }
 
     [Fact]
     public void AdjustContrast_WhenEnabled_AdjustsValue()
     {
         _sut.IsEnabled = true;
-        double originalContrast = _sut.Contrast;
-
+        double original = _sut.Contrast;
         _sut.AdjustContrast(AppConstants.ContrastStep);
-
-        _sut.Contrast.Should().Be(originalContrast + AppConstants.ContrastStep);
+        _sut.Contrast.Should().Be(original + AppConstants.ContrastStep);
     }
 
     [Fact]
@@ -105,9 +93,7 @@ public class DynamicControlsTests
     {
         _sut.IsEnabled = true;
         _sut.SetValues(AppConstants.GammaDefault, AppConstants.ContrastMax, AppConstants.VibranceDefault);
-
         _sut.AdjustContrast(AppConstants.ContrastStep);
-
         _sut.Contrast.Should().Be(AppConstants.ContrastMax);
     }
 
@@ -115,22 +101,18 @@ public class DynamicControlsTests
     public void AdjustVibrance_WhenDisabled_DoesNothing()
     {
         _sut.IsEnabled = false;
-        int originalVibrance = _sut.Vibrance;
-
+        int original = _sut.Vibrance;
         _sut.AdjustVibrance(AppConstants.VibranceStep);
-
-        _sut.Vibrance.Should().Be(originalVibrance);
+        _sut.Vibrance.Should().Be(original);
     }
 
     [Fact]
     public void AdjustVibrance_WhenEnabled_AdjustsValue()
     {
         _sut.IsEnabled = true;
-        int originalVibrance = _sut.Vibrance;
-
+        int original = _sut.Vibrance;
         _sut.AdjustVibrance(AppConstants.VibranceStep);
-
-        _sut.Vibrance.Should().Be(originalVibrance + AppConstants.VibranceStep);
+        _sut.Vibrance.Should().Be(original + AppConstants.VibranceStep);
     }
 
     [Fact]
@@ -138,9 +120,7 @@ public class DynamicControlsTests
     {
         _sut.IsEnabled = true;
         _sut.SetValues(AppConstants.GammaDefault, AppConstants.ContrastDefault, AppConstants.VibranceMax);
-
         _sut.AdjustVibrance(AppConstants.VibranceStep);
-
         _sut.Vibrance.Should().Be(AppConstants.VibranceMax);
     }
 
@@ -149,9 +129,7 @@ public class DynamicControlsTests
     {
         _sut.IsEnabled = true;
         _sut.SetValues(AppConstants.GammaDefault, AppConstants.ContrastDefault, AppConstants.VibranceMin);
-
         _sut.AdjustVibrance(-AppConstants.VibranceStep);
-
         _sut.Vibrance.Should().Be(AppConstants.VibranceMin);
     }
 
@@ -159,9 +137,7 @@ public class DynamicControlsTests
     public void SetValues_ClampsAllValues()
     {
         _sut.IsEnabled = true;
-
         _sut.SetValues(-1.0, 2.0, 200);
-
         _sut.Gamma.Should().Be(AppConstants.GammaMin);
         _sut.Contrast.Should().Be(AppConstants.ContrastMax);
         _sut.Vibrance.Should().Be(AppConstants.VibranceMax);
@@ -171,45 +147,36 @@ public class DynamicControlsTests
     public void SetValues_WhenEnabled_FiresValuesChanged()
     {
         _sut.IsEnabled = true;
-        bool eventFired = false;
-        _sut.ValuesChanged += (_, _) => eventFired = true;
-
+        bool fired = false;
+        _sut.ValuesChanged += (_, _) => fired = true;
         _sut.SetValues(1.5, 0.7, 80);
-
-        eventFired.Should().BeTrue();
+        fired.Should().BeTrue();
     }
 
     [Fact]
     public void SetValues_WhenDisabled_DoesNotFireValuesChanged()
     {
         _sut.IsEnabled = false;
-        bool eventFired = false;
-        _sut.ValuesChanged += (_, _) => eventFired = true;
-
+        bool fired = false;
+        _sut.ValuesChanged += (_, _) => fired = true;
         _sut.SetValues(1.5, 0.7, 80);
-
-        eventFired.Should().BeFalse();
+        fired.Should().BeFalse();
     }
 
     [Fact]
     public void AdjustGamma_WhenEnabled_FiresValuesChanged()
     {
         _sut.IsEnabled = true;
-        bool eventFired = false;
-        _sut.ValuesChanged += (_, _) => eventFired = true;
-
+        bool fired = false;
+        _sut.ValuesChanged += (_, _) => fired = true;
         _sut.AdjustGamma(AppConstants.GammaStep);
-
-        eventFired.Should().BeTrue();
+        fired.Should().BeTrue();
     }
 
     [Fact]
     public void ProcessHotkey_WhenDisabled_ReturnsFalse()
     {
         _sut.IsEnabled = false;
-
-        bool result = _sut.ProcessHotkey(IntPtr.Zero);
-
-        result.Should().BeFalse();
+        _sut.ProcessHotkey(IntPtr.Zero).Should().BeFalse();
     }
 }

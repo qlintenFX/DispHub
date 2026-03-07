@@ -1,3 +1,28 @@
+## [3.0.0] - 2026-03-08
+
+### Changed
+- Complete rewrite from WinForms to WPF with Fluent 2 design (WPF-UI 4.2)
+- Renamed: KeyedColors -> DisplayHub
+- System theme detection, Mica backdrop, WPF-UI FluentWindow dialogs
+- Navigation using NavigationView content area (no margin hack)
+
+### Added
+- Dynamic Controls value persistence across restarts
+- Human-readable hotkey labels (Ctrl+A instead of Modifier+VK65)
+- Explicit Apply button on Profiles page
+- Profile list template with hotkey badge
+- About page with version, credits, and GitHub links
+
+### Fixed
+- Orphaned OS hotkeys when Dynamic Controls toggled
+- Profile auto-applied on page load
+
+### Removed
+- [Serializable] from Profile (BinaryFormatter remnant)
+- Unused CommunityToolkit.Mvvm package
+
+---
+
 # Changelog
 
 All notable changes to KeyedColors will be documented in this file.

@@ -10,16 +10,24 @@
             <!-- Header -->
             <TextBlock Text="About" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,16"/>
 
-            <StackPanel HorizontalAlignment="Center" Margin="0,16,0,0">
-                <Image Source="/logo.png" Width="64" Height="64" HorizontalAlignment="Center"
+            <!-- Logo + title -->
+            <StackPanel HorizontalAlignment="Center" Margin="0,8,0,8">
+                <Image Source="/logo.png" Width="72" Height="72" HorizontalAlignment="Center"
                        RenderOptions.BitmapScalingMode="HighQuality" Margin="0,0,0,12"/>
-                <TextBlock Text="DisplayHub" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                <TextBlock Text="Version 3.0.0" Opacity="0.6" HorizontalAlignment="Center" Margin="0,4,0,0"/>
-                <TextBlock Text="Modern display profile manager" Opacity="0.6" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                <TextBlock x:Name="AppNameText" Text="DisplayHub"
+                           FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="VersionText"
+                           Opacity="0.6" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                <TextBlock Text="Modern display profile manager for Windows"
+                           Opacity="0.6" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                <ui:HyperlinkButton Content="View on GitHub" NavigateUri="https://github.com/qlintenFX/DisplayHub"
+                                    HorizontalAlignment="Center" Margin="0,8,0,0"/>
             </StackPanel>
 
-            <ui:CardControl Margin="0,24,0,8"
-                            Icon="{ui:SymbolIcon Brightness20}">
+            <!-- Features -->
+            <TextBlock Text="Features" FontSize="16" FontWeight="SemiBold" Margin="0,16,0,8"/>
+
+            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon Brightness20}">
                 <ui:CardControl.Header>
                     <StackPanel>
                         <TextBlock Text="Display Controls" FontWeight="Medium"/>
@@ -28,25 +36,64 @@
                 </ui:CardControl.Header>
             </ui:CardControl>
 
-            <ui:CardControl Margin="0,0,0,8"
-                            Icon="{ui:SymbolIcon Keyboard20}">
+            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon Keyboard20}">
                 <ui:CardControl.Header>
                     <StackPanel>
-                        <TextBlock Text="Hotkey Support" FontWeight="Medium"/>
-                        <TextBlock Text="Global hotkeys for quick profile switching" Opacity="0.6" FontSize="12"/>
+                        <TextBlock Text="Global Hotkeys" FontWeight="Medium"/>
+                        <TextBlock Text="Register per-profile hotkeys for instant switching" Opacity="0.6" FontSize="12"/>
                     </StackPanel>
                 </ui:CardControl.Header>
             </ui:CardControl>
 
-            <ui:CardControl Margin="0,0,0,8"
-                            Icon="{ui:SymbolIcon Gauge20}">
+            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon Gauge20}">
                 <ui:CardControl.Header>
                     <StackPanel>
                         <TextBlock Text="Dynamic Controls" FontWeight="Medium"/>
-                        <TextBlock Text="Real-time adjustments with Shift+Arrow keys" Opacity="0.6" FontSize="12"/>
+                        <TextBlock Text="Real-time fine-tuning with Shift+Arrow keys" Opacity="0.6" FontSize="12"/>
                     </StackPanel>
                 </ui:CardControl.Header>
             </ui:CardControl>
+
+            <!-- Credits -->
+            <TextBlock Text="Acknowledgements" FontSize="16" FontWeight="SemiBold" Margin="0,16,0,8"/>
+
+            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon Heart20}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="FluentFlyout by Hugo Li" FontWeight="Medium"/>
+                        <TextBlock Text="UI design inspired by FluentFlyout (GPL-3.0)" Opacity="0.6" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:HyperlinkButton Content="github.com/unchihugo/FluentFlyout"
+                                    NavigateUri="https://github.com/unchihugo/FluentFlyout"/>
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon Code20}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="WPF-UI by Leszek Pomianowski" FontWeight="Medium"/>
+                        <TextBlock Text="Fluent Design System components for WPF (MIT)" Opacity="0.6" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:HyperlinkButton Content="github.com/lepoco/wpfui"
+                                    NavigateUri="https://github.com/lepoco/wpfui"/>
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,8" Icon="{ui:SymbolIcon History20}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="Original KeyedColors" FontWeight="Medium"/>
+                        <TextBlock Text="The WinForms predecessor this project is based on" Opacity="0.6" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:HyperlinkButton Content="github.com/qlintenFX/KeyedColors"
+                                    NavigateUri="https://github.com/qlintenFX/KeyedColors"/>
+            </ui:CardControl>
+
+            <TextBlock Text="DisplayHub is licensed under GPL-3.0."
+                       Opacity="0.5" FontSize="11" HorizontalAlignment="Center" Margin="0,16,0,4"/>
+            <TextBlock x:Name="CopyrightText"
+                       Opacity="0.4" FontSize="11" HorizontalAlignment="Center" Margin="0,0,0,16"/>
 
         </StackPanel>
     </ScrollViewer>

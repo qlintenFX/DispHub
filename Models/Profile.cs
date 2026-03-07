@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Windows.Input;
 using DisplayHub.Constants;
 
 namespace DisplayHub.Models
 {
-    [Serializable]
     public class Profile
     {
         private string name = "New Profile";
@@ -104,6 +105,36 @@ namespace DisplayHub.Models
                 HotKeyModifier = modifier,
                 HotkeyId = id
             };
+        }
+
+        /// <summary>
+        /// Returns a human-readable hotkey string (e.g. "Ctrl+A"). Empty string when no hotkey is set.
+        /// </summary>
+        [JsonIgnore]
+        public string HotkeyDisplayText
+        {
+            get
+            {
+                if (HotKey == 0) return string.Empty;
+
+                var parts = new List<string>();
+                if ((HotKeyModifier & 0x20000) != 0) parts.Add("Ctrl");
+                if ((HotKeyModifier & 0x40000) != 0) parts.Add("Alt");
+                if ((HotKeyModifier & 0x10000) != 0) parts.Add("Shift");
+
+                var key = KeyInterop.KeyFromVirtualKey(HotKey);
+                string keyName = key.ToString() switch
+                {
+                    "D0" => "0", "D1" => "1", "D2" => "2", "D3" => "3", "D4" => "4",
+                    "D5" => "5", "D6" => "6", "D7" => "7", "D8" => "8", "D9" => "9",
+                    "Prior" => "PageUp", "Next" => "PageDown",
+                    "Back" => "Backspace", "Return" => "Enter",
+                    "Capital" => "CapsLock", "Snapshot" => "PrintScreen",
+                    var k => k
+                };
+                parts.Add(keyName);
+                return string.Join("+", parts);
+            }
         }
 
         public override string ToString()

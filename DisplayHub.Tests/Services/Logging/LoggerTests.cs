@@ -1,8 +1,9 @@
+using System.IO;
 using FluentAssertions;
-using KeyedColors.Services.Logging;
+using DisplayHub.Services.Logging;
 using Xunit;
 
-namespace KeyedColors.Tests.Services.Logging;
+namespace DisplayHub.Tests.Services.Logging;
 
 public class LoggerTests : IDisposable
 {
@@ -10,38 +11,28 @@ public class LoggerTests : IDisposable
 
     public LoggerTests()
     {
-        _testLogPath = Path.Combine(Path.GetTempPath(), $"keyedcolors_test_{Guid.NewGuid()}.log");
+        _testLogPath = Path.Combine(Path.GetTempPath(), $"displayhub_test_{Guid.NewGuid()}.log");
     }
 
     public void Dispose()
     {
-        try
-        {
-            if (File.Exists(_testLogPath))
-                File.Delete(_testLogPath);
-        }
-        catch
-        {
-            // Cleanup best effort
-        }
+        try { if (File.Exists(_testLogPath)) File.Delete(_testLogPath); }
+        catch { /* best-effort */ }
     }
 
     [Fact]
     public void Initialize_SetsLogPath()
     {
-        Logger.Initialize("keyedcolors_test.log");
-
+        Logger.Initialize("displayhub_test.log");
         Logger.LogPath.Should().NotBeNullOrEmpty();
-        Logger.LogPath.Should().EndWith("keyedcolors_test.log");
+        Logger.LogPath.Should().EndWith("displayhub_test.log");
     }
 
     [Fact]
     public void Log_WritesTimestampedMessage()
     {
         Logger.Initialize(_testLogPath);
-
         Logger.Log("Test message");
-
         string content = File.ReadAllText(Logger.LogPath);
         content.Should().Contain("Test message");
         content.Should().MatchRegex(@"\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]");
@@ -51,21 +42,15 @@ public class LoggerTests : IDisposable
     public void LogError_WritesErrorPrefix()
     {
         Logger.Initialize(_testLogPath);
-
         Logger.LogError("Something failed");
-
-        string content = File.ReadAllText(Logger.LogPath);
-        content.Should().Contain("ERROR: Something failed");
+        File.ReadAllText(Logger.LogPath).Should().Contain("ERROR: Something failed");
     }
 
     [Fact]
     public void LogError_WithException_IncludesExceptionDetails()
     {
         Logger.Initialize(_testLogPath);
-        var ex = new InvalidOperationException("Test exception");
-
-        Logger.LogError("Operation failed", ex);
-
+        Logger.LogError("Operation failed", new InvalidOperationException("Test exception"));
         string content = File.ReadAllText(Logger.LogPath);
         content.Should().Contain("ERROR: Operation failed");
         content.Should().Contain("Test exception");
@@ -76,10 +61,7 @@ public class LoggerTests : IDisposable
     {
         Logger.Initialize(_testLogPath);
         var inner = new ArgumentException("Inner problem");
-        var outer = new InvalidOperationException("Outer problem", inner);
-
-        Logger.LogError("Nested failure", outer);
-
+        Logger.LogError("Nested failure", new InvalidOperationException("Outer problem", inner));
         string content = File.ReadAllText(Logger.LogPath);
         content.Should().Contain("Outer problem");
         content.Should().Contain("Inner problem");
@@ -89,14 +71,10 @@ public class LoggerTests : IDisposable
     public void Log_EmptyMessage_DoesNotWrite()
     {
         Logger.Initialize(_testLogPath);
-        // Write a marker so we can check for NO additional writes
         Logger.Log("Marker");
-        string beforeContent = File.ReadAllText(Logger.LogPath);
-
+        string before = File.ReadAllText(Logger.LogPath);
         Logger.Log("");
-
-        string afterContent = File.ReadAllText(Logger.LogPath);
-        afterContent.Should().Be(beforeContent);
+        File.ReadAllText(Logger.LogPath).Should().Be(before);
     }
 
     [Fact]
@@ -104,26 +82,19 @@ public class LoggerTests : IDisposable
     {
         Logger.Initialize(_testLogPath);
         Logger.Log("Marker");
-        string beforeContent = File.ReadAllText(Logger.LogPath);
-
+        string before = File.ReadAllText(Logger.LogPath);
         Logger.Log(null!);
-
-        string afterContent = File.ReadAllText(Logger.LogPath);
-        afterContent.Should().Be(beforeContent);
+        File.ReadAllText(Logger.LogPath).Should().Be(before);
     }
 
     [Fact]
     public void Log_MultipleMessages_AppendsToFile()
     {
         Logger.Initialize(_testLogPath);
-
         Logger.Log("First");
         Logger.Log("Second");
         Logger.Log("Third");
-
         string content = File.ReadAllText(Logger.LogPath);
-        content.Should().Contain("First");
-        content.Should().Contain("Second");
-        content.Should().Contain("Third");
+        content.Should().Contain("First").And.Contain("Second").And.Contain("Third");
     }
 }

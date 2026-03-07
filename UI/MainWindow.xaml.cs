@@ -49,11 +49,9 @@ public partial class MainWindow : FluentWindow
         {
             Logger.Log("MainWindow loading");
 
-            // Get window handle for hotkey registration
             var helper = new WindowInteropHelper(this);
             IntPtr hwnd = helper.Handle;
 
-            // Hook WndProc for hotkey messages
             hwndSource = HwndSource.FromHwnd(hwnd);
             hwndSource?.AddHook(WndProc);
 
@@ -66,12 +64,12 @@ public partial class MainWindow : FluentWindow
             HotkeyManager.HotkeyPressed += HotkeyManager_HotkeyPressed;
 
             DynamicControls = new DynamicControls(DisplayManager);
+            DynamicControls.ValuesChanged += DynamicControls_ValuesChanged;
 
             SetupTrayIcon();
             RegisterAllHotkeys();
             LoadSettings();
 
-            // Set up navigation (handler is in XAML)
             NavigateToPage("profiles");
 
             Logger.Log("MainWindow initialization completed");
@@ -95,13 +93,28 @@ public partial class MainWindow : FluentWindow
         if (dynamicEnabled && DynamicControls != null && HotkeyManager != null)
         {
             DynamicControls.IsEnabled = true;
-            HotkeyManager.UnregisterAllHotkeys();
 
+            // Restore last-used DC values instead of resetting to defaults
+            double gamma = SettingsManager.GetDynamicGamma();
+            double contrast = SettingsManager.GetDynamicContrast();
+            int vibrance = SettingsManager.GetDynamicVibrance();
+
+            HotkeyManager.UnregisterAllHotkeys();
             var helper = new WindowInteropHelper(this);
             DynamicControls.RegisterHotkeys(HotkeyManager, helper.Handle);
-            DynamicControls.SetValues(DynamicControls.Gamma, DynamicControls.Contrast, DynamicControls.Vibrance);
+            DynamicControls.SetValues(gamma, contrast, vibrance);
             UpdateTrayProfilesMenu();
         }
+    }
+
+    // ─── Dynamic Controls Value Persistence ────────────────────────────
+
+    private void DynamicControls_ValuesChanged(object? sender, EventArgs e)
+    {
+        if (DynamicControls == null) return;
+        SettingsManager.SetDynamicGamma(DynamicControls.Gamma);
+        SettingsManager.SetDynamicContrast(DynamicControls.Contrast);
+        SettingsManager.SetDynamicVibrance(DynamicControls.Vibrance);
     }
 
     // ─── Navigation ────────────────────────────────────────────────────
@@ -109,9 +122,7 @@ public partial class MainWindow : FluentWindow
     private void NavigationView_SelectionChanged(Wpf.Ui.Controls.NavigationView sender, RoutedEventArgs args)
     {
         if (sender.SelectedItem is Wpf.Ui.Controls.NavigationViewItem item && item.Tag is string tag)
-        {
             NavigateToPage(tag);
-        }
     }
 
     private void NavigateToPage(string tag)
@@ -204,7 +215,6 @@ public partial class MainWindow : FluentWindow
         CurrentProfile = profile;
         DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
 
-        // Update UI if profiles page is active
         profilesPage?.OnProfileApplied(profile);
     }
 
@@ -214,7 +224,6 @@ public partial class MainWindow : FluentWindow
     {
         try
         {
-            // Use System.Drawing.Icon for tray (WPF doesn't have native tray support)
             System.Drawing.Icon appIcon;
             try
             {
@@ -303,9 +312,11 @@ public partial class MainWindow : FluentWindow
     {
         if (resourcesCleaned) return;
 
-        if (DynamicControls != null && HotkeyManager != null)
+        if (DynamicControls != null)
         {
-            DynamicControls.UnregisterHotkeys(HotkeyManager);
+            DynamicControls.ValuesChanged -= DynamicControls_ValuesChanged;
+            if (HotkeyManager != null)
+                DynamicControls.UnregisterHotkeys(HotkeyManager);
         }
 
         if (HotkeyManager != null)

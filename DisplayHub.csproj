@@ -20,7 +20,7 @@
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
     <InvariantGlobalization>false</InvariantGlobalization>
-    <DefaultItemExcludes>$(DefaultItemExcludes);KeyedColors.Tests\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);KeyedColors.Tests\**;DisplayHub.Tests\**</DefaultItemExcludes>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -31,7 +31,6 @@
   <ItemGroup>
     <PackageReference Include="WPF-UI" Version="4.2.0" />
     <PackageReference Include="WPF-UI.Tray" Version="4.2.0" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
 
   <!-- Publish-only settings: activated via dotnet publish -p:PublishSingleFile=true -->

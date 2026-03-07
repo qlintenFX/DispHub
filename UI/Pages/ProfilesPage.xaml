@@ -15,21 +15,53 @@
             <ui:CardExpander Header="Saved Profiles" IsExpanded="True"
                              Icon="{ui:SymbolIcon List20}">
                 <StackPanel>
-                    <ListBox x:Name="ProfileListBox" MinHeight="80" MaxHeight="180"
+                    <ListBox x:Name="ProfileListBox" MinHeight="80" MaxHeight="200"
                              SelectionChanged="ProfileListBox_SelectionChanged"
+                             MouseDoubleClick="ProfileListBox_MouseDoubleClick"
                              Background="Transparent" BorderThickness="0"
-                             Margin="0,0,0,8"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <ui:Button Content="Add" Icon="{ui:SymbolIcon Add20}" Margin="0,0,8,0"
-                                   Appearance="Primary" Click="AddProfile_Click"/>
-                        <ui:Button Content="Update" Icon="{ui:SymbolIcon ArrowSync20}" Margin="0,0,8,0"
+                             Margin="0,0,0,8">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding HotkeyDisplayText}"
+                                               Opacity="0.55" FontSize="11"
+                                               VerticalAlignment="Center" Margin="8,0,0,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HotkeyDisplayText}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Action Buttons -->
+                    <WrapPanel Margin="0,0,0,4">
+                        <ui:Button Content="Apply" Icon="{ui:SymbolIcon CheckmarkCircle20}" Margin="0,0,8,4"
+                                   Appearance="Primary" Click="ApplyProfile_Click"
+                                   ToolTip="Apply selected profile to display (or double-click)"/>
+                        <ui:Button Content="Add" Icon="{ui:SymbolIcon Add20}" Margin="0,0,8,4"
+                                   Click="AddProfile_Click"/>
+                        <ui:Button Content="Update" Icon="{ui:SymbolIcon ArrowSync20}" Margin="0,0,8,4"
                                    Click="UpdateProfile_Click"/>
-                        <ui:Button Content="Delete" Icon="{ui:SymbolIcon Delete20}" Margin="0,0,8,0"
+                        <ui:Button Content="Delete" Icon="{ui:SymbolIcon Delete20}" Margin="0,0,8,4"
                                    Appearance="Danger" Click="DeleteProfile_Click"/>
-                        <ui:Button Content="Set Hotkey" Icon="{ui:SymbolIcon Keyboard20}"
+                        <ui:Button Content="Set Hotkey" Icon="{ui:SymbolIcon Keyboard20}" Margin="0,0,0,4"
                                    Click="SetHotkey_Click"/>
-                    </StackPanel>
-                    <TextBlock x:Name="HotkeyLabel" Text="Hotkey: None" Opacity="0.6" Margin="0,8,0,0"/>
+                    </WrapPanel>
+                    <TextBlock x:Name="HotkeyLabel" Text="Hotkey: None" Opacity="0.6" Margin="0,4,0,0"/>
                 </StackPanel>
             </ui:CardExpander>
 
@@ -42,7 +74,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="54"/>
                         </Grid.ColumnDefinitions>
                         <Slider x:Name="GammaSlider" Minimum="30" Maximum="280" Value="100"
                                 TickFrequency="10" IsSnapToTickEnabled="True"
@@ -56,7 +88,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="54"/>
                         </Grid.ColumnDefinitions>
                         <Slider x:Name="ContrastSlider" Minimum="0" Maximum="100" Value="50"
                                 TickFrequency="5" IsSnapToTickEnabled="True"
@@ -70,7 +102,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="54"/>
                         </Grid.ColumnDefinitions>
                         <Slider x:Name="VibranceSlider" Minimum="0" Maximum="100" Value="50"
                                 TickFrequency="5" IsSnapToTickEnabled="True"
@@ -79,7 +111,7 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
 
-                    <!-- Reset Button -->
+                    <!-- Reset -->
                     <ui:Button Content="Reset to Default" Icon="{ui:SymbolIcon ArrowReset20}"
                                HorizontalAlignment="Right" Margin="0,12,0,0"
                                Click="ResetButton_Click"/>
