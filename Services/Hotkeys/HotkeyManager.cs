@@ -3,17 +3,18 @@ using DisplayHub.Models;
 
 namespace DisplayHub.Services.Hotkeys;
 
-public class HotkeyManager : IDisposable
+public sealed class HotkeyManager : IDisposable
 {
     [DllImport("user32.dll")]
-    public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+    private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 
     [DllImport("user32.dll")]
-    public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+    private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-    private int _nextHotkeyId = 1;
-    private readonly Dictionary<int, Profile> _registeredHotkeys = new();
+    private int _nextId = 1;
+    private readonly Dictionary<int, Profile> _profileHotkeys = new();
     private readonly IntPtr _hwnd;
+    private bool _disposed;
 
     public event EventHandler<HotkeyEventArgs>? HotkeyPressed;
     public IntPtr Hwnd => _hwnd;
@@ -23,64 +24,60 @@ public class HotkeyManager : IDisposable
         _hwnd = hwnd;
     }
 
+    /// <summary>Register a profile hotkey. Returns the assigned ID, or -1 on failure.</summary>
     public int RegisterHotkey(Profile profile)
     {
         if (profile.HotKeyValue == 0) return -1;
 
-        uint modifiers = profile.HotKeyModifierValue;
-        uint key = (uint)profile.HotKeyValue;
-
-        int id = _nextHotkeyId++;
-        if (RegisterHotKey(_hwnd, id, modifiers, key))
+        int id = _nextId++;
+        if (RegisterHotKey(_hwnd, id, profile.HotKeyModifierValue, (uint)profile.HotKeyValue))
         {
-            _registeredHotkeys[id] = profile;
+            _profileHotkeys[id] = profile;
             profile.HotkeyId = id;
             return id;
         }
         return -1;
     }
 
+    /// <summary>Register a raw (non-profile) hotkey. Returns the assigned ID, or -1 on failure.</summary>
     public int RegisterRawHotkey(uint vk, uint modifiers)
     {
-        int id = _nextHotkeyId++;
-        if (RegisterHotKey(_hwnd, id, modifiers, vk))
-            return id;
-        return -1;
+        int id = _nextId++;
+        return RegisterHotKey(_hwnd, id, modifiers, vk) ? id : -1;
     }
 
     public bool UnregisterRawHotkey(int id)
     {
-        if (id <= 0) return false;
-        return UnregisterHotKey(_hwnd, id);
+        return id > 0 && UnregisterHotKey(_hwnd, id);
     }
 
     public bool UnregisterHotkey(int id)
     {
         if (id <= 0) return false;
-        bool result = UnregisterHotKey(_hwnd, id);
-        if (result) _registeredHotkeys.Remove(id);
-        return result;
-    }
-
-    public void UnregisterAllHotkeys()
-    {
-        foreach (int id in _registeredHotkeys.Keys)
-            UnregisterHotKey(_hwnd, id);
-        _registeredHotkeys.Clear();
+        bool ok = UnregisterHotKey(_hwnd, id);
+        _profileHotkeys.Remove(id);
+        return ok;
     }
 
     public void ProcessHotkey(IntPtr wParam)
     {
         int id = wParam.ToInt32();
-        if (_registeredHotkeys.TryGetValue(id, out Profile? profile) && profile != null)
+        if (_profileHotkeys.TryGetValue(id, out var profile))
             HotkeyPressed?.Invoke(this, new HotkeyEventArgs(profile));
     }
 
-    public void Dispose() => UnregisterAllHotkeys();
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+
+        foreach (int id in _profileHotkeys.Keys)
+            UnregisterHotKey(_hwnd, id);
+        _profileHotkeys.Clear();
+    }
 }
 
-public class HotkeyEventArgs : EventArgs
+public sealed class HotkeyEventArgs(Profile profile) : EventArgs
 {
-    public Profile Profile { get; }
-    public HotkeyEventArgs(Profile profile) { Profile = profile; }
+    public Profile Profile { get; } = profile;
 }

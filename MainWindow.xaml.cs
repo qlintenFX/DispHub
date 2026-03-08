@@ -16,6 +16,12 @@ public partial class MainWindow : Window
     public static DynamicControls DynamicControls { get; private set; } = null!;
     public static SettingsManager SettingsManager { get; private set; } = null!;
 
+    /// <summary>
+    /// Fired on the UI thread when a profile is applied via global hotkey.
+    /// Subscribers (e.g. ProfilesPage) update their selected-profile display.
+    /// </summary>
+    public static event Action<int>? ActiveProfileChanged;
+
     private SettingsWindow? _settingsWindow;
     private HwndSource? _hwndSource;
 
@@ -51,39 +57,49 @@ public partial class MainWindow : Window
         }
 
         HotkeyManager.HotkeyPressed += OnProfileHotkeyPressed;
-
         OpenSettingsWindow();
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         const int WM_HOTKEY = 0x0312;
-        if (msg == WM_HOTKEY)
+        if (msg != WM_HOTKEY)
+            return IntPtr.Zero;
+
+        int id = wParam.ToInt32();
+
+        // Dynamic-controls mode owns ALL hotkey input — block profile switching
+        if (DynamicControls.IsEnabled)
         {
-            int id = wParam.ToInt32();
-            if (DynamicControls.IsEnabled && DynamicControls.ProcessHotkey(id))
-            {
-                handled = true;
-                return IntPtr.Zero;
-            }
-            HotkeyManager.ProcessHotkey(wParam);
+            DynamicControls.ProcessHotkey(id);
             handled = true;
+            return IntPtr.Zero;
         }
+
+        // Profile mode
+        HotkeyManager.ProcessHotkey(wParam);
+        handled = true;
         return IntPtr.Zero;
     }
 
     private void OnProfileHotkeyPressed(object? sender, HotkeyEventArgs e)
     {
+        int profileIndex = ProfileManager.IndexOf(e.Profile);
+        if (profileIndex < 0) return;
+
         DisplayManager.ApplySettings(e.Profile.Gamma, e.Profile.Contrast, e.Profile.Vibrance);
         Logger.Log($"Hotkey applied profile: {e.Profile.Name}");
+
+        // Notify the UI so ProfilesPage can update its selected card
+        ActiveProfileChanged?.Invoke(profileIndex);
     }
 
     public void OpenSettingsWindow()
     {
-        if (_settingsWindow == null || !_settingsWindow.IsLoaded)
+        if (_settingsWindow is null || !_settingsWindow.IsLoaded)
         {
             _settingsWindow = new SettingsWindow();
-            _settingsWindow.Closed += (s, e) => _settingsWindow = null;
+            _settingsWindow.Closed += (_, _) => _settingsWindow = null;
         }
         _settingsWindow.Show();
         _settingsWindow.Activate();

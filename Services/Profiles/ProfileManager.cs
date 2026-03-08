@@ -12,6 +12,8 @@ public class ProfileManager
 
     public IReadOnlyList<Profile> Profiles => _profiles;
 
+    public int IndexOf(Profile profile) => _profiles.IndexOf(profile);
+
     public ProfileManager()
     {
         _profiles = new List<Profile>();

@@ -4,7 +4,6 @@ using System.Windows.Input;
 
 namespace DisplayHub.Models;
 
-[Serializable]
 public class Profile
 {
     private string _name = "New Profile";
@@ -36,10 +35,12 @@ public class Profile
         set => _vibrance = Math.Clamp(value, AppConstants.VibranceMin, AppConstants.VibranceMax);
     }
 
-    public int HotKeyValue { get; set; } = 0;
+    public int HotKeyValue { get; set; }
 
-    public uint HotKeyModifierValue { get; set; } = 0;
+    public uint HotKeyModifierValue { get; set; }
 
+    /// <summary>Runtime-only hotkey registration ID - not persisted.</summary>
+    [JsonIgnore]
     public int HotkeyId { get; set; } = -1;
 
     [JsonIgnore]
@@ -48,41 +49,27 @@ public class Profile
         get
         {
             if (HotKeyValue == 0) return "None";
+
             var parts = new List<string>();
             if ((HotKeyModifierValue & AppConstants.MOD_CONTROL) != 0) parts.Add("Ctrl");
             if ((HotKeyModifierValue & AppConstants.MOD_ALT) != 0) parts.Add("Alt");
             if ((HotKeyModifierValue & AppConstants.MOD_SHIFT) != 0) parts.Add("Shift");
+
             Key key = KeyInterop.KeyFromVirtualKey(HotKeyValue);
             parts.Add(key.ToString());
             return string.Join("+", parts);
         }
     }
 
-    public Profile()
-    {
-        Name = "New Profile";
-        Gamma = AppConstants.GammaDefault;
-        Contrast = AppConstants.ContrastDefault;
-        Vibrance = AppConstants.VibranceDefault;
-        HotKeyValue = 0;
-        HotKeyModifierValue = 0;
-        HotkeyId = -1;
-    }
+    public Profile() { }
 
-    public Profile(string name, double gamma, double contrast, int vibrance = 50)
+    public Profile(string name, double gamma = AppConstants.GammaDefault,
+                   double contrast = AppConstants.ContrastDefault,
+                   int vibrance = AppConstants.VibranceDefault)
     {
         Name = name;
         Gamma = gamma;
         Contrast = contrast;
         Vibrance = vibrance;
-        HotKeyValue = 0;
-        HotKeyModifierValue = 0;
-        HotkeyId = -1;
-    }
-
-    public override string ToString()
-    {
-        string hotkeyText = HotKeyValue != 0 ? HotkeyDisplayText : "No hotkey";
-        return $"{Name} (Gamma: {Gamma:F2}, Contrast: {Contrast * 100:F0}%, Vibrance: {Vibrance}, Hotkey: {hotkeyText})";
     }
 }

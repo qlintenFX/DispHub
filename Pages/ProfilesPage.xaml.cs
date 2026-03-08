@@ -8,40 +8,62 @@ namespace DisplayHub.Pages;
 
 public partial class ProfilesPage : Page, INavigationAware
 {
-    private bool _isLoaded = false;
-    private int _selectedIndex = 0;
+    private bool _isLoaded;
+    private int _selectedIndex;
 
     public ProfilesPage()
     {
         InitializeComponent();
-        Loaded += ProfilesPage_Loaded;
+        Loaded += OnPageLoaded;
+        Unloaded += OnPageUnloaded;
     }
 
-    private void ProfilesPage_Loaded(object sender, RoutedEventArgs e)
+    private void OnPageLoaded(object sender, RoutedEventArgs e)
     {
         _isLoaded = true;
-        RefreshProfileList();
-        if (MainWindow.ProfileManager.Profiles.Count > 0)
-        {
-            _selectedIndex = 0;
-            LoadSelectedProfile();
-        }
-        UpdateDcState();
+        _selectedIndex = 0;
+        RefreshProfileCards();
+        LoadSelectedProfile();
+        SyncDynamicControlsState();
+
+        MainWindow.ActiveProfileChanged += OnActiveProfileChanged;
+    }
+
+    private void OnPageUnloaded(object sender, RoutedEventArgs e)
+    {
+        MainWindow.ActiveProfileChanged -= OnActiveProfileChanged;
     }
 
     public Task OnNavigatedToAsync()
     {
         if (_isLoaded)
         {
-            RefreshProfileList();
-            UpdateDcState();
+            RefreshProfileCards();
+            SyncDynamicControlsState();
         }
         return Task.CompletedTask;
     }
 
     public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
-    private void UpdateDcState()
+    // ── Hotkey-driven profile switch (fired from MainWindow) ──
+
+    private void OnActiveProfileChanged(int profileIndex)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (profileIndex < 0 || profileIndex >= MainWindow.ProfileManager.Profiles.Count)
+                return;
+
+            _selectedIndex = profileIndex;
+            LoadSelectedProfile();
+            RefreshProfileCards();
+        });
+    }
+
+    // ── Dynamic-controls mutual exclusion ──
+
+    private void SyncDynamicControlsState()
     {
         bool dcActive = MainWindow.DynamicControls.IsEnabled;
         DcWarningBar.IsOpen = dcActive;
@@ -50,24 +72,29 @@ public partial class ProfilesPage : Page, INavigationAware
         ProfileCardPanel.IsEnabled = !dcActive;
     }
 
-    private void RefreshProfileList()
+    // ── Profile card rendering ──
+
+    private void RefreshProfileCards()
     {
         ProfileCardPanel.Children.Clear();
-        for (int i = 0; i < MainWindow.ProfileManager.Profiles.Count; i++)
-        {
-            var profile = MainWindow.ProfileManager.Profiles[i];
-            bool isSelected = (i == _selectedIndex);
+        var profiles = MainWindow.ProfileManager.Profiles;
 
-            var stack = new StackPanel { MinWidth = 100 };
-            stack.Children.Add(new TextBlock
+        for (int i = 0; i < profiles.Count; i++)
+        {
+            var profile = profiles[i];
+            bool isSelected = i == _selectedIndex;
+
+            var content = new StackPanel { MinWidth = 100 };
+            content.Children.Add(new TextBlock
             {
                 Text = profile.Name,
                 FontWeight = FontWeights.SemiBold,
                 FontSize = 14
             });
+
             if (profile.HotKeyValue != 0)
             {
-                stack.Children.Add(new TextBlock
+                content.Children.Add(new TextBlock
                 {
                     Text = profile.HotkeyDisplayText,
                     FontSize = 11,
@@ -76,169 +103,188 @@ public partial class ProfilesPage : Page, INavigationAware
                 });
             }
 
-            int capturedIndex = i;
-            var btn = new Wpf.Ui.Controls.Button
+            int index = i;
+            var card = new Wpf.Ui.Controls.Button
             {
-                Content = stack,
+                Content = content,
                 Appearance = isSelected
                     ? Wpf.Ui.Controls.ControlAppearance.Primary
                     : Wpf.Ui.Controls.ControlAppearance.Secondary,
                 Margin = new Thickness(0, 0, 8, 8),
                 Padding = new Thickness(16, 10, 16, 10),
-                Tag = capturedIndex,
+                Tag = index,
             };
-            btn.Click += ProfileCard_Click;
-            ProfileCardPanel.Children.Add(btn);
+            card.Click += OnProfileCardClicked;
+            ProfileCardPanel.Children.Add(card);
         }
     }
 
-    private void ProfileCard_Click(object sender, RoutedEventArgs e)
+    // ── Card click → select + apply ──
+
+    private void OnProfileCardClicked(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        if (sender is Wpf.Ui.Controls.Button btn && btn.Tag is int idx)
-        {
-            _selectedIndex = idx;
-            LoadSelectedProfile();
-            ApplyCurrentSliders();
-            RefreshProfileList();
-        }
+        if (sender is not Wpf.Ui.Controls.Button { Tag: int index }) return;
+
+        _selectedIndex = index;
+        LoadSelectedProfile();
+        ApplyCurrentSliderValues();
+        RefreshProfileCards();
     }
+
+    // ── Slider ↔ profile synchronisation ──
 
     private void LoadSelectedProfile()
     {
-        if (_selectedIndex < 0 || _selectedIndex >= MainWindow.ProfileManager.Profiles.Count) return;
-        var profile = MainWindow.ProfileManager.Profiles[_selectedIndex];
+        var profiles = MainWindow.ProfileManager.Profiles;
+        if (_selectedIndex < 0 || _selectedIndex >= profiles.Count) return;
 
+        var profile = profiles[_selectedIndex];
+
+        // Suppress slider-change handlers while we set programmatic values
         _isLoaded = false;
         GammaSlider.Value = profile.Gamma;
         ContrastSlider.Value = profile.Contrast;
         VibranceSlider.Value = profile.Vibrance;
         _isLoaded = true;
 
-        GammaValueText.Text = profile.Gamma.ToString("F2");
-        ContrastValueText.Text = $"{profile.Contrast * 100:F0}%";
-        VibranceValueText.Text = profile.Vibrance.ToString();
+        UpdateSliderLabels();
     }
 
-    private void ApplyCurrentSliders()
+    private void UpdateSliderLabels()
     {
-        MainWindow.DisplayManager.ApplySettings(GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value);
-        if (_selectedIndex >= 0 && _selectedIndex < MainWindow.ProfileManager.Profiles.Count)
-            Logger.Log($"Applied profile: {MainWindow.ProfileManager.Profiles[_selectedIndex].Name}");
+        GammaValueText.Text = GammaSlider.Value.ToString("F2");
+        ContrastValueText.Text = $"{ContrastSlider.Value * 100:F0}%";
+        VibranceValueText.Text = ((int)VibranceSlider.Value).ToString();
     }
+
+    private void ApplyCurrentSliderValues()
+    {
+        MainWindow.DisplayManager.ApplySettings(
+            GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value);
+
+        var profiles = MainWindow.ProfileManager.Profiles;
+        if (_selectedIndex >= 0 && _selectedIndex < profiles.Count)
+            Logger.Log($"Applied profile: {profiles[_selectedIndex].Name}");
+    }
+
+    // ── Slider ValueChanged handlers ──
 
     private void GammaSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (!_isLoaded) return;
-        GammaValueText.Text = GammaSlider.Value.ToString("F2");
-        ApplyCurrentSliders();
+        UpdateSliderLabels();
+        ApplyCurrentSliderValues();
     }
 
     private void ContrastSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (!_isLoaded) return;
-        ContrastValueText.Text = $"{ContrastSlider.Value * 100:F0}%";
-        ApplyCurrentSliders();
+        UpdateSliderLabels();
+        ApplyCurrentSliderValues();
     }
 
     private void VibranceSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (!_isLoaded) return;
-        VibranceValueText.Text = ((int)VibranceSlider.Value).ToString();
-        ApplyCurrentSliders();
+        UpdateSliderLabels();
+        ApplyCurrentSliderValues();
     }
+
+    // ── Action buttons ──
 
     private void Save_Click(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        if (_selectedIndex < 0 || _selectedIndex >= MainWindow.ProfileManager.Profiles.Count) return;
+        var profiles = MainWindow.ProfileManager.Profiles;
+        if (_selectedIndex < 0 || _selectedIndex >= profiles.Count) return;
 
-        var profile = MainWindow.ProfileManager.Profiles[_selectedIndex];
-        var updated = new Profile(profile.Name, GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value)
+        var existing = profiles[_selectedIndex];
+        var updated = new Profile(existing.Name, GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value)
         {
-            HotKeyValue = profile.HotKeyValue,
-            HotKeyModifierValue = profile.HotKeyModifierValue,
-            HotkeyId = profile.HotkeyId
+            HotKeyValue = existing.HotKeyValue,
+            HotKeyModifierValue = existing.HotKeyModifierValue,
+            HotkeyId = existing.HotkeyId
         };
 
         MainWindow.ProfileManager.UpdateProfile(_selectedIndex, updated);
         Logger.Log($"Saved profile: {updated.Name}");
-        RefreshProfileList();
+        RefreshProfileCards();
     }
 
     private void SetHotkey_Click(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        if (_selectedIndex < 0 || _selectedIndex >= MainWindow.ProfileManager.Profiles.Count) return;
+        var profiles = MainWindow.ProfileManager.Profiles;
+        if (_selectedIndex < 0 || _selectedIndex >= profiles.Count) return;
 
-        var dialog = new HotkeyDialog();
-        dialog.Owner = Window.GetWindow(this);
-        if (dialog.ShowDialog() == true)
-        {
-            var profile = MainWindow.ProfileManager.Profiles[_selectedIndex];
+        var dialog = new HotkeyDialog { Owner = Window.GetWindow(this) };
+        if (dialog.ShowDialog() != true) return;
 
-            // Unregister old hotkey
-            if (profile.HotkeyId > 0)
-                MainWindow.HotkeyManager.UnregisterHotkey(profile.HotkeyId);
+        var profile = profiles[_selectedIndex];
 
-            profile.HotKeyValue = dialog.VirtualKeyCode;
-            profile.HotKeyModifierValue = dialog.Modifiers;
-            MainWindow.ProfileManager.SaveProfiles();
+        if (profile.HotkeyId > 0)
+            MainWindow.HotkeyManager.UnregisterHotkey(profile.HotkeyId);
 
-            // Register new hotkey if set
-            if (profile.HotKeyValue != 0)
-                MainWindow.HotkeyManager.RegisterHotkey(profile);
+        profile.HotKeyValue = dialog.VirtualKeyCode;
+        profile.HotKeyModifierValue = dialog.Modifiers;
+        MainWindow.ProfileManager.SaveProfiles();
 
-            RefreshProfileList();
-        }
+        if (profile.HotKeyValue != 0)
+            MainWindow.HotkeyManager.RegisterHotkey(profile);
+
+        RefreshProfileCards();
     }
 
     private void AddProfile_Click(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        var profile = new Profile($"Profile {MainWindow.ProfileManager.Profiles.Count + 1}",
-            1.0, 0.5, 50);
+
+        var profile = new Profile($"Profile {MainWindow.ProfileManager.Profiles.Count + 1}");
         MainWindow.ProfileManager.AddProfile(profile);
         _selectedIndex = MainWindow.ProfileManager.Profiles.Count - 1;
+
         LoadSelectedProfile();
-        ApplyCurrentSliders();
-        RefreshProfileList();
+        ApplyCurrentSliderValues();
+        RefreshProfileCards();
     }
 
     private void DeleteProfile_Click(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        if (_selectedIndex < 0 || _selectedIndex >= MainWindow.ProfileManager.Profiles.Count) return;
+        var profiles = MainWindow.ProfileManager.Profiles;
+        if (_selectedIndex < 0 || _selectedIndex >= profiles.Count) return;
 
-        // Unregister hotkey before deleting
-        var profile = MainWindow.ProfileManager.Profiles[_selectedIndex];
+        var profile = profiles[_selectedIndex];
         if (profile.HotkeyId > 0)
             MainWindow.HotkeyManager.UnregisterHotkey(profile.HotkeyId);
 
         MainWindow.ProfileManager.RemoveProfile(_selectedIndex);
-        if (MainWindow.ProfileManager.Profiles.Count > 0)
+
+        if (profiles.Count > 0)
         {
-            _selectedIndex = Math.Min(_selectedIndex, MainWindow.ProfileManager.Profiles.Count - 1);
+            _selectedIndex = Math.Min(_selectedIndex, profiles.Count - 1);
             LoadSelectedProfile();
-            ApplyCurrentSliders();
+            ApplyCurrentSliderValues();
         }
-        RefreshProfileList();
+        RefreshProfileCards();
     }
 
     private void ResetToDefault_Click(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
+
         _isLoaded = false;
-        GammaSlider.Value = 1.0;
-        ContrastSlider.Value = 0.5;
-        VibranceSlider.Value = 50;
+        GammaSlider.Value = Constants.AppConstants.GammaDefault;
+        ContrastSlider.Value = Constants.AppConstants.ContrastDefault;
+        VibranceSlider.Value = Constants.AppConstants.VibranceDefault;
         _isLoaded = true;
 
-        GammaValueText.Text = "1.00";
-        ContrastValueText.Text = "50%";
-        VibranceValueText.Text = "50";
-
-        MainWindow.DisplayManager.ApplySettings(1.0, 0.5, 50);
+        UpdateSliderLabels();
+        MainWindow.DisplayManager.ApplySettings(
+            Constants.AppConstants.GammaDefault,
+            Constants.AppConstants.ContrastDefault,
+            Constants.AppConstants.VibranceDefault);
         Logger.Log("Reset to default values");
     }
 }
