@@ -1,149 +1,88 @@
-using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using System.Windows.Input;
 using DisplayHub.Constants;
+using System.Windows.Input;
 
-namespace DisplayHub.Models
+namespace DisplayHub.Models;
+
+[Serializable]
+public class Profile
 {
-    public class Profile
+    private string _name = "New Profile";
+    private double _gamma = AppConstants.GammaDefault;
+    private double _contrast = AppConstants.ContrastDefault;
+    private int _vibrance = AppConstants.VibranceDefault;
+
+    public string Name
     {
-        private string name = "New Profile";
-        private double gamma = AppConstants.GammaDefault;
-        private double contrast = AppConstants.ContrastDefault;
-        private int vibrance = AppConstants.VibranceDefault;
+        get => _name;
+        set => _name = string.IsNullOrWhiteSpace(value) ? "New Profile" : value;
+    }
 
-        public string Name
+    public double Gamma
+    {
+        get => _gamma;
+        set => _gamma = Math.Clamp(value, AppConstants.GammaMin, AppConstants.GammaMax);
+    }
+
+    public double Contrast
+    {
+        get => _contrast;
+        set => _contrast = Math.Clamp(value, AppConstants.ContrastMin, AppConstants.ContrastMax);
+    }
+
+    public int Vibrance
+    {
+        get => _vibrance;
+        set => _vibrance = Math.Clamp(value, AppConstants.VibranceMin, AppConstants.VibranceMax);
+    }
+
+    public int HotKeyValue { get; set; } = 0;
+
+    public uint HotKeyModifierValue { get; set; } = 0;
+
+    public int HotkeyId { get; set; } = -1;
+
+    [JsonIgnore]
+    public string HotkeyDisplayText
+    {
+        get
         {
-            get => name;
-            set => name = string.IsNullOrWhiteSpace(value) ? "New Profile" : value;
+            if (HotKeyValue == 0) return "None";
+            var parts = new List<string>();
+            if ((HotKeyModifierValue & AppConstants.MOD_CONTROL) != 0) parts.Add("Ctrl");
+            if ((HotKeyModifierValue & AppConstants.MOD_ALT) != 0) parts.Add("Alt");
+            if ((HotKeyModifierValue & AppConstants.MOD_SHIFT) != 0) parts.Add("Shift");
+            Key key = KeyInterop.KeyFromVirtualKey(HotKeyValue);
+            parts.Add(key.ToString());
+            return string.Join("+", parts);
         }
+    }
 
-        public double Gamma
-        {
-            get => gamma;
-            set => gamma = Math.Clamp(value, AppConstants.GammaMin, AppConstants.GammaMax);
-        }
+    public Profile()
+    {
+        Name = "New Profile";
+        Gamma = AppConstants.GammaDefault;
+        Contrast = AppConstants.ContrastDefault;
+        Vibrance = AppConstants.VibranceDefault;
+        HotKeyValue = 0;
+        HotKeyModifierValue = 0;
+        HotkeyId = -1;
+    }
 
-        public double Contrast
-        {
-            get => contrast;
-            set => contrast = Math.Clamp(value, AppConstants.ContrastMin, AppConstants.ContrastMax);
-        }
+    public Profile(string name, double gamma, double contrast, int vibrance = 50)
+    {
+        Name = name;
+        Gamma = gamma;
+        Contrast = contrast;
+        Vibrance = vibrance;
+        HotKeyValue = 0;
+        HotKeyModifierValue = 0;
+        HotkeyId = -1;
+    }
 
-        public int Vibrance
-        {
-            get => vibrance;
-            set => vibrance = Math.Clamp(value, AppConstants.VibranceMin, AppConstants.VibranceMax);
-        }
-
-        /// <summary>Virtual key code for the hotkey (0 = None).</summary>
-        [JsonIgnore]
-        public int HotKey { get; set; }
-
-        /// <summary>Modifier key flags (0 = None).</summary>
-        [JsonIgnore]
-        public int HotKeyModifier { get; set; }
-
-        public int HotKeyValue
-        {
-            get => HotKey;
-            set => HotKey = value;
-        }
-
-        public int HotKeyModifierValue
-        {
-            get => HotKeyModifier;
-            set => HotKeyModifier = value;
-        }
-
-        public int HotkeyId { get; set; }
-
-        public Profile()
-        {
-            Name = "New Profile";
-            Gamma = AppConstants.GammaDefault;
-            Contrast = AppConstants.ContrastDefault;
-            Vibrance = AppConstants.VibranceDefault;
-            HotKey = 0;
-            HotKeyModifier = 0;
-            HotkeyId = -1;
-        }
-
-        public Profile(string name, double gamma, double contrast, int vibrance = 50)
-        {
-            Name = name;
-            Gamma = gamma;
-            Contrast = contrast;
-            Vibrance = vibrance;
-            HotKey = 0;
-            HotKeyModifier = 0;
-            HotkeyId = -1;
-        }
-
-        /// <summary>
-        /// Returns a new Profile with updated display settings.
-        /// </summary>
-        public Profile WithSettings(double newGamma, double newContrast, int newVibrance)
-        {
-            return new Profile(Name, newGamma, newContrast, newVibrance)
-            {
-                HotKey = HotKey,
-                HotKeyModifier = HotKeyModifier,
-                HotkeyId = HotkeyId
-            };
-        }
-
-        /// <summary>
-        /// Returns a new Profile with an updated hotkey binding.
-        /// </summary>
-        public Profile WithHotkey(int key, int modifier, int id)
-        {
-            return new Profile(Name, Gamma, Contrast, Vibrance)
-            {
-                HotKey = key,
-                HotKeyModifier = modifier,
-                HotkeyId = id
-            };
-        }
-
-        /// <summary>
-        /// Returns a human-readable hotkey string (e.g. "Ctrl+A"). Empty string when no hotkey is set.
-        /// </summary>
-        [JsonIgnore]
-        public string HotkeyDisplayText
-        {
-            get
-            {
-                if (HotKey == 0) return string.Empty;
-
-                var parts = new List<string>();
-                if ((HotKeyModifier & 0x20000) != 0) parts.Add("Ctrl");
-                if ((HotKeyModifier & 0x40000) != 0) parts.Add("Alt");
-                if ((HotKeyModifier & 0x10000) != 0) parts.Add("Shift");
-
-                var key = KeyInterop.KeyFromVirtualKey(HotKey);
-                string keyName = key.ToString() switch
-                {
-                    "D0" => "0", "D1" => "1", "D2" => "2", "D3" => "3", "D4" => "4",
-                    "D5" => "5", "D6" => "6", "D7" => "7", "D8" => "8", "D9" => "9",
-                    "Prior" => "PageUp", "Next" => "PageDown",
-                    "Back" => "Backspace", "Return" => "Enter",
-                    "Capital" => "CapsLock", "Snapshot" => "PrintScreen",
-                    var k => k
-                };
-                parts.Add(keyName);
-                return string.Join("+", parts);
-            }
-        }
-
-        public override string ToString()
-        {
-            string hotkeyText = HotKey != 0
-                ? $"Modifier+VK{HotKey}"
-                : "No hotkey";
-
-            return $"{Name} (Gamma: {Gamma:F2}, Contrast: {Contrast * 100:F0}%, Vibrance: {Vibrance}%, Hotkey: {hotkeyText})";
-        }
+    public override string ToString()
+    {
+        string hotkeyText = HotKeyValue != 0 ? HotkeyDisplayText : "No hotkey";
+        return $"{Name} (Gamma: {Gamma:F2}, Contrast: {Contrast * 100:F0}%, Vibrance: {Vibrance}, Hotkey: {hotkeyText})";
     }
 }

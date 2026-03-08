@@ -1,30 +1,20 @@
-using System;
 using System.Windows;
-using DisplayHub.Services.Logging;
-using Wpf.Ui.Appearance;
 
 namespace DisplayHub;
 
-public partial class App : System.Windows.Application
+public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
-        AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
-            Logger.LogError("Unhandled AppDomain exception", args.ExceptionObject as Exception);
+        AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+            Services.Logging.Logger.LogError("UnhandledException", (args.ExceptionObject as Exception)!);
 
-        DispatcherUnhandledException += (sender, args) =>
-            Logger.LogError("Unhandled Dispatcher exception", args.Exception);
+        DispatcherUnhandledException += (s, args) =>
+        {
+            Services.Logging.Logger.LogError("DispatcherUnhandledException", args.Exception);
+            args.Handled = true;
+        };
 
         base.OnStartup(e);
-
-        Logger.Initialize("displayhub.log");
-        ApplicationThemeManager.ApplySystemTheme();
-        Logger.Log("DisplayHub starting...");
-    }
-
-    protected override void OnExit(ExitEventArgs e)
-    {
-        Logger.Log("DisplayHub closed normally");
-        base.OnExit(e);
     }
 }

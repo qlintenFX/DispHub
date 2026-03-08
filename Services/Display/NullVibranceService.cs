@@ -1,40 +1,17 @@
-using System;
+namespace DisplayHub.Services.Display;
 
-namespace DisplayHub.Services.Display
+public sealed class NullVibranceService : IVibranceService
 {
-    /// <summary>
-    /// No-op vibrance implementation used when no GPU vendor API is available.
-    /// </summary>
-    public sealed class NullVibranceService : IVibranceService
-    {
-        public static NullVibranceService Instance { get; } = new NullVibranceService();
+    public static NullVibranceService Instance { get; } = new NullVibranceService();
 
-        private NullVibranceService()
-        {
-        }
+    private NullVibranceService() { }
 
-        public bool IsSupported => false;
+    public bool IsSupported => false;
+    public int MinValue => 0;
+    public int MaxValue => 100;
+    public int DefaultValue => 50;
 
-        public int MinValue => 0;
-
-        public int MaxValue => 100;
-
-        public int DefaultValue => 50;
-
-        public bool ApplyVibrance(int value)
-        {
-            // Intentionally a no-op so that gamma/contrast adjustments still succeed.
-            return true;
-        }
-
-        public void ResetVibrance()
-        {
-            // Nothing to reset.
-        }
-
-        public void Dispose()
-        {
-            // Nothing to dispose.
-        }
-    }
+    public bool ApplyVibrance(int value) => true;
+    public void ResetVibrance() { }
+    public void Dispose() { }
 }

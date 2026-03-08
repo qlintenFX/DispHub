@@ -1,0 +1,55 @@
+<Page x:Class="DisplayHub.Pages.AboutPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="About"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <StackPanel MaxWidth="700" Margin="16">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+            <Image Source="/logo.png" Width="48" Height="48" Margin="0,0,12,0" VerticalAlignment="Center"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="DisplayHub" FontSize="24" FontWeight="Bold"/>
+                <TextBlock x:Name="VersionText" Text="Version 1.0.0" Opacity="0.6" FontSize="14"/>
+            </StackPanel>
+        </StackPanel>
+
+        <TextBlock Text="A display settings manager with per-profile gamma, contrast, and vibrance control via hotkeys."
+                   Opacity="0.75" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,24"/>
+
+        <TextBlock Text="Open Source Licenses" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+        <ui:CardAction Margin="0,0,0,4" IsChevronVisible="False">
+            <StackPanel>
+                <TextBlock Text="FluentFlyout by unchihugo" FontWeight="SemiBold" FontSize="14"/>
+                <TextBlock Text="GPL-3.0 license — UI architecture template" Opacity="0.6" FontSize="12"/>
+            </StackPanel>
+        </ui:CardAction>
+
+        <ui:CardAction Margin="0,0,0,4" IsChevronVisible="False">
+            <StackPanel>
+                <TextBlock Text="WPF-UI by lepoco" FontWeight="SemiBold" FontSize="14"/>
+                <TextBlock Text="MIT license — Fluent design WPF controls" Opacity="0.6" FontSize="12"/>
+            </StackPanel>
+        </ui:CardAction>
+
+        <ui:CardAction Margin="0,0,0,4" IsChevronVisible="False">
+            <StackPanel>
+                <TextBlock Text="KeyedColors by qlintenFX" FontWeight="SemiBold" FontSize="14"/>
+                <TextBlock Text="Original display services source" Opacity="0.6" FontSize="12"/>
+            </StackPanel>
+        </ui:CardAction>
+
+        <ui:CardAction Margin="0,0,0,4" IsChevronVisible="False">
+            <StackPanel>
+                <TextBlock Text="MicaWPF by Simnico99" FontWeight="SemiBold" FontSize="14"/>
+                <TextBlock Text="MIT license — Mica effect for WPF" Opacity="0.6" FontSize="12"/>
+            </StackPanel>
+        </ui:CardAction>
+
+        <DockPanel Margin="0,24,0,0">
+            <ui:Anchor Content="View on GitHub" Icon="{ui:SymbolIcon Open24}"
+                       NavigateUri="https://github.com/qlintenFX/DisplayHub"/>
+        </DockPanel>
+    </StackPanel>
+</Page>

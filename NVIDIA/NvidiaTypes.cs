@@ -11,10 +11,6 @@ public struct NvDisplayDvcInfo
     public int MaxLevel;
 }
 
-/// <summary>
-/// Extended DVC info struct with DefaultLevel field.
-/// Used by NvAPI_GetDVCInfoEx/NvAPI_SetDVCLevelEx for full range including desaturation.
-/// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 8)]
 public struct NvDisplayDvcInfoEx
 {

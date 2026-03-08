@@ -2,16 +2,18 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             StartupUri="UI/MainWindow.xaml"
+             xmlns:mica="clr-namespace:MicaWPF.Styles;assembly=MicaWPF"
+             StartupUri="MainWindow.xaml"
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Unknown"/><!-- ApplicationThemeManager sets theme at runtime -->
+                <ui:ThemesDictionary Theme="Unknown"/>
                 <ui:ControlsDictionary />
+                <mica:ThemeDictionary Theme="Auto" DesignModeTheme="Auto"/>
+                <mica:ControlsDictionary />
+                <ResourceDictionary Source="Resources/Styles/CustomSlider.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <!-- Override default background colors for transparent nav -->
             <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
             <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
         </ResourceDictionary>

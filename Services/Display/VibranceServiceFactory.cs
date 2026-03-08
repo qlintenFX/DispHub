@@ -2,14 +2,10 @@ using DisplayHub.Services.Logging;
 
 namespace DisplayHub.Services.Display;
 
-/// <summary>
-/// Selects the best available vibrance implementation for the current system.
-/// </summary>
 public static class VibranceServiceFactory
 {
     public static IVibranceService Create()
     {
-        // Try NVIDIA first
         try
         {
             var nvidiaService = new NvidiaVibranceService();
@@ -18,7 +14,6 @@ public static class VibranceServiceFactory
                 Logger.Log("Using NVIDIA vibrance service");
                 return nvidiaService;
             }
-
             nvidiaService.Dispose();
         }
         catch (Exception ex)
@@ -26,8 +21,7 @@ public static class VibranceServiceFactory
             Logger.LogError("Failed to create NVIDIA vibrance service", ex);
         }
 
-        // Fallback to no-op implementation
-        Logger.Log("Using null vibrance service (no hardware vibrance support detected)");
+        Logger.Log("Using null vibrance service (no hardware support detected)");
         return NullVibranceService.Instance;
     }
 }

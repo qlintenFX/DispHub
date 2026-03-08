@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "OZUsSkixK94=",
+  "success": true,
+  "projectFilePath": "C:\\vscode projects\\DisplayHub\\DisplayHub.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\quint\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.0\\communitytoolkit.mvvm.8.4.0.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\micawpf\\6.3.2\\micawpf.6.3.2.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\micawpf.core\\6.3.2\\micawpf.core.6.3.2.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\micawpfruntimecomponent\\1.1.9\\micawpfruntimecomponent.1.1.9.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\microsoft.win32.systemevents\\10.0.0\\microsoft.win32.systemevents.10.0.0.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\nlog\\6.0.6\\nlog.6.0.6.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\system.drawing.common\\10.0.0\\system.drawing.common.10.0.0.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\wpf-ui\\4.2.0\\wpf-ui.4.2.0.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\wpf-ui.abstractions\\4.2.0\\wpf-ui.abstractions.4.2.0.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\wpf-ui.tray\\4.2.0\\wpf-ui.tray.4.2.0.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.23\\microsoft.netcore.app.ref.8.0.23.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.23\\microsoft.windowsdesktop.app.ref.8.0.23.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.23\\microsoft.aspnetcore.app.ref.8.0.23.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.23\\microsoft.netcore.app.host.win-x64.8.0.23.nupkg.sha512",
+    "C:\\Users\\quint\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.22000.57\\microsoft.windows.sdk.net.ref.10.0.22000.57.nupkg.sha512"
+  ],
+  "logs": []
+}
