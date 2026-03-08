@@ -223,6 +223,7 @@ public partial class ProfilesPage : Page, INavigationAware
 
         var profile = profiles[_selectedIndex];
 
+        // Unregister old hotkey (only if profile mode is active and hotkey was registered)
         if (profile.HotkeyId > 0)
             MainWindow.HotkeyManager.UnregisterHotkey(profile.HotkeyId);
 
@@ -230,7 +231,8 @@ public partial class ProfilesPage : Page, INavigationAware
         profile.HotKeyModifierValue = dialog.Modifiers;
         MainWindow.ProfileManager.SaveProfiles();
 
-        if (profile.HotKeyValue != 0)
+        // Only register if profile mode is active (DC mode doesn't register profile hotkeys)
+        if (profile.HotKeyValue != 0 && !MainWindow.DynamicControls.IsEnabled)
             MainWindow.HotkeyManager.RegisterHotkey(profile);
 
         RefreshProfileCards();

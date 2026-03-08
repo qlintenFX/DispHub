@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using DisplayHub.Pages;
 using System.ComponentModel;
 using System.Windows;
@@ -15,7 +16,7 @@ public partial class SettingsWindow : FluentWindow
     private void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
     {
         ApplyTheme(MainWindow.SettingsManager.AppTheme);
-        RootNavigation.Navigate(typeof(ProfilesPage));
+        RootNavigation.Navigate(typeof(HomePage));
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -26,7 +27,11 @@ public partial class SettingsWindow : FluentWindow
             Hide();
             return;
         }
-        base.OnClosing(e);
+
+        // Close-to-tray is off: fully exit the application
+        MainWindow.DisplayManager?.ResetToDefault();
+        MainWindow.HotkeyManager?.Dispose();
+        Application.Current.Shutdown();
     }
 
     private void ResetDisplay_Click(object sender, RoutedEventArgs e)

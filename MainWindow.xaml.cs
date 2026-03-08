@@ -1,5 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
+using System.Windows.Input;
 using DisplayHub.Services.Display;
 using DisplayHub.Services.Hotkeys;
 using DisplayHub.Services.Logging;
@@ -16,14 +19,18 @@ public partial class MainWindow : Window
     public static DynamicControls DynamicControls { get; private set; } = null!;
     public static SettingsManager SettingsManager { get; private set; } = null!;
 
-    /// <summary>
-    /// Fired on the UI thread when a profile is applied via global hotkey.
-    /// Subscribers (e.g. ProfilesPage) update their selected-profile display.
-    /// </summary>
+    /// <summary>Fired when a profile is applied via hotkey or tray menu.</summary>
     public static event Action<int>? ActiveProfileChanged;
+
+    /// <summary>Fired when DC mode is toggled (via hotkey or tray).</summary>
+    public static event Action<bool>? DynamicControlsModeChanged;
+
+    private const int MaxTrayProfiles = 10;
 
     private SettingsWindow? _settingsWindow;
     private HwndSource? _hwndSource;
+    private int _dcToggleHotkeyId = -1;
+    private int _activeProfileIndex = -1;
 
     public MainWindow()
     {
@@ -47,52 +54,230 @@ public partial class MainWindow : Window
         HotkeyManager = new HotkeyManager(helper.Handle);
         DynamicControls = new DynamicControls(DisplayManager);
 
-        foreach (var profile in ProfileManager.Profiles)
-            HotkeyManager.RegisterHotkey(profile);
+        HotkeyManager.HotkeyPressed += OnProfileHotkeyPressed;
 
+        // Mode-based hotkey registration — only one mode's keys are active at a time
         if (SettingsManager.DynamicControlsEnabled)
         {
             DynamicControls.IsEnabled = true;
-            DynamicControls.RegisterHotkeys(HotkeyManager);
+            SwitchToDcMode();
+        }
+        else
+        {
+            RegisterProfileHotkeys();
         }
 
-        HotkeyManager.HotkeyPressed += OnProfileHotkeyPressed;
+        RegisterDcToggleHotkey();
+        BuildTrayContextMenu();
         OpenSettingsWindow();
     }
+
+    // ── Mode-based hotkey management ──
+
+    public static void RegisterProfileHotkeys()
+    {
+        foreach (var profile in ProfileManager.Profiles)
+            HotkeyManager.RegisterHotkey(profile);
+    }
+
+    public static void UnregisterProfileHotkeys()
+    {
+        foreach (var profile in ProfileManager.Profiles)
+        {
+            if (profile.HotkeyId > 0)
+            {
+                HotkeyManager.UnregisterHotkey(profile.HotkeyId);
+                profile.HotkeyId = -1;
+            }
+        }
+    }
+
+    public static void SwitchToDcMode()
+    {
+        UnregisterProfileHotkeys();
+        DynamicControls.IsEnabled = true;
+        DynamicControls.RegisterHotkeys(HotkeyManager, SettingsManager.DcKeybinds);
+        SettingsManager.DynamicControlsEnabled = true;
+        DynamicControlsModeChanged?.Invoke(true);
+        Logger.Log("Switched to Dynamic Controls mode");
+    }
+
+    public static void SwitchToProfileMode()
+    {
+        DynamicControls.UnregisterHotkeys(HotkeyManager);
+        DynamicControls.IsEnabled = false;
+        RegisterProfileHotkeys();
+        SettingsManager.DynamicControlsEnabled = false;
+        DynamicControlsModeChanged?.Invoke(false);
+        Logger.Log("Switched to Profile mode");
+    }
+
+    private void RegisterDcToggleHotkey()
+    {
+        if (_dcToggleHotkeyId > 0)
+            HotkeyManager.UnregisterRawHotkey(_dcToggleHotkeyId);
+        _dcToggleHotkeyId = -1;
+
+        if (SettingsManager.DcToggleKey != 0)
+        {
+            _dcToggleHotkeyId = HotkeyManager.RegisterRawHotkey(
+                SettingsManager.DcToggleKey, SettingsManager.DcToggleMod);
+        }
+    }
+
+    public void UpdateDcToggleHotkey()
+    {
+        RegisterDcToggleHotkey();
+    }
+
+    // ── WndProc hotkey dispatch ──
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         const int WM_HOTKEY = 0x0312;
-        if (msg != WM_HOTKEY)
-            return IntPtr.Zero;
+        if (msg != WM_HOTKEY) return IntPtr.Zero;
 
         int id = wParam.ToInt32();
 
-        // Dynamic-controls mode owns ALL hotkey input — block profile switching
-        if (DynamicControls.IsEnabled)
+        // DC toggle hotkey is always active regardless of mode
+        if (id == _dcToggleHotkeyId && _dcToggleHotkeyId > 0)
         {
-            DynamicControls.ProcessHotkey(id);
+            if (DynamicControls.IsEnabled)
+                SwitchToProfileMode();
+            else
+                SwitchToDcMode();
+            BuildTrayContextMenu();
             handled = true;
             return IntPtr.Zero;
         }
 
-        // Profile mode
-        HotkeyManager.ProcessHotkey(wParam);
+        // Route to whichever mode is active (only that mode's keys are registered)
+        if (DynamicControls.IsEnabled)
+        {
+            DynamicControls.ProcessHotkey(id);
+        }
+        else
+        {
+            HotkeyManager.ProcessHotkey(wParam);
+        }
+
         handled = true;
         return IntPtr.Zero;
     }
 
     private void OnProfileHotkeyPressed(object? sender, HotkeyEventArgs e)
     {
-        int profileIndex = ProfileManager.IndexOf(e.Profile);
-        if (profileIndex < 0) return;
+        _activeProfileIndex = ProfileManager.IndexOf(e.Profile);
+        if (_activeProfileIndex < 0) return;
 
         DisplayManager.ApplySettings(e.Profile.Gamma, e.Profile.Contrast, e.Profile.Vibrance);
         Logger.Log($"Hotkey applied profile: {e.Profile.Name}");
 
-        // Notify the UI so ProfilesPage can update its selected card
-        ActiveProfileChanged?.Invoke(profileIndex);
+        ActiveProfileChanged?.Invoke(_activeProfileIndex);
+        BuildTrayContextMenu();
     }
+
+    // ── System tray context menu ──
+
+    public void BuildTrayContextMenu()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            TrayContextMenu.Items.Clear();
+
+            // Open
+            var openItem = new Wpf.Ui.Controls.MenuItem
+            {
+                Header = "Open DisplayHub",
+                Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Open24 }
+            };
+            openItem.Click += (_, _) => OpenSettingsWindow();
+            TrayContextMenu.Items.Add(openItem);
+
+            TrayContextMenu.Items.Add(new Separator());
+
+            // Profiles
+            bool dcActive = DynamicControls.IsEnabled;
+            var profiles = ProfileManager.Profiles;
+            int profileCount = Math.Min(profiles.Count, MaxTrayProfiles);
+
+            for (int i = 0; i < profileCount; i++)
+            {
+                var profile = profiles[i];
+                int index = i;
+                var profileItem = new MenuItem
+                {
+                    Header = profile.Name,
+                    IsChecked = index == _activeProfileIndex,
+                    IsEnabled = !dcActive
+                };
+                profileItem.Click += (_, _) => ApplyProfileFromTray(index);
+                TrayContextMenu.Items.Add(profileItem);
+            }
+
+            if (profiles.Count > MaxTrayProfiles)
+            {
+                var moreItem = new MenuItem { Header = $"More... ({profiles.Count - MaxTrayProfiles} more)", IsEnabled = !dcActive };
+                for (int i = MaxTrayProfiles; i < profiles.Count; i++)
+                {
+                    var profile = profiles[i];
+                    int index = i;
+                    var subItem = new MenuItem
+                    {
+                        Header = profile.Name,
+                        IsChecked = index == _activeProfileIndex
+                    };
+                    subItem.Click += (_, _) => ApplyProfileFromTray(index);
+                    moreItem.Items.Add(subItem);
+                }
+                TrayContextMenu.Items.Add(moreItem);
+            }
+
+            TrayContextMenu.Items.Add(new Separator());
+
+            // DC toggle
+            var dcItem = new MenuItem
+            {
+                Header = dcActive ? "Dynamic Controls: On" : "Dynamic Controls: Off",
+                IsChecked = dcActive
+            };
+            dcItem.Click += (_, _) =>
+            {
+                if (DynamicControls.IsEnabled)
+                    SwitchToProfileMode();
+                else
+                    SwitchToDcMode();
+                BuildTrayContextMenu();
+            };
+            TrayContextMenu.Items.Add(dcItem);
+
+            TrayContextMenu.Items.Add(new Separator());
+
+            // Exit
+            var exitItem = new Wpf.Ui.Controls.MenuItem
+            {
+                Header = "Exit",
+                Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowExit20 }
+            };
+            exitItem.Click += (_, _) => ExitApplication();
+            TrayContextMenu.Items.Add(exitItem);
+        });
+    }
+
+    private void ApplyProfileFromTray(int index)
+    {
+        var profiles = ProfileManager.Profiles;
+        if (index < 0 || index >= profiles.Count) return;
+
+        var profile = profiles[index];
+        _activeProfileIndex = index;
+        DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
+        Logger.Log($"Tray applied profile: {profile.Name}");
+        ActiveProfileChanged?.Invoke(index);
+        BuildTrayContextMenu();
+    }
+
+    // ── Window management ──
 
     public void OpenSettingsWindow()
     {
@@ -107,9 +292,8 @@ public partial class MainWindow : Window
     }
 
     private void TrayIcon_LeftClick(object sender, RoutedEventArgs e) => OpenSettingsWindow();
-    private void TrayOpen_Click(object sender, RoutedEventArgs e) => OpenSettingsWindow();
 
-    private void TrayExit_Click(object sender, RoutedEventArgs e)
+    private void ExitApplication()
     {
         DisplayManager?.ResetToDefault();
         HotkeyManager?.Dispose();

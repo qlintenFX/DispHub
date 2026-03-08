@@ -5,86 +5,145 @@
       Title="Dynamic Controls"
       Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
-    <StackPanel MaxWidth="700" Margin="16">
-        <TextBlock Text="Dynamic Controls" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,16"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="16">
+        <StackPanel MaxWidth="700">
+            <TextBlock Text="Dynamic Controls" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
 
-        <ui:InfoBar x:Name="DcActiveInfoBar"
-                    Title="Dynamic Controls active"
-                    Message="Profile switching is disabled. Adjust display settings in real-time using hotkeys."
-                    Severity="Informational" IsOpen="False" IsClosable="False"
-                    Margin="0,0,0,12"/>
+            <ui:InfoBar x:Name="DcActiveInfoBar"
+                        Title="Dynamic Controls active"
+                        Message="Profile switching is disabled. Adjust display settings in real-time using hotkeys."
+                        Severity="Informational" IsOpen="False" IsClosable="False"
+                        Margin="0,0,0,12"/>
 
-        <ui:Card Margin="0,0,0,12">
-            <StackPanel Orientation="Horizontal">
-                <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                    <TextBlock Text="Enable Dynamic Controls" FontWeight="Medium" FontSize="14"/>
-                    <TextBlock Text="Adjust display settings with hotkeys in real-time"
-                               Opacity="0.6" FontSize="12" Margin="0,4,0,0"/>
-                </StackPanel>
+            <!-- Enable Toggle -->
+            <ui:CardControl Margin="0,0,0,12">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="Enable Dynamic Controls" FontSize="14" FontWeight="Medium"/>
+                        <TextBlock Text="Adjust display settings with hotkeys in real-time"
+                                   Opacity="0.6" FontSize="12" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
                 <ui:ToggleSwitch x:Name="DynamicControlsToggle"
                                  Checked="DynamicControlsToggle_Changed"
-                                 Unchecked="DynamicControlsToggle_Changed"
-                                 HorizontalAlignment="Right"/>
-            </StackPanel>
-        </ui:Card>
+                                 Unchecked="DynamicControlsToggle_Changed"/>
+            </ui:CardControl>
 
-        <ui:Card Margin="0,0,0,12">
-            <StackPanel>
-                <TextBlock Text="Current Values" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12"/>
+            <!-- Current Values -->
+            <TextBlock Text="Current Values" FontSize="14" FontWeight="SemiBold" Margin="0,4,0,6"/>
+            <ui:Card Margin="0,0,0,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Gamma:" FontWeight="Medium" Margin="0,0,16,8"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="GammaValueText" Text="1.00" Opacity="0.8"/>
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Center" Margin="8">
+                        <ui:SymbolIcon Symbol="BrightnessHigh20" FontSize="20" Margin="0,0,0,4"/>
+                        <TextBlock Text="Gamma" FontWeight="Medium" HorizontalAlignment="Center" FontSize="12"/>
+                        <TextBlock x:Name="GammaValueText" Text="1.00" HorizontalAlignment="Center"
+                                   FontSize="18" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                    </StackPanel>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Contrast:" FontWeight="Medium" Margin="0,0,16,8"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ContrastValueText" Text="50%" Opacity="0.8"/>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="8">
+                        <ui:SymbolIcon Symbol="ArrowSync20" FontSize="20" Margin="0,0,0,4"/>
+                        <TextBlock Text="Contrast" FontWeight="Medium" HorizontalAlignment="Center" FontSize="12"/>
+                        <TextBlock x:Name="ContrastValueText" Text="50%" HorizontalAlignment="Center"
+                                   FontSize="18" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                    </StackPanel>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Vibrance:" FontWeight="Medium" Margin="0,0,16,0"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="VibranceValueText" Text="50" Opacity="0.8"/>
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Center" Margin="8">
+                        <ui:SymbolIcon Symbol="FlashSettings20" FontSize="20" Margin="0,0,0,4"/>
+                        <TextBlock Text="Vibrance" FontWeight="Medium" HorizontalAlignment="Center" FontSize="12"/>
+                        <TextBlock x:Name="VibranceValueText" Text="50" HorizontalAlignment="Center"
+                                   FontSize="18" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                    </StackPanel>
                 </Grid>
-            </StackPanel>
-        </ui:Card>
+            </ui:Card>
 
-        <ui:Card>
-            <StackPanel>
-                <TextBlock Text="Hotkey Reference" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12"/>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <!-- Keybinds Section -->
+            <TextBlock Text="Keybinds" FontSize="14" FontWeight="SemiBold" Margin="0,4,0,6"/>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Shift+Up" FontFamily="Consolas" Margin="0,0,16,8" Opacity="0.8"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Increase Gamma" Margin="0,0,0,8"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Shift+Down" FontFamily="Consolas" Margin="0,0,16,8" Opacity="0.8"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Decrease Gamma" Margin="0,0,0,8"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Shift+Right" FontFamily="Consolas" Margin="0,0,16,8" Opacity="0.8"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="Increase Contrast" Margin="0,0,0,8"/>
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Shift+Left" FontFamily="Consolas" Margin="0,0,16,8" Opacity="0.8"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="Decrease Contrast" Margin="0,0,0,8"/>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Shift+Page Up" FontFamily="Consolas" Margin="0,0,16,8" Opacity="0.8"/>
-                    <TextBlock Grid.Row="4" Grid.Column="1" Text="Increase Vibrance" Margin="0,0,0,8"/>
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Shift+Page Down" FontFamily="Consolas" Margin="0,0,16,0" Opacity="0.8"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1" Text="Decrease Vibrance"/>
-                </Grid>
-            </StackPanel>
-        </ui:Card>
-    </StackPanel>
+            <ui:CardControl Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowUp20" Margin="0,0,8,0"/>
+                        <TextBlock Text="Increase Gamma" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button x:Name="GammaUpKeybind" Content="Shift + Up" Click="ChangeKeybind_Click" Tag="GammaUp"
+                           Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowDown20" Margin="0,0,8,0"/>
+                        <TextBlock Text="Decrease Gamma" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button x:Name="GammaDownKeybind" Content="Shift + Down" Click="ChangeKeybind_Click" Tag="GammaDown"
+                           Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowRight20" Margin="0,0,8,0"/>
+                        <TextBlock Text="Increase Contrast" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button x:Name="ContrastUpKeybind" Content="Shift + Right" Click="ChangeKeybind_Click" Tag="ContrastUp"
+                           Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowLeft20" Margin="0,0,8,0"/>
+                        <TextBlock Text="Decrease Contrast" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button x:Name="ContrastDownKeybind" Content="Shift + Left" Click="ChangeKeybind_Click" Tag="ContrastDown"
+                           Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowUp20" Margin="0,0,8,0"/>
+                        <TextBlock Text="Increase Vibrance" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button x:Name="VibranceUpKeybind" Content="Shift + PgUp" Click="ChangeKeybind_Click" Tag="VibranceUp"
+                           Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
+            </ui:CardControl>
+
+            <ui:CardControl Margin="0,0,0,12">
+                <ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowDown20" Margin="0,0,8,0"/>
+                        <TextBlock Text="Decrease Vibrance" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button x:Name="VibranceDownKeybind" Content="Shift + PgDn" Click="ChangeKeybind_Click" Tag="VibranceDown"
+                           Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
+            </ui:CardControl>
+
+            <!-- DC Toggle Hotkey -->
+            <TextBlock Text="Toggle Hotkey" FontSize="14" FontWeight="SemiBold" Margin="0,4,0,6"/>
+            <ui:CardControl Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="Toggle Dynamic Controls" FontSize="14" FontWeight="Medium"/>
+                        <TextBlock Text="Global hotkey to switch between DC and Profile mode"
+                                   Opacity="0.6" FontSize="12" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button x:Name="DcToggleKeybind" Content="None" Click="ChangeDcToggle_Click"
+                           Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
+            </ui:CardControl>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

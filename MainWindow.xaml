@@ -19,19 +19,7 @@
             FocusOnLeftClick="False"
             MenuOnRightClick="True">
             <tray:NotifyIcon.Menu>
-                <ContextMenu>
-                    <ui:MenuItem x:Name="TrayOpenItem" Header="Open DisplayHub" Click="TrayOpen_Click">
-                        <ui:MenuItem.Icon>
-                            <ui:SymbolIcon Symbol="Settings20"/>
-                        </ui:MenuItem.Icon>
-                    </ui:MenuItem>
-                    <Separator/>
-                    <ui:MenuItem x:Name="TrayExitItem" Header="Exit" Click="TrayExit_Click">
-                        <ui:MenuItem.Icon>
-                            <ui:SymbolIcon Symbol="ArrowExit20"/>
-                        </ui:MenuItem.Icon>
-                    </ui:MenuItem>
-                </ContextMenu>
+                <ContextMenu x:Name="TrayContextMenu"/>
             </tray:NotifyIcon.Menu>
         </tray:NotifyIcon>
     </Grid>

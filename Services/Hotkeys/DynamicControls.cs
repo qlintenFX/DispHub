@@ -1,5 +1,6 @@
 using DisplayHub.Constants;
 using DisplayHub.Services.Display;
+using DisplayHub.Services.Settings;
 
 namespace DisplayHub.Services.Hotkeys;
 
@@ -21,21 +22,12 @@ public class DynamicControls
     private int _hotkeyIdVibranceUp = -1;
     private int _hotkeyIdVibranceDown = -1;
 
-    // Virtual key codes for arrow keys (no WinForms dependency)
-    private const uint VK_UP = 0x26;
-    private const uint VK_DOWN = 0x28;
-    private const uint VK_LEFT = 0x25;
-    private const uint VK_RIGHT = 0x27;
-    private const uint VK_PRIOR = 0x21; // Page Up
-    private const uint VK_NEXT = 0x22;  // Page Down
-
     public DynamicControls(DisplayManager displayManager)
     {
         _displayManager = displayManager;
         Gamma = AppConstants.GammaDefault;
         Contrast = AppConstants.ContrastDefault;
         Vibrance = AppConstants.VibranceDefault;
-        IsEnabled = false;
     }
 
     public void AdjustGamma(double delta)
@@ -93,21 +85,21 @@ public class DynamicControls
         }
     }
 
-    public void RegisterHotkeys(HotkeyManager hotkeyManager)
+    public void RegisterHotkeys(HotkeyManager hotkeyManager, DcKeybindSettings keybinds)
     {
         UnregisterHotkeys(hotkeyManager);
-        _hotkeyIdGammaUp = hotkeyManager.RegisterRawHotkey(VK_UP, AppConstants.MOD_SHIFT);
-        _hotkeyIdGammaDown = hotkeyManager.RegisterRawHotkey(VK_DOWN, AppConstants.MOD_SHIFT);
-        _hotkeyIdContrastUp = hotkeyManager.RegisterRawHotkey(VK_RIGHT, AppConstants.MOD_SHIFT);
-        _hotkeyIdContrastDown = hotkeyManager.RegisterRawHotkey(VK_LEFT, AppConstants.MOD_SHIFT);
-        _hotkeyIdVibranceUp = hotkeyManager.RegisterRawHotkey(VK_PRIOR, AppConstants.MOD_SHIFT);
-        _hotkeyIdVibranceDown = hotkeyManager.RegisterRawHotkey(VK_NEXT, AppConstants.MOD_SHIFT);
+        _hotkeyIdGammaUp = hotkeyManager.RegisterRawHotkey(keybinds.GammaUpKey, keybinds.GammaUpMod);
+        _hotkeyIdGammaDown = hotkeyManager.RegisterRawHotkey(keybinds.GammaDownKey, keybinds.GammaDownMod);
+        _hotkeyIdContrastUp = hotkeyManager.RegisterRawHotkey(keybinds.ContrastUpKey, keybinds.ContrastUpMod);
+        _hotkeyIdContrastDown = hotkeyManager.RegisterRawHotkey(keybinds.ContrastDownKey, keybinds.ContrastDownMod);
+        _hotkeyIdVibranceUp = hotkeyManager.RegisterRawHotkey(keybinds.VibranceUpKey, keybinds.VibranceUpMod);
+        _hotkeyIdVibranceDown = hotkeyManager.RegisterRawHotkey(keybinds.VibranceDownKey, keybinds.VibranceDownMod);
     }
 
     public void UnregisterHotkeys(HotkeyManager hotkeyManager)
     {
-        int[] ids = { _hotkeyIdGammaUp, _hotkeyIdGammaDown, _hotkeyIdContrastUp,
-                      _hotkeyIdContrastDown, _hotkeyIdVibranceUp, _hotkeyIdVibranceDown };
+        int[] ids = [_hotkeyIdGammaUp, _hotkeyIdGammaDown, _hotkeyIdContrastUp,
+                     _hotkeyIdContrastDown, _hotkeyIdVibranceUp, _hotkeyIdVibranceDown];
         foreach (int id in ids)
             if (id > 0) hotkeyManager.UnregisterRawHotkey(id);
 

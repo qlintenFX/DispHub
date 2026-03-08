@@ -5,12 +5,31 @@ using Microsoft.Win32;
 
 namespace DisplayHub.Services.Settings;
 
+public class DcKeybindSettings
+{
+    public uint GammaUpKey { get; set; } = 0x26;       // VK_UP
+    public uint GammaUpMod { get; set; } = AppConstants.MOD_SHIFT;
+    public uint GammaDownKey { get; set; } = 0x28;     // VK_DOWN
+    public uint GammaDownMod { get; set; } = AppConstants.MOD_SHIFT;
+    public uint ContrastUpKey { get; set; } = 0x27;    // VK_RIGHT
+    public uint ContrastUpMod { get; set; } = AppConstants.MOD_SHIFT;
+    public uint ContrastDownKey { get; set; } = 0x25;  // VK_LEFT
+    public uint ContrastDownMod { get; set; } = AppConstants.MOD_SHIFT;
+    public uint VibranceUpKey { get; set; } = 0x21;    // VK_PRIOR (Page Up)
+    public uint VibranceUpMod { get; set; } = AppConstants.MOD_SHIFT;
+    public uint VibranceDownKey { get; set; } = 0x22;  // VK_NEXT (Page Down)
+    public uint VibranceDownMod { get; set; } = AppConstants.MOD_SHIFT;
+}
+
 public class SettingsData
 {
-    public bool StartWithWindows { get; set; } = false;
-    public bool CloseToTray { get; set; } = false;
-    public int AppTheme { get; set; } = 0;  // 0=System, 1=Light, 2=Dark
-    public bool DynamicControlsEnabled { get; set; } = false;
+    public bool StartWithWindows { get; set; }
+    public bool CloseToTray { get; set; }
+    public int AppTheme { get; set; }  // 0=System, 1=Light, 2=Dark
+    public bool DynamicControlsEnabled { get; set; }
+    public uint DcToggleKey { get; set; }     // VK code, 0 = no toggle hotkey
+    public uint DcToggleMod { get; set; }     // Modifier bitmask
+    public DcKeybindSettings DcKeybinds { get; set; } = new();
 }
 
 public class SettingsManager
@@ -46,6 +65,26 @@ public class SettingsManager
         get => _data.DynamicControlsEnabled;
         set { _data.DynamicControlsEnabled = value; Save(); }
     }
+
+    public uint DcToggleKey
+    {
+        get => _data.DcToggleKey;
+        set { _data.DcToggleKey = value; Save(); }
+    }
+
+    public uint DcToggleMod
+    {
+        get => _data.DcToggleMod;
+        set { _data.DcToggleMod = value; Save(); }
+    }
+
+    public DcKeybindSettings DcKeybinds
+    {
+        get => _data.DcKeybinds;
+        set { _data.DcKeybinds = value; Save(); }
+    }
+
+    public void SaveDcKeybinds() => Save();
 
     public SettingsManager()
     {
