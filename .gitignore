@@ -1,0 +1,16 @@
+## .NET / C#
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.log
+
+## NuGet
+*.nupkg
+packages/
+
+## OS
+Thumbs.db
+.DS_Store
+desktop.ini
