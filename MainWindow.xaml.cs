@@ -8,7 +8,7 @@ using DisplayHub.Services.Settings;
 
 namespace DisplayHub;
 
-public partial class MainWindow : MicaWPF.Controls.MicaWindow
+public partial class MainWindow : Window
 {
     public static ProfileManager ProfileManager { get; private set; } = null!;
     public static DisplayManager DisplayManager { get; private set; } = null!;

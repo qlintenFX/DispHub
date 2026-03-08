@@ -59,7 +59,7 @@ internal static class NvidiaApi
 
     public static bool HasExtendedDvc => _getDVCInfoEx != null && _setDVCLevelEx != null;
 
-    [DllImport("nvapi.dll", EntryPoint = "nvapi_QueryInterface", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("nvapi64.dll", EntryPoint = "nvapi_QueryInterface", CallingConvention = CallingConvention.Cdecl)]
     private static extern IntPtr QueryInterface(uint id);
 
     private static T? GetDelegate<T>(uint id) where T : Delegate
