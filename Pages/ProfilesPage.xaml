@@ -5,91 +5,80 @@
       Title="Profiles"
       Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
-    <Grid Margin="16">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <!-- Left: Profile List -->
-        <StackPanel Grid.Column="0" Margin="0,0,16,0">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="16">
+        <StackPanel MaxWidth="700">
             <TextBlock Text="Profiles" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
 
-            <ListBox x:Name="ProfileListBox"
-                     SelectionChanged="ProfileListBox_SelectionChanged"
-                     Height="300"
-                     Margin="0,0,0,8">
-            </ListBox>
+            <ui:InfoBar x:Name="DcWarningBar"
+                        Title="Dynamic Controls Active"
+                        Message="Disable Dynamic Controls first to switch profiles."
+                        Severity="Warning" IsOpen="False" IsClosable="False"
+                        Margin="0,0,0,12"/>
 
-            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+            <!-- Profile Cards -->
+            <WrapPanel x:Name="ProfileCardPanel" Orientation="Horizontal" Margin="0,0,0,16"/>
+
+            <!-- Sliders -->
+            <StackPanel x:Name="SlidersPanel">
+                <ui:Card Margin="0,0,0,12">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <ui:SymbolIcon Symbol="BrightnessHigh20" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Gamma" FontWeight="Medium" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="GammaValueText" Text="1.00"
+                                       Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Slider x:Name="GammaSlider"
+                                Minimum="0.30" Maximum="2.80"
+                                TickFrequency="0.05" IsSnapToTickEnabled="True"
+                                ValueChanged="GammaSlider_ValueChanged"/>
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card Margin="0,0,0,12">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <ui:SymbolIcon Symbol="ArrowSync20" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Contrast" FontWeight="Medium" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="ContrastValueText" Text="50%"
+                                       Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Slider x:Name="ContrastSlider"
+                                Minimum="0.00" Maximum="1.00"
+                                TickFrequency="0.05" IsSnapToTickEnabled="True"
+                                ValueChanged="ContrastSlider_ValueChanged"/>
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card Margin="0,0,0,16">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <ui:SymbolIcon Symbol="FlashSettings20" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Vibrance" FontWeight="Medium" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="VibranceValueText" Text="50"
+                                       Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Slider x:Name="VibranceSlider"
+                                Minimum="0" Maximum="100"
+                                TickFrequency="5" IsSnapToTickEnabled="True"
+                                ValueChanged="VibranceSlider_ValueChanged"/>
+                    </StackPanel>
+                </ui:Card>
+            </StackPanel>
+
+            <!-- Action Buttons -->
+            <StackPanel x:Name="ActionButtonsPanel" Orientation="Horizontal">
+                <ui:Button x:Name="SaveButton" Content="Save" Icon="{ui:SymbolIcon Save20}"
+                           Appearance="Primary" Margin="0,0,8,0" Click="Save_Click"/>
+                <ui:Button x:Name="SetHotkeyButton" Content="Set Hotkey" Icon="{ui:SymbolIcon Keyboard20}"
+                           Appearance="Secondary" Margin="0,0,8,0" Click="SetHotkey_Click"/>
                 <ui:Button x:Name="AddProfileButton" Content="Add" Icon="{ui:SymbolIcon Add20}"
-                           Margin="0,0,8,0" Click="AddProfile_Click" Appearance="Secondary"/>
+                           Appearance="Secondary" Margin="0,0,8,0" Click="AddProfile_Click"/>
                 <ui:Button x:Name="DeleteProfileButton" Content="Delete" Icon="{ui:SymbolIcon Delete20}"
-                           Margin="0,0,8,0" Click="DeleteProfile_Click" Appearance="Secondary"/>
-            </StackPanel>
-
-            <ui:Button x:Name="SetHotkeyButton" Content="Set Hotkey" Icon="{ui:SymbolIcon Keyboard20}"
-                       Margin="0,8,0,0" Click="SetHotkey_Click" Appearance="Secondary"/>
-
-            <TextBlock x:Name="HotkeyDisplayText" Text="Hotkey: None"
-                       FontSize="12" Opacity="0.6" Margin="0,8,0,0"/>
-        </StackPanel>
-
-        <!-- Right: Settings sliders -->
-        <StackPanel Grid.Column="1" Margin="0,0,0,0">
-            <TextBlock Text="Display Settings" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,16"/>
-
-            <ui:Card Margin="0,0,0,12">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <ui:SymbolIcon Symbol="BrightnessHigh20" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Gamma" FontWeight="Medium" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="GammaValueText" Text="1.00"
-                                   Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <Slider x:Name="GammaSlider"
-                            Minimum="0.30" Maximum="2.80"
-                            TickFrequency="0.05" IsSnapToTickEnabled="True"
-                            ValueChanged="GammaSlider_ValueChanged"/>
-                </StackPanel>
-            </ui:Card>
-
-            <ui:Card Margin="0,0,0,12">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <ui:SymbolIcon Symbol="ArrowSync20" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Contrast" FontWeight="Medium" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="ContrastValueText" Text="50%"
-                                   Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <Slider x:Name="ContrastSlider"
-                            Minimum="0.00" Maximum="1.00"
-                            TickFrequency="0.05" IsSnapToTickEnabled="True"
-                            ValueChanged="ContrastSlider_ValueChanged"/>
-                </StackPanel>
-            </ui:Card>
-
-            <ui:Card Margin="0,0,0,16">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <ui:SymbolIcon Symbol="FlashSettings20" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Vibrance" FontWeight="Medium" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="VibranceValueText" Text="50"
-                                   Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <Slider x:Name="VibranceSlider"
-                            Minimum="0" Maximum="100"
-                            TickFrequency="5" IsSnapToTickEnabled="True"
-                            ValueChanged="VibranceSlider_ValueChanged"/>
-                </StackPanel>
-            </ui:Card>
-
-            <StackPanel Orientation="Horizontal">
-                <ui:Button x:Name="ApplyButton" Content="Apply" Icon="{ui:SymbolIcon Checkmark20}"
-                           Appearance="Primary" Margin="0,0,8,0" Click="Apply_Click"/>
-                <ui:Button x:Name="ResetButton" Content="Reset Display" Icon="{ui:SymbolIcon ArrowReset20}"
-                           Appearance="Secondary" Click="Reset_Click"/>
+                           Appearance="Secondary" Margin="0,0,8,0" Click="DeleteProfile_Click"/>
+                <ui:Button x:Name="ResetDefaultButton" Content="Reset to Default" Icon="{ui:SymbolIcon ArrowReset20}"
+                           Appearance="Secondary" Click="ResetToDefault_Click"/>
             </StackPanel>
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </Page>

@@ -18,35 +18,36 @@ public partial class SettingsPage : Page, INavigationAware
     {
         _isLoaded = false;
         StartWithWindowsToggle.IsChecked = MainWindow.SettingsManager.StartWithWindows;
-        MinimizeToTrayToggle.IsChecked = MainWindow.SettingsManager.MinimizeToTray;
-        ResetOnExitToggle.IsChecked = MainWindow.SettingsManager.ResetOnExit;
+        ThemeComboBox.SelectedIndex = MainWindow.SettingsManager.AppTheme;
+
+        if (MainWindow.SettingsManager.CloseToTray)
+            CloseToTrayRadio.IsChecked = true;
+        else
+            CloseAppRadio.IsChecked = true;
+
         _isLoaded = true;
     }
 
     public Task OnNavigatedToAsync() => Task.CompletedTask;
     public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
+    private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_isLoaded) return;
+        int theme = ThemeComboBox.SelectedIndex;
+        MainWindow.SettingsManager.AppTheme = theme;
+        SettingsWindow.ApplyTheme(theme);
+    }
+
+    private void CloseBehavior_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!_isLoaded) return;
+        MainWindow.SettingsManager.CloseToTray = CloseToTrayRadio.IsChecked == true;
+    }
+
     private void StartWithWindows_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
         MainWindow.SettingsManager.StartWithWindows = StartWithWindowsToggle.IsChecked == true;
-    }
-
-    private void MinimizeToTray_Changed(object sender, RoutedEventArgs e)
-    {
-        if (!_isLoaded) return;
-        MainWindow.SettingsManager.MinimizeToTray = MinimizeToTrayToggle.IsChecked == true;
-    }
-
-    private void ResetOnExit_Changed(object sender, RoutedEventArgs e)
-    {
-        if (!_isLoaded) return;
-        MainWindow.SettingsManager.ResetOnExit = ResetOnExitToggle.IsChecked == true;
-    }
-
-    private void ResetNow_Click(object sender, RoutedEventArgs e)
-    {
-        if (!_isLoaded) return;
-        MainWindow.DisplayManager.ResetToDefault();
     }
 }

@@ -8,9 +8,9 @@ namespace DisplayHub.Services.Settings;
 public class SettingsData
 {
     public bool StartWithWindows { get; set; } = false;
-    public bool MinimizeToTray { get; set; } = true;
+    public bool CloseToTray { get; set; } = false;
+    public int AppTheme { get; set; } = 0;  // 0=System, 1=Light, 2=Dark
     public bool DynamicControlsEnabled { get; set; } = false;
-    public bool ResetOnExit { get; set; } = false;
 }
 
 public class SettingsManager
@@ -29,22 +29,22 @@ public class SettingsManager
         }
     }
 
-    public bool MinimizeToTray
+    public bool CloseToTray
     {
-        get => _data.MinimizeToTray;
-        set { _data.MinimizeToTray = value; Save(); }
+        get => _data.CloseToTray;
+        set { _data.CloseToTray = value; Save(); }
+    }
+
+    public int AppTheme
+    {
+        get => _data.AppTheme;
+        set { _data.AppTheme = value; Save(); }
     }
 
     public bool DynamicControlsEnabled
     {
         get => _data.DynamicControlsEnabled;
         set { _data.DynamicControlsEnabled = value; Save(); }
-    }
-
-    public bool ResetOnExit
-    {
-        get => _data.ResetOnExit;
-        set { _data.ResetOnExit = value; Save(); }
     }
 
     public SettingsManager()

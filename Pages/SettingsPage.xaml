@@ -8,70 +8,48 @@
     <StackPanel MaxWidth="700" Margin="16">
         <TextBlock Text="Settings" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,16"/>
 
-        <ui:Card Margin="0,0,0,8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Text="Start with Windows" FontWeight="Medium" FontSize="14"/>
-                    <TextBlock Text="Automatically start DisplayHub when Windows starts"
-                               Opacity="0.6" FontSize="12" Margin="0,4,0,0"/>
+        <!-- App Theme -->
+        <TextBlock Text="Appearance" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
+        <ui:CardControl Margin="0,0,0,8">
+            <ui:CardControl.Header>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="App Theme" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Choose the application color theme" FontSize="12" Opacity="0.5"/>
                 </StackPanel>
-                <ui:ToggleSwitch x:Name="StartWithWindowsToggle"
-                                 Grid.Column="1"
-                                 Checked="StartWithWindows_Changed"
-                                 Unchecked="StartWithWindows_Changed"/>
-            </Grid>
-        </ui:Card>
+            </ui:CardControl.Header>
+            <ComboBox x:Name="ThemeComboBox" SelectionChanged="ThemeComboBox_SelectionChanged" MinWidth="120">
+                <ComboBoxItem Content="System"/>
+                <ComboBoxItem Content="Light"/>
+                <ComboBoxItem Content="Dark"/>
+            </ComboBox>
+        </ui:CardControl>
 
+        <!-- Close Behavior -->
+        <TextBlock Text="Behavior" FontSize="14" FontWeight="SemiBold" Margin="0,12,0,6"/>
         <ui:Card Margin="0,0,0,8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Text="Minimize to Tray" FontWeight="Medium" FontSize="14"/>
-                    <TextBlock Text="Minimize to system tray instead of taskbar"
-                               Opacity="0.6" FontSize="12" Margin="0,4,0,0"/>
-                </StackPanel>
-                <ui:ToggleSwitch x:Name="MinimizeToTrayToggle"
-                                 Grid.Column="1"
-                                 Checked="MinimizeToTray_Changed"
-                                 Unchecked="MinimizeToTray_Changed"/>
-            </Grid>
-        </ui:Card>
-
-        <ui:Card Margin="0,0,0,8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Text="Reset Display on Exit" FontWeight="Medium" FontSize="14"/>
-                    <TextBlock Text="Restore default display settings when DisplayHub exits"
-                               Opacity="0.6" FontSize="12" Margin="0,4,0,0"/>
-                </StackPanel>
-                <ui:ToggleSwitch x:Name="ResetOnExitToggle"
-                                 Grid.Column="1"
-                                 Checked="ResetOnExit_Changed"
-                                 Unchecked="ResetOnExit_Changed"/>
-            </Grid>
-        </ui:Card>
-
-        <ui:Card Margin="0,0,0,8">
-            <StackPanel Orientation="Horizontal">
-                <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
-                    <TextBlock Text="Reset Display Now" FontWeight="Medium" FontSize="14"/>
-                    <TextBlock Text="Immediately restore default display settings"
-                               Opacity="0.6" FontSize="12" Margin="0,4,0,0"/>
-                </StackPanel>
-                <ui:Button Content="Reset" Icon="{ui:SymbolIcon ArrowReset20}"
-                           Appearance="Secondary" Click="ResetNow_Click"/>
+            <StackPanel>
+                <TextBlock Text="Close button behavior" FontWeight="Medium" FontSize="14" Margin="0,0,0,4"/>
+                <TextBlock Text="Choose what happens when you close the window"
+                           Opacity="0.6" FontSize="12" Margin="0,0,0,12"/>
+                <RadioButton x:Name="CloseAppRadio" Content="Close application"
+                             GroupName="CloseBehavior" Checked="CloseBehavior_Changed"/>
+                <RadioButton x:Name="CloseToTrayRadio" Content="Minimize to system tray"
+                             GroupName="CloseBehavior" Checked="CloseBehavior_Changed"
+                             Margin="0,6,0,0"/>
             </StackPanel>
         </ui:Card>
+
+        <!-- Start with Windows -->
+        <ui:CardControl Margin="0,0,0,8">
+            <ui:CardControl.Header>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Start with Windows" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Automatically start DisplayHub when Windows starts" FontSize="12" Opacity="0.5"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch x:Name="StartWithWindowsToggle"
+                             Checked="StartWithWindows_Changed"
+                             Unchecked="StartWithWindows_Changed"/>
+        </ui:CardControl>
     </StackPanel>
 </Page>

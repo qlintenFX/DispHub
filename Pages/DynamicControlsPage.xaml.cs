@@ -18,6 +18,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
     {
         _isLoaded = false;
         DynamicControlsToggle.IsChecked = MainWindow.DynamicControls.IsEnabled;
+        DcActiveInfoBar.IsOpen = MainWindow.DynamicControls.IsEnabled;
         _isLoaded = true;
 
         UpdateValueDisplay();
@@ -54,6 +55,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
         bool enabled = DynamicControlsToggle.IsChecked == true;
         MainWindow.DynamicControls.IsEnabled = enabled;
         MainWindow.SettingsManager.DynamicControlsEnabled = enabled;
+        DcActiveInfoBar.IsOpen = enabled;
 
         if (enabled)
             MainWindow.DynamicControls.RegisterHotkeys(MainWindow.HotkeyManager);

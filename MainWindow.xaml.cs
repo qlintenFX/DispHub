@@ -35,6 +35,7 @@ public partial class MainWindow : Window
         _hwndSource?.AddHook(WndProc);
 
         SettingsManager = new SettingsManager();
+        SettingsWindow.ApplyTheme(SettingsManager.AppTheme);
         ProfileManager = new ProfileManager();
         DisplayManager = new DisplayManager(VibranceServiceFactory.Create());
         HotkeyManager = new HotkeyManager(helper.Handle);
@@ -94,8 +95,7 @@ public partial class MainWindow : Window
 
     private void TrayExit_Click(object sender, RoutedEventArgs e)
     {
-        if (SettingsManager?.ResetOnExit == true)
-            DisplayManager?.ResetToDefault();
+        DisplayManager?.ResetToDefault();
         HotkeyManager?.Dispose();
         Application.Current.Shutdown();
     }
