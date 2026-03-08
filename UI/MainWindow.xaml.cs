@@ -63,8 +63,14 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
             RegisterAllHotkeys();
             LoadSettings();
 
-            // Navigate to Profiles page on startup (WPF-UI handles page lifetime)
+            Logger.Log("Services initialized — navigating to Profiles");
+
+            // Navigate after all services are ready
             NavigationView.Navigate(typeof(ProfilesPage));
+
+            // Bring window to foreground (in case something pushed it behind)
+            Activate();
+            Focus();
 
             Logger.Log("MainWindow initialization completed");
         }
@@ -72,8 +78,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         {
             Logger.LogError("MainWindow initialization failed", ex);
             System.Windows.MessageBox.Show(
-                $"Error loading the application: {ex.Message}",
-                "DisplayHub Error",
+                $"Startup error: {ex.GetType().Name}\n\n{ex.Message}\n\nInner: {ex.InnerException?.Message}",
+                "DisplayHub — Initialization Error",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Error);
         }

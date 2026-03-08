@@ -61,7 +61,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
 
     private void UpdateSliderLabels()
     {
-        if (DynGammaText == null) return;
+        if (DynGammaText == null || DynContrastText == null || DynVibranceText == null) return;
         DynGammaText.Text = $"{DynamicGammaSlider.Value / 100.0:F2}";
         DynContrastText.Text = $"{(int)DynamicContrastSlider.Value}%";
         DynVibranceText.Text = $"{(int)DynamicVibranceSlider.Value}%";

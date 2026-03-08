@@ -81,7 +81,10 @@ public partial class ProfilesPage : Page, INavigationAware
 
     private void UpdateSliderLabels()
     {
-        if (GammaValueText == null) return;
+        // All three TextBlocks must exist before we can update (they may be null
+        // during XAML initialization when slider ValueChanged fires before the
+        // rest of the XAML tree is parsed)
+        if (GammaValueText == null || ContrastValueText == null || VibranceValueText == null) return;
         GammaValueText.Text = $"{GammaSlider.Value / 100.0:F2}";
         ContrastValueText.Text = $"{(int)ContrastSlider.Value}%";
         VibranceValueText.Text = $"{(int)VibranceSlider.Value}%";
