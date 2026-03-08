@@ -23,8 +23,8 @@
         </StackPanel>
 
         <ui:InfoBar x:Name="PowerOffBar"
-                    Title="Display Power Off"
-                    Message="Turn display power back on to manage profiles."
+                    Title="DisplayHub Disabled"
+                    Message="Enable DisplayHub to manage profiles."
                     Severity="Error" IsOpen="False" IsClosable="False"
                     Margin="0,0,0,12"/>
 

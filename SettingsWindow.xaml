@@ -50,7 +50,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,140,0">
                     <Button x:Name="PowerButton"
                             Click="PowerToggle_Click"
-                            ToolTip="Toggle Display Power (On/Off)"
+                            ToolTip="Toggle DisplayHub"
                             Width="36" Height="30"
                             Padding="0"
                             Background="Transparent"

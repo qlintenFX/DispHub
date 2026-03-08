@@ -95,6 +95,7 @@ public partial class ProfilesPage : Page, INavigationAware
         {
             SyncPowerState();
             SyncDynamicControlsState();
+            RefreshProfileCards();
         });
     }
 
@@ -104,6 +105,7 @@ public partial class ProfilesPage : Page, INavigationAware
     {
         ProfileCardPanel.Children.Clear();
         var profiles = MainWindow.ProfileManager.Profiles;
+        bool isDisabled = !MainWindow.IsDisplayActive;
 
         for (int i = 0; i < profiles.Count; i++)
         {
@@ -130,16 +132,30 @@ public partial class ProfilesPage : Page, INavigationAware
             }
 
             int index = i;
+
+            // When DisplayHub is disabled, all cards use Secondary appearance
+            // but the active card gets a left accent border to indicate it will resume
+            var appearance = isSelected && !isDisabled
+                ? Wpf.Ui.Controls.ControlAppearance.Primary
+                : Wpf.Ui.Controls.ControlAppearance.Secondary;
+
             var card = new Wpf.Ui.Controls.Button
             {
                 Content = content,
-                Appearance = isSelected
-                    ? Wpf.Ui.Controls.ControlAppearance.Primary
-                    : Wpf.Ui.Controls.ControlAppearance.Secondary,
+                Appearance = appearance,
                 Margin = new Thickness(0, 0, 8, 8),
                 Padding = new Thickness(16, 10, 16, 10),
                 Tag = index,
             };
+
+            // Active card when disabled: accent left border to show "will resume"
+            if (isSelected && isDisabled)
+            {
+                card.BorderThickness = new Thickness(3, 1, 1, 1);
+                card.BorderBrush = (System.Windows.Media.Brush)FindResource("SystemAccentColorPrimaryBrush");
+                card.Opacity = 0.7;
+            }
+
             card.Click += OnProfileCardClicked;
             ProfileCardPanel.Children.Add(card);
         }

@@ -68,7 +68,7 @@
 
         <!-- Tray Icon -->
         <TextBlock Text="Tray Icon" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-        <ui:CardControl Margin="0,0,0,8">
+        <ui:CardControl Margin="0,0,0,12">
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Left-click behavior" FontSize="14" FontWeight="Regular"/>
@@ -79,6 +79,19 @@
                 <ComboBoxItem Content="Open Settings"/>
                 <ComboBoxItem Content="Do Nothing"/>
             </ComboBox>
+        </ui:CardControl>
+
+        <!-- Hotkeys -->
+        <TextBlock Text="Hotkeys" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
+        <ui:CardControl Margin="0,0,0,12">
+            <ui:CardControl.Header>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Toggle DisplayHub" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Global hotkey to enable or disable DisplayHub" FontSize="12" Opacity="0.5"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:Button x:Name="MasterToggleKeybind" Content="None" Click="MasterToggleKeybind_Click"
+                       Appearance="Secondary" FontFamily="Consolas" MinWidth="120"/>
         </ui:CardControl>
     </StackPanel>
 </Page>

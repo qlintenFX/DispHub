@@ -184,19 +184,16 @@ public partial class TaskbarWidgetWindow : Window
         {
             case 0: // Left
             {
-                int baseOffset = 20;
-                if (autoPadding)
+                // Always detect system button area as minimum safe offset
+                int baseOffset = 60;
+                IntPtr sysButtonArea = NativeMethods.FindWindowEx(
+                    _taskbarHandle, IntPtr.Zero, "Windows.UI.Composition.DesktopWindowContentBridge", null);
+                if (sysButtonArea != IntPtr.Zero)
                 {
-                    // Auto-detect Windows Widgets button (DesktopPEBHost or similar)
-                    IntPtr widgetsHandle = NativeMethods.FindWindowEx(
-                        _taskbarHandle, IntPtr.Zero, "Windows.UI.Composition.DesktopWindowContentBridge", null);
-                    if (widgetsHandle != IntPtr.Zero)
-                    {
-                        NativeMethods.GetWindowRect(widgetsHandle, out var widgetBtnRect);
-                        int widgetBtnRight = widgetBtnRect.Right - taskbarRect.Left;
-                        if (widgetBtnRight > baseOffset)
-                            baseOffset = widgetBtnRight + 4;
-                    }
+                    NativeMethods.GetWindowRect(sysButtonArea, out var btnRect);
+                    int btnRight = btnRect.Right - taskbarRect.Left;
+                    if (btnRight > baseOffset)
+                        baseOffset = btnRight + 4;
                 }
                 return baseOffset + manualPadding;
             }

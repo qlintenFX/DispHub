@@ -54,8 +54,8 @@ public partial class SettingsWindow : FluentWindow
     {
         bool active = MainWindow.IsDisplayActive;
         PowerButton.ToolTip = active
-            ? "Display Power: ON — click to turn off"
-            : "Display Power: OFF — click to turn on";
+            ? "DisplayHub: Active — click to disable"
+            : "DisplayHub: Inactive — click to enable";
 
         if (active)
         {

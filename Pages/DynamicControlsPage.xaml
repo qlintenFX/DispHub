@@ -23,8 +23,8 @@
         </StackPanel>
 
         <ui:InfoBar x:Name="PowerOffBar"
-                    Title="Display Power Off"
-                    Message="Turn display power back on to use Dynamic Controls."
+                    Title="DisplayHub Disabled"
+                    Message="Enable DisplayHub to use Dynamic Controls."
                     Severity="Error" IsOpen="False" IsClosable="False"
                     Margin="0,0,0,12"/>
 

@@ -120,8 +120,8 @@
         <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Margin="0,0,0,12">
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Hide When Powered Off" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Completely hide the widget when display power is off" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Hide When Disabled" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Hide the widget when DisplayHub is disabled" FontSize="12" Opacity="0.5"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch x:Name="HideWhenInactiveToggle"

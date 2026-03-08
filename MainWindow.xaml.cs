@@ -33,6 +33,7 @@ public partial class MainWindow : Window
     private TaskbarWidgetWindow? _taskbarWidget;
     private HwndSource? _hwndSource;
     private int _dcToggleHotkeyId = -1;
+    private int _masterToggleHotkeyId = -1;
     private int _activeProfileIndex = -1;
     private static MainWindow? _staticInstance;
 
@@ -88,6 +89,7 @@ public partial class MainWindow : Window
         }
 
         RegisterDcToggleHotkey();
+        RegisterMasterToggleHotkey();
         _profileFlyout = new ProfileFlyoutWindow();
 
         BuildTrayContextMenu();
@@ -119,7 +121,7 @@ public partial class MainWindow : Window
         DisplayManager.ResetToDefault();
         UnregisterAllHotkeys();
         IsDisplayActive = false;
-        Logger.Log("Display powered OFF");
+        Logger.Log("DisplayHub disabled");
     }
 
     private static void PowerOn()
@@ -139,6 +141,7 @@ public partial class MainWindow : Window
         }
 
         _staticInstance?.RegisterDcToggleHotkey();
+        _staticInstance?.RegisterMasterToggleHotkey();
 
         // Restore display settings — always have a valid profile to fall back to
         if (DynamicControls.IsEnabled)
@@ -166,7 +169,7 @@ public partial class MainWindow : Window
             }
         }
 
-        Logger.Log("Display powered ON");
+        Logger.Log("DisplayHub enabled");
     }
 
     private static void UnregisterAllHotkeys()
@@ -186,6 +189,12 @@ public partial class MainWindow : Window
         {
             HotkeyManager.UnregisterRawHotkey(_staticInstance._dcToggleHotkeyId);
             _staticInstance._dcToggleHotkeyId = -1;
+        }
+
+        if (_staticInstance != null && _staticInstance._masterToggleHotkeyId > 0)
+        {
+            HotkeyManager.UnregisterRawHotkey(_staticInstance._masterToggleHotkeyId);
+            _staticInstance._masterToggleHotkeyId = -1;
         }
     }
 
@@ -243,6 +252,19 @@ public partial class MainWindow : Window
 
     public void UpdateDcToggleHotkey() => RegisterDcToggleHotkey();
 
+    private void RegisterMasterToggleHotkey()
+    {
+        if (_masterToggleHotkeyId > 0)
+            HotkeyManager.UnregisterRawHotkey(_masterToggleHotkeyId);
+        _masterToggleHotkeyId = -1;
+
+        if (SettingsManager.MasterToggleKey != 0)
+            _masterToggleHotkeyId = HotkeyManager.RegisterRawHotkey(
+                SettingsManager.MasterToggleKey, SettingsManager.MasterToggleMod);
+    }
+
+    public void UpdateMasterToggleHotkey() => RegisterMasterToggleHotkey();
+
     // ══════════════════════════════════════════════════════════════
     //  WndProc — hotkey dispatch
     // ══════════════════════════════════════════════════════════════
@@ -252,9 +274,17 @@ public partial class MainWindow : Window
         const int WM_HOTKEY = 0x0312;
         if (msg != WM_HOTKEY) return IntPtr.Zero;
 
-        if (!IsDisplayActive) { handled = true; return IntPtr.Zero; }
-
         int id = wParam.ToInt32();
+
+        // Master toggle must work even when DisplayHub is disabled
+        if (id == _masterToggleHotkeyId && _masterToggleHotkeyId > 0)
+        {
+            ToggleDisplayPower();
+            handled = true;
+            return IntPtr.Zero;
+        }
+
+        if (!IsDisplayActive) { handled = true; return IntPtr.Zero; }
 
         if (id == _dcToggleHotkeyId && _dcToggleHotkeyId > 0)
         {
@@ -349,7 +379,7 @@ public partial class MainWindow : Window
 
             var powerItem = new MenuItem
             {
-                Header = powerOff ? "⏻  Power: Off" : "⏻  Power: On",
+                Header = powerOff ? "DisplayHub: Off" : "DisplayHub: On",
                 FontWeight = FontWeights.SemiBold,
                 IsChecked = IsDisplayActive
             };

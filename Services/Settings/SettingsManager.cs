@@ -30,6 +30,8 @@ public class SettingsData
     public bool DynamicControlsEnabled { get; set; }
     public uint DcToggleKey { get; set; }     // VK code, 0 = no toggle hotkey
     public uint DcToggleMod { get; set; }     // Modifier bitmask
+    public uint MasterToggleKey { get; set; }  // VK code for master on/off toggle
+    public uint MasterToggleMod { get; set; }  // Modifier bitmask for master toggle
     public DcKeybindSettings DcKeybinds { get; set; } = new();
     public int LastActiveProfileIndex { get; set; }  // Persisted active profile
     public bool TaskbarWidgetEnabled { get; set; }
@@ -87,6 +89,18 @@ public class SettingsManager
     {
         get => _data.DcToggleMod;
         set { _data.DcToggleMod = value; Save(); }
+    }
+
+    public uint MasterToggleKey
+    {
+        get => _data.MasterToggleKey;
+        set { _data.MasterToggleKey = value; Save(); }
+    }
+
+    public uint MasterToggleMod
+    {
+        get => _data.MasterToggleMod;
+        set { _data.MasterToggleMod = value; Save(); }
     }
 
     public DcKeybindSettings DcKeybinds
