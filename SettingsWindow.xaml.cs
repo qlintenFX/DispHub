@@ -2,6 +2,7 @@
 using DisplayHub.Pages;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Wpf.Ui.Controls;
 
@@ -9,6 +10,8 @@ namespace DisplayHub;
 
 public partial class SettingsWindow : FluentWindow
 {
+    private ScrollViewer? _contentScrollViewer;
+
     public SettingsWindow()
     {
         InitializeComponent();
@@ -20,6 +23,8 @@ public partial class SettingsWindow : FluentWindow
     {
         ApplyTheme(MainWindow.SettingsManager.AppTheme);
         RootNavigation.Navigate(typeof(HomePage));
+
+        RootNavigation.Navigated += (_, _) => ResetScrollPosition();
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -44,18 +49,49 @@ public partial class SettingsWindow : FluentWindow
     private void UpdatePowerButtonVisual()
     {
         bool active = MainWindow.IsDisplayActive;
-        PowerButton.ToolTip = active ? "Display Power: On (click to turn off)" : "Display Power: Off (click to turn on)";
+        PowerButton.ToolTip = active
+            ? "Display Power: On (click to turn off)"
+            : "Display Power: Off (click to turn on)";
 
-        if (active)
+        PowerIcon.Foreground = active
+            ? (Brush)FindResource("TextFillColorPrimaryBrush")
+            : Brushes.OrangeRed;
+
+        PowerButton.Opacity = active ? 1.0 : 0.8;
+    }
+
+    /// <summary>
+    /// Reset scroll to top on page navigation (FluentFlyout pattern).
+    /// </summary>
+    private void ResetScrollPosition()
+    {
+        Dispatcher.BeginInvoke(() =>
         {
-            PowerButton.Foreground = (Brush)FindResource("TextFillColorPrimaryBrush");
-            PowerButton.Opacity = 1.0;
-        }
-        else
+            try
+            {
+                _contentScrollViewer ??= FindScrollableScrollViewer(RootNavigation);
+                _contentScrollViewer?.ScrollToVerticalOffset(0);
+            }
+            catch { /* ignore scroll reset failures */ }
+        }, System.Windows.Threading.DispatcherPriority.Loaded);
+    }
+
+    /// <summary>
+    /// Traverse visual tree to find NavigationView's internal ScrollViewer.
+    /// </summary>
+    private static ScrollViewer? FindScrollableScrollViewer(DependencyObject parent)
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
         {
-            PowerButton.Foreground = Brushes.OrangeRed;
-            PowerButton.Opacity = 0.8;
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is ScrollViewer sv && sv.ScrollableHeight > 0)
+                return sv;
+
+            var result = FindScrollableScrollViewer(child);
+            if (result != null)
+                return result;
         }
+        return null;
     }
 
     public static void ApplyTheme(int theme)

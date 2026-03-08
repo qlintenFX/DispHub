@@ -30,6 +30,7 @@
                 <ui:NavigationViewItem Content="Home" Icon="{ui:SymbolIcon Home24}" TargetPageType="{x:Type pages:HomePage}" />
                 <ui:NavigationViewItem Content="Profiles" Icon="{ui:SymbolIcon SlideMultiple24}" TargetPageType="{x:Type pages:ProfilesPage}" />
                 <ui:NavigationViewItem Content="Dynamic Controls" Icon="{ui:SymbolIcon Gauge20}" TargetPageType="{x:Type pages:DynamicControlsPage}" />
+                <ui:NavigationViewItem Content="Taskbar Widget" Icon="{ui:SymbolIcon TextboxAlignBottom24}" TargetPageType="{x:Type pages:TaskbarWidgetPage}" />
                 <ui:NavigationViewItem Content="Settings" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type pages:SettingsPage}" />
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
@@ -46,12 +47,17 @@
             </ui:TitleBar.Icon>
             <ui:TitleBar.Header>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,140,0">
-                    <ui:Button x:Name="PowerButton"
-                               Icon="{ui:SymbolIcon Power24}"
-                               Appearance="Transparent"
-                               ToolTip="Toggle Display Power (On/Off)"
-                               Click="PowerToggle_Click"
-                               Padding="8,4"/>
+                    <Button x:Name="PowerButton"
+                            Click="PowerToggle_Click"
+                            ToolTip="Toggle Display Power (On/Off)"
+                            Width="36" Height="30"
+                            Padding="0"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center">
+                        <ui:SymbolIcon x:Name="PowerIcon" Symbol="Power24" FontSize="16"/>
+                    </Button>
                 </StackPanel>
             </ui:TitleBar.Header>
         </ui:TitleBar>

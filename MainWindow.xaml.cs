@@ -36,6 +36,7 @@ public partial class MainWindow : Window
 
     private SettingsWindow? _settingsWindow;
     private ProfileFlyoutWindow? _profileFlyout;
+    private TaskbarWidgetWindow? _taskbarWidget;
     private HwndSource? _hwndSource;
     private int _dcToggleHotkeyId = -1;
     private int _activeProfileIndex = -1;
@@ -80,6 +81,10 @@ public partial class MainWindow : Window
         _profileFlyout = new ProfileFlyoutWindow();
 
         BuildTrayContextMenu();
+
+        if (SettingsManager.TaskbarWidgetEnabled)
+            ShowTaskbarWidget();
+
         OpenSettingsWindow();
     }
 
@@ -356,7 +361,66 @@ public partial class MainWindow : Window
         _settingsWindow.Focus();
     }
 
-    private void TrayIcon_LeftClick(object sender, RoutedEventArgs e) => OpenSettingsWindow();
+    private void TrayIcon_LeftClick(object sender, RoutedEventArgs e)
+    {
+        if (SettingsManager.TrayLeftClickBehavior == 0)
+            OpenSettingsWindow();
+        // 1 = Do Nothing
+    }
+
+    // ── Taskbar Widget ──
+
+    public static void SetTaskbarWidgetEnabled(bool enabled)
+    {
+        if (_staticInstance == null) return;
+        if (enabled)
+            _staticInstance.ShowTaskbarWidget();
+        else
+            _staticInstance.HideTaskbarWidget();
+    }
+
+    public static void RefreshTaskbarWidget()
+    {
+        _staticInstance?._taskbarWidget?.RefreshPosition();
+    }
+
+    private void ShowTaskbarWidget()
+    {
+        if (_taskbarWidget != null) return;
+        _taskbarWidget = new TaskbarWidgetWindow();
+        _taskbarWidget.Show();
+
+        string profileName = _activeProfileIndex >= 0 && _activeProfileIndex < ProfileManager.Profiles.Count
+            ? ProfileManager.Profiles[_activeProfileIndex].Name
+            : "No Profile";
+        _taskbarWidget.UpdateDisplay(profileName, IsDisplayActive);
+
+        ActiveProfileChanged += UpdateWidgetOnProfileChange;
+        DisplayPowerChanged += UpdateWidgetOnPowerChange;
+    }
+
+    private void HideTaskbarWidget()
+    {
+        if (_taskbarWidget == null) return;
+        ActiveProfileChanged -= UpdateWidgetOnProfileChange;
+        DisplayPowerChanged -= UpdateWidgetOnPowerChange;
+        _taskbarWidget.StopAndClose();
+        _taskbarWidget = null;
+    }
+
+    private void UpdateWidgetOnProfileChange(int index)
+    {
+        if (index >= 0 && index < ProfileManager.Profiles.Count)
+            _taskbarWidget?.UpdateDisplay(ProfileManager.Profiles[index].Name, IsDisplayActive);
+    }
+
+    private void UpdateWidgetOnPowerChange(bool active)
+    {
+        string profileName = _activeProfileIndex >= 0 && _activeProfileIndex < ProfileManager.Profiles.Count
+            ? ProfileManager.Profiles[_activeProfileIndex].Name
+            : "No Profile";
+        _taskbarWidget?.UpdateDisplay(profileName, active);
+    }
 
     private void ExitApplication()
     {

@@ -6,7 +6,7 @@ namespace DisplayHub.Pages;
 
 public partial class SettingsPage : Page, INavigationAware
 {
-    private bool _isLoaded = false;
+    private bool _isLoaded;
 
     public SettingsPage()
     {
@@ -19,6 +19,7 @@ public partial class SettingsPage : Page, INavigationAware
         _isLoaded = false;
         StartWithWindowsToggle.IsChecked = MainWindow.SettingsManager.StartWithWindows;
         ThemeComboBox.SelectedIndex = MainWindow.SettingsManager.AppTheme;
+        TrayLeftClickComboBox.SelectedIndex = MainWindow.SettingsManager.TrayLeftClickBehavior;
 
         if (MainWindow.SettingsManager.CloseToTray)
             CloseToTrayRadio.IsChecked = true;
@@ -49,5 +50,11 @@ public partial class SettingsPage : Page, INavigationAware
     {
         if (!_isLoaded) return;
         MainWindow.SettingsManager.StartWithWindows = StartWithWindowsToggle.IsChecked == true;
+    }
+
+    private void TrayLeftClick_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_isLoaded) return;
+        MainWindow.SettingsManager.TrayLeftClickBehavior = TrayLeftClickComboBox.SelectedIndex;
     }
 }

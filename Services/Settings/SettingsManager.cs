@@ -26,10 +26,14 @@ public class SettingsData
     public bool StartWithWindows { get; set; }
     public bool CloseToTray { get; set; }
     public int AppTheme { get; set; }  // 0=System, 1=Light, 2=Dark
+    public int TrayLeftClickBehavior { get; set; }  // 0=Open Settings, 1=Do Nothing
     public bool DynamicControlsEnabled { get; set; }
     public uint DcToggleKey { get; set; }     // VK code, 0 = no toggle hotkey
     public uint DcToggleMod { get; set; }     // Modifier bitmask
     public DcKeybindSettings DcKeybinds { get; set; } = new();
+    public bool TaskbarWidgetEnabled { get; set; }
+    public int TaskbarWidgetPosition { get; set; }  // 0=Left, 1=Center, 2=Right
+    public int TaskbarWidgetPadding { get; set; } = 10;
 }
 
 public class SettingsManager
@@ -82,6 +86,30 @@ public class SettingsManager
     {
         get => _data.DcKeybinds;
         set { _data.DcKeybinds = value; Save(); }
+    }
+
+    public int TrayLeftClickBehavior
+    {
+        get => _data.TrayLeftClickBehavior;
+        set { _data.TrayLeftClickBehavior = value; Save(); }
+    }
+
+    public bool TaskbarWidgetEnabled
+    {
+        get => _data.TaskbarWidgetEnabled;
+        set { _data.TaskbarWidgetEnabled = value; Save(); }
+    }
+
+    public int TaskbarWidgetPosition
+    {
+        get => _data.TaskbarWidgetPosition;
+        set { _data.TaskbarWidgetPosition = value; Save(); }
+    }
+
+    public int TaskbarWidgetPadding
+    {
+        get => _data.TaskbarWidgetPadding;
+        set { _data.TaskbarWidgetPadding = value; Save(); }
     }
 
     public void SaveDcKeybinds() => Save();

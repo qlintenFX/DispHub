@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using DisplayHub.Constants;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
@@ -14,49 +13,16 @@ public partial class HomePage : Page, INavigationAware
     {
         InitializeComponent();
         VersionTextBlock.Text = $"v{AppConstants.Version}";
-        Loaded += OnPageLoaded;
-        Unloaded += OnPageUnloaded;
-    }
-
-    private void OnPageLoaded(object sender, RoutedEventArgs e)
-    {
-        MainWindow.ActiveProfileChanged += OnActiveProfileChanged;
-        MainWindow.DisplayPowerChanged += OnPowerChanged;
-        MainWindow.DynamicControlsModeChanged += OnModeChanged;
-    }
-
-    private void OnPageUnloaded(object sender, RoutedEventArgs e)
-    {
-        MainWindow.ActiveProfileChanged -= OnActiveProfileChanged;
-        MainWindow.DisplayPowerChanged -= OnPowerChanged;
-        MainWindow.DynamicControlsModeChanged -= OnModeChanged;
     }
 
     public Task OnNavigatedToAsync()
     {
         ProfileStatusText.Text = $"{MainWindow.ProfileManager.Profiles.Count} profiles";
         DcStatusText.Text = MainWindow.DynamicControls.IsEnabled ? "Enabled" : "Disabled";
-        UpdatePowerStatus();
         return Task.CompletedTask;
     }
 
     public Task OnNavigatedFromAsync() => Task.CompletedTask;
-
-    private void OnActiveProfileChanged(int index) => Dispatcher.Invoke(UpdatePowerStatus);
-    private void OnPowerChanged(bool active) => Dispatcher.Invoke(UpdatePowerStatus);
-    private void OnModeChanged(bool dcEnabled) => Dispatcher.Invoke(() =>
-        DcStatusText.Text = dcEnabled ? "Enabled" : "Disabled");
-
-    private void UpdatePowerStatus()
-    {
-        bool active = MainWindow.IsDisplayActive;
-        PowerStatusText.Text = active ? "Active" : "Off";
-        PowerStatusText.Foreground = active
-            ? (Brush)(TryFindResource("SystemFillColorSuccessBrush") ?? Brushes.Green)
-            : (Brush)(TryFindResource("SystemFillColorCriticalBrush") ?? Brushes.OrangeRed);
-
-        ActiveProfileText.Text = "None";
-    }
 
     private void NavigateToPage(Type pageType)
     {
