@@ -17,10 +17,14 @@ public partial class TaskbarWidgetPage : Page, INavigationAware
     private void TaskbarWidgetPage_Loaded(object sender, RoutedEventArgs e)
     {
         _isLoaded = false;
-        WidgetEnabledToggle.IsChecked = MainWindow.SettingsManager.TaskbarWidgetEnabled;
-        PositionComboBox.SelectedIndex = MainWindow.SettingsManager.TaskbarWidgetPosition;
-        PaddingSlider.Value = MainWindow.SettingsManager.TaskbarWidgetPadding;
-        PaddingValueText.Text = MainWindow.SettingsManager.TaskbarWidgetPadding.ToString();
+        var sm = MainWindow.SettingsManager;
+        WidgetEnabledToggle.IsChecked = sm.TaskbarWidgetEnabled;
+        PositionComboBox.SelectedIndex = sm.TaskbarWidgetPosition;
+        AutoPaddingToggle.IsChecked = sm.TaskbarWidgetAutoPadding;
+        ManualPaddingTextBox.Text = sm.TaskbarWidgetManualPadding.ToString();
+        ClickableToggle.IsChecked = sm.TaskbarWidgetClickable;
+        BackgroundBlurToggle.IsChecked = sm.TaskbarWidgetBackgroundBlur;
+        HideWhenInactiveToggle.IsChecked = sm.TaskbarWidgetHideWhenInactive;
         _isLoaded = true;
     }
 
@@ -42,12 +46,40 @@ public partial class TaskbarWidgetPage : Page, INavigationAware
         MainWindow.RefreshTaskbarWidget();
     }
 
-    private void Padding_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void AutoPadding_Changed(object sender, RoutedEventArgs e)
     {
-        if (!_isLoaded || PaddingValueText == null) return;
-        int val = (int)PaddingSlider.Value;
-        PaddingValueText.Text = val.ToString();
-        MainWindow.SettingsManager.TaskbarWidgetPadding = val;
+        if (!_isLoaded) return;
+        MainWindow.SettingsManager.TaskbarWidgetAutoPadding = AutoPaddingToggle.IsChecked == true;
         MainWindow.RefreshTaskbarWidget();
+    }
+
+    private void ManualPadding_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (!_isLoaded) return;
+        if (int.TryParse(ManualPaddingTextBox.Text, out int val) && val >= -500 && val <= 500)
+        {
+            MainWindow.SettingsManager.TaskbarWidgetManualPadding = val;
+            MainWindow.RefreshTaskbarWidget();
+        }
+    }
+
+    private void Clickable_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!_isLoaded) return;
+        MainWindow.SettingsManager.TaskbarWidgetClickable = ClickableToggle.IsChecked == true;
+    }
+
+    private void BackgroundBlur_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!_isLoaded) return;
+        MainWindow.SettingsManager.TaskbarWidgetBackgroundBlur = BackgroundBlurToggle.IsChecked == true;
+        MainWindow.UpdateTaskbarWidgetSettings();
+    }
+
+    private void HideWhenInactive_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!_isLoaded) return;
+        MainWindow.SettingsManager.TaskbarWidgetHideWhenInactive = HideWhenInactiveToggle.IsChecked == true;
+        MainWindow.UpdateTaskbarWidgetSettings();
     }
 }

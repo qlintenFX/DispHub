@@ -13,7 +13,7 @@
             <Border CornerRadius="10" ClipToBounds="True" Width="164" Height="98"
                     Background="{DynamicResource ControlFillColorSecondaryBrush}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <ui:SymbolIcon Symbol="AlertBadge24" FontSize="28" Opacity="0.3"/>
+                    <ui:SymbolIcon Symbol="Alert24" FontSize="28" Opacity="0.3"/>
                     <TextBlock Text="Flyout Preview" FontSize="10" Opacity="0.3" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>

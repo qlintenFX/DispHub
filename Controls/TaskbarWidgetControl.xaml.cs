@@ -24,45 +24,54 @@ public partial class TaskbarWidgetControl : UserControl
         Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
     }
 
-    public void UpdateState(string profileName, bool isActive, bool dcMode)
+    public void UpdateState(string profileName, bool isActive, bool dcMode, bool backgroundBlur)
     {
-        if (dcMode)
-            ProfileText.Text = "Dynamic";
-        else
-            ProfileText.Text = profileName;
+        ProfileText.Text = dcMode ? "Dynamic" : profileName;
 
-        // Power off = dim the text, power on = full white
+        // Text color: white when active, gray when powered off
         TextBrush.Color = isActive ? Colors.White : Color.FromRgb(140, 140, 140);
+
+        // Background blur effect (semi-transparent background)
+        if (backgroundBlur)
+        {
+            bool isDark = ApplicationThemeManager.GetSystemTheme() == SystemTheme.Dark;
+            BackgroundBrush.Color = isDark
+                ? Color.FromArgb(40, 255, 255, 255)
+                : Color.FromArgb(30, 0, 0, 0);
+        }
+        else
+        {
+            BackgroundBrush.Color = Color.FromArgb(0, 0, 0, 0);
+        }
     }
 
     private void Border_MouseEnter(object sender, MouseEventArgs e)
     {
         bool isDark = ApplicationThemeManager.GetSystemTheme() == SystemTheme.Dark;
         var hoverColor = isDark
-            ? Color.FromArgb(20, 255, 255, 255)
-            : Color.FromArgb(15, 0, 0, 0);
+            ? Color.FromArgb(30, 255, 255, 255)
+            : Color.FromArgb(20, 0, 0, 0);
 
         var borderColor = isDark
             ? Color.FromArgb(60, 255, 255, 255)
             : Color.FromArgb(40, 0, 0, 0);
 
         var colorAnim = new ColorAnimation(hoverColor, TimeSpan.FromMilliseconds(120));
-        ((SolidColorBrush)MainBorder.Background).BeginAnimation(SolidColorBrush.ColorProperty, colorAnim);
-
-        var opAnim = new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(120));
-        ((SolidColorBrush)MainBorder.Background).BeginAnimation(Brush.OpacityProperty, opAnim);
-
+        BackgroundBrush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnim);
         TopBorder.BorderBrush = new SolidColorBrush(borderColor);
     }
 
     private void Border_MouseLeave(object sender, MouseEventArgs e)
     {
-        var colorAnim = new ColorAnimation(Color.FromArgb(0, 255, 255, 255), TimeSpan.FromMilliseconds(150));
-        ((SolidColorBrush)MainBorder.Background).BeginAnimation(SolidColorBrush.ColorProperty, colorAnim);
+        bool blur = MainWindow.SettingsManager.TaskbarWidgetBackgroundBlur;
+        bool isDark = ApplicationThemeManager.GetSystemTheme() == SystemTheme.Dark;
 
-        var opAnim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));
-        ((SolidColorBrush)MainBorder.Background).BeginAnimation(Brush.OpacityProperty, opAnim);
+        var restColor = blur
+            ? (isDark ? Color.FromArgb(40, 255, 255, 255) : Color.FromArgb(30, 0, 0, 0))
+            : Color.FromArgb(0, 0, 0, 0);
 
+        var colorAnim = new ColorAnimation(restColor, TimeSpan.FromMilliseconds(150));
+        BackgroundBrush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnim);
         TopBorder.BorderBrush = null;
     }
 

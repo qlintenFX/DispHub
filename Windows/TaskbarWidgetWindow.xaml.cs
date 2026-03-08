@@ -7,11 +7,6 @@ using DisplayHub.Services.Logging;
 
 namespace DisplayHub.Windows;
 
-/// <summary>
-/// Taskbar-docked widget window. Follows FluentFlyout's SetParent pattern:
-/// the Window covers the full taskbar area, the Control is positioned within
-/// the Canvas, and SetWindowRgn limits the click region to the control.
-/// </summary>
 public partial class TaskbarWidgetWindow : Window
 {
     private IntPtr _handle;
@@ -34,7 +29,6 @@ public partial class TaskbarWidgetWindow : Window
         source.AddHook(WndProc);
     }
 
-    /// <summary>Block messages that cause taskbar freezes (FluentFlyout pattern).</summary>
     private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         switch (msg)
@@ -59,7 +53,30 @@ public partial class TaskbarWidgetWindow : Window
 
     public void UpdateDisplay(string profileName, bool isActive, bool dcMode)
     {
-        Dispatcher.Invoke(() => WidgetControl.UpdateState(profileName, isActive, dcMode));
+        Dispatcher.Invoke(() =>
+        {
+            bool blur = MainWindow.SettingsManager.TaskbarWidgetBackgroundBlur;
+            WidgetControl.UpdateState(profileName, isActive, dcMode, blur);
+        });
+    }
+
+    public void SetWidgetVisible(bool visible)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            WidgetControl.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+            if (visible)
+                CalculateAndSetPosition();
+        });
+    }
+
+    public void ApplySettings()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            _trayHandle = IntPtr.Zero; // Force refresh
+            CalculateAndSetPosition();
+        });
     }
 
     private void SetupWindow()
@@ -75,15 +92,12 @@ public partial class TaskbarWidgetWindow : Window
                 return;
             }
 
-            // Make this a child of the taskbar (FluentFlyout pattern)
             int style = NativeMethods.GetWindowLong(_handle, NativeMethods.GWL_STYLE);
             style = (int)(((uint)style & ~NativeMethods.WS_POPUP) | NativeMethods.WS_CHILD);
             NativeMethods.SetWindowLong(_handle, NativeMethods.GWL_STYLE, style);
-
             NativeMethods.SetParent(_handle, _taskbarHandle);
             _isDockedInTaskbar = true;
 
-            // Find the system tray notification area handle
             _trayHandle = NativeMethods.FindWindowEx(_taskbarHandle, IntPtr.Zero, "TrayNotifyWnd", null);
 
             CalculateAndSetPosition();
@@ -113,37 +127,30 @@ public partial class TaskbarWidgetWindow : Window
             int taskbarWidth = taskbarRect.Width;
             int taskbarHeight = taskbarRect.Height;
 
-            // Re-parent if needed (e.g. after explorer restart)
+            // Re-parent if needed (explorer restart)
             if (NativeMethods.GetParent(_handle) != _taskbarHandle)
                 NativeMethods.SetParent(_handle, _taskbarHandle);
 
-            // Convert screen coords to client coords for SetWindowPos
             var containerPos = new NativeMethods.POINT
             {
                 X = taskbarRect.Left, Y = taskbarRect.Top
             };
             NativeMethods.ScreenToClient(_taskbarHandle, ref containerPos);
 
-            // Set the window to cover the full taskbar area
             NativeMethods.SetWindowPos(_handle, IntPtr.Zero,
                 containerPos.X, containerPos.Y,
                 taskbarWidth, taskbarHeight,
                 NativeMethods.SWP_NOZORDER | NativeMethods.SWP_NOACTIVATE |
                 NativeMethods.SWP_ASYNCWINDOWPOS | NativeMethods.SWP_SHOWWINDOW);
 
-            // Widget dimensions
             int widgetPhysicalW = (int)(130 * dpiScale);
             int widgetPhysicalH = (int)(28 * dpiScale);
-            int manualPadding = (int)(MainWindow.SettingsManager.TaskbarWidgetPadding * dpiScale);
 
-            // Calculate vertical position (centered, -1 like FluentFlyout)
             int widgetTop = (taskbarHeight - widgetPhysicalH) / 2 - 1;
 
-            // Calculate horizontal position based on alignment
             int widgetLeft = CalculateHorizontalPosition(
-                taskbarRect, taskbarWidth, widgetPhysicalW, manualPadding, dpiScale);
+                taskbarRect, taskbarWidth, widgetPhysicalW, dpiScale);
 
-            // Position the control within the Canvas
             Dispatcher.Invoke(() =>
             {
                 Canvas.SetLeft(WidgetControl, widgetLeft / dpiScale);
@@ -152,7 +159,6 @@ public partial class TaskbarWidgetWindow : Window
                 WidgetControl.Height = widgetPhysicalH / dpiScale;
             });
 
-            // Set the click region so only the widget area is interactive
             IntPtr rgn = NativeMethods.CreateRectRgn(
                 widgetLeft, widgetTop, widgetLeft + widgetPhysicalW, widgetTop + widgetPhysicalH);
             NativeMethods.SetWindowRgn(_handle, rgn, true);
@@ -167,44 +173,60 @@ public partial class TaskbarWidgetWindow : Window
         }
     }
 
-    /// <summary>
-    /// Calculate horizontal position following FluentFlyout's logic:
-    /// Left  = left edge + padding
-    /// Center = center of taskbar
-    /// Right = left of TrayNotifyWnd (system tray area), so it doesn't collide
-    /// </summary>
     private int CalculateHorizontalPosition(
-        NativeMethods.RECT taskbarRect, int taskbarWidth, int widgetWidth, int manualPadding, double dpiScale)
+        NativeMethods.RECT taskbarRect, int taskbarWidth, int widgetWidth, double dpiScale)
     {
         int position = MainWindow.SettingsManager.TaskbarWidgetPosition;
+        bool autoPadding = MainWindow.SettingsManager.TaskbarWidgetAutoPadding;
+        int manualPadding = (int)(MainWindow.SettingsManager.TaskbarWidgetManualPadding * dpiScale);
 
         switch (position)
         {
             case 0: // Left
-                return 20 + manualPadding;
+            {
+                int baseOffset = 20;
+                if (autoPadding)
+                {
+                    // Auto-detect Windows Widgets button (DesktopPEBHost or similar)
+                    IntPtr widgetsHandle = NativeMethods.FindWindowEx(
+                        _taskbarHandle, IntPtr.Zero, "Windows.UI.Composition.DesktopWindowContentBridge", null);
+                    if (widgetsHandle != IntPtr.Zero)
+                    {
+                        NativeMethods.GetWindowRect(widgetsHandle, out var widgetBtnRect);
+                        int widgetBtnRight = widgetBtnRect.Right - taskbarRect.Left;
+                        if (widgetBtnRight > baseOffset)
+                            baseOffset = widgetBtnRight + 4;
+                    }
+                }
+                return baseOffset + manualPadding;
+            }
 
             case 1: // Center
                 return (taskbarWidth - widgetWidth) / 2 + manualPadding;
 
-            case 2: // Right — position next to system tray (FluentFlyout pattern)
+            case 2: // Right (to the left of system tray)
+            {
                 try
                 {
                     if (_trayHandle == IntPtr.Zero)
-                        _trayHandle = NativeMethods.FindWindowEx(_taskbarHandle, IntPtr.Zero, "TrayNotifyWnd", null);
+                        _trayHandle = NativeMethods.FindWindowEx(
+                            _taskbarHandle, IntPtr.Zero, "TrayNotifyWnd", null);
 
                     if (_trayHandle != IntPtr.Zero)
                     {
                         NativeMethods.GetWindowRect(_trayHandle, out var trayRect);
-                        // Position just left of the tray area
-                        return trayRect.Left - taskbarRect.Left - widgetWidth - 1 + manualPadding;
+                        int autoPos = trayRect.Left - taskbarRect.Left - widgetWidth - 1;
+                        return autoPadding
+                            ? autoPos + manualPadding
+                            : taskbarWidth - widgetWidth - 20 + manualPadding;
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.LogError("Failed to get tray position", ex);
                 }
-                // Fallback: right edge with padding
                 return taskbarWidth - widgetWidth - 20 + manualPadding;
+            }
 
             default:
                 return 20;
@@ -220,7 +242,7 @@ public partial class TaskbarWidgetWindow : Window
 
     private void StartPositionTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1500) };
+        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(2000) };
         _positionTimer.Tick += (_, _) =>
         {
             Dispatcher.BeginInvoke(CalculateAndSetPosition, DispatcherPriority.Background);
@@ -242,9 +264,14 @@ public partial class TaskbarWidgetWindow : Window
 
     private void OnWidgetClicked()
     {
+        if (!MainWindow.SettingsManager.TaskbarWidgetClickable) return;
         if (Application.Current.MainWindow is MainWindow mw)
             mw.OpenSettingsWindow();
     }
 
-    public void RefreshPosition() => CalculateAndSetPosition();
+    public void RefreshPosition()
+    {
+        _trayHandle = IntPtr.Zero; // Force tray handle refresh
+        CalculateAndSetPosition();
+    }
 }

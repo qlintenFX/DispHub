@@ -31,9 +31,14 @@ public class SettingsData
     public uint DcToggleKey { get; set; }     // VK code, 0 = no toggle hotkey
     public uint DcToggleMod { get; set; }     // Modifier bitmask
     public DcKeybindSettings DcKeybinds { get; set; } = new();
+    public int LastActiveProfileIndex { get; set; }  // Persisted active profile
     public bool TaskbarWidgetEnabled { get; set; }
     public int TaskbarWidgetPosition { get; set; }  // 0=Left, 1=Center, 2=Right
-    public int TaskbarWidgetPadding { get; set; } = 10;
+    public int TaskbarWidgetManualPadding { get; set; }
+    public bool TaskbarWidgetAutoPadding { get; set; } = true;
+    public bool TaskbarWidgetClickable { get; set; } = true;
+    public bool TaskbarWidgetBackgroundBlur { get; set; }
+    public bool TaskbarWidgetHideWhenInactive { get; set; }
     public bool FlyoutEnabled { get; set; } = true;
     public int FlyoutDuration { get; set; } = 1800;  // ms
 }
@@ -96,6 +101,12 @@ public class SettingsManager
         set { _data.TrayLeftClickBehavior = value; Save(); }
     }
 
+    public int LastActiveProfileIndex
+    {
+        get => _data.LastActiveProfileIndex;
+        set { _data.LastActiveProfileIndex = value; Save(); }
+    }
+
     public bool TaskbarWidgetEnabled
     {
         get => _data.TaskbarWidgetEnabled;
@@ -108,10 +119,34 @@ public class SettingsManager
         set { _data.TaskbarWidgetPosition = value; Save(); }
     }
 
-    public int TaskbarWidgetPadding
+    public int TaskbarWidgetManualPadding
     {
-        get => _data.TaskbarWidgetPadding;
-        set { _data.TaskbarWidgetPadding = value; Save(); }
+        get => _data.TaskbarWidgetManualPadding;
+        set { _data.TaskbarWidgetManualPadding = value; Save(); }
+    }
+
+    public bool TaskbarWidgetAutoPadding
+    {
+        get => _data.TaskbarWidgetAutoPadding;
+        set { _data.TaskbarWidgetAutoPadding = value; Save(); }
+    }
+
+    public bool TaskbarWidgetClickable
+    {
+        get => _data.TaskbarWidgetClickable;
+        set { _data.TaskbarWidgetClickable = value; Save(); }
+    }
+
+    public bool TaskbarWidgetBackgroundBlur
+    {
+        get => _data.TaskbarWidgetBackgroundBlur;
+        set { _data.TaskbarWidgetBackgroundBlur = value; Save(); }
+    }
+
+    public bool TaskbarWidgetHideWhenInactive
+    {
+        get => _data.TaskbarWidgetHideWhenInactive;
+        set { _data.TaskbarWidgetHideWhenInactive = value; Save(); }
     }
 
     public bool FlyoutEnabled

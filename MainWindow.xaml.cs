@@ -61,6 +61,11 @@ public partial class MainWindow : Window
 
         HotkeyManager.HotkeyPressed += OnProfileHotkeyPressed;
 
+        // Restore last active profile from settings (default to 0 if invalid)
+        int savedIndex = SettingsManager.LastActiveProfileIndex;
+        _activeProfileIndex = savedIndex >= 0 && savedIndex < ProfileManager.Profiles.Count
+            ? savedIndex : 0;
+
         // Register hotkeys for the saved mode
         if (SettingsManager.DynamicControlsEnabled)
         {
@@ -72,6 +77,14 @@ public partial class MainWindow : Window
         {
             foreach (var p in ProfileManager.Profiles)
                 HotkeyManager.RegisterHotkey(p);
+
+            // Apply the restored profile on startup
+            if (_activeProfileIndex >= 0 && _activeProfileIndex < ProfileManager.Profiles.Count)
+            {
+                var profile = ProfileManager.Profiles[_activeProfileIndex];
+                DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
+                Logger.Log($"Startup: applied saved profile '{profile.Name}' (index {_activeProfileIndex})");
+            }
         }
 
         RegisterDcToggleHotkey();
@@ -111,39 +124,53 @@ public partial class MainWindow : Window
 
     private static void PowerOn()
     {
-        // CRITICAL: Set state to active FIRST so guards pass
+        // CRITICAL: Set state to active FIRST so registration guards pass
         IsDisplayActive = true;
 
         // Re-register hotkeys for current mode
         if (DynamicControls.IsEnabled)
+        {
             DynamicControls.RegisterHotkeys(HotkeyManager, SettingsManager.DcKeybinds);
+        }
         else
+        {
             foreach (var p in ProfileManager.Profiles)
                 HotkeyManager.RegisterHotkey(p);
+        }
 
         _staticInstance?.RegisterDcToggleHotkey();
 
-        // Reapply display settings
+        // Restore display settings — always have a valid profile to fall back to
         if (DynamicControls.IsEnabled)
         {
             DisplayManager.ApplySettings(
                 DynamicControls.Gamma, DynamicControls.Contrast, DynamicControls.Vibrance);
         }
-        else if (_staticInstance != null &&
-                 _staticInstance._activeProfileIndex >= 0 &&
-                 _staticInstance._activeProfileIndex < ProfileManager.Profiles.Count)
+        else if (_staticInstance != null)
         {
-            var p = ProfileManager.Profiles[_staticInstance._activeProfileIndex];
-            DisplayManager.ApplySettings(p.Gamma, p.Contrast, p.Vibrance);
-            ActiveProfileChanged?.Invoke(_staticInstance._activeProfileIndex);
+            int idx = _staticInstance._activeProfileIndex;
+
+            // If no valid profile index, default to 0
+            if (idx < 0 || idx >= ProfileManager.Profiles.Count)
+            {
+                idx = ProfileManager.Profiles.Count > 0 ? 0 : -1;
+                _staticInstance._activeProfileIndex = idx;
+            }
+
+            if (idx >= 0)
+            {
+                var p = ProfileManager.Profiles[idx];
+                DisplayManager.ApplySettings(p.Gamma, p.Contrast, p.Vibrance);
+                ActiveProfileChanged?.Invoke(idx);
+                Logger.Log($"PowerOn: restored profile '{p.Name}'");
+            }
         }
 
-        Logger.Log("Display powered ON — hotkeys re-registered, profile restored");
+        Logger.Log("Display powered ON");
     }
 
     private static void UnregisterAllHotkeys()
     {
-        // Profile hotkeys
         foreach (var profile in ProfileManager.Profiles)
         {
             if (profile.HotkeyId > 0)
@@ -153,10 +180,8 @@ public partial class MainWindow : Window
             }
         }
 
-        // DC hotkeys
         DynamicControls.UnregisterHotkeys(HotkeyManager);
 
-        // DC toggle hotkey
         if (_staticInstance != null && _staticInstance._dcToggleHotkeyId > 0)
         {
             HotkeyManager.UnregisterRawHotkey(_staticInstance._dcToggleHotkeyId);
@@ -172,7 +197,6 @@ public partial class MainWindow : Window
     {
         if (!IsDisplayActive) return;
 
-        // Unregister profile hotkeys
         foreach (var profile in ProfileManager.Profiles)
         {
             if (profile.HotkeyId > 0)
@@ -258,6 +282,7 @@ public partial class MainWindow : Window
         if (_activeProfileIndex < 0) return;
 
         DisplayManager.ApplySettings(e.Profile.Gamma, e.Profile.Contrast, e.Profile.Vibrance);
+        SettingsManager.LastActiveProfileIndex = _activeProfileIndex;
         Logger.Log($"Hotkey applied profile: {e.Profile.Name}");
 
         ActiveProfileChanged?.Invoke(_activeProfileIndex);
@@ -279,6 +304,7 @@ public partial class MainWindow : Window
             _staticInstance._activeProfileIndex = index;
 
         DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
+        SettingsManager.LastActiveProfileIndex = index;
         Logger.Log($"Applied profile: {profile.Name}");
 
         ActiveProfileChanged?.Invoke(index);
@@ -288,8 +314,6 @@ public partial class MainWindow : Window
         if (SettingsManager.FlyoutEnabled)
             _staticInstance?.ShowProfileFlyout(profile.Name);
     }
-
-    // ── Profile flyout ──
 
     private void ShowProfileFlyout(string profileName)
     {
@@ -444,6 +468,12 @@ public partial class MainWindow : Window
         _staticInstance?._taskbarWidget?.RefreshPosition();
     }
 
+    public static void UpdateTaskbarWidgetSettings()
+    {
+        _staticInstance?._taskbarWidget?.ApplySettings();
+        _staticInstance?.UpdateWidgetDisplay();
+    }
+
     private void ShowTaskbarWidget()
     {
         if (_taskbarWidget != null) return;
@@ -462,6 +492,15 @@ public partial class MainWindow : Window
     private void UpdateWidgetDisplay()
     {
         if (_taskbarWidget == null) return;
+
+        bool hideWhenInactive = SettingsManager.TaskbarWidgetHideWhenInactive;
+        if (hideWhenInactive && !IsDisplayActive)
+        {
+            _taskbarWidget.SetWidgetVisible(false);
+            return;
+        }
+
+        _taskbarWidget.SetWidgetVisible(true);
         string name = _activeProfileIndex >= 0 && _activeProfileIndex < ProfileManager.Profiles.Count
             ? ProfileManager.Profiles[_activeProfileIndex].Name
             : "No Profile";
@@ -477,6 +516,7 @@ public partial class MainWindow : Window
     {
         HideTaskbarWidget();
         DisplayManager?.ResetToDefault();
+        DisplayManager?.Dispose();
         HotkeyManager?.Dispose();
         Application.Current.Shutdown();
     }

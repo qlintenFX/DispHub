@@ -23,7 +23,7 @@
         </StackPanel>
 
         <!-- Enable/Disable -->
-        <ui:CardControl Margin="0,0,0,8">
+        <ui:CardControl Icon="{ui:SymbolIcon TextboxAlignBottom24}" Margin="0,0,0,16">
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Enable Taskbar Widget" FontSize="14" FontWeight="Regular"/>
@@ -35,8 +35,12 @@
                              Unchecked="WidgetEnabled_Changed"/>
         </ui:CardControl>
 
+        <ui:InfoBar IsOpen="True" Severity="Warning" IsClosable="False" Margin="0,0,0,12"
+                    Title="Visual issues may occur"
+                    Message="The taskbar widget uses Win32 embedding which may have visual glitches on some systems or after explorer restarts."/>
+
         <!-- Position -->
-        <ui:CardControl Margin="0,0,0,8">
+        <ui:CardControl Icon="{ui:SymbolIcon ArrowMove24}" Margin="0,0,0,3">
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Position" FontSize="14" FontWeight="Regular"/>
@@ -50,25 +54,79 @@
             </ComboBox>
         </ui:CardControl>
 
-        <!-- Padding -->
-        <ui:CardControl Margin="0,0,0,8">
+        <!-- Padding Settings (expandable) -->
+        <ui:CardExpander Icon="{ui:SymbolIcon Wrench24}" ContentPadding="6" Margin="0,0,0,12">
+            <ui:CardExpander.Header>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Padding Settings" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Fine-tune widget position with automatic or manual padding" FontSize="12" Opacity="0.5"/>
+                </StackPanel>
+            </ui:CardExpander.Header>
+            <StackPanel>
+                <ui:CardControl Icon="{ui:SymbolIcon PaddingRight24}" Margin="0,0,0,3">
+                    <ui:CardControl.Header>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Auto Padding" FontSize="14" FontWeight="Regular"/>
+                            <TextBlock Text="Automatically avoid taskbar buttons and system areas" FontSize="12" Opacity="0.5"/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch x:Name="AutoPaddingToggle"
+                                     Checked="AutoPadding_Changed"
+                                     Unchecked="AutoPadding_Changed"/>
+                </ui:CardControl>
+                <ui:CardControl Icon="{ui:SymbolIcon ArrowFit20}" Margin="0,0,0,0">
+                    <ui:CardControl.Header>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Manual Padding" FontSize="14" FontWeight="Regular"/>
+                            <TextBlock Text="Additional offset in pixels from the edge" FontSize="12" Opacity="0.5"/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:TextBox x:Name="ManualPaddingTextBox" Width="60" ClearButtonEnabled="False"
+                                    TextChanged="ManualPadding_TextChanged"/>
+                        <TextBlock Text="px" FontSize="14" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:CardControl>
+            </StackPanel>
+        </ui:CardExpander>
+
+        <!-- Clickable -->
+        <ui:CardControl Icon="{ui:SymbolIcon ExpandUpRight24}" Margin="0,0,0,3">
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Padding" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Distance from taskbar edge (pixels)" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Clickable" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Click the widget to open DisplayHub settings" FontSize="12" Opacity="0.5"/>
                 </StackPanel>
             </ui:CardControl.Header>
-            <StackPanel Orientation="Horizontal">
-                <Slider x:Name="PaddingSlider" Minimum="0" Maximum="100" Width="120"
-                        TickFrequency="1" IsSnapToTickEnabled="True"
-                        ValueChanged="Padding_ValueChanged"/>
-                <TextBlock x:Name="PaddingValueText" Text="10" FontSize="13"
-                           VerticalAlignment="Center" Margin="8,0,0,0" MinWidth="24"/>
-            </StackPanel>
+            <ui:ToggleSwitch x:Name="ClickableToggle"
+                             Checked="Clickable_Changed"
+                             Unchecked="Clickable_Changed"/>
         </ui:CardControl>
 
-        <ui:InfoBar IsOpen="True" Severity="Informational" IsClosable="False" Margin="0,8,0,0"
-                    Title="Restart may be required"
-                    Message="Changes to widget position take effect automatically. Enabling or disabling the widget takes effect immediately."/>
+        <!-- Background Blur -->
+        <ui:CardControl Icon="{ui:SymbolIcon ColorBackground24}" Margin="0,0,0,3">
+            <ui:CardControl.Header>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Background" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Show a subtle background behind the widget text" FontSize="12" Opacity="0.5"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch x:Name="BackgroundBlurToggle"
+                             Checked="BackgroundBlur_Changed"
+                             Unchecked="BackgroundBlur_Changed"/>
+        </ui:CardControl>
+
+        <!-- Hide When Inactive -->
+        <ui:CardControl Icon="{ui:SymbolIcon EyeOff24}" Margin="0,0,0,12">
+            <ui:CardControl.Header>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Hide When Powered Off" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Completely hide the widget when display power is off" FontSize="12" Opacity="0.5"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ui:ToggleSwitch x:Name="HideWhenInactiveToggle"
+                             Checked="HideWhenInactive_Changed"
+                             Unchecked="HideWhenInactive_Changed"/>
+        </ui:CardControl>
     </StackPanel>
 </Page>

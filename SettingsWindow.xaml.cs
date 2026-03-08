@@ -11,12 +11,14 @@ namespace DisplayHub;
 public partial class SettingsWindow : FluentWindow
 {
     private ScrollViewer? _contentScrollViewer;
+    private readonly Action<bool> _powerChangedHandler;
 
     public SettingsWindow()
     {
         InitializeComponent();
+        _powerChangedHandler = _ => Dispatcher.Invoke(UpdatePowerButtonVisual);
         Loaded += (_, _) => UpdatePowerButtonVisual();
-        MainWindow.DisplayPowerChanged += _ => Dispatcher.Invoke(UpdatePowerButtonVisual);
+        MainWindow.DisplayPowerChanged += _powerChangedHandler;
     }
 
     private void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
@@ -28,6 +30,8 @@ public partial class SettingsWindow : FluentWindow
 
     protected override void OnClosing(CancelEventArgs e)
     {
+        MainWindow.DisplayPowerChanged -= _powerChangedHandler;
+
         if (MainWindow.SettingsManager.CloseToTray)
         {
             e.Cancel = true;
@@ -36,6 +40,7 @@ public partial class SettingsWindow : FluentWindow
         }
 
         MainWindow.DisplayManager?.ResetToDefault();
+        MainWindow.DisplayManager?.Dispose();
         MainWindow.HotkeyManager?.Dispose();
         Application.Current.Shutdown();
     }

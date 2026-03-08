@@ -154,7 +154,7 @@ public partial class ProfilesPage : Page, INavigationAware
 
         _selectedIndex = index;
         LoadSelectedProfile();
-        ApplyCurrentSliderValues();
+        MainWindow.ApplyProfile(index);
         RefreshProfileCards();
     }
 
