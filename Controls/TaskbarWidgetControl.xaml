@@ -2,28 +2,41 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             Width="120" Height="40"
-             Background="Transparent">
-    <Border x:Name="WidgetBorder"
-            Background="#22FFFFFF"
-            CornerRadius="8"
-            Padding="8,4"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
+             Width="140" Height="32"
+             Background="Transparent"
+             TextOptions.TextRenderingMode="ClearType"
+             TextOptions.TextFormattingMode="Ideal"
+             FontFamily="Segoe UI Variable, Segoe UI">
+    <Border x:Name="MainBorder" CornerRadius="6" ClipToBounds="True"
             Cursor="Hand"
-            MouseEnter="WidgetBorder_MouseEnter"
-            MouseLeave="WidgetBorder_MouseLeave"
-            MouseLeftButtonUp="WidgetBorder_MouseLeftButtonUp">
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Ellipse x:Name="StatusDot" Width="8" Height="8" Margin="0,0,6,0"
-                     Fill="#4CAF50" VerticalAlignment="Center"/>
-            <TextBlock x:Name="ProfileText"
-                       Text="No Profile"
-                       FontSize="12"
-                       Foreground="White"
-                       VerticalAlignment="Center"
-                       TextTrimming="CharacterEllipsis"
-                       MaxWidth="85"/>
-        </StackPanel>
+            MouseEnter="Border_MouseEnter"
+            MouseLeave="Border_MouseLeave"
+            MouseLeftButtonUp="Border_Click">
+        <Border.Background>
+            <SolidColorBrush Color="White" Opacity="0"/>
+        </Border.Background>
+        <Border x:Name="TopBorder" BorderThickness="0,1,0,0" CornerRadius="5" Margin="0,0,0,1">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Center"
+                  RenderTransformOrigin="0,0.5">
+                <Grid.RenderTransform>
+                    <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                </Grid.RenderTransform>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,6,0">
+                    <Ellipse x:Name="StatusDot" Width="8" Height="8" Margin="0,0,6,0"
+                             VerticalAlignment="Center"/>
+                    <TextBlock x:Name="ProfileText"
+                               Text="No Profile"
+                               FontSize="12"
+                               FontWeight="Normal"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               MaxWidth="110">
+                        <TextBlock.Foreground>
+                            <SolidColorBrush Color="White"/>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Border>
 </UserControl>

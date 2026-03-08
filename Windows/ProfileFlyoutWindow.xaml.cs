@@ -25,23 +25,18 @@ public partial class ProfileFlyoutWindow : Window
 
     private void PositionWindow()
     {
-        Left = (SystemParameters.WorkArea.Width / 2) - (Width / 2);
+        Left = (SystemParameters.WorkArea.Width - Width) / 2;
     }
 
-    public async void ShowProfileFlyout(string profileName, bool isActive)
+    public async void ShowProfileFlyout(string profileName)
     {
         ProfileNameText.Text = profileName;
-
-        // Accent bar visibility based on active state
-        AccentBar.Opacity = isActive ? 1.0 : 0.3;
-
         PositionWindow();
 
         if (_isHiding)
         {
             _isHiding = false;
-            // Slide up from below workarea
-            double targetTop = SystemParameters.WorkArea.Height - Height - 8;
+            double targetTop = SystemParameters.WorkArea.Height - Height - 12;
             Top = SystemParameters.WorkArea.Height;
             Opacity = 0;
             Show();
@@ -59,16 +54,15 @@ public partial class ProfileFlyoutWindow : Window
             BeginAnimation(OpacityProperty, fadeAnim);
         }
 
-        // Reset timer
         _cts.Cancel();
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
 
         try
         {
-            await Task.Delay(DisplayDurationMs, token);
+            int duration = MainWindow.SettingsManager.FlyoutDuration;
+            await Task.Delay(duration, token);
 
-            // Slide down to hide
             _isHiding = true;
             double hideTarget = SystemParameters.WorkArea.Height;
             var moveOut = new DoubleAnimation(hideTarget, TimeSpan.FromMilliseconds(AnimationDurationMs))
@@ -90,9 +84,6 @@ public partial class ProfileFlyoutWindow : Window
                 Top = -9999;
             }
         }
-        catch (TaskCanceledException)
-        {
-            // New profile switch came in, flyout stays visible
-        }
+        catch (TaskCanceledException) { }
     }
 }

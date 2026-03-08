@@ -34,6 +34,8 @@ public class SettingsData
     public bool TaskbarWidgetEnabled { get; set; }
     public int TaskbarWidgetPosition { get; set; }  // 0=Left, 1=Center, 2=Right
     public int TaskbarWidgetPadding { get; set; } = 10;
+    public bool FlyoutEnabled { get; set; } = true;
+    public int FlyoutDuration { get; set; } = 1800;  // ms
 }
 
 public class SettingsManager
@@ -110,6 +112,18 @@ public class SettingsManager
     {
         get => _data.TaskbarWidgetPadding;
         set { _data.TaskbarWidgetPadding = value; Save(); }
+    }
+
+    public bool FlyoutEnabled
+    {
+        get => _data.FlyoutEnabled;
+        set { _data.FlyoutEnabled = value; Save(); }
+    }
+
+    public int FlyoutDuration
+    {
+        get => _data.FlyoutDuration;
+        set { _data.FlyoutDuration = value; Save(); }
     }
 
     public void SaveDcKeybinds() => Save();

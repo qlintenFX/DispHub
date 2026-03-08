@@ -21,6 +21,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
     private void OnPageLoaded(object sender, RoutedEventArgs e)
     {
         _isLoaded = false;
+        SyncPowerState();
         DynamicControlsToggle.IsChecked = MainWindow.DynamicControls.IsEnabled;
         DcActiveInfoBar.IsOpen = MainWindow.DynamicControls.IsEnabled;
         _isLoaded = true;
@@ -30,12 +31,14 @@ public partial class DynamicControlsPage : Page, INavigationAware
 
         MainWindow.DynamicControls.ValuesChanged += OnValuesChanged;
         MainWindow.DynamicControlsModeChanged += OnModeChanged;
+        MainWindow.DisplayPowerChanged += OnPowerChanged;
     }
 
     private void OnPageUnloaded(object sender, RoutedEventArgs e)
     {
         MainWindow.DynamicControls.ValuesChanged -= OnValuesChanged;
         MainWindow.DynamicControlsModeChanged -= OnModeChanged;
+        MainWindow.DisplayPowerChanged -= OnPowerChanged;
     }
 
     public Task OnNavigatedToAsync()
@@ -44,6 +47,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
         {
             UpdateValueDisplay();
             UpdateKeybindLabels();
+            SyncPowerState();
         }
         return Task.CompletedTask;
     }
@@ -64,6 +68,18 @@ public partial class DynamicControlsPage : Page, INavigationAware
             DcActiveInfoBar.IsOpen = dcEnabled;
             _isLoaded = true;
         });
+    }
+
+    private void OnPowerChanged(bool active)
+    {
+        Dispatcher.Invoke(SyncPowerState);
+    }
+
+    private void SyncPowerState()
+    {
+        bool powerOff = !MainWindow.IsDisplayActive;
+        PowerOffBar.IsOpen = powerOff;
+        DynamicControlsToggle.IsEnabled = !powerOff;
     }
 
     private void UpdateValueDisplay()

@@ -25,13 +25,16 @@ public partial class ProfilesPage : Page, INavigationAware
         RefreshProfileCards();
         LoadSelectedProfile();
         SyncDynamicControlsState();
+        SyncPowerState();
 
         MainWindow.ActiveProfileChanged += OnActiveProfileChanged;
+        MainWindow.DisplayPowerChanged += OnPowerChanged;
     }
 
     private void OnPageUnloaded(object sender, RoutedEventArgs e)
     {
         MainWindow.ActiveProfileChanged -= OnActiveProfileChanged;
+        MainWindow.DisplayPowerChanged -= OnPowerChanged;
     }
 
     public Task OnNavigatedToAsync()
@@ -40,6 +43,7 @@ public partial class ProfilesPage : Page, INavigationAware
         {
             RefreshProfileCards();
             SyncDynamicControlsState();
+            SyncPowerState();
         }
         return Task.CompletedTask;
     }
@@ -67,9 +71,31 @@ public partial class ProfilesPage : Page, INavigationAware
     {
         bool dcActive = MainWindow.DynamicControls.IsEnabled;
         DcWarningBar.IsOpen = dcActive;
-        SlidersPanel.IsEnabled = !dcActive;
-        ActionButtonsPanel.IsEnabled = !dcActive;
-        ProfileCardPanel.IsEnabled = !dcActive;
+        bool canEdit = !dcActive && MainWindow.IsDisplayActive;
+        SlidersPanel.IsEnabled = canEdit;
+        ActionButtonsPanel.IsEnabled = canEdit;
+        ProfileCardPanel.IsEnabled = canEdit;
+    }
+
+    // ── Power state ──
+
+    private void SyncPowerState()
+    {
+        bool powerOff = !MainWindow.IsDisplayActive;
+        PowerOffBar.IsOpen = powerOff;
+        bool canEdit = !powerOff && !MainWindow.DynamicControls.IsEnabled;
+        SlidersPanel.IsEnabled = canEdit;
+        ActionButtonsPanel.IsEnabled = canEdit;
+        ProfileCardPanel.IsEnabled = canEdit;
+    }
+
+    private void OnPowerChanged(bool active)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            SyncPowerState();
+            SyncDynamicControlsState();
+        });
     }
 
     // ── Profile card rendering ──

@@ -30,6 +30,7 @@
                 <ui:NavigationViewItem Content="Home" Icon="{ui:SymbolIcon Home24}" TargetPageType="{x:Type pages:HomePage}" />
                 <ui:NavigationViewItem Content="Profiles" Icon="{ui:SymbolIcon SlideMultiple24}" TargetPageType="{x:Type pages:ProfilesPage}" />
                 <ui:NavigationViewItem Content="Dynamic Controls" Icon="{ui:SymbolIcon Gauge20}" TargetPageType="{x:Type pages:DynamicControlsPage}" />
+                <ui:NavigationViewItem Content="Flyout" Icon="{ui:SymbolIcon AlertBadge24}" TargetPageType="{x:Type pages:FlyoutPage}" />
                 <ui:NavigationViewItem Content="Taskbar Widget" Icon="{ui:SymbolIcon TextboxAlignBottom24}" TargetPageType="{x:Type pages:TaskbarWidgetPage}" />
                 <ui:NavigationViewItem Content="Settings" Icon="{ui:SymbolIcon Settings24}" TargetPageType="{x:Type pages:SettingsPage}" />
             </ui:NavigationView.MenuItems>

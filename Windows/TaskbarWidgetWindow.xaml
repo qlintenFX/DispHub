@@ -7,9 +7,11 @@
         Background="Transparent"
         ShowInTaskbar="False"
         Topmost="True"
-        Width="120" Height="40"
-        ResizeMode="NoResize">
-    <Canvas>
+        Width="140" Height="40"
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded"
+        Visibility="Collapsed">
+    <Canvas x:Name="WidgetCanvas" Background="Transparent">
         <controls:TaskbarWidgetControl x:Name="WidgetControl"/>
     </Canvas>
 </Window>

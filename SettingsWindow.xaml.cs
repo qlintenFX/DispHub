@@ -23,7 +23,6 @@ public partial class SettingsWindow : FluentWindow
     {
         ApplyTheme(MainWindow.SettingsManager.AppTheme);
         RootNavigation.Navigate(typeof(HomePage));
-
         RootNavigation.Navigated += (_, _) => ResetScrollPosition();
     }
 
@@ -50,19 +49,23 @@ public partial class SettingsWindow : FluentWindow
     {
         bool active = MainWindow.IsDisplayActive;
         PowerButton.ToolTip = active
-            ? "Display Power: On (click to turn off)"
-            : "Display Power: Off (click to turn on)";
+            ? "Display Power: ON — click to turn off"
+            : "Display Power: OFF — click to turn on";
 
-        PowerIcon.Foreground = active
-            ? (Brush)FindResource("TextFillColorPrimaryBrush")
-            : Brushes.OrangeRed;
-
-        PowerButton.Opacity = active ? 1.0 : 0.8;
+        if (active)
+        {
+            PowerIcon.Symbol = SymbolRegular.Power24;
+            PowerIcon.Foreground = (Brush)FindResource("TextFillColorPrimaryBrush");
+            PowerButton.Opacity = 1.0;
+        }
+        else
+        {
+            PowerIcon.Symbol = SymbolRegular.Power24;
+            PowerIcon.Foreground = Brushes.OrangeRed;
+            PowerButton.Opacity = 0.85;
+        }
     }
 
-    /// <summary>
-    /// Reset scroll to top on page navigation (FluentFlyout pattern).
-    /// </summary>
     private void ResetScrollPosition()
     {
         Dispatcher.BeginInvoke(() =>
@@ -72,13 +75,10 @@ public partial class SettingsWindow : FluentWindow
                 _contentScrollViewer ??= FindScrollableScrollViewer(RootNavigation);
                 _contentScrollViewer?.ScrollToVerticalOffset(0);
             }
-            catch { /* ignore scroll reset failures */ }
+            catch { }
         }, System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
-    /// <summary>
-    /// Traverse visual tree to find NavigationView's internal ScrollViewer.
-    /// </summary>
     private static ScrollViewer? FindScrollableScrollViewer(DependencyObject parent)
     {
         for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
@@ -86,10 +86,8 @@ public partial class SettingsWindow : FluentWindow
             var child = VisualTreeHelper.GetChild(parent, i);
             if (child is ScrollViewer sv && sv.ScrollableHeight > 0)
                 return sv;
-
             var result = FindScrollableScrollViewer(child);
-            if (result != null)
-                return result;
+            if (result != null) return result;
         }
         return null;
     }
