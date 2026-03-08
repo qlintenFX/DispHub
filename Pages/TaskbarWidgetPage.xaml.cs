@@ -21,7 +21,7 @@ public partial class TaskbarWidgetPage : Page, INavigationAware
         WidgetEnabledToggle.IsChecked = sm.TaskbarWidgetEnabled;
         PositionComboBox.SelectedIndex = sm.TaskbarWidgetPosition;
         AutoPaddingToggle.IsChecked = sm.TaskbarWidgetAutoPadding;
-        ManualPaddingTextBox.Text = sm.TaskbarWidgetManualPadding.ToString();
+        ManualPaddingBox.Value = sm.TaskbarWidgetManualPadding;
         ClickableToggle.IsChecked = sm.TaskbarWidgetClickable;
         BackgroundBlurToggle.IsChecked = sm.TaskbarWidgetBackgroundBlur;
         HideWhenInactiveToggle.IsChecked = sm.TaskbarWidgetHideWhenInactive;
@@ -53,14 +53,12 @@ public partial class TaskbarWidgetPage : Page, INavigationAware
         MainWindow.RefreshTaskbarWidget();
     }
 
-    private void ManualPadding_TextChanged(object sender, TextChangedEventArgs e)
+    private void ManualPadding_ValueChanged(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        if (int.TryParse(ManualPaddingTextBox.Text, out int val) && val >= -500 && val <= 500)
-        {
-            MainWindow.SettingsManager.TaskbarWidgetManualPadding = val;
-            MainWindow.RefreshTaskbarWidget();
-        }
+        int val = (int)(ManualPaddingBox.Value ?? 0);
+        MainWindow.SettingsManager.TaskbarWidgetManualPadding = val;
+        MainWindow.RefreshTaskbarWidget();
     }
 
     private void Clickable_Changed(object sender, RoutedEventArgs e)

@@ -24,13 +24,11 @@
 
         <ui:InfoBar x:Name="PowerOffBar"
                     Title="DisplayHub Disabled"
-                    Message="Enable DisplayHub to manage profiles."
                     Severity="Error" IsOpen="False" IsClosable="False"
                     Margin="0,0,0,12"/>
 
         <ui:InfoBar x:Name="DcWarningBar"
                     Title="Dynamic Controls Active"
-                    Message="Disable Dynamic Controls first to switch profiles."
                     Severity="Warning" IsOpen="False" IsClosable="False"
                     Margin="0,0,0,12"/>
 

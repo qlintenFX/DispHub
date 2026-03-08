@@ -24,13 +24,11 @@
 
         <ui:InfoBar x:Name="PowerOffBar"
                     Title="DisplayHub Disabled"
-                    Message="Enable DisplayHub to use Dynamic Controls."
                     Severity="Error" IsOpen="False" IsClosable="False"
                     Margin="0,0,0,12"/>
 
         <ui:InfoBar x:Name="DcActiveInfoBar"
-                    Title="Dynamic Controls active"
-                    Message="Profile switching is disabled. Adjust display settings in real-time using hotkeys."
+                    Title="Dynamic Controls Active"
                     Severity="Informational" IsOpen="False" IsClosable="False"
                     Margin="0,0,0,12"/>
 
