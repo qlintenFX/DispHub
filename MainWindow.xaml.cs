@@ -8,6 +8,7 @@ using DisplayHub.Services.Hotkeys;
 using DisplayHub.Services.Logging;
 using DisplayHub.Services.Profiles;
 using DisplayHub.Services.Settings;
+using DisplayHub.Windows;
 
 namespace DisplayHub;
 
@@ -25,9 +26,16 @@ public partial class MainWindow : Window
     /// <summary>Fired when DC mode is toggled (via hotkey or tray).</summary>
     public static event Action<bool>? DynamicControlsModeChanged;
 
+    /// <summary>Fired when display power is toggled on/off.</summary>
+    public static event Action<bool>? DisplayPowerChanged;
+
+    /// <summary>Whether the display settings are currently applied (not reset).</summary>
+    public static bool IsDisplayActive { get; private set; } = true;
+
     private const int MaxTrayProfiles = 10;
 
     private SettingsWindow? _settingsWindow;
+    private ProfileFlyoutWindow? _profileFlyout;
     private HwndSource? _hwndSource;
     private int _dcToggleHotkeyId = -1;
     private int _activeProfileIndex = -1;
@@ -35,6 +43,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        _staticInstance = this;
     }
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -56,7 +65,6 @@ public partial class MainWindow : Window
 
         HotkeyManager.HotkeyPressed += OnProfileHotkeyPressed;
 
-        // Mode-based hotkey registration — only one mode's keys are active at a time
         if (SettingsManager.DynamicControlsEnabled)
         {
             DynamicControls.IsEnabled = true;
@@ -68,9 +76,43 @@ public partial class MainWindow : Window
         }
 
         RegisterDcToggleHotkey();
+
+        _profileFlyout = new ProfileFlyoutWindow();
+
         BuildTrayContextMenu();
         OpenSettingsWindow();
     }
+
+    // ── Display power toggle ──
+
+    public static void ToggleDisplayPower()
+    {
+        if (IsDisplayActive)
+        {
+            DisplayManager.ResetToDefault();
+            IsDisplayActive = false;
+            Logger.Log("Display powered off (reset to default)");
+        }
+        else
+        {
+            // Reapply the active profile or DC values
+            if (DynamicControls.IsEnabled)
+            {
+                DisplayManager.ApplySettings(DynamicControls.Gamma, DynamicControls.Contrast, DynamicControls.Vibrance);
+            }
+            else if (_staticInstance?._activeProfileIndex >= 0 &&
+                     _staticInstance._activeProfileIndex < ProfileManager.Profiles.Count)
+            {
+                var p = ProfileManager.Profiles[_staticInstance._activeProfileIndex];
+                DisplayManager.ApplySettings(p.Gamma, p.Contrast, p.Vibrance);
+            }
+            IsDisplayActive = true;
+            Logger.Log("Display powered on");
+        }
+        DisplayPowerChanged?.Invoke(IsDisplayActive);
+    }
+
+    private static MainWindow? _staticInstance;
 
     // ── Mode-based hotkey management ──
 
@@ -125,10 +167,7 @@ public partial class MainWindow : Window
         }
     }
 
-    public void UpdateDcToggleHotkey()
-    {
-        RegisterDcToggleHotkey();
-    }
+    public void UpdateDcToggleHotkey() => RegisterDcToggleHotkey();
 
     // ── WndProc hotkey dispatch ──
 
@@ -139,7 +178,6 @@ public partial class MainWindow : Window
 
         int id = wParam.ToInt32();
 
-        // DC toggle hotkey is always active regardless of mode
         if (id == _dcToggleHotkeyId && _dcToggleHotkeyId > 0)
         {
             if (DynamicControls.IsEnabled)
@@ -151,15 +189,10 @@ public partial class MainWindow : Window
             return IntPtr.Zero;
         }
 
-        // Route to whichever mode is active (only that mode's keys are registered)
         if (DynamicControls.IsEnabled)
-        {
             DynamicControls.ProcessHotkey(id);
-        }
         else
-        {
             HotkeyManager.ProcessHotkey(wParam);
-        }
 
         handled = true;
         return IntPtr.Zero;
@@ -170,11 +203,26 @@ public partial class MainWindow : Window
         _activeProfileIndex = ProfileManager.IndexOf(e.Profile);
         if (_activeProfileIndex < 0) return;
 
-        DisplayManager.ApplySettings(e.Profile.Gamma, e.Profile.Contrast, e.Profile.Vibrance);
+        if (IsDisplayActive)
+        {
+            DisplayManager.ApplySettings(e.Profile.Gamma, e.Profile.Contrast, e.Profile.Vibrance);
+        }
         Logger.Log($"Hotkey applied profile: {e.Profile.Name}");
 
         ActiveProfileChanged?.Invoke(_activeProfileIndex);
         BuildTrayContextMenu();
+        ShowProfileFlyout(e.Profile.Name);
+    }
+
+    // ── Profile flyout ──
+
+    private void ShowProfileFlyout(string profileName)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            _profileFlyout ??= new ProfileFlyoutWindow();
+            _profileFlyout.ShowProfileFlyout(profileName, IsDisplayActive);
+        });
     }
 
     // ── System tray context menu ──
@@ -196,11 +244,25 @@ public partial class MainWindow : Window
 
             TrayContextMenu.Items.Add(new Separator());
 
-            // Profiles
+            // Active profile header
             bool dcActive = DynamicControls.IsEnabled;
             var profiles = ProfileManager.Profiles;
-            int profileCount = Math.Min(profiles.Count, MaxTrayProfiles);
 
+            string activeLabel = _activeProfileIndex >= 0 && _activeProfileIndex < profiles.Count
+                ? $"Active: {profiles[_activeProfileIndex].Name}"
+                : "No active profile";
+            var headerItem = new MenuItem
+            {
+                Header = activeLabel,
+                IsEnabled = false,
+                FontWeight = FontWeights.SemiBold
+            };
+            TrayContextMenu.Items.Add(headerItem);
+
+            TrayContextMenu.Items.Add(new Separator());
+
+            // Profile list
+            int profileCount = Math.Min(profiles.Count, MaxTrayProfiles);
             for (int i = 0; i < profileCount; i++)
             {
                 var profile = profiles[i];
@@ -209,7 +271,8 @@ public partial class MainWindow : Window
                 {
                     Header = profile.Name,
                     IsChecked = index == _activeProfileIndex,
-                    IsEnabled = !dcActive
+                    IsEnabled = !dcActive,
+                    FontWeight = index == _activeProfileIndex ? FontWeights.SemiBold : FontWeights.Normal
                 };
                 profileItem.Click += (_, _) => ApplyProfileFromTray(index);
                 TrayContextMenu.Items.Add(profileItem);
@@ -243,10 +306,8 @@ public partial class MainWindow : Window
             };
             dcItem.Click += (_, _) =>
             {
-                if (DynamicControls.IsEnabled)
-                    SwitchToProfileMode();
-                else
-                    SwitchToDcMode();
+                if (DynamicControls.IsEnabled) SwitchToProfileMode();
+                else SwitchToDcMode();
                 BuildTrayContextMenu();
             };
             TrayContextMenu.Items.Add(dcItem);
@@ -271,10 +332,14 @@ public partial class MainWindow : Window
 
         var profile = profiles[index];
         _activeProfileIndex = index;
-        DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
+
+        if (IsDisplayActive)
+            DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
+
         Logger.Log($"Tray applied profile: {profile.Name}");
         ActiveProfileChanged?.Invoke(index);
         BuildTrayContextMenu();
+        ShowProfileFlyout(profile.Name);
     }
 
     // ── Window management ──

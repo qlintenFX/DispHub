@@ -2,6 +2,7 @@
 using DisplayHub.Pages;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
 using Wpf.Ui.Controls;
 
 namespace DisplayHub;
@@ -11,6 +12,8 @@ public partial class SettingsWindow : FluentWindow
     public SettingsWindow()
     {
         InitializeComponent();
+        Loaded += (_, _) => UpdatePowerButtonVisual();
+        MainWindow.DisplayPowerChanged += _ => Dispatcher.Invoke(UpdatePowerButtonVisual);
     }
 
     private void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
@@ -28,15 +31,31 @@ public partial class SettingsWindow : FluentWindow
             return;
         }
 
-        // Close-to-tray is off: fully exit the application
         MainWindow.DisplayManager?.ResetToDefault();
         MainWindow.HotkeyManager?.Dispose();
         Application.Current.Shutdown();
     }
 
-    private void ResetDisplay_Click(object sender, RoutedEventArgs e)
+    private void PowerToggle_Click(object sender, RoutedEventArgs e)
     {
-        MainWindow.DisplayManager.ResetToDefault();
+        MainWindow.ToggleDisplayPower();
+    }
+
+    private void UpdatePowerButtonVisual()
+    {
+        bool active = MainWindow.IsDisplayActive;
+        PowerButton.ToolTip = active ? "Display Power: On (click to turn off)" : "Display Power: Off (click to turn on)";
+
+        if (active)
+        {
+            PowerButton.Foreground = (Brush)FindResource("TextFillColorPrimaryBrush");
+            PowerButton.Opacity = 1.0;
+        }
+        else
+        {
+            PowerButton.Foreground = Brushes.OrangeRed;
+            PowerButton.Opacity = 0.8;
+        }
     }
 
     public static void ApplyTheme(int theme)

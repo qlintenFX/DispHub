@@ -46,10 +46,11 @@
             </ui:TitleBar.Icon>
             <ui:TitleBar.Header>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,140,0">
-                    <ui:Button Icon="{ui:SymbolIcon Power24}"
+                    <ui:Button x:Name="PowerButton"
+                               Icon="{ui:SymbolIcon Power24}"
                                Appearance="Transparent"
-                               ToolTip="Reset Display to Default"
-                               Click="ResetDisplay_Click"
+                               ToolTip="Toggle Display Power (On/Off)"
+                               Click="PowerToggle_Click"
                                Padding="8,4"/>
                 </StackPanel>
             </ui:TitleBar.Header>
