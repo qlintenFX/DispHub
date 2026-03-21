@@ -29,6 +29,20 @@ public static class AppConstants
     public const int VibranceDefault = 50;
     public const int VibranceStep = 5;
 
+    // Color Temperature (Night Light)
+    // Slider value mapping:
+    // 0   = 2700K (warmest)
+    // 50  = 6500K (neutral white point)
+    // 100 = 9500K (coolest)
+    public const int ColorTempMin = 0;
+    public const int ColorTempMax = 100;
+    public const int ColorTempNeutralValue = 50;
+    public const int ColorTempMinKelvin = 2700;
+    public const int ColorTempNeutralKelvin = 6500;
+    public const int ColorTempMaxKelvin = 9500;
+    public const int ColorTempDefault = ColorTempNeutralValue;
+    public const int ColorTempStep = 5;
+
     // Gamma Ramp
     public const int GammaRampSize = 256;
     public const double GammaRampMaxValue = 65535.0;

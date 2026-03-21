@@ -28,13 +28,34 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="App Theme" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Choose the application color theme" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Choose the application color theme" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ComboBox x:Name="ThemeComboBox" SelectionChanged="ThemeComboBox_SelectionChanged" MinWidth="120">
                 <ComboBoxItem Content="System"/>
                 <ComboBoxItem Content="Light"/>
                 <ComboBoxItem Content="Dark"/>
+            </ComboBox>
+        </ui:CardControl>
+
+        <!-- Accent Color Picker -->
+        <ui:CardControl Margin="0,0,0,12">
+            <ui:CardControl.Header>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Accent Color" FontSize="14" FontWeight="Regular"/>
+                    <TextBlock Text="Customize buttons and highlights" FontSize="12" Opacity="0.7"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+            <ComboBox x:Name="AccentColorComboBox" SelectionChanged="AccentColorComboBox_SelectionChanged" MinWidth="180">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="16" Height="16" CornerRadius="3" Margin="0,0,10,0"
+                                    Background="{Binding Color}"/>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
         </ui:CardControl>
 
@@ -58,7 +79,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Start with Windows" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Automatically start DisplayHub when Windows starts" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Automatically start DisplayHub when Windows starts" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch x:Name="StartWithWindowsToggle"
@@ -72,7 +93,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Left-click behavior" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Choose what happens when you left-click the tray icon" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Choose what happens when you left-click the tray icon" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ComboBox x:Name="TrayLeftClickComboBox" SelectionChanged="TrayLeftClick_SelectionChanged" MinWidth="140">
@@ -87,7 +108,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Toggle DisplayHub" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Global hotkey to enable or disable DisplayHub" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Global hotkey to enable or disable DisplayHub" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:Button x:Name="MasterToggleKeybind" Content="None" Click="MasterToggleKeybind_Click"

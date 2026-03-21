@@ -44,7 +44,7 @@
                                                         Height="4"
                                                         Margin="0,0,-10,0"
                                                         Opacity="0.9"
-                                                        Background="{ui:ThemeResource AccentTextFillColorTertiaryBrush}" />
+                                                        Background="{DynamicResource AccentFillColorDefaultBrush}" />
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>

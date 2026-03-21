@@ -43,25 +43,6 @@ public partial class TaskbarWidgetWindow : Window
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
-        var source = (HwndSource)PresentationSource.FromDependencyObject(this);
-        source.AddHook(WndProc);
-    }
-
-    private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-    {
-        // Prevent taskbar interface tools from querying this window (FluentFlyout pattern)
-        switch (msg)
-        {
-            case 0x003D: // WM_GETOBJECT
-            case 0x0018: // WM_SHOWWINDOW
-            case 0x0046: // WM_WINDOWPOSCHANGING
-            case 0x0083: // WM_NCCALCSIZE
-            case 0x0281: // WM_IME_SETCONTEXT
-            case 0x0282: // WM_IME_NOTIFY
-                handled = true;
-                return IntPtr.Zero;
-        }
-        return IntPtr.Zero;
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -96,6 +77,8 @@ public partial class TaskbarWidgetWindow : Window
             _trayHandle = IntPtr.Zero;
             _widgetButtonElement = null;
             _taskbarFrameElement = null;
+            _widgetButtonBounds = null;
+            _taskbarFrameBounds = null;
             CalculateAndSetPosition();
         });
     }
@@ -133,87 +116,72 @@ public partial class TaskbarWidgetWindow : Window
         }
     }
 
-    // UI Automation element detection (FluentFlyout approach)
+    // UI Automation element detection - non-blocking with caching
+    // Returns cached values immediately; refreshes cache in background
 
     private (bool Found, Rect Bounds) GetTaskbarXamlElementRect(
-        ref AutomationElement? cache, string automationId)
+        ref AutomationElement? cache, ref Rect? cachedBounds, string automationId)
     {
         if (_taskbarHandle == IntPtr.Zero) return (false, Rect.Empty);
 
-        try
+        // Return cached bounds if available
+        if (cache != null && cachedBounds.HasValue)
+            return (true, cachedBounds.Value);
+
+        // Kick off async refresh if not already running
+        if (!_pendingAutomationTasks.TryGetValue(automationId, out var pending) || pending.IsCompleted)
         {
-            if (cache == null)
+            var localCache = cache;
+            var findTask = Task.Run(() =>
             {
-                if (_pendingAutomationTasks.TryGetValue(automationId, out var pending) && !pending.IsCompleted)
-                    return (false, Rect.Empty);
-
-                AutomationElement? found = null;
-                var findTask = Task.Run(() =>
+                try
                 {
-                    var root = AutomationElement.FromHandle(_taskbarHandle);
-                    found = root.FindFirst(TreeScope.Descendants,
-                        new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
-                });
-                _pendingAutomationTasks[automationId] = findTask;
+                    if (localCache == null)
+                    {
+                        var root = AutomationElement.FromHandle(_taskbarHandle);
+                        localCache = root.FindFirst(TreeScope.Descendants,
+                            new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
+                    }
+                    return localCache?.Current.BoundingRectangle ?? Rect.Empty;
+                }
+                catch { return Rect.Empty; }
+            });
 
-                if (!findTask.Wait(1000))
-                    return (false, Rect.Empty);
+            _pendingAutomationTasks[automationId] = findTask;
 
-                findTask.GetAwaiter().GetResult();
-                cache = found;
-            }
-
-            if (cache == null) return (false, Rect.Empty);
-
-            try
+            // Fire-and-forget update of cache when complete
+            _ = findTask.ContinueWith(t =>
             {
-                if (_pendingAutomationTasks.TryGetValue(automationId, out var pending2) && !pending2.IsCompleted)
+                if (t.IsCompletedSuccessfully && t.Result != Rect.Empty)
                 {
-                    cache = null;
-                    return (false, Rect.Empty);
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        if (automationId == "WidgetsButton")
+                        {
+                            _widgetButtonElement = localCache;
+                            _widgetButtonBounds = t.Result;
+                        }
+                        else if (automationId == "TaskbarFrame")
+                        {
+                            _taskbarFrameElement = localCache;
+                            _taskbarFrameBounds = t.Result;
+                        }
+                    });
                 }
-
-                var cachedElement = cache;
-                var boundsTask = Task.Run(() => cachedElement.Current.BoundingRectangle);
-                _pendingAutomationTasks[automationId] = boundsTask;
-
-                if (!boundsTask.Wait(500))
-                {
-                    cache = null;
-                    return (false, Rect.Empty);
-                }
-
-                var rect = boundsTask.GetAwaiter().GetResult();
-                if (rect == Rect.Empty)
-                {
-                    cache = null;
-                    return (false, Rect.Empty);
-                }
-                return (true, rect);
-            }
-            catch (ElementNotAvailableException)
-            {
-                cache = null;
-                return (false, Rect.Empty);
-            }
+            }, TaskScheduler.Default);
         }
-        catch (COMException)
-        {
-            cache = null;
-            return (false, Rect.Empty);
-        }
-        catch (Exception)
-        {
-            cache = null;
-            return (false, Rect.Empty);
-        }
+
+        return (false, Rect.Empty);
     }
 
+    private Rect? _widgetButtonBounds;
+    private Rect? _taskbarFrameBounds;
+
     private (bool, Rect) GetWidgetsButtonRect()
-        => GetTaskbarXamlElementRect(ref _widgetButtonElement, "WidgetsButton");
+        => GetTaskbarXamlElementRect(ref _widgetButtonElement, ref _widgetButtonBounds, "WidgetsButton");
 
     private (bool, Rect) GetTaskbarFrameRect()
-        => GetTaskbarXamlElementRect(ref _taskbarFrameElement, "TaskbarFrame");
+        => GetTaskbarXamlElementRect(ref _taskbarFrameElement, ref _taskbarFrameBounds, "TaskbarFrame");
 
     // Position calculation
 
@@ -304,41 +272,47 @@ public partial class TaskbarWidgetWindow : Window
 
         switch (position)
         {
-            case 0: // Left - position after Widgets button
+            case 0: // Left - position after Widgets button (FluentFlyout approach)
             {
                 int widgetLeft = 20;
 
                 if (autoPadding)
                 {
-                    // Use UI Automation to find WidgetsButton (FluentFlyout approach)
+                    // Use UI Automation to find WidgetsButton
                     var (found, wbRect) = GetWidgetsButtonRect();
+                    // Make sure it's on the left side, otherwise ignore
                     if (found && wbRect.Right < (taskbarRect.Left + taskbarRect.Right) / 2.0)
+                    {
                         widgetLeft = (int)(wbRect.Right - taskbarRect.Left) + 2;
+                    }
                 }
 
                 return widgetLeft + manualPadding;
             }
 
-            case 1: // Center - position in left gap, before Start button area
+            case 1: // Center - true center of the taskbar (FluentFlyout approach)
             {
-                int leftBound = 20;
-                var (found, wbRect) = GetWidgetsButtonRect();
-                if (found && wbRect.Right < (taskbarRect.Left + taskbarRect.Right) / 2.0)
-                    leftBound = (int)(wbRect.Right - taskbarRect.Left) + 2;
-
-                // Center of the left gap between left elements and center Start area
-                int centerOfTaskbar = taskbarWidth / 2;
-                int gapCenter = (leftBound + centerOfTaskbar) / 2;
-                int widgetLeft = gapCenter - widgetWidth / 2;
-
-                widgetLeft = Math.Max(widgetLeft, leftBound + 4);
-                widgetLeft = Math.Min(widgetLeft, centerOfTaskbar - widgetWidth - 20);
-
+                int widgetLeft = (taskbarWidth - widgetWidth) / 2;
                 return widgetLeft + manualPadding;
             }
 
-            case 2: // Right - to the left of system tray
+            case 2: // Right - next to system tray with auto padding for widgets button
             {
+                int widgetLeft = taskbarWidth - widgetWidth - 20;
+
+                // Try to position next to widgets button if auto padding is enabled
+                if (autoPadding)
+                {
+                    var (found, wbRect) = GetWidgetsButtonRect();
+                    // Make sure it's on the right side, otherwise fall back to tray
+                    if (found && wbRect.Left > (taskbarRect.Left + taskbarRect.Right) / 2.0)
+                    {
+                        widgetLeft = (int)(wbRect.Left - taskbarRect.Left) - widgetWidth - 2;
+                        return widgetLeft + manualPadding;
+                    }
+                }
+
+                // Fall back to position next to system tray
                 try
                 {
                     if (_trayHandle == IntPtr.Zero)
@@ -348,15 +322,15 @@ public partial class TaskbarWidgetWindow : Window
                     if (_trayHandle != IntPtr.Zero)
                     {
                         NativeMethods.GetWindowRect(_trayHandle, out var trayRect);
-                        int widgetLeft = trayRect.Left - taskbarRect.Left - widgetWidth - 1;
-                        return widgetLeft + manualPadding;
+                        widgetLeft = trayRect.Left - taskbarRect.Left - widgetWidth - 4;
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.LogError("Failed to get tray position", ex);
                 }
-                return taskbarWidth - widgetWidth - 20 + manualPadding;
+
+                return widgetLeft + manualPadding;
             }
 
             default:
@@ -405,6 +379,8 @@ public partial class TaskbarWidgetWindow : Window
         _trayHandle = IntPtr.Zero;
         _widgetButtonElement = null;
         _taskbarFrameElement = null;
+        _widgetButtonBounds = null;
+        _taskbarFrameBounds = null;
         CalculateAndSetPosition();
     }
 }

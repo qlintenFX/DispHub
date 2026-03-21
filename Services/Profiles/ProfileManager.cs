@@ -77,7 +77,9 @@ public class ProfileManager
                 string json = File.ReadAllText(_profilesFilePath);
                 var loaded = JsonSerializer.Deserialize<List<Profile>>(json);
                 if (loaded != null && loaded.Count > 0)
+                {
                     _profiles = loaded;
+                }
                 else
                     CreateDefaultProfiles();
             }

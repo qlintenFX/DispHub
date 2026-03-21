@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Windows.Threading;
 using DisplayHub.Constants;
 using DisplayHub.Services.Logging;
 using Microsoft.Win32;
@@ -26,6 +27,7 @@ public class SettingsData
     public bool StartWithWindows { get; set; }
     public bool CloseToTray { get; set; }
     public int AppTheme { get; set; }  // 0=System, 1=Light, 2=Dark
+    public int AccentColor { get; set; }  // 0=System, 1-10=Preset colors
     public int TrayLeftClickBehavior { get; set; }  // 0=Open Settings, 1=Do Nothing
     public bool DynamicControlsEnabled { get; set; }
     public uint DcToggleKey { get; set; }     // VK code, 0 = no toggle hotkey
@@ -49,6 +51,8 @@ public class SettingsManager
 {
     private SettingsData _data;
     private readonly string _settingsFilePath;
+    private readonly DispatcherTimer _saveDebounceTimer;
+    private bool _savePending;
 
     public bool StartWithWindows
     {
@@ -71,6 +75,12 @@ public class SettingsManager
     {
         get => _data.AppTheme;
         set { _data.AppTheme = value; Save(); }
+    }
+
+    public int AccentColor
+    {
+        get => _data.AccentColor;
+        set { _data.AccentColor = value; Save(); }
     }
 
     public bool DynamicControlsEnabled
@@ -185,6 +195,18 @@ public class SettingsManager
 
         _settingsFilePath = Path.Combine(appDataPath, AppConstants.SettingsFileName);
         _data = Load();
+
+        // Debounce saves to avoid blocking UI on rapid changes
+        _saveDebounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+        _saveDebounceTimer.Tick += (_, _) =>
+        {
+            _saveDebounceTimer.Stop();
+            if (_savePending)
+            {
+                _savePending = false;
+                SaveToFileAsync();
+            }
+        };
     }
 
     private SettingsData Load()
@@ -206,11 +228,19 @@ public class SettingsManager
 
     private void Save()
     {
+        // Debounce: mark pending and restart timer
+        _savePending = true;
+        _saveDebounceTimer.Stop();
+        _saveDebounceTimer.Start();
+    }
+
+    private async void SaveToFileAsync()
+    {
         try
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
             string json = JsonSerializer.Serialize(_data, options);
-            File.WriteAllText(_settingsFilePath, json);
+            await File.WriteAllTextAsync(_settingsFilePath, json);
         }
         catch (Exception ex)
         {

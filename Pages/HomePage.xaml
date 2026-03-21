@@ -5,82 +5,106 @@
       Title="Home"
       Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
-    <StackPanel MaxWidth="1000" Margin="16">
-        <!-- App Header -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
-            <Image Source="/logo.png" Width="44" Height="44"/>
-            <TextBlock Text="DisplayHub" FontSize="24" FontWeight="Medium" Margin="12,0,0,0" VerticalAlignment="Center"/>
-            <TextBlock x:Name="VersionTextBlock" FontSize="14" FontWeight="Regular" VerticalAlignment="Bottom"
-                       Margin="10" Opacity="0.5"/>
-        </StackPanel>
+    <StackPanel MaxWidth="1000" Margin="16,16,16,40">
 
-        <!-- Dashboard -->
-        <TextBlock Text="Dashboard" FontSize="14" FontWeight="SemiBold" Margin="0,36,0,6"/>
-        <Grid Margin="-4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <!-- App Header -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Image Source="/logo.png" Width="40" Height="40"/>
+                <TextBlock Text="DisplayHub" FontSize="24" FontWeight="Medium" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                <TextBlock x:Name="VersionTextBlock" FontSize="13" FontWeight="Regular" VerticalAlignment="Center"
+                           Margin="10,4,0,0" Opacity="0.5"/>
+            </StackPanel>
 
-            <ui:CardAction Grid.Row="0" Grid.Column="0" Margin="4" Padding="12,20" IsChevronVisible="True" Click="Profiles_Click">
-                <ui:CardAction.Icon>
-                    <ui:SymbolIcon Symbol="SlideMultiple24" FontSize="30" Filled="False"/>
-                </ui:CardAction.Icon>
-                <StackPanel>
-                    <ui:TextBlock FontWeight="Medium" Text="Profiles"/>
-                    <ui:TextBlock x:Name="ProfileStatusText" Appearance="Secondary" Text="3 profiles" FontSize="12"/>
-                </StackPanel>
-            </ui:CardAction>
+            <!-- Features Section -->
+            <TextBlock Text="Features" FontSize="14" FontWeight="SemiBold" Margin="0,24,0,8"/>
+            <Grid Margin="-4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <ui:CardAction Grid.Row="0" Grid.Column="1" Margin="4" Padding="12,20" IsChevronVisible="True" Click="DynamicControls_Click">
-                <ui:CardAction.Icon>
-                    <ui:SymbolIcon Symbol="Gauge20" FontSize="30" Filled="False"/>
-                </ui:CardAction.Icon>
-                <StackPanel>
-                    <ui:TextBlock FontWeight="Medium" Text="Dynamic Controls"/>
-                    <ui:TextBlock x:Name="DcStatusText" Appearance="Secondary" Text="Disabled" FontSize="12"/>
-                </StackPanel>
-            </ui:CardAction>
+                <ui:CardAction Grid.Row="0" Grid.Column="0" Margin="4" Padding="14,18" IsChevronVisible="True" Click="Profiles_Click">
+                    <ui:CardAction.Icon>
+                        <ui:SymbolIcon Symbol="SlideMultiple24" FontSize="28" Filled="False"/>
+                    </ui:CardAction.Icon>
+                    <StackPanel>
+                        <ui:TextBlock FontWeight="Medium" Text="Profiles" FontSize="14"/>
+                        <ui:TextBlock x:Name="ProfileStatusText" Appearance="Secondary" Text="3 profiles configured" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardAction>
 
-            <ui:CardAction Grid.Row="1" Grid.Column="0" Margin="4" Padding="12,20" IsChevronVisible="True" Click="Settings_Click">
-                <ui:CardAction.Icon>
-                    <ui:SymbolIcon Symbol="Settings24" FontSize="30" Filled="False"/>
-                </ui:CardAction.Icon>
-                <StackPanel>
-                    <ui:TextBlock FontWeight="Medium" Text="Settings"/>
-                    <ui:TextBlock Appearance="Secondary" Text="Configure" FontSize="12"/>
-                </StackPanel>
-            </ui:CardAction>
+                <ui:CardAction Grid.Row="0" Grid.Column="1" Margin="4" Padding="14,18" IsChevronVisible="True" Click="DynamicControls_Click">
+                    <ui:CardAction.Icon>
+                        <ui:SymbolIcon Symbol="Gauge20" FontSize="28" Filled="False"/>
+                    </ui:CardAction.Icon>
+                    <StackPanel>
+                        <ui:TextBlock FontWeight="Medium" Text="Dynamic Controls" FontSize="14"/>
+                        <ui:TextBlock x:Name="DcStatusText" Appearance="Secondary" Text="Disabled" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardAction>
 
-            <ui:CardAction Grid.Row="1" Grid.Column="1" Margin="4" Padding="12,20" IsChevronVisible="True" Click="About_Click">
-                <ui:CardAction.Icon>
-                    <ui:SymbolIcon Symbol="Info20" FontSize="30" Filled="False"/>
-                </ui:CardAction.Icon>
-                <StackPanel>
-                    <ui:TextBlock FontWeight="Medium" Text="About"/>
-                    <ui:TextBlock Appearance="Secondary" Text="Credits &amp; licenses" FontSize="12"/>
-                </StackPanel>
-            </ui:CardAction>
-        </Grid>
+                <ui:CardAction Grid.Row="1" Grid.Column="0" Margin="4" Padding="14,18" IsChevronVisible="True" Click="TaskbarWidget_Click">
+                    <ui:CardAction.Icon>
+                        <ui:SymbolIcon Symbol="TextboxAlignBottom24" FontSize="28" Filled="False"/>
+                    </ui:CardAction.Icon>
+                    <StackPanel>
+                        <ui:TextBlock FontWeight="Medium" Text="Taskbar Widget" FontSize="14"/>
+                        <ui:TextBlock x:Name="WidgetStatusText" Appearance="Secondary" Text="Disabled" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardAction>
 
-        <!-- Quick Links -->
-        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-            <ui:Button Appearance="Transparent" Padding="16,4,16,0" Height="56" BorderBrush="Transparent" Margin="0,0,8,0" Click="GitHub_Click">
-                <StackPanel VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Open24" FontSize="18" Filled="False"/>
-                    <ui:TextBlock Text="GitHub" FontWeight="Normal"/>
-                </StackPanel>
-            </ui:Button>
-            <ui:Button Appearance="Transparent" Padding="16,4,16,0" Height="56" BorderBrush="Transparent" Margin="0,0,8,0" Click="ReportBug_Click">
-                <StackPanel VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Bug20" FontSize="18" Filled="False"/>
-                    <ui:TextBlock Text="Report Bug" FontWeight="Normal"/>
-                </StackPanel>
-            </ui:Button>
-        </StackPanel>
+                <ui:CardAction Grid.Row="1" Grid.Column="1" Margin="4" Padding="14,18" IsChevronVisible="True" Click="Flyout_Click">
+                    <ui:CardAction.Icon>
+                        <ui:SymbolIcon Symbol="Alert24" FontSize="28" Filled="False"/>
+                    </ui:CardAction.Icon>
+                    <StackPanel>
+                        <ui:TextBlock FontWeight="Medium" Text="Profile Flyout" FontSize="14"/>
+                        <ui:TextBlock x:Name="FlyoutStatusText" Appearance="Secondary" Text="Enabled" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardAction>
+
+                <ui:CardAction Grid.Row="2" Grid.Column="0" Margin="4" Padding="14,18" IsChevronVisible="True" Click="Settings_Click">
+                    <ui:CardAction.Icon>
+                        <ui:SymbolIcon Symbol="Settings24" FontSize="28" Filled="False"/>
+                    </ui:CardAction.Icon>
+                    <StackPanel>
+                        <ui:TextBlock FontWeight="Medium" Text="Settings" FontSize="14"/>
+                        <ui:TextBlock Appearance="Secondary" Text="App preferences" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardAction>
+
+                <ui:CardAction Grid.Row="2" Grid.Column="1" Margin="4" Padding="14,18" IsChevronVisible="True" Click="About_Click">
+                    <ui:CardAction.Icon>
+                        <ui:SymbolIcon Symbol="Info24" FontSize="28" Filled="False"/>
+                    </ui:CardAction.Icon>
+                    <StackPanel>
+                        <ui:TextBlock FontWeight="Medium" Text="About" FontSize="14"/>
+                        <ui:TextBlock Appearance="Secondary" Text="Credits &amp; licenses" FontSize="12"/>
+                    </StackPanel>
+                </ui:CardAction>
+            </Grid>
+
+            <!-- Quick Links -->
+            <TextBlock Text="Links" FontSize="14" FontWeight="SemiBold" Margin="0,24,0,8"/>
+            <StackPanel Orientation="Horizontal" Margin="-4,0,0,0">
+                <ui:Button Appearance="Transparent" Padding="14,8" BorderThickness="0" Margin="4,0" Click="GitHub_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Open24" FontSize="18" Filled="False" Margin="0,0,8,0"/>
+                        <TextBlock Text="GitHub" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:Button>
+                <ui:Button Appearance="Transparent" Padding="14,8" BorderThickness="0" Margin="4,0" Click="ReportBug_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Bug20" FontSize="18" Filled="False" Margin="0,0,8,0"/>
+                        <TextBlock Text="Report Bug" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:Button>
+            </StackPanel>
+
     </StackPanel>
 </Page>

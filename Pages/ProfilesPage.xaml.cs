@@ -188,6 +188,7 @@ public partial class ProfilesPage : Page, INavigationAware
         GammaSlider.Value = profile.Gamma;
         ContrastSlider.Value = profile.Contrast;
         VibranceSlider.Value = profile.Vibrance;
+        ColorTempSlider.Value = profile.ColorTemperature;
         _isLoaded = true;
 
         UpdateSliderLabels();
@@ -198,12 +199,26 @@ public partial class ProfilesPage : Page, INavigationAware
         GammaValueText.Text = GammaSlider.Value.ToString("F2");
         ContrastValueText.Text = $"{ContrastSlider.Value * 100:F0}%";
         VibranceValueText.Text = ((int)VibranceSlider.Value).ToString();
+        
+        int temp = (int)ColorTempSlider.Value;
+        ColorTempValueText.Text = temp < 40 ? "Warm" : temp > 60 ? "Cool" : "Neutral";
+
+        int kelvin = temp <= Constants.AppConstants.ColorTempNeutralValue
+            ? Constants.AppConstants.ColorTempMinKelvin +
+              (int)Math.Round((temp / (double)Constants.AppConstants.ColorTempNeutralValue) *
+                              (Constants.AppConstants.ColorTempNeutralKelvin - Constants.AppConstants.ColorTempMinKelvin))
+            : Constants.AppConstants.ColorTempNeutralKelvin +
+              (int)Math.Round(((temp - Constants.AppConstants.ColorTempNeutralValue) /
+                               (double)(Constants.AppConstants.ColorTempMax - Constants.AppConstants.ColorTempNeutralValue)) *
+                              (Constants.AppConstants.ColorTempMaxKelvin - Constants.AppConstants.ColorTempNeutralKelvin));
+
+        ColorTempKelvinText.Text = $"{kelvin} K";
     }
 
     private void ApplyCurrentSliderValues()
     {
         MainWindow.DisplayManager.ApplySettings(
-            GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value);
+            GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value, (int)ColorTempSlider.Value);
 
         var profiles = MainWindow.ProfileManager.Profiles;
         if (_selectedIndex >= 0 && _selectedIndex < profiles.Count)
@@ -233,6 +248,13 @@ public partial class ProfilesPage : Page, INavigationAware
         ApplyCurrentSliderValues();
     }
 
+    private void ColorTempSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!_isLoaded) return;
+        UpdateSliderLabels();
+        ApplyCurrentSliderValues();
+    }
+
     // ── Action buttons ──
 
     private void Save_Click(object sender, RoutedEventArgs e)
@@ -242,7 +264,7 @@ public partial class ProfilesPage : Page, INavigationAware
         if (_selectedIndex < 0 || _selectedIndex >= profiles.Count) return;
 
         var existing = profiles[_selectedIndex];
-        var updated = new Profile(existing.Name, GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value)
+        var updated = new Profile(existing.Name, GammaSlider.Value, ContrastSlider.Value, (int)VibranceSlider.Value, (int)ColorTempSlider.Value)
         {
             HotKeyValue = existing.HotKeyValue,
             HotKeyModifierValue = existing.HotKeyModifierValue,
@@ -322,13 +344,85 @@ public partial class ProfilesPage : Page, INavigationAware
         GammaSlider.Value = Constants.AppConstants.GammaDefault;
         ContrastSlider.Value = Constants.AppConstants.ContrastDefault;
         VibranceSlider.Value = Constants.AppConstants.VibranceDefault;
+        ColorTempSlider.Value = Constants.AppConstants.ColorTempDefault;
         _isLoaded = true;
 
         UpdateSliderLabels();
         MainWindow.DisplayManager.ApplySettings(
             Constants.AppConstants.GammaDefault,
             Constants.AppConstants.ContrastDefault,
-            Constants.AppConstants.VibranceDefault);
+            Constants.AppConstants.VibranceDefault,
+            Constants.AppConstants.ColorTempDefault);
         Logger.Log("Reset to default values");
+    }
+
+    private void GammaReset_Click(object sender, RoutedEventArgs e)
+    {
+        GammaSlider.Value = Constants.AppConstants.GammaDefault;
+    }
+
+    private void ContrastReset_Click(object sender, RoutedEventArgs e)
+    {
+        ContrastSlider.Value = Constants.AppConstants.ContrastDefault;
+    }
+
+    private void VibranceReset_Click(object sender, RoutedEventArgs e)
+    {
+        VibranceSlider.Value = Constants.AppConstants.VibranceDefault;
+    }
+
+    private void ColorTempReset_Click(object sender, RoutedEventArgs e)
+    {
+        ColorTempSlider.Value = Constants.AppConstants.ColorTempDefault;
+    }
+
+    // ── Right-click to reset individual sliders ──
+
+    private void GammaSlider_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        GammaSlider.Value = Constants.AppConstants.GammaDefault;
+        e.Handled = true;
+    }
+
+    private void GammaLabel_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        GammaSlider.Value = Constants.AppConstants.GammaDefault;
+        e.Handled = true;
+    }
+
+    private void ContrastSlider_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        ContrastSlider.Value = Constants.AppConstants.ContrastDefault;
+        e.Handled = true;
+    }
+
+    private void ContrastLabel_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        ContrastSlider.Value = Constants.AppConstants.ContrastDefault;
+        e.Handled = true;
+    }
+
+    private void VibranceSlider_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        VibranceSlider.Value = Constants.AppConstants.VibranceDefault;
+        e.Handled = true;
+    }
+
+    private void VibranceLabel_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        VibranceSlider.Value = Constants.AppConstants.VibranceDefault;
+        e.Handled = true;
+    }
+
+    private void ColorTempSlider_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        ColorTempSlider.Value = Constants.AppConstants.ColorTempDefault;
+        e.Handled = true;
+    }
+
+    private void ColorTempLabel_RightClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        ColorTempSlider.Value = Constants.AppConstants.ColorTempDefault;
+        e.Handled = true;
     }
 }

@@ -1,0 +1,74 @@
+name: Store packaging readiness
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-collect:
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      BUILD_CONFIGURATION: Release
+      TARGET_FRAMEWORK: net8.0-windows10.0.22000.0
+      PLATFORM: x64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore .\DisplayHub.sln
+
+      - name: Build
+        run: dotnet build .\DisplayHub.sln -c $env:BUILD_CONFIGURATION --no-restore -p:Platform=$env:PLATFORM
+
+      - name: Publish release binaries
+        run: |
+          dotnet publish .\DisplayHub.csproj `
+            -c $env:BUILD_CONFIGURATION `
+            -f $env:TARGET_FRAMEWORK `
+            -p:Platform=$env:PLATFORM `
+            -p:SelfContained=false `
+            --no-build `
+            -o .\artifacts\publish
+
+      - name: Collect store readiness inputs
+        run: |
+          New-Item -ItemType Directory -Path .\artifacts\store -Force | Out-Null
+          Copy-Item -Path .\Store\* -Destination .\artifacts\store -Recurse -Force
+
+      - name: MSIX placeholder
+        run: |
+          # Placeholder: this repository currently has no .wapproj/MSIX packaging project.
+          # Once a packaging project and signing setup exist, replace this note with an actual
+          # MSIX generation/signing step.
+          @'
+          MSIX generation is not configured in this repository yet.
+          Readiness workflow currently publishes build outputs and Store metadata templates.
+          Next steps:
+          1) Add packaging project (.wapproj or equivalent).
+          2) Configure package identity/signing cert via secrets.
+          3) Add CI step for MSIX creation and validation.
+          '@ | Set-Content -Path .\artifacts\msix-placeholder.txt
+
+      - name: Upload publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: displayhub-publish
+          path: .\artifacts\publish
+
+      - name: Upload store-readiness artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: store-readiness
+          path: |
+            .\artifacts\store
+            .\artifacts\msix-placeholder.txt

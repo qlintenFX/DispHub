@@ -1,0 +1,17 @@
+APP_NAME={{APP_NAME}}
+TAGLINE={{ONE_SENTENCE_VALUE_PROPOSITION}}
+
+OVERVIEW:
+{{2-3 sentences describing who the app is for, what problem it solves, and why it is useful.}}
+
+HIGHLIGHTS:
+- {{Feature 1 + benefit}}
+- {{Feature 2 + benefit}}
+- {{Feature 3 + benefit}}
+
+SYSTEM_REQUIREMENTS:
+- Windows {{MIN_WINDOWS_VERSION}}
+- {{OTHER_REQUIREMENTS_IF_ANY}}
+
+SUPPORT_AND_FEEDBACK:
+{{Support URL or contact method}}

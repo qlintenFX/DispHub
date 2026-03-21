@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using DisplayHub.Constants;
+using DisplayHub.Helpers;
 using DisplayHub.Services.Logging;
 
 namespace DisplayHub.Services.Display;
@@ -79,7 +80,7 @@ public class DisplayManager : IDisposable
         }
     }
 
-    public bool ApplySettings(double gamma, double contrast, int? vibrance = null)
+    public bool ApplySettings(double gamma, double contrast, int? vibrance = null, int colorTemperature = 50)
     {
         if (!_apiAvailable) return false;
         try
@@ -87,6 +88,10 @@ public class DisplayManager : IDisposable
             if (gamma < AppConstants.GammaMin || gamma > AppConstants.GammaMax ||
                 contrast < AppConstants.ContrastMin || contrast > AppConstants.ContrastMax)
                 return false;
+
+            // Convert color temperature (0-100) to RGB multipliers
+            // 0 = warmest (reduce blue, boost red), 50 = neutral, 100 = coolest (reduce red, boost blue)
+            var (rMult, gMult, bMult) = ColorTemperatureMapper.GetMultipliers(colorTemperature);
 
             RAMP ramp = new RAMP
             {
@@ -101,10 +106,11 @@ public class DisplayManager : IDisposable
                 double adjustedContrast = contrast * 2.0;
                 value = ((value / AppConstants.GammaRampMaxValue) - 0.5) * adjustedContrast + 0.5;
                 value = Math.Max(0, Math.Min(1, value)) * AppConstants.GammaRampMaxValue;
-                ushort val = (ushort)Math.Round(value);
-                ramp.Red[i] = val;
-                ramp.Green[i] = val;
-                ramp.Blue[i] = val;
+                
+                // Apply color temperature per channel
+                ramp.Red[i] = (ushort)Math.Round(Math.Clamp(value * rMult, 0, AppConstants.GammaRampMaxValue));
+                ramp.Green[i] = (ushort)Math.Round(Math.Clamp(value * gMult, 0, AppConstants.GammaRampMaxValue));
+                ramp.Blue[i] = (ushort)Math.Round(Math.Clamp(value * bMult, 0, AppConstants.GammaRampMaxValue));
             }
 
             bool success = false;

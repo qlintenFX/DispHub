@@ -1,0 +1,54 @@
+name: Release validation
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-build:
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      BUILD_CONFIGURATION: Release
+      TARGET_FRAMEWORK: net8.0-windows10.0.22000.0
+      PLATFORM: x64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore .\DisplayHub.sln
+
+      - name: Build solution (Release)
+        run: dotnet build .\DisplayHub.sln -c $env:BUILD_CONFIGURATION --no-restore -p:Platform=$env:PLATFORM
+
+      - name: Publish app binaries
+        run: |
+          dotnet publish .\DisplayHub.csproj `
+            -c $env:BUILD_CONFIGURATION `
+            -f $env:TARGET_FRAMEWORK `
+            -p:Platform=$env:PLATFORM `
+            -p:SelfContained=false `
+            --no-build `
+            -o .\artifacts\publish
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: displayhub-release-validation
+          path: .\artifacts\publish
+          if-no-files-found: error

@@ -1,0 +1,38 @@
+name: Stale triage
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark and close stale items
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has had no activity
+            for 45 days. It will be closed in 14 days if no further activity occurs.
+          close-issue-message: >
+            Closing this issue due to prolonged inactivity. If this still affects the latest
+            version of DisplayHub, feel free to reopen with updated details.
+          stale-pr-message: >
+            This pull request has been automatically marked as stale due to 30 days of inactivity.
+            It will be closed in 14 days if no updates are made.
+          close-pr-message: >
+            Closing this pull request due to inactivity. Please reopen if you want to continue it.
+          days-before-issue-stale: 45
+          days-before-issue-close: 14
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          exempt-issue-labels: "security,pinned,priority:high"
+          exempt-pr-labels: "security,pinned,priority:high"
+          stale-issue-label: "needs-triage"
+          stale-pr-label: "needs-triage"

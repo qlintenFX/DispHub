@@ -1,0 +1,18 @@
+VERSION={{SEMVER}}
+RELEASE_DATE_UTC={{YYYY-MM-DD}}
+RING={{Production|Flight}}
+
+WHAT_IS_NEW:
+- {{User-facing change 1}}
+- {{User-facing change 2}}
+- {{User-facing change 3}}
+
+FIXES:
+- {{Bug fix 1}}
+- {{Bug fix 2}}
+
+KNOWN_ISSUES:
+- {{Known issue or N/A}}
+
+ROLLBACK_NOTES:
+{{Rollback guidance or N/A}}

@@ -41,14 +41,21 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                         <ui:SymbolIcon Symbol="BrightnessHigh20" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Gamma" FontWeight="Medium" VerticalAlignment="Center"/>
+                        <TextBlock Text="Gamma" FontWeight="Medium" VerticalAlignment="Center" 
+                                   MouseRightButtonUp="GammaLabel_RightClick" Cursor="Hand"
+                                   ToolTip="Right-click to reset"/>
                         <TextBlock x:Name="GammaValueText" Text="1.00"
                                    Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
                     <Slider x:Name="GammaSlider"
                             Minimum="0.30" Maximum="2.80"
                             TickFrequency="0.01"
-                            ValueChanged="GammaSlider_ValueChanged"/>
+                            ValueChanged="GammaSlider_ValueChanged"
+                            MouseRightButtonUp="GammaSlider_RightClick"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <ui:Button Content="Reset" Appearance="Transparent" Padding="8,2"
+                                   FontSize="11" Click="GammaReset_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </ui:Card>
 
@@ -56,29 +63,76 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                         <ui:SymbolIcon Symbol="ArrowSync20" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Contrast" FontWeight="Medium" VerticalAlignment="Center"/>
+                        <TextBlock Text="Contrast" FontWeight="Medium" VerticalAlignment="Center"
+                                   MouseRightButtonUp="ContrastLabel_RightClick" Cursor="Hand"
+                                   ToolTip="Right-click to reset"/>
                         <TextBlock x:Name="ContrastValueText" Text="50%"
                                    Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
                     <Slider x:Name="ContrastSlider"
                             Minimum="0.00" Maximum="1.00"
                             TickFrequency="0.01"
-                            ValueChanged="ContrastSlider_ValueChanged"/>
+                            ValueChanged="ContrastSlider_ValueChanged"
+                            MouseRightButtonUp="ContrastSlider_RightClick"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <ui:Button Content="Reset" Appearance="Transparent" Padding="8,2"
+                                   FontSize="11" Click="ContrastReset_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </ui:Card>
 
-            <ui:Card Margin="0,0,0,16">
+            <ui:Card Margin="0,0,0,12">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                         <ui:SymbolIcon Symbol="FlashSettings20" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Vibrance" FontWeight="Medium" VerticalAlignment="Center"/>
+                        <TextBlock Text="Vibrance" FontWeight="Medium" VerticalAlignment="Center"
+                                   MouseRightButtonUp="VibranceLabel_RightClick" Cursor="Hand"
+                                   ToolTip="Right-click to reset"/>
                         <TextBlock x:Name="VibranceValueText" Text="50"
                                    Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
                     <Slider x:Name="VibranceSlider"
                             Minimum="0" Maximum="100"
                             TickFrequency="1"
-                            ValueChanged="VibranceSlider_ValueChanged"/>
+                            ValueChanged="VibranceSlider_ValueChanged"
+                            MouseRightButtonUp="VibranceSlider_RightClick"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <ui:Button Content="Reset" Appearance="Transparent" Padding="8,2"
+                                   FontSize="11" Click="VibranceReset_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,0,0,16">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <ui:SymbolIcon Symbol="WeatherMoon20" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Color Temperature" FontWeight="Medium" VerticalAlignment="Center"
+                                   MouseRightButtonUp="ColorTempLabel_RightClick" Cursor="Hand"
+                                   ToolTip="Right-click to reset"/>
+                        <TextBlock x:Name="ColorTempValueText" Text="Neutral"
+                                    Opacity="0.6" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Warm" FontSize="11" Opacity="0.7" VerticalAlignment="Center"/>
+                        <Slider x:Name="ColorTempSlider" Grid.Column="1"
+                                Minimum="0" Maximum="100"
+                                TickFrequency="5" Margin="8,0"
+                                ValueChanged="ColorTempSlider_ValueChanged"
+                                MouseRightButtonUp="ColorTempSlider_RightClick"/>
+                        <TextBlock Grid.Column="2" Text="Cool" FontSize="11" Opacity="0.7" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock x:Name="ColorTempKelvinText" Text="6500 K"
+                               FontSize="11" Opacity="0.7" Margin="0,6,0,0" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <ui:Button Content="Reset" Appearance="Transparent" Padding="8,2"
+                                   FontSize="11" Click="ColorTempReset_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </ui:Card>
         </StackPanel>

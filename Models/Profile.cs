@@ -10,6 +10,7 @@ public class Profile
     private double _gamma = AppConstants.GammaDefault;
     private double _contrast = AppConstants.ContrastDefault;
     private int _vibrance = AppConstants.VibranceDefault;
+    private int _colorTemperature = AppConstants.ColorTempDefault;
 
     public string Name
     {
@@ -33,6 +34,15 @@ public class Profile
     {
         get => _vibrance;
         set => _vibrance = Math.Clamp(value, AppConstants.VibranceMin, AppConstants.VibranceMax);
+    }
+
+    /// <summary>
+    /// Color temperature: 0 = warmest (night light), 50 = neutral, 100 = coolest
+    /// </summary>
+    public int ColorTemperature
+    {
+        get => _colorTemperature;
+        set => _colorTemperature = Math.Clamp(value, AppConstants.ColorTempMin, AppConstants.ColorTempMax);
     }
 
     public int HotKeyValue { get; set; }
@@ -65,11 +75,13 @@ public class Profile
 
     public Profile(string name, double gamma = AppConstants.GammaDefault,
                    double contrast = AppConstants.ContrastDefault,
-                   int vibrance = AppConstants.VibranceDefault)
+                   int vibrance = AppConstants.VibranceDefault,
+                   int colorTemperature = AppConstants.ColorTempDefault)
     {
         Name = name;
         Gamma = gamma;
         Contrast = contrast;
         Vibrance = vibrance;
+        ColorTemperature = colorTemperature;
     }
 }

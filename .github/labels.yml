@@ -1,0 +1,47 @@
+- name: needs-triage
+  color: "D4C5F9"
+  description: New issue or PR awaiting maintainer triage.
+
+- name: bug
+  color: "D73A4A"
+  description: Something is not working as expected.
+
+- name: enhancement
+  color: "A2EEEF"
+  description: New feature or improvement request.
+
+- name: documentation
+  color: "0075CA"
+  description: Documentation changes or additions.
+
+- name: good first issue
+  color: "7057FF"
+  description: Well-scoped task suitable for first-time contributors.
+
+- name: help wanted
+  color: "008672"
+  description: Community help is requested to move this forward.
+
+- name: needs-info
+  color: "FBCA04"
+  description: More details are required before work can proceed.
+
+- name: question
+  color: "CC317C"
+  description: Support or clarification request.
+
+- name: duplicate
+  color: "CFD3D7"
+  description: This issue or PR already exists elsewhere.
+
+- name: priority:low
+  color: "C2E0C6"
+  description: Nice to have, not time-sensitive.
+
+- name: priority:medium
+  color: "FBCA04"
+  description: Important but not urgent.
+
+- name: priority:high
+  color: "B60205"
+  description: High-impact and should be addressed soon.

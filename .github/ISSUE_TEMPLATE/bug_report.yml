@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible problem in DisplayHub
+title: "bug: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: What is broken?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: DisplayHub version
+      placeholder: "e.g. 1.0.0"
+
+  - type: input
+    attributes:
+      label: Windows version
+      placeholder: "e.g. 23H2 / build 22631"
+
+  - type: textarea
+    attributes:
+      label: Logs and screenshots
+      description: Attach files; remove sensitive info first.

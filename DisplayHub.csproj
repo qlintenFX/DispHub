@@ -22,4 +22,9 @@
     <Resource Include="logo.ico" />
     <Resource Include="logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="DisplayHub.Tests\**\*.cs" />
+    <EmbeddedResource Remove="DisplayHub.Tests\**\*" />
+    <None Remove="DisplayHub.Tests\**\*" />
+  </ItemGroup>
 </Project>

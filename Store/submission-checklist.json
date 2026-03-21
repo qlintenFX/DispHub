@@ -1,0 +1,119 @@
+{
+  "checklistName": "Microsoft Store submission readiness",
+  "version": 1,
+  "lastReviewedUtc": "YYYY-MM-DDTHH:MM:SSZ",
+  "items": [
+    {
+      "id": "identity.partner-center-product",
+      "category": "Identity",
+      "required": true,
+      "status": "pending",
+      "description": "Partner Center app entry exists and matches the intended public product identity.",
+      "evidence": ""
+    },
+    {
+      "id": "identity.package-publisher-match",
+      "category": "Identity",
+      "required": true,
+      "status": "pending",
+      "description": "Package identity and publisher values match Partner Center configuration and signing certificate subject.",
+      "evidence": ""
+    },
+    {
+      "id": "listing.short-description",
+      "category": "Store Listing",
+      "required": true,
+      "status": "pending",
+      "description": "Short description is finalized using Store\\listing\\short-description.txt.",
+      "evidence": ""
+    },
+    {
+      "id": "listing.full-description",
+      "category": "Store Listing",
+      "required": true,
+      "status": "pending",
+      "description": "Full description is finalized using Store\\listing\\full-description.txt.",
+      "evidence": ""
+    },
+    {
+      "id": "listing.keywords",
+      "category": "Store Listing",
+      "required": true,
+      "status": "pending",
+      "description": "Keywords are reviewed and finalized using Store\\listing\\keywords.txt.",
+      "evidence": ""
+    },
+    {
+      "id": "listing.release-notes",
+      "category": "Store Listing",
+      "required": true,
+      "status": "pending",
+      "description": "Release notes are prepared from Store\\listing\\release-notes-template.txt.",
+      "evidence": ""
+    },
+    {
+      "id": "assets.app-icons",
+      "category": "Visual Assets",
+      "required": true,
+      "status": "pending",
+      "description": "Store icon and logo assets satisfy current Microsoft Store size/format requirements.",
+      "evidence": ""
+    },
+    {
+      "id": "assets.screenshots",
+      "category": "Visual Assets",
+      "required": true,
+      "status": "pending",
+      "description": "Required screenshots are captured from release build and uploaded.",
+      "evidence": ""
+    },
+    {
+      "id": "compliance.privacy-policy",
+      "category": "Compliance",
+      "required": true,
+      "status": "pending",
+      "description": "Privacy policy URL is valid and accurately describes app data handling.",
+      "evidence": ""
+    },
+    {
+      "id": "compliance.age-rating",
+      "category": "Compliance",
+      "required": true,
+      "status": "pending",
+      "description": "Age ratings questionnaire is completed and consistent with app functionality.",
+      "evidence": ""
+    },
+    {
+      "id": "quality.install-upgrade-uninstall",
+      "category": "Quality",
+      "required": true,
+      "status": "pending",
+      "description": "Manual validation confirms clean install, upgrade, launch, and uninstall behavior.",
+      "evidence": ""
+    },
+    {
+      "id": "quality.crash-check",
+      "category": "Quality",
+      "required": true,
+      "status": "pending",
+      "description": "Release build smoke-tested on target Windows versions with no blocking crashes.",
+      "evidence": ""
+    },
+    {
+      "id": "packaging.msix-generated",
+      "category": "Packaging",
+      "required": true,
+      "status": "pending",
+      "description": "MSIX package is generated from a dedicated packaging project with release signing.",
+      "evidence": ""
+    },
+    {
+      "id": "packaging.artifact-retention",
+      "category": "Packaging",
+      "required": true,
+      "status": "pending",
+      "description": "Build and publish artifacts are retained in CI for submission traceability.",
+      "evidence": ""
+    }
+  ]
+}

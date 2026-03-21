@@ -83,7 +83,7 @@ public partial class MainWindow : Window
             if (_activeProfileIndex >= 0 && _activeProfileIndex < ProfileManager.Profiles.Count)
             {
                 var profile = ProfileManager.Profiles[_activeProfileIndex];
-                DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
+                DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance, profile.ColorTemperature);
                 Logger.Log($"Startup: applied saved profile '{profile.Name}' (index {_activeProfileIndex})");
             }
         }
@@ -163,7 +163,7 @@ public partial class MainWindow : Window
             if (idx >= 0)
             {
                 var p = ProfileManager.Profiles[idx];
-                DisplayManager.ApplySettings(p.Gamma, p.Contrast, p.Vibrance);
+                DisplayManager.ApplySettings(p.Gamma, p.Contrast, p.Vibrance, p.ColorTemperature);
                 ActiveProfileChanged?.Invoke(idx);
                 Logger.Log($"PowerOn: restored profile '{p.Name}'");
             }
@@ -311,7 +311,7 @@ public partial class MainWindow : Window
         _activeProfileIndex = ProfileManager.IndexOf(e.Profile);
         if (_activeProfileIndex < 0) return;
 
-        DisplayManager.ApplySettings(e.Profile.Gamma, e.Profile.Contrast, e.Profile.Vibrance);
+        DisplayManager.ApplySettings(e.Profile.Gamma, e.Profile.Contrast, e.Profile.Vibrance, e.Profile.ColorTemperature);
         SettingsManager.LastActiveProfileIndex = _activeProfileIndex;
         Logger.Log($"Hotkey applied profile: {e.Profile.Name}");
 
@@ -333,7 +333,7 @@ public partial class MainWindow : Window
         if (_staticInstance != null)
             _staticInstance._activeProfileIndex = index;
 
-        DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance);
+        DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance, profile.ColorTemperature);
         SettingsManager.LastActiveProfileIndex = index;
         Logger.Log($"Applied profile: {profile.Name}");
 

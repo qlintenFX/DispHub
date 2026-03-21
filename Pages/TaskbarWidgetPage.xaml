@@ -17,9 +17,9 @@
                     <TextBlock Text="Widget Preview" FontSize="10" Opacity="0.3" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
-            <TextBlock Text="Display the active profile in the Windows taskbar. The widget docks itself into the system taskbar area."
-                       FontSize="13" Opacity="0.6" Margin="16,0,0,0" MaxWidth="400"
-                       TextWrapping="WrapWithOverflow" VerticalAlignment="Center"/>
+            <TextBlock Text="Show the active profile in the Windows taskbar."
+                        FontSize="13" Opacity="0.6" Margin="16,0,0,0" MaxWidth="400"
+                        TextWrapping="WrapWithOverflow" VerticalAlignment="Center"/>
         </StackPanel>
 
         <!-- Enable/Disable -->
@@ -27,7 +27,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Enable Taskbar Widget" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Show the active profile directly in the Windows taskbar" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Turn taskbar display on or off" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch x:Name="WidgetEnabledToggle"
@@ -44,7 +44,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Position" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Where to place the widget in the taskbar" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Where to place the widget in the taskbar" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ComboBox x:Name="PositionComboBox" SelectionChanged="Position_SelectionChanged" MinWidth="120">
@@ -59,7 +59,7 @@
             <ui:CardExpander.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Padding Settings" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Fine-tune widget position with automatic or manual padding" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Fine-tune widget position with automatic or manual padding" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardExpander.Header>
             <StackPanel>
@@ -67,7 +67,7 @@
                     <ui:CardControl.Header>
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="Auto Padding" FontSize="14" FontWeight="Regular"/>
-                            <TextBlock Text="Automatically avoid taskbar buttons and system areas" FontSize="12" Opacity="0.5"/>
+                            <TextBlock Text="Position next to the Windows Widgets button when on Left or Right" FontSize="12" Opacity="0.7"/>
                         </StackPanel>
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch x:Name="AutoPaddingToggle"
@@ -78,7 +78,7 @@
                     <ui:CardControl.Header>
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="Manual Padding" FontSize="14" FontWeight="Regular"/>
-                            <TextBlock Text="Additional offset in pixels from the edge" FontSize="12" Opacity="0.5"/>
+                            <TextBlock Text="Additional offset in pixels from the edge" FontSize="12" Opacity="0.7"/>
                         </StackPanel>
                     </ui:CardControl.Header>
                     <ui:NumberBox x:Name="ManualPaddingBox"
@@ -97,7 +97,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Clickable" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Click the widget to open DisplayHub settings" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Click the widget to open DisplayHub settings" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch x:Name="ClickableToggle"
@@ -110,7 +110,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Background" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Show a subtle background behind the widget text" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Show a subtle background behind the widget text" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch x:Name="BackgroundBlurToggle"
@@ -123,7 +123,7 @@
             <ui:CardControl.Header>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Hide When Disabled" FontSize="14" FontWeight="Regular"/>
-                    <TextBlock Text="Hide the widget when DisplayHub is disabled" FontSize="12" Opacity="0.5"/>
+                    <TextBlock Text="Hide the widget when DisplayHub is disabled" FontSize="12" Opacity="0.7"/>
                 </StackPanel>
             </ui:CardControl.Header>
             <ui:ToggleSwitch x:Name="HideWhenInactiveToggle"

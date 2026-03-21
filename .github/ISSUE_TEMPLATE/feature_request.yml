@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest an improvement for DisplayHub
+title: "feature: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    attributes:
+      label: Problem statement
+      description: What user problem are you trying to solve?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Alternatives considered
+
+  - type: textarea
+    attributes:
+      label: Additional context

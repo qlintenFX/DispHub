@@ -17,12 +17,23 @@ public partial class HomePage : Page, INavigationAware
 
     public Task OnNavigatedToAsync()
     {
-        ProfileStatusText.Text = $"{MainWindow.ProfileManager.Profiles.Count} profiles";
-        DcStatusText.Text = MainWindow.DynamicControls.IsEnabled ? "Enabled" : "Disabled";
+        UpdateStatus();
         return Task.CompletedTask;
     }
 
     public Task OnNavigatedFromAsync() => Task.CompletedTask;
+
+    private void UpdateStatus()
+    {
+        var sm = MainWindow.SettingsManager;
+        int profileCount = MainWindow.ProfileManager.Profiles.Count;
+
+        // Feature cards
+        ProfileStatusText.Text = $"{profileCount} profile{(profileCount != 1 ? "s" : "")} configured";
+        DcStatusText.Text = MainWindow.DynamicControls.IsEnabled ? "Enabled" : "Disabled";
+        WidgetStatusText.Text = sm.TaskbarWidgetEnabled ? "Enabled" : "Disabled";
+        FlyoutStatusText.Text = sm.FlyoutEnabled ? "Enabled" : "Disabled";
+    }
 
     private void NavigateToPage(Type pageType)
     {
@@ -33,6 +44,8 @@ public partial class HomePage : Page, INavigationAware
 
     private void Profiles_Click(object sender, RoutedEventArgs e) => NavigateToPage(typeof(ProfilesPage));
     private void DynamicControls_Click(object sender, RoutedEventArgs e) => NavigateToPage(typeof(DynamicControlsPage));
+    private void TaskbarWidget_Click(object sender, RoutedEventArgs e) => NavigateToPage(typeof(TaskbarWidgetPage));
+    private void Flyout_Click(object sender, RoutedEventArgs e) => NavigateToPage(typeof(FlyoutPage));
     private void Settings_Click(object sender, RoutedEventArgs e) => NavigateToPage(typeof(SettingsPage));
     private void About_Click(object sender, RoutedEventArgs e) => NavigateToPage(typeof(AboutPage));
 

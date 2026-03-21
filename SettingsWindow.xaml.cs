@@ -23,9 +23,13 @@ public partial class SettingsWindow : FluentWindow
 
     private void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        // Apply theme first, then accent color
         ApplyTheme(MainWindow.SettingsManager.AppTheme);
-        RootNavigation.Navigate(typeof(HomePage));
+        // Small delay to ensure theme is applied before accent
+        Dispatcher.BeginInvoke(() => SettingsPage.ApplyAccentColor(MainWindow.SettingsManager.AccentColor), 
+            System.Windows.Threading.DispatcherPriority.Loaded);
         RootNavigation.Navigated += (_, _) => ResetScrollPosition();
+        RootNavigation.Navigate(typeof(HomePage));
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -77,34 +81,82 @@ public partial class SettingsWindow : FluentWindow
         {
             try
             {
-                _contentScrollViewer ??= FindScrollableScrollViewer(RootNavigation);
+                EnsureSmoothScrollAttached();
                 _contentScrollViewer?.ScrollToVerticalOffset(0);
             }
             catch { }
         }, System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
-    private static ScrollViewer? FindScrollableScrollViewer(DependencyObject parent)
+    private void EnsureSmoothScrollAttached()
+    {
+        var contentScrollViewer = FindContentScrollViewer(RootNavigation);
+        if (contentScrollViewer == null)
+            return;
+
+        if (ReferenceEquals(_contentScrollViewer, contentScrollViewer))
+            return;
+
+        if (_contentScrollViewer != null)
+        {
+            try
+            {
+                Helpers.SmoothScrollBehavior.SetIsEnabled(_contentScrollViewer, false);
+            }
+            catch
+            {
+                // Ignore detach failures and continue.
+            }
+        }
+
+        _contentScrollViewer = contentScrollViewer;
+        Helpers.SmoothScrollBehavior.SetIsEnabled(_contentScrollViewer, true);
+    }
+
+    private static ScrollViewer? FindContentScrollViewer(DependencyObject root)
+    {
+        var contentPresenter = FindDescendant<NavigationViewContentPresenter>(root);
+        return contentPresenter == null ? null : FindDescendant<ScrollViewer>(contentPresenter);
+    }
+
+    private static T? FindDescendant<T>(DependencyObject parent) where T : DependencyObject
     {
         for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
         {
             var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is ScrollViewer sv && sv.ScrollableHeight > 0)
-                return sv;
-            var result = FindScrollableScrollViewer(child);
-            if (result != null) return result;
+            if (child is T typedChild)
+                return typedChild;
+
+            var nested = FindDescendant<T>(child);
+            if (nested != null)
+                return nested;
         }
+
         return null;
     }
 
     public static void ApplyTheme(int theme)
     {
-        var appTheme = theme switch
+        switch (theme)
         {
-            1 => Wpf.Ui.Appearance.ApplicationTheme.Light,
-            2 => Wpf.Ui.Appearance.ApplicationTheme.Dark,
-            _ => Wpf.Ui.Appearance.ApplicationTheme.Unknown,
-        };
-        Wpf.Ui.Appearance.ApplicationThemeManager.Apply(appTheme);
+            case 1:
+                Wpf.Ui.Appearance.ApplicationThemeManager.Apply(
+                    Wpf.Ui.Appearance.ApplicationTheme.Light,
+                    updateAccent: false
+                );
+                break;
+
+            case 2:
+                Wpf.Ui.Appearance.ApplicationThemeManager.Apply(
+                    Wpf.Ui.Appearance.ApplicationTheme.Dark,
+                    updateAccent: false
+                );
+                break;
+
+            default:
+                // Follow Windows light/dark while preserving current accent selection.
+                Wpf.Ui.Appearance.ApplicationThemeManager.ApplySystemTheme(updateAccent: false);
+                break;
+        }
     }
 }
