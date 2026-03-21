@@ -2,18 +2,33 @@ name: Store packaging readiness
 
 on:
   workflow_dispatch:
+    inputs:
+      msix_version:
+        description: "MSIX package version (a.b.c.d). Defaults to 1.0.<run_number>.0"
+        required: false
+        type: string
 
 permissions:
   contents: read
 
+concurrency:
+  group: store-packaging-readiness-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build-and-collect:
+  build-and-package:
     runs-on: windows-latest
     env:
       DOTNET_NOLOGO: true
       BUILD_CONFIGURATION: Release
       TARGET_FRAMEWORK: net8.0-windows10.0.22000.0
       PLATFORM: x64
+      RUNTIME_IDENTIFIER: win-x64
+      MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
+      MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
+      MSIX_CERT_BASE64: ${{ secrets.MSIX_CERT_BASE64 }}
+      MSIX_CERT_PASSWORD: ${{ secrets.MSIX_CERT_PASSWORD }}
+      MSIX_VERSION_INPUT: ${{ inputs.msix_version }}
 
     steps:
       - name: Checkout
@@ -23,6 +38,49 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Validate required inputs and packaging files
+        run: |
+          $requiredFiles = @(
+            '.\Packaging\DisplayHub.Package.wapproj',
+            '.\Packaging\Package.appxmanifest',
+            '.\Properties\PublishProfiles\win-x64.pubxml',
+            '.\Packaging\Assets\StoreLogo.png',
+            '.\Packaging\Assets\Square44x44Logo.png',
+            '.\Packaging\Assets\Square150x150Logo.png',
+            '.\Packaging\Assets\Wide310x150Logo.png',
+            '.\Packaging\Assets\SplashScreen.png'
+          )
+          $missingFiles = $requiredFiles | Where-Object { -not (Test-Path $_) }
+          if ($missingFiles.Count -gt 0) {
+            throw "Missing required packaging files:`n$($missingFiles -join "`n")"
+          }
+
+          $missingInputs = @()
+          if ([string]::IsNullOrWhiteSpace($env:MSIX_IDENTITY_NAME)) { $missingInputs += 'Repository variable MSIX_IDENTITY_NAME' }
+          if ([string]::IsNullOrWhiteSpace($env:MSIX_PUBLISHER)) { $missingInputs += 'Repository variable MSIX_PUBLISHER' }
+          if ([string]::IsNullOrWhiteSpace($env:MSIX_CERT_BASE64)) { $missingInputs += 'Repository secret MSIX_CERT_BASE64' }
+          if ([string]::IsNullOrWhiteSpace($env:MSIX_CERT_PASSWORD)) { $missingInputs += 'Repository secret MSIX_CERT_PASSWORD' }
+          if ($missingInputs.Count -gt 0) {
+            throw "Missing required workflow variables/secrets:`n$($missingInputs -join "`n")"
+          }
+
+          $version = $env:MSIX_VERSION_INPUT
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            $version = '1.0.${{ github.run_number }}.0'
+          }
+          if ($version -notmatch '^\d+\.\d+\.\d+\.\d+$') {
+            throw "MSIX version must use a.b.c.d format (received '$version')."
+          }
+          $versionParts = $version.Split('.') | ForEach-Object { [int]$_ }
+          if ($versionParts | Where-Object { $_ -lt 0 -or $_ -gt 65535 }) {
+            throw "MSIX version parts must be between 0 and 65535 (received '$version')."
+          }
+
+          "MSIX_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Restore
         run: dotnet restore .\DisplayHub.sln
@@ -35,40 +93,140 @@ jobs:
           dotnet publish .\DisplayHub.csproj `
             -c $env:BUILD_CONFIGURATION `
             -f $env:TARGET_FRAMEWORK `
+            -r $env:RUNTIME_IDENTIFIER `
             -p:Platform=$env:PLATFORM `
             -p:SelfContained=false `
-            --no-build `
+            --no-restore `
             -o .\artifacts\publish
+
+      - name: Materialize signing certificate
+        run: |
+          New-Item -ItemType Directory -Path .\artifacts\signing -Force | Out-Null
+          try {
+            [System.IO.File]::WriteAllBytes('.\artifacts\signing\msix-signing.pfx', [System.Convert]::FromBase64String($env:MSIX_CERT_BASE64))
+          } catch {
+            throw "MSIX_CERT_BASE64 is not valid base64 PFX content."
+          }
+
+      - name: Validate signing certificate and identity
+        run: |
+          $certPath = (Resolve-Path '.\artifacts\signing\msix-signing.pfx').Path
+          $password = ConvertTo-SecureString $env:MSIX_CERT_PASSWORD -AsPlainText -Force
+          $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($certPath, $password)
+
+          if ($cert.Subject -ne $env:MSIX_PUBLISHER) {
+            throw "MSIX_PUBLISHER ('$($env:MSIX_PUBLISHER)') must exactly match certificate Subject ('$($cert.Subject)')."
+          }
+
+          if ($cert.NotAfter -lt (Get-Date)) {
+            throw "Signing certificate is expired: $($cert.NotAfter.ToString('u'))."
+          }
+
+          "MSIX_CERT_SUBJECT=$($cert.Subject)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "MSIX_CERT_THUMBPRINT=$($cert.Thumbprint)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Render package manifest identity values
+        run: |
+          $manifestPath = '.\Packaging\Package.appxmanifest'
+          $manifestTemplate = Get-Content $manifestPath -Raw
+          $manifestRendered = $manifestTemplate `
+            .Replace('__MSIX_IDENTITY_NAME__', $env:MSIX_IDENTITY_NAME) `
+            .Replace('__MSIX_PUBLISHER__', $env:MSIX_PUBLISHER) `
+            .Replace('__MSIX_VERSION__', $env:MSIX_VERSION)
+
+          if ($manifestRendered -match '__MSIX_(IDENTITY_NAME|PUBLISHER|VERSION)__') {
+            throw 'Package manifest token replacement failed.'
+          }
+
+          $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+          [System.IO.File]::WriteAllText((Resolve-Path $manifestPath), $manifestRendered, $utf8NoBom)
+
+      - name: Build and sign MSIX package
+        run: |
+          New-Item -ItemType Directory -Path .\artifacts\msix -Force | Out-Null
+          $packageOutputDir = (Resolve-Path '.\artifacts\msix').Path + '\'
+          $certificatePath = (Resolve-Path '.\artifacts\signing\msix-signing.pfx').Path
+
+          msbuild .\Packaging\DisplayHub.Package.wapproj `
+            /restore `
+            /p:Configuration=$env:BUILD_CONFIGURATION `
+            /p:Platform=$env:PLATFORM `
+            /p:RuntimeIdentifier=$env:RUNTIME_IDENTIFIER `
+            /p:GenerateAppxPackageOnBuild=true `
+            /p:UapAppxPackageBuildMode=SideloadOnly `
+            /p:AppxBundle=Never `
+            /p:AppxPackageDir="$packageOutputDir" `
+            /p:PackageCertificateKeyFile="$certificatePath" `
+            /p:PackageCertificatePassword="$env:MSIX_CERT_PASSWORD" `
+            /p:AppxPackageSigningEnabled=true
+
+      - name: Validate MSIX outputs
+        run: |
+          $packages = Get-ChildItem -Path .\artifacts\msix -Recurse -File | Where-Object {
+            $_.Extension -in '.msix', '.msixupload', '.appx', '.appxupload', '.msixbundle', '.appxbundle'
+          }
+          if ($packages.Count -eq 0) {
+            throw 'No MSIX/AppX package artifacts were generated.'
+          }
+
+          $renderedManifest = Get-Content .\Packaging\Package.appxmanifest -Raw
+          if ($renderedManifest -notmatch [regex]::Escape($env:MSIX_IDENTITY_NAME)) {
+            throw 'Rendered package manifest does not include expected Identity Name.'
+          }
+          if ($renderedManifest -notmatch [regex]::Escape($env:MSIX_PUBLISHER)) {
+            throw 'Rendered package manifest does not include expected Publisher.'
+          }
+          if ($renderedManifest -notmatch [regex]::Escape($env:MSIX_VERSION)) {
+            throw 'Rendered package manifest does not include expected Version.'
+          }
+
+          $packages | Select-Object FullName, Length | Format-Table -AutoSize
 
       - name: Collect store readiness inputs
         run: |
           New-Item -ItemType Directory -Path .\artifacts\store -Force | Out-Null
           Copy-Item -Path .\Store\* -Destination .\artifacts\store -Recurse -Force
+          Copy-Item -Path .\Packaging\Package.appxmanifest -Destination .\artifacts\store\Package.effective.appxmanifest -Force
 
-      - name: MSIX placeholder
-        run: |
-          # Placeholder: this repository currently has no .wapproj/MSIX packaging project.
-          # Once a packaging project and signing setup exist, replace this note with an actual
-          # MSIX generation/signing step.
-          @'
-          MSIX generation is not configured in this repository yet.
-          Readiness workflow currently publishes build outputs and Store metadata templates.
-          Next steps:
-          1) Add packaging project (.wapproj or equivalent).
-          2) Configure package identity/signing cert via secrets.
-          3) Add CI step for MSIX creation and validation.
-          '@ | Set-Content -Path .\artifacts\msix-placeholder.txt
+          $packageFiles = Get-ChildItem -Path .\artifacts\msix -Recurse -File | ForEach-Object {
+            [pscustomobject]@{
+              relativePath = $_.FullName.Replace((Resolve-Path '.\artifacts\msix').Path + '\', '')
+              sizeBytes = $_.Length
+            }
+          }
+
+          $metadata = [ordered]@{
+            generatedUtc = (Get-Date).ToUniversalTime().ToString('o')
+            gitRef = '${{ github.ref }}'
+            gitSha = '${{ github.sha }}'
+            msixIdentityName = $env:MSIX_IDENTITY_NAME
+            msixPublisher = $env:MSIX_PUBLISHER
+            msixVersion = $env:MSIX_VERSION
+            certificateSubject = $env:MSIX_CERT_SUBJECT
+            certificateThumbprint = $env:MSIX_CERT_THUMBPRINT
+            packageFiles = $packageFiles
+          }
+
+          $metadata | ConvertTo-Json -Depth 6 | Set-Content -Path .\artifacts\store\msix-build-metadata.json -Encoding utf8
+          Remove-Item -Path .\artifacts\signing\msix-signing.pfx -Force
 
       - name: Upload publish artifact
         uses: actions/upload-artifact@v4
         with:
           name: displayhub-publish
           path: .\artifacts\publish
+          if-no-files-found: error
+
+      - name: Upload MSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: displayhub-msix
+          path: .\artifacts\msix
+          if-no-files-found: error
 
       - name: Upload store-readiness artifact
         uses: actions/upload-artifact@v4
         with:
           name: store-readiness
-          path: |
-            .\artifacts\store
-            .\artifacts\msix-placeholder.txt
+          path: .\artifacts\store
+          if-no-files-found: error

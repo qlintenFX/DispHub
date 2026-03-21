@@ -1,17 +1,19 @@
-APP_NAME={{APP_NAME}}
-TAGLINE={{ONE_SENTENCE_VALUE_PROPOSITION}}
+DisplayHub is an open-source Windows display profile manager built for fast daily control of monitor behavior. It helps multi-monitor users switch between saved profiles and adjust key settings without digging through multiple menus.
 
-OVERVIEW:
-{{2-3 sentences describing who the app is for, what problem it solves, and why it is useful.}}
+Use profiles to keep your preferred display setup ready for work, gaming, or evening use. DisplayHub is actively maintained, with source builds available under GPL-3.0-or-later.
 
-HIGHLIGHTS:
-- {{Feature 1 + benefit}}
-- {{Feature 2 + benefit}}
-- {{Feature 3 + benefit}}
+Highlights:
+- Save per-profile settings for gamma, contrast, vibrance, and color temperature
+- Switch profiles quickly with global hotkeys
+- Use Dynamic Controls mode for rapid adjustment workflows
+- Access controls from taskbar widget integration and profile flyout notifications
+- Match your desktop with Windows theme and accent integration
 
-SYSTEM_REQUIREMENTS:
-- Windows {{MIN_WINDOWS_VERSION}}
-- {{OTHER_REQUIREMENTS_IF_ANY}}
+System requirements:
+- Windows 10 or Windows 11
+- x64 system
 
-SUPPORT_AND_FEEDBACK:
-{{Support URL or contact method}}
+Support and feedback:
+- GitHub Discussions for setup help and usage questions
+- GitHub Issues for reproducible bugs and feature requests
+- Security reporting guidance is provided in SECURITY.md

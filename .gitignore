@@ -1,16 +1,51 @@
 ## .NET / C#
 bin/
 obj/
+artifacts/
+TestResults/
+AppPackages/
+BundleArtifacts/
+
+## IDE and user-specific
 *.user
+*.rsuser
 *.suo
+*.userosscache
+*.sln.docstates
+*.code-workspace
 .vs/
-*.log
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 ## NuGet
 *.nupkg
+*.snupkg
 packages/
+
+## Test, coverage, and logs
+*.log
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+coverage-*/
+BenchmarkDotNet.Artifacts/
+
+## Windows package artifacts
+*.appxupload
+*.appxbundle
+*.msix
+*.msixbundle
+*.msixupload
 
 ## OS
 Thumbs.db
 .DS_Store
 desktop.ini
+
+## Owner-local private runbooks/secrets
+.private/

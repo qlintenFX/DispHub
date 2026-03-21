@@ -1,18 +1,18 @@
-VERSION={{SEMVER}}
-RELEASE_DATE_UTC={{YYYY-MM-DD}}
-RING={{Production|Flight}}
+Version: 1.0.0
+Release date (UTC): 2026-03-21
+Channel: Production
 
-WHAT_IS_NEW:
-- {{User-facing change 1}}
-- {{User-facing change 2}}
-- {{User-facing change 3}}
+What's new
+- Added a high-fidelity smooth scrolling engine for settings navigation.
+- Improved profile and settings UX consistency with reduced redundant labels.
+- Added release operations docs and contributor workflow improvements.
 
-FIXES:
-- {{Bug fix 1}}
-- {{Bug fix 2}}
+Fixes
+- Fixed jitter and step-like wheel scrolling behavior in long settings pages.
+- Improved repository automation with CI, label sync, and stale triage workflows.
 
-KNOWN_ISSUES:
-- {{Known issue or N/A}}
+Known issues
+- Local MSIX packaging requires DesktopBridge targets; use CI packaging workflow on windows-latest.
 
-ROLLBACK_NOTES:
-{{Rollback guidance or N/A}}
+Open-source and support note
+- DisplayHub remains open source under GPL-3.0-or-later; Microsoft Store distribution is an optional convenience/support channel.

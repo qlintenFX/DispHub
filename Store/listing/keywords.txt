@@ -1,2 +1,1 @@
-{{keyword1}},{{keyword2}},{{keyword3}},{{keyword4}},{{keyword5}},{{keyword6}},{{keyword7}}
-# Keep keywords relevant to app discovery intent; avoid competitor names.
+display,monitor,multi-monitor,display profile,color temperature,gamma,hotkeys

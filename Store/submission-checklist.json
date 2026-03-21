@@ -1,7 +1,7 @@
 {
   "checklistName": "Microsoft Store submission readiness",
   "version": 1,
-  "lastReviewedUtc": "YYYY-MM-DDTHH:MM:SSZ",
+  "lastReviewedUtc": "2026-03-21T12:00:00Z",
   "items": [
     {
       "id": "identity.partner-center-product",
@@ -9,7 +9,13 @@
       "required": true,
       "status": "pending",
       "description": "Partner Center app entry exists and matches the intended public product identity.",
-      "evidence": ""
+      "evidence": "",
+      "family": "identity",
+      "assigneeRole": "owner",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "manual.partner-center"
+      ]
     },
     {
       "id": "identity.package-publisher-match",
@@ -17,7 +23,14 @@
       "required": true,
       "status": "pending",
       "description": "Package identity and publisher values match Partner Center configuration and signing certificate subject.",
-      "evidence": ""
+      "evidence": "",
+      "family": "identity",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "manual.partner-center",
+        "store-packaging-readiness"
+      ]
     },
     {
       "id": "listing.short-description",
@@ -25,7 +38,13 @@
       "required": true,
       "status": "pending",
       "description": "Short description is finalized using Store\\listing\\short-description.txt.",
-      "evidence": ""
+      "evidence": "",
+      "family": "listing",
+      "assigneeRole": "owner",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "store-packaging-readiness"
+      ]
     },
     {
       "id": "listing.full-description",
@@ -33,7 +52,13 @@
       "required": true,
       "status": "pending",
       "description": "Full description is finalized using Store\\listing\\full-description.txt.",
-      "evidence": ""
+      "evidence": "",
+      "family": "listing",
+      "assigneeRole": "owner",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "store-packaging-readiness"
+      ]
     },
     {
       "id": "listing.keywords",
@@ -41,7 +66,13 @@
       "required": true,
       "status": "pending",
       "description": "Keywords are reviewed and finalized using Store\\listing\\keywords.txt.",
-      "evidence": ""
+      "evidence": "",
+      "family": "listing",
+      "assigneeRole": "owner",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "store-packaging-readiness"
+      ]
     },
     {
       "id": "listing.release-notes",
@@ -49,7 +80,13 @@
       "required": true,
       "status": "pending",
       "description": "Release notes are prepared from Store\\listing\\release-notes-template.txt.",
-      "evidence": ""
+      "evidence": "",
+      "family": "listing",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "store-packaging-readiness"
+      ]
     },
     {
       "id": "assets.app-icons",
@@ -57,7 +94,13 @@
       "required": true,
       "status": "pending",
       "description": "Store icon and logo assets satisfy current Microsoft Store size/format requirements.",
-      "evidence": ""
+      "evidence": "",
+      "family": "assets",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "manual.partner-center"
+      ]
     },
     {
       "id": "assets.screenshots",
@@ -65,7 +108,14 @@
       "required": true,
       "status": "pending",
       "description": "Required screenshots are captured from release build and uploaded.",
-      "evidence": ""
+      "evidence": "",
+      "family": "assets",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "release-validation",
+        "manual.partner-center"
+      ]
     },
     {
       "id": "compliance.privacy-policy",
@@ -73,7 +123,13 @@
       "required": true,
       "status": "pending",
       "description": "Privacy policy URL is valid and accurately describes app data handling.",
-      "evidence": ""
+      "evidence": "",
+      "family": "compliance",
+      "assigneeRole": "owner",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "manual.partner-center"
+      ]
     },
     {
       "id": "compliance.age-rating",
@@ -81,7 +137,13 @@
       "required": true,
       "status": "pending",
       "description": "Age ratings questionnaire is completed and consistent with app functionality.",
-      "evidence": ""
+      "evidence": "",
+      "family": "compliance",
+      "assigneeRole": "owner",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "manual.partner-center"
+      ]
     },
     {
       "id": "quality.install-upgrade-uninstall",
@@ -89,7 +151,14 @@
       "required": true,
       "status": "pending",
       "description": "Manual validation confirms clean install, upgrade, launch, and uninstall behavior.",
-      "evidence": ""
+      "evidence": "",
+      "family": "quality",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "release-validation",
+        "manual.test-run"
+      ]
     },
     {
       "id": "quality.crash-check",
@@ -97,7 +166,14 @@
       "required": true,
       "status": "pending",
       "description": "Release build smoke-tested on target Windows versions with no blocking crashes.",
-      "evidence": ""
+      "evidence": "",
+      "family": "quality",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "release-validation",
+        "manual.test-run"
+      ]
     },
     {
       "id": "packaging.msix-generated",
@@ -105,7 +181,13 @@
       "required": true,
       "status": "pending",
       "description": "MSIX package is generated from a dedicated packaging project with release signing.",
-      "evidence": ""
+      "evidence": "",
+      "family": "packaging",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "store-packaging-readiness"
+      ]
     },
     {
       "id": "packaging.artifact-retention",
@@ -113,7 +195,23 @@
       "required": true,
       "status": "pending",
       "description": "Build and publish artifacts are retained in CI for submission traceability.",
-      "evidence": ""
+      "evidence": "",
+      "family": "packaging",
+      "assigneeRole": "dev",
+      "reviewerRole": "reviewer",
+      "workflowTouchpoints": [
+        "store-packaging-readiness"
+      ]
     }
+  ],
+  "statusWorkflow": [
+    "pending",
+    "in_progress",
+    "done"
+  ],
+  "roles": [
+    "owner",
+    "dev",
+    "reviewer"
   ]
 }
