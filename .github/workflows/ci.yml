@@ -15,11 +15,68 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  BUILD_CONFIGURATION: Release
+
 jobs:
+  # ════════════════════════════════════════════════════════════
+  #  BUILD + TEST + FORMAT CHECK  (runs on every PR and push)
+  # ════════════════════════════════════════════════════════════
+  build:
+    name: Build, Test & Lint
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore .\DispHub.sln
+
+      - name: Check code formatting
+        run: dotnet format .\DispHub.sln --verify-no-changes --verbosity diagnostic
+        continue-on-error: true
+
+      - name: Build (Release)
+        run: dotnet build .\DispHub.sln -c $env:BUILD_CONFIGURATION --no-restore
+
+      - name: Run tests with coverage
+        run: |
+          dotnet test .\DispHub.Tests\DispHub.Tests.csproj `
+            -c $env:BUILD_CONFIGURATION `
+            --no-restore `
+            --verbosity minimal `
+            --collect:"XPlat Code Coverage" `
+            --results-directory .\TestResults `
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: .\TestResults\**\coverage.opencover.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+  # ════════════════════════════════════════════════════════════
+  #  CODEQL SECURITY ANALYSIS  (runs in parallel with build)
+  # ════════════════════════════════════════════════════════════
   codeql:
-    name: CodeQL
+    name: CodeQL Security Scan
     runs-on: windows-latest
     timeout-minutes: 20
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,31 +98,3 @@ jobs:
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4
-
-  build:
-    needs: codeql
-    runs-on: windows-latest
-    timeout-minutes: 20
-    env:
-      DOTNET_NOLOGO: true
-      BUILD_CONFIGURATION: Release
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore
-        run: dotnet restore .\DispHub.sln
-
-      - name: Build
-        run: dotnet build .\DispHub.sln -c $env:BUILD_CONFIGURATION --no-restore
-
-      - name: Test
-        run: dotnet test .\DispHub.Tests\DispHub.Tests.csproj -c $env:BUILD_CONFIGURATION --no-restore --verbosity minimal

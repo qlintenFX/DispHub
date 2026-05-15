@@ -70,3 +70,6 @@ desktop.ini
 
 ## Owner-local private runbooks/secrets
 .private/
+
+## SonarQube local analysis cache
+.sonarqube/
