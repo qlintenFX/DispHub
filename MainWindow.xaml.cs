@@ -2,14 +2,14 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
-using DisplayHub.Services.Display;
-using DisplayHub.Services.Hotkeys;
-using DisplayHub.Services.Logging;
-using DisplayHub.Services.Profiles;
-using DisplayHub.Services.Settings;
-using DisplayHub.Windows;
+using DispHub.Services.Display;
+using DispHub.Services.Hotkeys;
+using DispHub.Services.Logging;
+using DispHub.Services.Profiles;
+using DispHub.Services.Settings;
+using DispHub.Windows;
 
-namespace DisplayHub;
+namespace DispHub;
 
 public partial class MainWindow : Window
 {
@@ -121,7 +121,7 @@ public partial class MainWindow : Window
         DisplayManager.ResetToDefault();
         UnregisterAllHotkeys();
         IsDisplayActive = false;
-        Logger.Log("DisplayHub disabled");
+        Logger.Log("DispHub disabled");
     }
 
     private static void PowerOn()
@@ -169,7 +169,7 @@ public partial class MainWindow : Window
             }
         }
 
-        Logger.Log("DisplayHub enabled");
+        Logger.Log("DispHub enabled");
     }
 
     private static void UnregisterAllHotkeys()
@@ -276,7 +276,7 @@ public partial class MainWindow : Window
 
         int id = wParam.ToInt32();
 
-        // Master toggle must work even when DisplayHub is disabled
+        // Master toggle must work even when DispHub is disabled
         if (id == _masterToggleHotkeyId && _masterToggleHotkeyId > 0)
         {
             ToggleDisplayPower();
@@ -370,7 +370,7 @@ public partial class MainWindow : Window
 
             var openItem = new Wpf.Ui.Controls.MenuItem
             {
-                Header = "Open DisplayHub",
+                Header = "Open DispHub",
                 Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Open24 }
             };
             openItem.Click += (_, _) => OpenSettingsWindow();
@@ -379,7 +379,7 @@ public partial class MainWindow : Window
 
             var powerItem = new MenuItem
             {
-                Header = powerOff ? "DisplayHub: Off" : "DisplayHub: On",
+                Header = powerOff ? "DispHub: Off" : "DispHub: On",
                 FontWeight = FontWeights.SemiBold,
                 IsChecked = IsDisplayActive
             };

@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Input;
-using DisplayHub.Constants;
+using DispHub.Constants;
 using Wpf.Ui.Controls;
 
-namespace DisplayHub;
+namespace DispHub;
 
 public partial class HotkeyDialog : FluentWindow
 {

@@ -1,5 +1,5 @@
 ---
-goal: DisplayHub UI Enhancement Round 3 - Scrolling, Flyout, Power Toggle, Visual Improvements
+goal: DispHub UI Enhancement Round 3 - Scrolling, Flyout, Power Toggle, Visual Improvements
 version: 1.0
 date_created: 2025-06-20
 last_updated: 2025-06-20
@@ -12,7 +12,7 @@ tags: [feature, ui, enhancement]
 
 ![Status: In progress](https://img.shields.io/badge/status-In%20progress-yellow)
 
-Comprehensive UI/UX enhancement for DisplayHub including smooth scrolling, profile switch flyout, power button toggle, improved DC keybinds layout, and page preview placeholders.
+Comprehensive UI/UX enhancement for DispHub including smooth scrolling, profile switch flyout, power button toggle, improved DC keybinds layout, and page preview placeholders.
 
 ## 1. Requirements & Constraints
 

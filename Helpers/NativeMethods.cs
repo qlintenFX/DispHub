@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Runtime.InteropServices;
 
-namespace DisplayHub.Helpers;
+namespace DispHub.Helpers;
 
 internal static partial class NativeMethods
 {

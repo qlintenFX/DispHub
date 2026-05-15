@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Runtime.InteropServices;
-using DisplayHub.Constants;
-using DisplayHub.Helpers;
-using DisplayHub.Services.Logging;
+using DispHub.Constants;
+using DispHub.Helpers;
+using DispHub.Services.Logging;
 
-namespace DisplayHub.Services.Display;
+namespace DispHub.Services.Display;
 
 public class DisplayManager : IDisposable
 {

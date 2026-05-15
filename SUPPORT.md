@@ -1,6 +1,6 @@
 # Support
 
-DisplayHub is free and open source under GPL-3.0-or-later. Optional support/funding channels (such as GitHub Sponsors and an optional Microsoft Store purchase) help fund maintenance, bug triage, and ongoing releases.
+DispHub is free and open source under GPL-3.0-or-later. Optional support/funding channels (such as GitHub Sponsors and an optional Microsoft Store purchase) help fund maintenance, bug triage, and ongoing releases.
 
 ## User support
 
@@ -11,7 +11,7 @@ DisplayHub is free and open source under GPL-3.0-or-later. Optional support/fund
 
 Please include:
 
-- DisplayHub version
+- DispHub version
 - Windows version
 - Repro steps
 - Expected vs actual behavior

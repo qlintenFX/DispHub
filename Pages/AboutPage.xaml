@@ -1,4 +1,4 @@
-<Page x:Class="DisplayHub.Pages.AboutPage"
+<Page x:Class="DispHub.Pages.AboutPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -8,7 +8,7 @@
     <StackPanel MaxWidth="1000" Margin="16">
         <!-- Contributors -->
         <TextBlock Text="Contributors" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,0"/>
-        <TextBlock Text="The people behind DisplayHub" FontSize="14" Margin="4,12,0,8"
+        <TextBlock Text="The people behind DispHub" FontSize="14" Margin="4,12,0,8"
                    FontWeight="Regular" Opacity="0.75" TextWrapping="WrapWithOverflow"/>
 
         <ui:CardExpander Icon="{ui:SymbolIcon Code24}" ContentPadding="6" Margin="0,0,0,4">
@@ -18,7 +18,7 @@
             <StackPanel Margin="8">
                 <TextBlock FontSize="14" Opacity="0.75" TextWrapping="WrapWithOverflow">
                     <Run FontWeight="SemiBold">qlintenFX</Run>
-                    <Run> &#x2014; Creator and maintainer of DisplayHub</Run>
+                    <Run> &#x2014; Creator and maintainer of DispHub</Run>
                 </TextBlock>
             </StackPanel>
         </ui:CardExpander>
@@ -33,23 +33,23 @@
 
         <!-- Support -->
         <TextBlock Text="Support" FontSize="20" FontWeight="SemiBold" Margin="0,24,0,0"/>
-        <ui:InfoBar Title="DisplayHub is free and open source"
+        <ui:InfoBar Title="DispHub is free and open source"
                     IsOpen="True" Severity="Informational" IsClosable="False" Margin="0,12,0,12">
             <TextBlock Text="You can build it yourself from source or download it from GitHub."
                        FontSize="12" Opacity="0.75" TextWrapping="WrapWithOverflow"/>
         </ui:InfoBar>
 
         <TextBlock FontSize="14" Margin="4,0,0,0" Opacity="0.75" TextWrapping="WrapWithOverflow"
-                   Text="DisplayHub is a display settings manager with per-profile gamma, contrast, vibrance, and color temperature control through customizable hotkeys and taskbar integration. It is built with a modern Fluent-inspired Windows UI and maintained in the open."/>
+                   Text="DispHub is a display settings manager with per-profile gamma, contrast, vibrance, and color temperature control through customizable hotkeys and taskbar integration. It is built with a modern Fluent-inspired Windows UI and maintained in the open."/>
 
         <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
             <ui:Anchor Content="GitHub" Icon="{ui:SymbolIcon Open24}"
-                       NavigateUri="https://github.com/qlintenFX/DisplayHub" Margin="0,0,4,0"/>
+                       NavigateUri="https://github.com/qlintenFX/DispHub" Margin="0,0,4,0"/>
         </StackPanel>
 
         <!-- Open Source Licenses -->
         <TextBlock Text="Open Source Licenses" FontSize="20" FontWeight="SemiBold" Margin="0,36,0,12"/>
-        <TextBlock Text="DisplayHub is built with the following open source projects."
+        <TextBlock Text="DispHub is built with the following open source projects."
                    FontSize="14" Margin="4,0,0,0" Opacity="0.75" TextWrapping="WrapWithOverflow"/>
 
         <StackPanel Margin="0,12,0,0">
@@ -107,10 +107,10 @@
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Left">
                 <ui:SymbolIcon Symbol="Star24" Filled="True" Width="24" Height="24" FontSize="16"
                                VerticalAlignment="Center" Foreground="Gold"/>
-                <TextBlock Text="Enjoying DisplayHub?" HorizontalAlignment="Center" FontSize="12"
+                <TextBlock Text="Enjoying DispHub?" HorizontalAlignment="Center" FontSize="12"
                            Opacity="0.5" VerticalAlignment="Center" Margin="4,0,0,0"/>
                 <ui:Anchor Appearance="Transparent" Content="Star on GitHub" Icon="{ui:SymbolIcon Open24}"
-                           NavigateUri="https://github.com/qlintenFX/DisplayHub" Margin="12,0,0,0"/>
+                           NavigateUri="https://github.com/qlintenFX/DispHub" Margin="12,0,0,0"/>
             </StackPanel>
         </DockPanel>
     </StackPanel>

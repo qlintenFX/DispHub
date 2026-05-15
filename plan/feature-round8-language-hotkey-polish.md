@@ -12,13 +12,13 @@ tags: [feature, bug, ui-polish, refactor]
 
 ![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
 
-Round 8 stabilization addressing four user-reported issues: (1) Replace gimmicky `power` language with natural `DisplayHub enabled/disabled` terminology, (2) add a master toggle hotkey in Settings page, (3) fix active profile card visual contrast when DisplayHub is disabled, and (4) fix taskbar widget disappearing at Left position without auto-padding.
+Round 8 stabilization addressing four user-reported issues: (1) Replace gimmicky `power` language with natural `DispHub enabled/disabled` terminology, (2) add a master toggle hotkey in Settings page, (3) fix active profile card visual contrast when DispHub is disabled, and (4) fix taskbar widget disappearing at Left position without auto-padding.
 
 ## 1. Requirements & Constraints
 
-- **REQ-001**: Replace all `Display Power Off/On` language with `DisplayHub Disabled/Enabled` or equivalent natural language throughout all UI, tooltips, tray menu, log messages, and widget settings
+- **REQ-001**: Replace all `Display Power Off/On` language with `DispHub Disabled/Enabled` or equivalent natural language throughout all UI, tooltips, tray menu, log messages, and widget settings
 - **REQ-002**: Add a master toggle hotkey setter in the Settings page that registers a global hotkey calling `MainWindow.ToggleDisplayPower()`
-- **REQ-003**: When DisplayHub is disabled, the active profile card must visually contrast with inactive cards — not use full Primary (accent) appearance, but still be distinguishable as the `will-resume` profile
+- **REQ-003**: When DispHub is disabled, the active profile card must visually contrast with inactive cards — not use full Primary (accent) appearance, but still be distinguishable as the `will-resume` profile
 - **REQ-004**: Taskbar widget at Left position must be visible regardless of auto-padding setting — always detect system button area as minimum offset
 - **CON-001**: No breaking changes to existing `settings.json` schema — new fields use sensible defaults and missing fields are handled gracefully by `JsonSerializer.Deserialize`
 - **CON-002**: Master toggle hotkey must coexist with DC toggle hotkey and profile hotkeys without conflicts
@@ -27,22 +27,22 @@ Round 8 stabilization addressing four user-reported issues: (1) Replace gimmicky
 
 ## 2. Implementation Steps
 
-### Phase 1 — Language Rename: `Power` → Natural `DisplayHub` Terminology
+### Phase 1 — Language Rename: `Power` → Natural `DispHub` Terminology
 
 - GOAL-001: Replace all gimmicky `power` language with natural, professional terminology across the entire codebase
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-001 | `Pages/ProfilesPage.xaml`: Change `PowerOffBar` Title from `Display Power Off` to `DisplayHub Disabled`, Message from `Turn display power back on to manage profiles.` to `Enable DisplayHub to manage profiles.` | | |
-| TASK-002 | `Pages/DynamicControlsPage.xaml`: Change `PowerOffBar` Title from `Display Power Off` to `DisplayHub Disabled`, Message from `Turn display power back on to use Dynamic Controls.` to `Enable DisplayHub to use Dynamic Controls.` | | |
-| TASK-003 | `Pages/TaskbarWidgetPage.xaml`: Change `Hide When Powered Off` to `Hide When Disabled`, subtitle from `Completely hide the widget when display power is off` to `Hide the widget when DisplayHub is disabled` | | |
-| TASK-004 | `SettingsWindow.xaml`: Change `PowerButton` ToolTip from `Toggle Display Power (On/Off)` to `Toggle DisplayHub` | | |
-| TASK-005 | `SettingsWindow.xaml.cs`: Update `UpdatePowerButtonVisual()` tooltips: active → `DisplayHub: Active — click to disable`, inactive → `DisplayHub: Inactive — click to enable` | | |
-| TASK-006 | `MainWindow.xaml.cs`: Update tray menu `powerItem.Header` from `⏻ Power: Off/On` to `DisplayHub: Off/On`. Update Logger messages from `Display powered OFF/ON` to `DisplayHub disabled/enabled` | | |
+| TASK-001 | `Pages/ProfilesPage.xaml`: Change `PowerOffBar` Title from `Display Power Off` to `DispHub Disabled`, Message from `Turn display power back on to manage profiles.` to `Enable DispHub to manage profiles.` | | |
+| TASK-002 | `Pages/DynamicControlsPage.xaml`: Change `PowerOffBar` Title from `Display Power Off` to `DispHub Disabled`, Message from `Turn display power back on to use Dynamic Controls.` to `Enable DispHub to use Dynamic Controls.` | | |
+| TASK-003 | `Pages/TaskbarWidgetPage.xaml`: Change `Hide When Powered Off` to `Hide When Disabled`, subtitle from `Completely hide the widget when display power is off` to `Hide the widget when DispHub is disabled` | | |
+| TASK-004 | `SettingsWindow.xaml`: Change `PowerButton` ToolTip from `Toggle Display Power (On/Off)` to `Toggle DispHub` | | |
+| TASK-005 | `SettingsWindow.xaml.cs`: Update `UpdatePowerButtonVisual()` tooltips: active → `DispHub: Active — click to disable`, inactive → `DispHub: Inactive — click to enable` | | |
+| TASK-006 | `MainWindow.xaml.cs`: Update tray menu `powerItem.Header` from `⏻ Power: Off/On` to `DispHub: Off/On`. Update Logger messages from `Display powered OFF/ON` to `DispHub disabled/enabled` | | |
 
 ### Phase 2 — Master Toggle Hotkey
 
-- GOAL-002: Add a global hotkey to toggle DisplayHub on/off, configurable from the Settings page
+- GOAL-002: Add a global hotkey to toggle DispHub on/off, configurable from the Settings page
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
@@ -50,12 +50,12 @@ Round 8 stabilization addressing four user-reported issues: (1) Replace gimmicky
 | TASK-008 | `MainWindow.xaml.cs`: Add `_masterToggleHotkeyId` field (int, init -1). Add `RegisterMasterToggleHotkey()` method (pattern: unregister old, register new if key != 0). Call from `MainWindow_Loaded` after `RegisterDcToggleHotkey()`. Add public `UpdateMasterToggleHotkey()` for Settings page to call after changing the hotkey | | |
 | TASK-009 | `MainWindow.xaml.cs`: In `WndProc`, add check for `_masterToggleHotkeyId` BEFORE the `IsDisplayActive` early-return guard (master toggle must work even when disabled). Call `ToggleDisplayPower()` on match | | |
 | TASK-010 | `MainWindow.xaml.cs`: In `UnregisterAllHotkeys()`, unregister `_masterToggleHotkeyId` if > 0 | | |
-| TASK-011 | `Pages/SettingsPage.xaml`: Add `Hotkeys` section after `Tray Icon` section with a `CardControl` for `Master Toggle Hotkey` — header: `Toggle DisplayHub`, subtitle: `Global hotkey to enable/disable DisplayHub`, content: `ui:Button` with `Consolas` font showing current keybind | | |
+| TASK-011 | `Pages/SettingsPage.xaml`: Add `Hotkeys` section after `Tray Icon` section with a `CardControl` for `Master Toggle Hotkey` — header: `Toggle DispHub`, subtitle: `Global hotkey to enable/disable DispHub`, content: `ui:Button` with `Consolas` font showing current keybind | | |
 | TASK-012 | `Pages/SettingsPage.xaml.cs`: Add `MasterToggleKeybind_Click` handler: open `HotkeyDialog`, save to `SettingsManager.MasterToggleKey/Mod`, update label, call `MainWindow.UpdateMasterToggleHotkey()`. Load current value in `SettingsPage_Loaded` | | |
 
 ### Phase 3 — Active Profile Card Contrast When Disabled
 
-- GOAL-003: Make the active profile card visually distinct but subdued when DisplayHub is disabled, so it's clear which profile will resume on re-enable
+- GOAL-003: Make the active profile card visually distinct but subdued when DispHub is disabled, so it's clear which profile will resume on re-enable
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
@@ -99,11 +99,11 @@ Round 8 stabilization addressing four user-reported issues: (1) Replace gimmicky
 ## 6. Testing
 
 - **TEST-001**: Build succeeds with `dotnet build` — no compilation errors
-- **TEST-002**: Launch app, verify all InfoBar messages show `DisplayHub Disabled` (not `Display Power Off`)
-- **TEST-003**: Toggle power button, verify tray menu shows `DisplayHub: Off/On`
-- **TEST-004**: Set master toggle hotkey in Settings, press hotkey, verify DisplayHub toggles on/off
-- **TEST-005**: When DisplayHub is disabled, verify active profile card has accent border but subdued appearance, inactive cards have no border
-- **TEST-006**: Re-enable DisplayHub, verify active profile card returns to full Primary appearance
+- **TEST-002**: Launch app, verify all InfoBar messages show `DispHub Disabled` (not `Display Power Off`)
+- **TEST-003**: Toggle power button, verify tray menu shows `DispHub: Off/On`
+- **TEST-004**: Set master toggle hotkey in Settings, press hotkey, verify DispHub toggles on/off
+- **TEST-005**: When DispHub is disabled, verify active profile card has accent border but subdued appearance, inactive cards have no border
+- **TEST-006**: Re-enable DispHub, verify active profile card returns to full Primary appearance
 - **TEST-007**: Set widget position to Left with auto-padding OFF, verify widget is visible (not hidden behind Start button)
 - **TEST-008**: Set widget position to Left with auto-padding ON, verify widget positions after system elements
 
@@ -116,6 +116,6 @@ Round 8 stabilization addressing four user-reported issues: (1) Replace gimmicky
 
 ## 8. Related Specifications / Further Reading
 
-- [plan/feature-stabilization-round7-1.md](plan/feature-stabilization-round7-1.md) — Prior round 7 plan
+- [feature-stabilization-round7-1.md](feature-stabilization-round7-1.md) — Prior round 7 plan
 - [FluentFlyout GitHub](https://github.com/unchihugo/FluentFlyout) — UI reference, GPL-3.0
 - [KeyedColors GitHub](https://github.com/qlintenFX/KeyedColors) — Original app logic

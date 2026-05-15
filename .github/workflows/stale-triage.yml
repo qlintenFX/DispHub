@@ -27,7 +27,7 @@ jobs:
             for 45 days. It will be closed in 14 days if no further activity occurs.
           close-issue-message: >
             Closing this issue due to prolonged inactivity. If this still affects the latest
-            version of DisplayHub, feel free to reopen with updated details.
+            version of DispHub, feel free to reopen with updated details.
           stale-pr-message: >
             This pull request has been automatically marked as stale due to 30 days of inactivity.
             It will be closed in 14 days if no updates are made.

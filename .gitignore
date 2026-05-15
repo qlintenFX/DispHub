@@ -41,6 +41,27 @@ BenchmarkDotNet.Artifacts/
 *.msix
 *.msixbundle
 *.msixupload
+*.appx
+*.appinstaller
+*.msixsym
+
+## Signing and secrets
+*.pfx
+*.cer
+*.snk
+*.key
+*.p12
+*.pvk
+*.publishsettings
+*.pubxml.user
+.env
+.env.*
+!.env.example
+
+## Packaging build outputs
+Packaging/bin/
+Packaging/obj/
+Packaging/artifacts/
 
 ## OS
 Thumbs.db

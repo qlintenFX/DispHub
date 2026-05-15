@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -5,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Wpf.Ui.Appearance;
 
-namespace DisplayHub.Controls;
+namespace DispHub.Controls;
 
 public partial class TaskbarWidgetControl : UserControl
 {

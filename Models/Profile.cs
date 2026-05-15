@@ -1,8 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Text.Json.Serialization;
-using DisplayHub.Constants;
+using DispHub.Constants;
 using System.Windows.Input;
 
-namespace DisplayHub.Models;
+namespace DispHub.Models;
 
 public class Profile
 {

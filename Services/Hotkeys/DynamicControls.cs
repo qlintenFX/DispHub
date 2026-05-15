@@ -1,8 +1,9 @@
-using DisplayHub.Constants;
-using DisplayHub.Services.Display;
-using DisplayHub.Services.Settings;
+// SPDX-License-Identifier: GPL-3.0-or-later
+using DispHub.Constants;
+using DispHub.Services.Display;
+using DispHub.Services.Settings;
 
-namespace DisplayHub.Services.Hotkeys;
+namespace DispHub.Services.Hotkeys;
 
 public class DynamicControls
 {

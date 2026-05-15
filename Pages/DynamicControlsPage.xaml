@@ -1,4 +1,4 @@
-<Page x:Class="DisplayHub.Pages.DynamicControlsPage"
+<Page x:Class="DispHub.Pages.DynamicControlsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -8,22 +8,8 @@
     <StackPanel MaxWidth="700" Margin="16">
         <TextBlock Text="Dynamic Controls" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,4"/>
 
-        <!-- Preview placeholder -->
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-            <Border CornerRadius="10" ClipToBounds="True" Width="164" Height="98"
-                    Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <ui:SymbolIcon Symbol="Gauge24" FontSize="28" Opacity="0.3"/>
-                    <TextBlock Text="Preview" FontSize="10" Opacity="0.3" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Border>
-            <TextBlock Text="Adjust display settings in real-time using customizable hotkeys. Switch between Dynamic Controls and Profile modes."
-                       FontSize="13" Opacity="0.6" Margin="16,0,0,0" MaxWidth="400"
-                       TextWrapping="WrapWithOverflow" VerticalAlignment="Center"/>
-        </StackPanel>
-
         <ui:InfoBar x:Name="PowerOffBar"
-                    Title="DisplayHub Disabled"
+                    Title="DispHub Disabled"
                     Severity="Error" IsOpen="False" IsClosable="False"
                     Margin="0,0,0,12"/>
 

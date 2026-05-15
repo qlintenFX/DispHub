@@ -1,6 +1,6 @@
-# DisplayHub
+# DispHub
 
-DisplayHub is an open-source Windows app for saving and switching display profiles. It helps you quickly adjust monitor settings for work, gaming, and daily use.
+DispHub is an open-source Windows app for saving and switching display profiles. It helps you quickly adjust monitor settings for work, gaming, and daily use.
 
 ## Features
 
@@ -15,10 +15,10 @@ DisplayHub is an open-source Windows app for saving and switching display profil
 ### Build from source
 
 ```powershell
-git clone https://github.com/qlintenFX/DisplayHub.git
-cd DisplayHub
-dotnet build DisplayHub.sln
-dotnet run --project DisplayHub.csproj
+git clone https://github.com/qlintenFX/DispHub.git
+cd DispHub
+dotnet build DispHub.sln
+dotnet run --project DispHub.csproj
 ```
 
 ### Microsoft Store (optional)
@@ -28,7 +28,7 @@ If available, the Microsoft Store listing is an optional convenience purchase. B
 ## Requirements
 
 - Windows 10/11
-- .NET 8 SDK (stable; `global.json` pins to .NET 8)
+- .NET 10 SDK (LTS; `global.json` pins a stable 10.0 feature band)
 - x64 system
 
 ## Contributing
@@ -44,6 +44,7 @@ Contributions are welcome.
 - Usage help: GitHub Discussions
 - Bugs and feature requests: GitHub Issues
 - Security reports: follow `SECURITY.md`
+- Privacy: see `PRIVACY.md`
 - Optional support: GitHub Sponsors or a Store purchase
 
 ## License
@@ -52,3 +53,9 @@ Licensed under **GPL-3.0-or-later**.
 
 - `LICENSE`
 - `THIRD_PARTY_NOTICES.md`
+
+## Privacy
+
+DispHub does not include custom telemetry or account tracking, and stores settings/profiles locally.
+
+- `PRIVACY.md`

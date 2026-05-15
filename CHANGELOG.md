@@ -19,15 +19,18 @@ The format is based on Keep a Changelog and this project aims to follow Semantic
   - `.github/ISSUE_TEMPLATE/feature_request.yml`
   - `.github/pull_request_template.md`
   - `.github/workflows/ci.yml`
-- Baseline test project `DisplayHub.Tests` with coverage for:
+- Baseline test project `DispHub.Tests` with coverage for:
   - color temperature slider/kelvin/multiplier mapping
   - profile clamping/default values
 
 ### Changed
-- About page wording updated to DisplayHub messaging
-- Legacy root asset renamed from `KeyedColors image.png` to `legacy-reference-image.png`
-- `DisplayHub.csproj` updated to exclude test project sources from main app compile
+- Renamed project from DisplayHub to DispHub
+- Upgraded from .NET 8 to .NET 10 (LTS)
+- About page wording updated to DispHub messaging
+- `DispHub.csproj` updated to exclude test project sources from main app compile
+- Removed page preview image placeholders
+- Removed custom smooth scrolling behavior (`SmoothScrollBehavior.cs`)
+- Removed legacy root assets (`legacy-reference-image.png`, `kofi-promo.jpg`)
 
 ### Fixed
 - Refactored color temperature mapping into reusable helper (`Helpers/ColorTemperatureMapper.cs`) so behavior can be tested and kept consistent
-- Finalized settings smooth scrolling by attaching wheel animation to the `NavigationView` content `ScrollViewer` and preventing nested scroll-viewer wheel conflicts

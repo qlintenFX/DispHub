@@ -1,6 +1,6 @@
-DisplayHub is an open-source Windows display profile manager built for fast daily control of monitor behavior. It helps multi-monitor users switch between saved profiles and adjust key settings without digging through multiple menus.
+DispHub is an open-source Windows display profile manager built for fast daily control of monitor behavior. It helps multi-monitor users switch between saved profiles and adjust key settings without digging through multiple menus.
 
-Use profiles to keep your preferred display setup ready for work, gaming, or evening use. DisplayHub is actively maintained, with source builds available under GPL-3.0-or-later.
+Use profiles to keep your preferred display setup ready for work, gaming, or evening use. DispHub is actively maintained, with source builds available under GPL-3.0-or-later.
 
 Highlights:
 - Save per-profile settings for gamma, contrast, vibrance, and color temperature

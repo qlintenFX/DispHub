@@ -1,13 +1,14 @@
-namespace DisplayHub.Constants;
+// SPDX-License-Identifier: GPL-3.0-or-later
+namespace DispHub.Constants;
 
 public static class AppConstants
 {
-    public const string AppName = "DisplayHub";
+    public const string AppName = "DispHub";
     public const string Version = "1.0.0";
-    public const string AppDataFolder = "DisplayHub";
+    public const string AppDataFolder = "DispHub";
     public const string ProfilesFileName = "profiles.json";
     public const string SettingsFileName = "settings.json";
-    public const string LogFileName = "displayhub.log";
+    public const string LogFileName = "disphub.log";
 
     public static string AppDataPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),

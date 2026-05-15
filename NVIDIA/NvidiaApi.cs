@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Runtime.InteropServices;
-using DisplayHub.Services.Logging;
+using DispHub.Services.Logging;
 
-namespace DisplayHub.NVIDIA;
+namespace DispHub.NVIDIA;
 
 internal static class NvidiaApi
 {

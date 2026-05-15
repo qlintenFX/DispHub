@@ -1,4 +1,5 @@
-namespace DisplayHub.Services.Logging;
+// SPDX-License-Identifier: GPL-3.0-or-later
+namespace DispHub.Services.Logging;
 
 public static class Logger
 {
@@ -59,7 +60,7 @@ public static class Logger
         {
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename),
             Path.Combine(Path.GetTempPath(), filename),
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DisplayHub", filename)
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DispHub", filename)
         };
 
         foreach (string path in candidates)

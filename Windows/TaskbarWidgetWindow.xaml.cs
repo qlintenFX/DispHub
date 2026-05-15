@@ -6,10 +6,10 @@ using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Threading;
-using DisplayHub.Helpers;
-using DisplayHub.Services.Logging;
+using DispHub.Helpers;
+using DispHub.Services.Logging;
 
-namespace DisplayHub.Windows;
+namespace DispHub.Windows;
 
 public partial class TaskbarWidgetWindow : Window
 {

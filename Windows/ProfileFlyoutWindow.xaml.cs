@@ -1,11 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace DisplayHub.Windows;
+namespace DispHub.Windows;
 
 public partial class ProfileFlyoutWindow : Window
 {
-    private CancellationTokenSource _cts = new();
+    private CancellationTokenSource? _cts;
     private bool _isHiding = true;
     private const int DisplayDurationMs = 1800;
     private const int AnimationDurationMs = 250;
@@ -28,7 +29,7 @@ public partial class ProfileFlyoutWindow : Window
         Left = (SystemParameters.WorkArea.Width - Width) / 2;
     }
 
-    public async void ShowProfileFlyout(string profileName)
+    public async Task ShowProfileFlyout(string profileName)
     {
         ProfileNameText.Text = profileName;
         PositionWindow();
@@ -54,7 +55,8 @@ public partial class ProfileFlyoutWindow : Window
             BeginAnimation(OpacityProperty, fadeAnim);
         }
 
-        _cts.Cancel();
+        _cts?.Cancel();
+        _cts?.Dispose();
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
 

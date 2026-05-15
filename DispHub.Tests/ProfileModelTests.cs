@@ -1,7 +1,7 @@
-using DisplayHub.Constants;
-using DisplayHub.Models;
+using DispHub.Constants;
+using DispHub.Models;
 
-namespace DisplayHub.Tests;
+namespace DispHub.Tests;
 
 public class ProfileModelTests
 {

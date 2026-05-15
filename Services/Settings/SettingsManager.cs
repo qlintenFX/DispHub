@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Text.Json;
 using System.Windows.Threading;
-using DisplayHub.Constants;
-using DisplayHub.Services.Logging;
+using DispHub.Constants;
+using DispHub.Services.Logging;
 using Microsoft.Win32;
 
-namespace DisplayHub.Services.Settings;
+namespace DispHub.Services.Settings;
 
 public class DcKeybindSettings
 {
@@ -234,7 +235,7 @@ public class SettingsManager
         _saveDebounceTimer.Start();
     }
 
-    private async void SaveToFileAsync()
+    private async Task SaveToFileAsync()
     {
         try
         {

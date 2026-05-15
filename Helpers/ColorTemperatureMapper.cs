@@ -1,6 +1,7 @@
-using DisplayHub.Constants;
+// SPDX-License-Identifier: GPL-3.0-or-later
+using DispHub.Constants;
 
-namespace DisplayHub.Helpers;
+namespace DispHub.Helpers;
 
 public static class ColorTemperatureMapper
 {

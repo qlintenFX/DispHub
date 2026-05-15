@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Text.Json;
-using DisplayHub.Constants;
-using DisplayHub.Models;
-using DisplayHub.Services.Logging;
+using DispHub.Constants;
+using DispHub.Models;
+using DispHub.Services.Logging;
 
-namespace DisplayHub.Services.Profiles;
+namespace DispHub.Services.Profiles;
 
 public class ProfileManager
 {

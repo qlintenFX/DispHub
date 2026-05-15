@@ -1,6 +1,11 @@
 # Third-Party Notices
 
-DisplayHub includes third-party dependencies and inspirations.
+DispHub includes third-party dependencies and inspirations.
+
+## Project licensing
+
+- DispHub source code is licensed under GPL-3.0-or-later.
+- The full GPL-3.0 license text is in `LICENSE`.
 
 ## Runtime dependencies
 
@@ -24,3 +29,8 @@ DisplayHub includes third-party dependencies and inspirations.
 
 - KeyedColors (same maintainer's earlier project as starting point)
   - https://github.com/qlintenFX/KeyedColors
+
+## Attribution notes
+
+- Some UX patterns and design decisions were informed by FluentFlyout.
+- DispHub does not bundle FluentFlyout binaries.

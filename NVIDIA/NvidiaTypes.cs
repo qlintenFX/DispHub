@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Runtime.InteropServices;
 
-namespace DisplayHub.NVIDIA;
+namespace DispHub.NVIDIA;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct NvDisplayDvcInfo

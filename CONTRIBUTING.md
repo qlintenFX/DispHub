@@ -1,4 +1,4 @@
-# Contributing to DisplayHub
+# Contributing to DispHub
 
 Thanks for contributing.
 
@@ -78,6 +78,10 @@ Expected baseline labels:
 - `bug`: Reproducible defect.
 - `enhancement`: Product or UX improvement request.
 - `documentation`: Docs-only or docs-heavy changes.
+- `ui`: User-facing window/page/XAML changes.
+- `core`: App logic or service/model/helper changes.
+- `tests`: Test additions or updates.
+- `ci`: Workflow, automation, or dependency-bot configuration changes.
 - `good first issue`: Scoped newcomer task with clear instructions.
 - `help wanted`: Maintainers welcome community implementation help.
 - `needs-info`: Waiting on reporter details before work can continue.
@@ -88,6 +92,14 @@ Expected baseline labels:
 When triaging, aim for one type label plus optional onboarding/priority/status labels.
 
 ## PR review lifecycle
+
+### Automatic PR labels
+
+DispHub uses path-based PR labeling in CI to speed up maintainer triage.
+
+- Labels are applied from `.github/labeler.yml`.
+- Keep PRs scoped so labels (`ui`, `core`, `tests`, `ci`, `documentation`) remain accurate.
+- If a PR spans multiple areas, multiple labels are expected.
 
 Recommended lifecycle for pull requests:
 
@@ -120,6 +132,24 @@ dotnet build
 ```
 
 If tests are present for your area, run them too.
+
+## SonarQube Analysis
+
+We use SonarQube locally to track code quality and technical debt. 
+
+To set up and run the analysis:
+
+1. Ensure Docker is running.
+2. Start the SonarQube stack:
+   ```powershell
+   docker compose up -d
+   ```
+3. Run the scan script (this builds the project, runs tests with coverage, and uploads to SonarQube):
+   ```powershell
+   .\run-sonar.ps1
+   ```
+4. View the dashboard at `http://localhost:9000` (Default login: `admin` / `admin`).
+
 
 ## Community expectations
 

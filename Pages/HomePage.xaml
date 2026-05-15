@@ -1,4 +1,4 @@
-<Page x:Class="DisplayHub.Pages.HomePage"
+<Page x:Class="DispHub.Pages.HomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -10,7 +10,7 @@
             <!-- App Header -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <Image Source="/logo.png" Width="40" Height="40"/>
-                <TextBlock Text="DisplayHub" FontSize="24" FontWeight="Medium" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                <TextBlock Text="DispHub" FontSize="24" FontWeight="Medium" Margin="12,0,0,0" VerticalAlignment="Center"/>
                 <TextBlock x:Name="VersionTextBlock" FontSize="13" FontWeight="Regular" VerticalAlignment="Center"
                            Margin="10,4,0,0" Opacity="0.5"/>
             </StackPanel>

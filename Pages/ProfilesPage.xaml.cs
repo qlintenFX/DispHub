@@ -1,10 +1,11 @@
-using DisplayHub.Models;
-using DisplayHub.Services.Logging;
+// SPDX-License-Identifier: GPL-3.0-or-later
+using DispHub.Models;
+using DispHub.Services.Logging;
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
 
-namespace DisplayHub.Pages;
+namespace DispHub.Pages;
 
 public partial class ProfilesPage : Page, INavigationAware
 {
@@ -133,7 +134,7 @@ public partial class ProfilesPage : Page, INavigationAware
 
             int index = i;
 
-            // When DisplayHub is disabled, all cards use Secondary appearance
+            // When DispHub is disabled, all cards use Secondary appearance
             // but the active card gets a left accent border to indicate it will resume
             var appearance = isSelected && !isDisabled
                 ? Wpf.Ui.Controls.ControlAppearance.Primary

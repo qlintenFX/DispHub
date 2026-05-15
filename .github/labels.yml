@@ -14,6 +14,22 @@
   color: "0075CA"
   description: Documentation changes or additions.
 
+- name: ui
+  color: "1D76DB"
+  description: UI/XAML or user-facing window/page changes.
+
+- name: core
+  color: "0E8A16"
+  description: Core app logic, services, models, or helpers.
+
+- name: tests
+  color: "5319E7"
+  description: Test additions or updates.
+
+- name: ci
+  color: "BFD4F2"
+  description: CI/CD or repository automation updates.
+
 - name: good first issue
   color: "7057FF"
   description: Well-scoped task suitable for first-time contributors.

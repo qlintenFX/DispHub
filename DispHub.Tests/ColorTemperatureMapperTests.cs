@@ -1,7 +1,7 @@
-using DisplayHub.Constants;
-using DisplayHub.Helpers;
+using DispHub.Constants;
+using DispHub.Helpers;
 
-namespace DisplayHub.Tests;
+namespace DispHub.Tests;
 
 public class ColorTemperatureMapperTests
 {

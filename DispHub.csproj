@@ -1,30 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>x64</Platforms>
     <ApplicationIcon>logo.ico</ApplicationIcon>
-    <AssemblyName>DisplayHub</AssemblyName>
-    <RootNamespace>DisplayHub</RootNamespace>
+    <AssemblyName>DispHub</AssemblyName>
+    <RootNamespace>DispHub</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="WPF-UI" Version="4.2.0" />
     <PackageReference Include="WPF-UI.Tray" Version="4.2.0" />
     <PackageReference Include="MicaWPF" Version="6.3.2" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="NLog" Version="6.0.6" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
+    <PackageReference Include="NLog" Version="6.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />
     <Resource Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="DisplayHub.Tests\**\*.cs" />
-    <EmbeddedResource Remove="DisplayHub.Tests\**\*" />
-    <None Remove="DisplayHub.Tests\**\*" />
+    <Compile Remove="DispHub.Tests\**\*.cs" />
+    <EmbeddedResource Remove="DispHub.Tests\**\*" />
+    <None Remove="DispHub.Tests\**\*" />
   </ItemGroup>
 </Project>

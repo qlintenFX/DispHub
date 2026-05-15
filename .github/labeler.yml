@@ -1,0 +1,42 @@
+ui:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "MainWindow.xaml"
+          - "MainWindow.xaml.cs"
+          - "SettingsWindow.xaml"
+          - "SettingsWindow.xaml.cs"
+          - "HotkeyDialog.xaml"
+          - "HotkeyDialog.xaml.cs"
+          - "Controls/**/*.{xaml,cs}"
+          - "Pages/**/*.{xaml,cs}"
+          - "Windows/**/*.{xaml,cs}"
+
+core:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "Services/**/*.cs"
+          - "Helpers/**/*.cs"
+          - "Models/**/*.cs"
+          - "Constants/**/*.cs"
+          - "NVIDIA/**/*.cs"
+          - "App.xaml.cs"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "DispHub.Tests/**/*"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**/*"
+          - ".github/dependabot.yml"
+          - ".github/labels.yml"
+          - ".github/labeler.yml"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.md"
+          - ".github/ISSUE_TEMPLATE/**/*"
+          - ".github/pull_request_template.md"

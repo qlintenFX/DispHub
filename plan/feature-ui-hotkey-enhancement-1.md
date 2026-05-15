@@ -1,5 +1,5 @@
 ---
-goal: DisplayHub UI/UX Enhancement, Hotkey Architecture Refactor, and GPL-3.0 Compliance
+goal: DispHub UI/UX Enhancement, Hotkey Architecture Refactor, and GPL-3.0 Compliance
 version: 1.0
 date_created: 2026-03-08
 last_updated: 2026-03-08
@@ -12,7 +12,7 @@ tags: feature, refactor, architecture, ui
 
 ![Status: In progress](https://img.shields.io/badge/status-In%20progress-yellow)
 
-Comprehensive enhancement of DisplayHub covering: fine-grained slider control, close-button behavior fix, dynamic system tray with profile switching, mode-based hotkey architecture (no conflicts), configurable Dynamic Controls keybinds with toggle hotkey, DC page redesign, HomePage addition, FluentFlyout-style About page, NavigationView styling, and GPL-3.0 license compliance with proper attribution.
+Comprehensive enhancement of DispHub covering: fine-grained slider control, close-button behavior fix, dynamic system tray with profile switching, mode-based hotkey architecture (no conflicts), configurable Dynamic Controls keybinds with toggle hotkey, DC page redesign, HomePage addition, FluentFlyout-style About page, NavigationView styling, and GPL-3.0 license compliance with proper attribution.
 
 ## 1. Requirements & Constraints
 
@@ -32,7 +32,7 @@ Comprehensive enhancement of DisplayHub covering: fine-grained slider control, c
 - **REQ-014**: NavigationView pane must have rounded top-left corner merging with titlebar area
 - **CON-001**: Must remain compatible with WPF-UI 4.2, MicaWPF 6.3.2, net8.0-windows10.0.22000.0
 - **CON-002**: No DI container — services remain static properties on MainWindow
-- **CON-003**: FluentFlyout is GPL-3.0 — DisplayHub must be GPL-3.0 since it derives UI code from it
+- **CON-003**: FluentFlyout is GPL-3.0 — DispHub must be GPL-3.0 since it derives UI code from it
 - **GUD-001**: Follow FluentFlyout UI patterns exactly for consistency
 - **PAT-001**: _isLoaded guard pattern on all event handlers to prevent XAML-init firing
 
@@ -80,7 +80,7 @@ Comprehensive enhancement of DisplayHub covering: fine-grained slider control, c
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
 | TASK-015 | `MainWindow.xaml`: Remove static ContextMenu from XAML. Build it dynamically in code-behind. | | |
-| TASK-016 | `MainWindow.xaml.cs`: Add `BuildTrayContextMenu()` method. Structure: "Open DisplayHub" → Separator → Profile items (max 10, with checkmark on active) → "More profiles..." submenu if >10 → Separator → "Dynamic Controls: On/Off" toggle item → Separator → "Exit". | | |
+| TASK-016 | `MainWindow.xaml.cs`: Add `BuildTrayContextMenu()` method. Structure: "Open DispHub" → Separator → Profile items (max 10, with checkmark on active) → "More profiles..." submenu if >10 → Separator → "Dynamic Controls: On/Off" toggle item → Separator → "Exit". | | |
 | TASK-017 | `MainWindow.xaml.cs`: Call `BuildTrayContextMenu()` on startup, on profile add/delete/rename, on mode switch, on profile hotkey apply. Profile items click handler: apply profile, update active indicator, fire `ActiveProfileChanged`. | | |
 | TASK-018 | `MainWindow.xaml.cs`: When DC is active, set `IsEnabled = false` on all profile menu items and add "(DC Active)" suffix to the DC toggle item. | | |
 
@@ -99,11 +99,11 @@ Comprehensive enhancement of DisplayHub covering: fine-grained slider control, c
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-021 | `Pages/HomePage.xaml`: Create new page. Top: logo + "DisplayHub" + version. Dashboard section title. 2x2 grid of CardAction tiles: Profiles (Home24 icon, shows active profile name), Dynamic Controls (Gauge20 icon, shows Enabled/Disabled), Settings (Settings24, "Configure"), About (Info20, "Credits & licenses"). Bottom row: GitHub link button, Report Bug button. | | |
+| TASK-021 | `Pages/HomePage.xaml`: Create new page. Top: logo + "DispHub" + version. Dashboard section title. 2x2 grid of CardAction tiles: Profiles (Home24 icon, shows active profile name), Dynamic Controls (Gauge20 icon, shows Enabled/Disabled), Settings (Settings24, "Configure"), About (Info20, "Credits & licenses"). Bottom row: GitHub link button, Report Bug button. | | |
 | TASK-022 | `Pages/HomePage.xaml.cs`: Create code-behind. Click handlers navigate to respective pages via `SettingsWindow.RootNavigation.Navigate(typeof(...))`. Show active profile name and DC status dynamically. | | |
 | TASK-023 | `SettingsWindow.xaml`: Add HomePage as first NavigationViewItem (Icon: Home24, Content: "Home"). Change Profiles icon to something else (e.g., `SlideMultiple24` or `Board24`). | | |
 | TASK-024 | `SettingsWindow.xaml.cs` SettingsWindow_Loaded: Navigate to HomePage by default instead of ProfilesPage. | | |
-| TASK-025 | `Pages/AboutPage.xaml`: Redesign to match FluentFlyout. Sections: "Contributors" title + description. CardExpander for "Developers" — content: "qlintenFX — Creator of KeyedColors, DisplayHub developer". CardExpander for "Translators" — grayed out, content: "No translations yet". "Support" section with note: "DisplayHub is free and open source. You can build it yourself or download it from GitHub." GitHub sponsor/ko-fi links if desired. "Open Source Licenses" section title + description. License cards: FluentFlyout (GPL-3.0, Hugo Li, UI architecture & code inspiration), WPF-UI (MIT), KeyedColors (qlintenFX, original display services), MicaWPF (MIT). Bottom: star icon + "Enjoying DisplayHub?" + GitHub repo link. | | |
+| TASK-025 | `Pages/AboutPage.xaml`: Redesign to match FluentFlyout. Sections: "Contributors" title + description. CardExpander for "Developers" — content: "qlintenFX — Creator of KeyedColors, DispHub developer". CardExpander for "Translators" — grayed out, content: "No translations yet". "Support" section with note: "DispHub is free and open source. You can build it yourself or download it from GitHub." GitHub sponsor/ko-fi links if desired. "Open Source Licenses" section title + description. License cards: FluentFlyout (GPL-3.0, Hugo Li, UI architecture & code inspiration), WPF-UI (MIT), KeyedColors (qlintenFX, original display services), MicaWPF (MIT). Bottom: star icon + "Enjoying DispHub?" + GitHub repo link. | | |
 | TASK-026 | `Pages/AboutPage.xaml.cs`: Update to support CardExpander interactions and hyperlink navigation. | | |
 
 ### Phase 7: NavigationView Styling
@@ -117,7 +117,7 @@ Comprehensive enhancement of DisplayHub covering: fine-grained slider control, c
 
 ### Phase 8: GPL-3.0 License & Attribution
 
-- GOAL-008: Full GPL-3.0 compliance since DisplayHub derives UI code from FluentFlyout (GPL-3.0)
+- GOAL-008: Full GPL-3.0 compliance since DispHub derives UI code from FluentFlyout (GPL-3.0)
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
@@ -130,7 +130,7 @@ Comprehensive enhancement of DisplayHub covering: fine-grained slider control, c
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-031 | Kill any running DisplayHub.exe, run `dotnet build`, verify 0 errors 0 warnings. | | |
+| TASK-031 | Kill any running DispHub.exe, run `dotnet build`, verify 0 errors 0 warnings. | | |
 | TASK-032 | Run the app, verify: sliders have fine steps, close button exits when CloseToTray=false, tray menu shows profiles, DC keybinds are editable, HomePage loads, About page has proper credits. | | |
 | TASK-033 | Commit all changes with descriptive message and Co-authored-by trailer. | | |
 
@@ -183,7 +183,7 @@ Comprehensive enhancement of DisplayHub covering: fine-grained slider control, c
 - **RISK-001**: CardExpander may not be available in WPF-UI 4.2 — need to verify. Fallback: use regular Card with Expander inside.
 - **RISK-002**: Removing static tray ContextMenu from XAML and building dynamically may cause tray icon issues if menu reference is lost.
 - **RISK-003**: Mode-based hotkey re-registration may cause brief period where no hotkeys are active during switch.
-- **ASSUMPTION-001**: FluentFlyout''s GPL-3.0 requires DisplayHub to also be GPL-3.0 since we adapted their UI code.
+- **ASSUMPTION-001**: FluentFlyout''s GPL-3.0 requires DispHub to also be GPL-3.0 since we adapted their UI code.
 - **ASSUMPTION-002**: WPF-UI''s NavigationView built-in styling provides the rounded corner effect without custom templates.
 - **ASSUMPTION-003**: The user''s settings.json on disk may have stale values — all new settings fields must have sensible defaults.
 

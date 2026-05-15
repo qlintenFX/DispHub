@@ -27,7 +27,7 @@
     <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <EntryPointProjectUniqueName>..\DisplayHub.csproj</EntryPointProjectUniqueName>
+    <EntryPointProjectUniqueName>..\DispHub.csproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>false</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <NoWarn>$(NoWarn);NU1702</NoWarn>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DisplayHub.csproj">
+    <ProjectReference Include="..\DispHub.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
       <PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
     </ProjectReference>

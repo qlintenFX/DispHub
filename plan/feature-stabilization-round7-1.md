@@ -1,5 +1,5 @@
 ---
-goal: DisplayHub Post-Migration Stabilization and Feature Completion (Round 7)
+goal: DispHub Post-Migration Stabilization and Feature Completion (Round 7)
 version: 1.0
 date_created: 2025-07-18
 last_updated: 2025-07-18
@@ -12,7 +12,7 @@ tags: [bug, feature, migration, ui, stabilization]
 
 ![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
 
-Comprehensive stabilization plan for DisplayHub after migrating from KeyedColors (WinForms) to WPF-UI architecture inspired by FluentFlyout. This addresses all remaining bugs, missing features, UI/UX polish, and code quality issues identified through full codebase audit after Round 6 (commit `137a956`).
+Comprehensive stabilization plan for DispHub after migrating from KeyedColors (WinForms) to WPF-UI architecture inspired by FluentFlyout. This addresses all remaining bugs, missing features, UI/UX polish, and code quality issues identified through full codebase audit after Round 6 (commit `137a956`).
 
 ## 1. Requirements & Constraints
 
@@ -23,7 +23,7 @@ Comprehensive stabilization plan for DisplayHub after migrating from KeyedColors
 - **REQ-005**: Close button behavior (exit vs minimize-to-tray) must respect user setting
 - **REQ-006**: System tray left-click behavior must work per setting
 - **REQ-007**: Profile flyout popup must appear cleanly on hotkey switch
-- **REQ-008**: All settings must persist across app restarts via `%APPDATA%\DisplayHub\`
+- **REQ-008**: All settings must persist across app restarts via `%APPDATA%\DispHub\`
 - **REQ-009**: GPL-3.0 license compliance with FluentFlyout credit
 - **SEC-001**: No hardcoded credentials or sensitive data in source
 - **CON-001**: Must target .NET 8 with WPF-UI 4.2.0, x64 only
@@ -75,7 +75,7 @@ Comprehensive stabilization plan for DisplayHub after migrating from KeyedColors
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-014 | **NavigationView title bar integration**: FluentFlyout has the NavigationView pane merging with the title bar area creating a cohesive rounded-corner design. Current DisplayHub has `Margin="0,40,0,0"` on NavigationView to avoid overlapping the TitleBar. Research if setting the NavigationView's `PaneHeader` or adjusting margins can achieve the integrated look. The key is the background behind the nav pane being a different color than the content area, with rounded inner corner. | | |
+| TASK-014 | **NavigationView title bar integration**: FluentFlyout has the NavigationView pane merging with the title bar area creating a cohesive rounded-corner design. Current DispHub has `Margin="0,40,0,0"` on NavigationView to avoid overlapping the TitleBar. Research if setting the NavigationView's `PaneHeader` or adjusting margins can achieve the integrated look. The key is the background behind the nav pane being a different color than the content area, with rounded inner corner. | | |
 | TASK-015 | **Theme ComboBox dropdown always white**: The user reported the theme dropdown selector itself is always white regardless of dark mode. This is likely because the ComboBox popup uses system theme, not WPF-UI theme. WPF-UI ComboBox should handle this — verify the ComboBox is using `ui:ComboBox` from the WPF-UI namespace, or if it's using the stock WPF ComboBox which doesn't support dark mode. | | |
 | TASK-016 | **Profile cards visual design**: Profile cards use `Wpf.Ui.Controls.Button` with Primary/Secondary appearance. The user complained about "blue color and hard corners nothing rounded or in style". The Button control should already have rounded corners from WPF-UI. Verify the cards look good in both light and dark mode. Consider using `ui:Card` or `ui:CardControl` instead of buttons for a more cohesive look with the rest of the page. | | |
 | TASK-017 | **HomePage dashboard cards**: The CardAction items look good but `ProfileStatusText` and `DcStatusText` are only updated in `OnNavigatedToAsync`. If the user switches profiles or enables DC and comes back to Home, the text won't update. Subscribe to `ActiveProfileChanged` and `DynamicControlsModeChanged` events. | | |
@@ -87,12 +87,12 @@ Comprehensive stabilization plan for DisplayHub after migrating from KeyedColors
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-019 | **Remove unused NLog dependency**: `DisplayHub.csproj` references `NLog 6.0.6` but `Services/Logging/Logger.cs` likely uses a custom file logger (not NLog). If NLog isn't used anywhere, remove the package reference to reduce binary size. | | |
+| TASK-019 | **Remove unused NLog dependency**: `DispHub.csproj` references `NLog 6.0.6` but `Services/Logging/Logger.cs` likely uses a custom file logger (not NLog). If NLog isn't used anywhere, remove the package reference to reduce binary size. | | |
 | TASK-020 | **Remove unused CommunityToolkit.Mvvm**: The project references `CommunityToolkit.Mvvm 8.4.0` but no classes use `ObservableObject`, `RelayCommand`, or other MVVM toolkit types. If unused, remove. | | |
 | TASK-021 | **Static service pattern cleanup**: All services are static properties on MainWindow. This works but creates tight coupling. For now, keep the pattern (matches FluentFlyout) but document it clearly. Ensure no page accesses services before `MainWindow_Loaded` completes. | | |
 | TASK-022 | **IDisposable implementation audit**: `DisplayManager` implements `IDisposable` (disposes vibrance service). `HotkeyManager` implements `IDisposable` (unregisters all hotkeys). Verify both are properly disposed in `ExitApplication()`. Currently `HotkeyManager.Dispose()` is called but `DisplayManager.Dispose()` is not — add it. | | |
 | TASK-023 | **Event handler leak audit**: Pages subscribe to static events (`ActiveProfileChanged`, `DynamicControlsModeChanged`, `DisplayPowerChanged`) in `OnPageLoaded` and unsubscribe in `OnPageUnloaded`. This is correct. But `SettingsWindow` subscribes to `DisplayPowerChanged` in constructor and never unsubscribes. Since SettingsWindow is recreated each time, the old handler should be GC'd with the window, but it's cleaner to unsubscribe in `OnClosing`. | | |
-| TASK-024 | **Logger audit**: Verify `Logger.Initialize()` creates the log file in `%APPDATA%\DisplayHub\`. Check that `Logger.LogError()` doesn't throw if the file is locked or the directory doesn't exist. | | |
+| TASK-024 | **Logger audit**: Verify `Logger.Initialize()` creates the log file in `%APPDATA%\DispHub\`. Check that `Logger.LogError()` doesn't throw if the file is locked or the directory doesn't exist. | | |
 | TASK-025 | **Profile name editing**: Currently profiles can only be renamed by... they can't. The `AddProfile_Click` creates a profile with auto-generated name "Profile N" but there's no UI to rename. Need to add a rename button or inline editing (double-click the card to edit name, or a TextBox that appears). | | |
 
 ### Implementation Phase 6: Missing Features

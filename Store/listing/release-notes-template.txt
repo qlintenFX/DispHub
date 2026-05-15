@@ -15,4 +15,4 @@ Known issues
 - Local MSIX packaging requires DesktopBridge targets; use CI packaging workflow on windows-latest.
 
 Open-source and support note
-- DisplayHub remains open source under GPL-3.0-or-later; Microsoft Store distribution is an optional convenience/support channel.
+- DispHub remains open source under GPL-3.0-or-later; Microsoft Store distribution is an optional convenience/support channel.

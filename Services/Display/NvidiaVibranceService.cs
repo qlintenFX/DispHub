@@ -1,8 +1,9 @@
-using DisplayHub.Constants;
-using DisplayHub.NVIDIA;
-using DisplayHub.Services.Logging;
+// SPDX-License-Identifier: GPL-3.0-or-later
+using DispHub.Constants;
+using DispHub.NVIDIA;
+using DispHub.Services.Logging;
 
-namespace DisplayHub.Services.Display;
+namespace DispHub.Services.Display;
 
 public sealed class NvidiaVibranceService : IVibranceService
 {

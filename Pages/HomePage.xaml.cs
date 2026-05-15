@@ -1,11 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using DisplayHub.Constants;
+using DispHub.Constants;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 
-namespace DisplayHub.Pages;
+namespace DispHub.Pages;
 
 public partial class HomePage : Page, INavigationAware
 {
@@ -51,11 +52,11 @@ public partial class HomePage : Page, INavigationAware
 
     private void GitHub_Click(object sender, RoutedEventArgs e)
     {
-        Process.Start(new ProcessStartInfo("https://github.com/qlintenFX/DisplayHub") { UseShellExecute = true });
+        Process.Start(new ProcessStartInfo("https://github.com/qlintenFX/DispHub") { UseShellExecute = true });
     }
 
     private void ReportBug_Click(object sender, RoutedEventArgs e)
     {
-        Process.Start(new ProcessStartInfo("https://github.com/qlintenFX/DisplayHub/issues/new") { UseShellExecute = true });
+        Process.Start(new ProcessStartInfo("https://github.com/qlintenFX/DispHub/issues/new") { UseShellExecute = true });
     }
 }

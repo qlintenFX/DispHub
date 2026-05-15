@@ -1,10 +1,10 @@
 <Window
-    x:Class="DisplayHub.MainWindow"
+    x:Class="DispHub.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
-    Title="DisplayHub"
+    Title="DispHub"
     Height="1" Width="1"
     WindowStyle="None"
     ShowInTaskbar="False"
@@ -14,7 +14,7 @@
         <tray:NotifyIcon
             x:Name="TrayIcon"
             Icon="/logo.ico"
-            TooltipText="DisplayHub"
+            TooltipText="DispHub"
             LeftClick="TrayIcon_LeftClick"
             FocusOnLeftClick="False"
             MenuOnRightClick="True">

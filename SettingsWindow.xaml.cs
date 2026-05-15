@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using DisplayHub.Pages;
+using DispHub.Pages;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Wpf.Ui.Controls;
 
-namespace DisplayHub;
+namespace DispHub;
 
 public partial class SettingsWindow : FluentWindow
 {
@@ -58,8 +58,8 @@ public partial class SettingsWindow : FluentWindow
     {
         bool active = MainWindow.IsDisplayActive;
         PowerButton.ToolTip = active
-            ? "DisplayHub: Active — click to disable"
-            : "DisplayHub: Inactive — click to enable";
+            ? "DispHub: Active — click to disable"
+            : "DispHub: Inactive — click to enable";
 
         if (active)
         {
@@ -81,36 +81,13 @@ public partial class SettingsWindow : FluentWindow
         {
             try
             {
-                EnsureSmoothScrollAttached();
+                if (_contentScrollViewer == null)
+                    _contentScrollViewer = FindContentScrollViewer(RootNavigation);
+
                 _contentScrollViewer?.ScrollToVerticalOffset(0);
             }
             catch { }
         }, System.Windows.Threading.DispatcherPriority.Loaded);
-    }
-
-    private void EnsureSmoothScrollAttached()
-    {
-        var contentScrollViewer = FindContentScrollViewer(RootNavigation);
-        if (contentScrollViewer == null)
-            return;
-
-        if (ReferenceEquals(_contentScrollViewer, contentScrollViewer))
-            return;
-
-        if (_contentScrollViewer != null)
-        {
-            try
-            {
-                Helpers.SmoothScrollBehavior.SetIsEnabled(_contentScrollViewer, false);
-            }
-            catch
-            {
-                // Ignore detach failures and continue.
-            }
-        }
-
-        _contentScrollViewer = contentScrollViewer;
-        Helpers.SmoothScrollBehavior.SetIsEnabled(_contentScrollViewer, true);
     }
 
     private static ScrollViewer? FindContentScrollViewer(DependencyObject root)

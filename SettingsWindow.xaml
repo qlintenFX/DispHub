@@ -1,14 +1,14 @@
 <ui:FluentWindow
-    x:Class="DisplayHub.SettingsWindow"
+    x:Class="DispHub.SettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:pages="clr-namespace:DisplayHub.Pages"
+    xmlns:pages="clr-namespace:DispHub.Pages"
     mc:Ignorable="d"
     Height="700" MinHeight="300" MinWidth="750" Width="900"
-    Title="DisplayHub"
+    Title="DispHub"
     Icon="/logo.ico"
     ExtendsContentIntoTitleBar="True"
     WindowBackdropType="Mica"
@@ -41,7 +41,7 @@
 
         <ui:TitleBar
             x:Name="TitleBar"
-            Title="DisplayHub"
+            Title="DispHub"
             VerticalAlignment="Top">
             <ui:TitleBar.Icon>
                 <ui:ImageIcon Source="/logo.png" />
@@ -50,7 +50,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,140,0">
                     <Button x:Name="PowerButton"
                             Click="PowerToggle_Click"
-                            ToolTip="Toggle DisplayHub"
+                            ToolTip="Toggle DispHub"
                             Width="36" Height="30"
                             Padding="0"
                             Background="Transparent"

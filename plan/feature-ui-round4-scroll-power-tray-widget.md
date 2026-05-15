@@ -1,5 +1,5 @@
 ---
-goal: DisplayHub Round 4 - Scrolling fix, Power toggle fix, Tray left-click, Taskbar widget
+goal: DispHub Round 4 - Scrolling fix, Power toggle fix, Tray left-click, Taskbar widget
 version: 1.0
 date_created: 2026-03-08
 last_updated: 2026-03-08
@@ -74,7 +74,7 @@ Fix critical scrolling issues, refine power toggle behavior, add FluentFlyout-st
 
 - GOAL-004: Add configurable left-click tray behavior with setting in Settings page
 
-FluentFlyout pattern: `NIconLeftClick` int setting (0=Open Settings, 1=Show Media Flyout) with ComboBox on SystemPage. For DisplayHub: 0=Open Settings (default), 1=Do Nothing.
+FluentFlyout pattern: `NIconLeftClick` int setting (0=Open Settings, 1=Show Media Flyout) with ComboBox on SystemPage. For DispHub: 0=Open Settings (default), 1=Do Nothing.
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
@@ -98,7 +98,7 @@ FluentFlyout pattern: `NIconLeftClick` int setting (0=Open Settings, 1=Show Medi
 
 - GOAL-006: Create a small taskbar-docked widget showing the current active profile
 
-FluentFlyout's `TaskbarWidgetControl` is a borderless 40x100 UserControl docked above the taskbar, showing song info with blur background. For DisplayHub: simplified version showing current profile name.
+FluentFlyout's `TaskbarWidgetControl` is a borderless 40x100 UserControl docked above the taskbar, showing song info with blur background. For DispHub: simplified version showing current profile name.
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|

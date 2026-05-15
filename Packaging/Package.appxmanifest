@@ -13,9 +13,9 @@
     ProcessorArchitecture="x64" />
 
   <Properties>
-    <DisplayName>DisplayHub</DisplayName>
-    <PublisherDisplayName>DisplayHub</PublisherDisplayName>
-    <Description>DisplayHub desktop display control utility.</Description>
+    <DisplayName>DispHub</DisplayName>
+    <PublisherDisplayName>DispHub</PublisherDisplayName>
+    <Description>DispHub desktop display control utility.</Description>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -29,14 +29,14 @@
 
   <Applications>
     <Application
-      Id="DisplayHub"
-      Executable="DisplayHub.exe"
+      Id="DispHub"
+      Executable="DispHub.exe"
       EntryPoint="Windows.FullTrustApplication"
       uap10:RuntimeBehavior="packagedClassicApp"
       uap10:TrustLevel="mediumIL">
       <uap:VisualElements
-        DisplayName="DisplayHub"
-        Description="DisplayHub"
+        DisplayName="DispHub"
+        Description="DispHub"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">

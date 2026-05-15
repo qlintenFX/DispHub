@@ -1,8 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
 
-namespace DisplayHub.Pages;
+namespace DispHub.Pages;
 
 public partial class FlyoutPage : Page, INavigationAware
 {

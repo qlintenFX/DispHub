@@ -1,1 +1,1 @@
-DisplayHub lets multi-monitor users switch profiles and tune displays on Windows.
+DispHub lets multi-monitor users switch profiles and tune displays on Windows.

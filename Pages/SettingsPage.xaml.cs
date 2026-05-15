@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using DisplayHub.Constants;
+using DispHub.Constants;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
 
-namespace DisplayHub.Pages;
+namespace DispHub.Pages;
 
 public partial class SettingsPage : Page, INavigationAware
 {

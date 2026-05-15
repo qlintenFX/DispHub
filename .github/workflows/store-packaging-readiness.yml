@@ -18,10 +18,11 @@ concurrency:
 jobs:
   build-and-package:
     runs-on: windows-latest
+    timeout-minutes: 30
     env:
       DOTNET_NOLOGO: true
       BUILD_CONFIGURATION: Release
-      TARGET_FRAMEWORK: net8.0-windows10.0.22000.0
+      TARGET_FRAMEWORK: net10.0-windows10.0.22000.0
       PLATFORM: x64
       RUNTIME_IDENTIFIER: win-x64
       MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
@@ -33,11 +34,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -45,7 +48,7 @@ jobs:
       - name: Validate required inputs and packaging files
         run: |
           $requiredFiles = @(
-            '.\Packaging\DisplayHub.Package.wapproj',
+            '.\Packaging\DispHub.Package.wapproj',
             '.\Packaging\Package.appxmanifest',
             '.\Properties\PublishProfiles\win-x64.pubxml',
             '.\Packaging\Assets\StoreLogo.png',
@@ -83,14 +86,14 @@ jobs:
           "MSIX_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Restore
-        run: dotnet restore .\DisplayHub.sln
+        run: dotnet restore .\DispHub.sln
 
       - name: Build
-        run: dotnet build .\DisplayHub.sln -c $env:BUILD_CONFIGURATION --no-restore -p:Platform=$env:PLATFORM
+        run: dotnet build .\DispHub.sln -c $env:BUILD_CONFIGURATION --no-restore -p:Platform=$env:PLATFORM
 
       - name: Publish release binaries
         run: |
-          dotnet publish .\DisplayHub.csproj `
+          dotnet publish .\DispHub.csproj `
             -c $env:BUILD_CONFIGURATION `
             -f $env:TARGET_FRAMEWORK `
             -r $env:RUNTIME_IDENTIFIER `
@@ -147,7 +150,7 @@ jobs:
           $packageOutputDir = (Resolve-Path '.\artifacts\msix').Path + '\'
           $certificatePath = (Resolve-Path '.\artifacts\signing\msix-signing.pfx').Path
 
-          msbuild .\Packaging\DisplayHub.Package.wapproj `
+          msbuild .\Packaging\DispHub.Package.wapproj `
             /restore `
             /p:Configuration=$env:BUILD_CONFIGURATION `
             /p:Platform=$env:PLATFORM `
@@ -208,19 +211,28 @@ jobs:
           }
 
           $metadata | ConvertTo-Json -Depth 6 | Set-Content -Path .\artifacts\store\msix-build-metadata.json -Encoding utf8
-          Remove-Item -Path .\artifacts\signing\msix-signing.pfx -Force
+
+      - name: Cleanup signing certificate
+        if: always()
+        run: |
+          if (Test-Path '.\artifacts\signing\msix-signing.pfx') {
+            Remove-Item -Path '.\artifacts\signing\msix-signing.pfx' -Force
+          }
+          if (Test-Path '.\artifacts\signing\msix-signing.pfx') {
+            throw 'Signing certificate cleanup failed: artifacts\signing\msix-signing.pfx still exists.'
+          }
 
       - name: Upload publish artifact
         uses: actions/upload-artifact@v4
         with:
-          name: displayhub-publish
+          name: disphub-publish
           path: .\artifacts\publish
           if-no-files-found: error
 
       - name: Upload MSIX artifact
         uses: actions/upload-artifact@v4
         with:
-          name: displayhub-msix
+          name: disphub-msix
           path: .\artifacts\msix
           if-no-files-found: error
 

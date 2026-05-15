@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Runtime.InteropServices;
-using DisplayHub.Models;
+using DispHub.Models;
 
-namespace DisplayHub.Services.Hotkeys;
+namespace DispHub.Services.Hotkeys;
 
 public sealed class HotkeyManager : IDisposable
 {

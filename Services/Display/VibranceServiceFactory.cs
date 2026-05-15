@@ -1,6 +1,7 @@
-using DisplayHub.Services.Logging;
+// SPDX-License-Identifier: GPL-3.0-or-later
+using DispHub.Services.Logging;
 
-namespace DisplayHub.Services.Display;
+namespace DispHub.Services.Display;
 
 public static class VibranceServiceFactory
 {
