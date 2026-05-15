@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Constants;
 using DispHub.Services.Display;
 using DispHub.Services.Settings;
@@ -101,8 +101,9 @@ public class DynamicControls
     {
         int[] ids = [_hotkeyIdGammaUp, _hotkeyIdGammaDown, _hotkeyIdContrastUp,
                      _hotkeyIdContrastDown, _hotkeyIdVibranceUp, _hotkeyIdVibranceDown];
-        foreach (int id in ids)
-            if (id > 0) hotkeyManager.UnregisterRawHotkey(id);
+
+        foreach (int id in ids.Where(id => id > 0))
+            hotkeyManager.UnregisterRawHotkey(id);
 
         _hotkeyIdGammaUp = _hotkeyIdGammaDown = _hotkeyIdContrastUp =
         _hotkeyIdContrastDown = _hotkeyIdVibranceUp = _hotkeyIdVibranceDown = -1;

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Text.Json;
 using System.Windows.Threading;
 using DispHub.Constants;
@@ -50,7 +50,9 @@ public class SettingsData
 
 public class SettingsManager
 {
-    private SettingsData _data;
+    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+
+    private readonly SettingsData _data;
     private readonly string _settingsFilePath;
     private readonly DispatcherTimer _saveDebounceTimer;
     private bool _savePending;
@@ -205,7 +207,7 @@ public class SettingsManager
             if (_savePending)
             {
                 _savePending = false;
-                SaveToFileAsync();
+                _ = SaveToFileAsync();
             }
         };
     }
@@ -239,9 +241,8 @@ public class SettingsManager
     {
         try
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(_data, options);
-            await File.WriteAllTextAsync(_settingsFilePath, json);
+            string json = JsonSerializer.Serialize(_data, _jsonOptions);
+            await File.WriteAllTextAsync(_settingsFilePath, json).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -249,7 +250,7 @@ public class SettingsManager
         }
     }
 
-    private void ApplyStartWithWindows(bool enabled)
+    private static void ApplyStartWithWindows(bool enabled)
     {
         try
         {

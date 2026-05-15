@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -40,7 +40,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+#pragma warning disable S3010 // WPF singleton pattern — only one MainWindow is ever created
         _staticInstance = this;
+#pragma warning restore S3010
     }
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -350,7 +352,7 @@ public partial class MainWindow : Window
         Dispatcher.Invoke(() =>
         {
             _profileFlyout ??= new ProfileFlyoutWindow();
-            _profileFlyout.ShowProfileFlyout(profileName);
+            _ = _profileFlyout.ShowProfileFlyout(profileName);
         });
     }
 
@@ -366,98 +368,117 @@ public partial class MainWindow : Window
 
             bool powerOff = !IsDisplayActive;
             bool dcActive = DynamicControls.IsEnabled;
-            var profiles = ProfileManager.Profiles;
 
-            var openItem = new Wpf.Ui.Controls.MenuItem
+            AddHeaderMenuItems(powerOff);
+            AddProfileMenuItems(powerOff, dcActive);
+            AddControlMenuItems(powerOff, dcActive);
+        });
+    }
+
+    private void AddHeaderMenuItems(bool powerOff)
+    {
+        var openItem = new Wpf.Ui.Controls.MenuItem
+        {
+            Header = "Open DispHub",
+            Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Open24 }
+        };
+        openItem.Click += (_, _) => OpenSettingsWindow();
+        TrayContextMenu.Items.Add(openItem);
+        TrayContextMenu.Items.Add(new Separator());
+
+        var powerItem = new MenuItem
+        {
+            Header = powerOff ? "DispHub: Off" : "DispHub: On",
+            FontWeight = FontWeights.SemiBold,
+            IsChecked = IsDisplayActive
+        };
+        powerItem.Click += (_, _) => ToggleDisplayPower();
+        TrayContextMenu.Items.Add(powerItem);
+        TrayContextMenu.Items.Add(new Separator());
+
+        var profiles = ProfileManager.Profiles;
+        string activeLabel = _activeProfileIndex >= 0 && _activeProfileIndex < profiles.Count
+            ? $"Active: {profiles[_activeProfileIndex].Name}"
+            : "No active profile";
+        TrayContextMenu.Items.Add(new MenuItem
+        {
+            Header = activeLabel,
+            IsEnabled = false,
+            FontWeight = FontWeights.SemiBold
+        });
+        TrayContextMenu.Items.Add(new Separator());
+    }
+
+    private void AddProfileMenuItems(bool powerOff, bool dcActive)
+    {
+        var profiles = ProfileManager.Profiles;
+        bool profilesDisabled = dcActive || powerOff;
+        int profileCount = Math.Min(profiles.Count, MaxTrayProfiles);
+
+        for (int i = 0; i < profileCount; i++)
+        {
+            var profile = profiles[i];
+            int index = i;
+            var profileItem = new MenuItem
             {
-                Header = "Open DispHub",
-                Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.Open24 }
+                Header = profile.Name,
+                IsChecked = index == _activeProfileIndex,
+                IsEnabled = !profilesDisabled,
+                FontWeight = index == _activeProfileIndex ? FontWeights.SemiBold : FontWeights.Normal
             };
-            openItem.Click += (_, _) => OpenSettingsWindow();
-            TrayContextMenu.Items.Add(openItem);
-            TrayContextMenu.Items.Add(new Separator());
+            profileItem.Click += (_, _) => ApplyProfile(index);
+            TrayContextMenu.Items.Add(profileItem);
+        }
 
-            var powerItem = new MenuItem
+        if (profiles.Count > MaxTrayProfiles)
+        {
+            var moreItem = new MenuItem
             {
-                Header = powerOff ? "DispHub: Off" : "DispHub: On",
-                FontWeight = FontWeights.SemiBold,
-                IsChecked = IsDisplayActive
+                Header = $"More... ({profiles.Count - MaxTrayProfiles} more)",
+                IsEnabled = !profilesDisabled
             };
-            powerItem.Click += (_, _) => ToggleDisplayPower();
-            TrayContextMenu.Items.Add(powerItem);
-            TrayContextMenu.Items.Add(new Separator());
-
-            string activeLabel = _activeProfileIndex >= 0 && _activeProfileIndex < profiles.Count
-                ? $"Active: {profiles[_activeProfileIndex].Name}"
-                : "No active profile";
-            TrayContextMenu.Items.Add(new MenuItem
-            {
-                Header = activeLabel, IsEnabled = false, FontWeight = FontWeights.SemiBold
-            });
-            TrayContextMenu.Items.Add(new Separator());
-
-            bool profilesDisabled = dcActive || powerOff;
-            int profileCount = Math.Min(profiles.Count, MaxTrayProfiles);
-            for (int i = 0; i < profileCount; i++)
+            for (int i = MaxTrayProfiles; i < profiles.Count; i++)
             {
                 var profile = profiles[i];
                 int index = i;
-                var profileItem = new MenuItem
+                var subItem = new MenuItem
                 {
                     Header = profile.Name,
-                    IsChecked = index == _activeProfileIndex,
-                    IsEnabled = !profilesDisabled,
-                    FontWeight = index == _activeProfileIndex ? FontWeights.SemiBold : FontWeights.Normal
+                    IsChecked = index == _activeProfileIndex
                 };
-                profileItem.Click += (_, _) => ApplyProfile(index);
-                TrayContextMenu.Items.Add(profileItem);
+                subItem.Click += (_, _) => ApplyProfile(index);
+                moreItem.Items.Add(subItem);
             }
+            TrayContextMenu.Items.Add(moreItem);
+        }
 
-            if (profiles.Count > MaxTrayProfiles)
-            {
-                var moreItem = new MenuItem
-                {
-                    Header = $"More... ({profiles.Count - MaxTrayProfiles} more)",
-                    IsEnabled = !profilesDisabled
-                };
-                for (int i = MaxTrayProfiles; i < profiles.Count; i++)
-                {
-                    var profile = profiles[i];
-                    int index = i;
-                    var subItem = new MenuItem
-                    {
-                        Header = profile.Name, IsChecked = index == _activeProfileIndex
-                    };
-                    subItem.Click += (_, _) => ApplyProfile(index);
-                    moreItem.Items.Add(subItem);
-                }
-                TrayContextMenu.Items.Add(moreItem);
-            }
+        TrayContextMenu.Items.Add(new Separator());
+    }
 
-            TrayContextMenu.Items.Add(new Separator());
+    private void AddControlMenuItems(bool powerOff, bool dcActive)
+    {
+        var dcItem = new MenuItem
+        {
+            Header = dcActive ? "Dynamic Controls: On" : "Dynamic Controls: Off",
+            IsChecked = dcActive,
+            IsEnabled = !powerOff
+        };
+        dcItem.Click += (_, _) =>
+        {
+            if (DynamicControls.IsEnabled) SwitchToProfileMode();
+            else SwitchToDcMode();
+            BuildTrayContextMenu();
+        };
+        TrayContextMenu.Items.Add(dcItem);
+        TrayContextMenu.Items.Add(new Separator());
 
-            var dcItem = new MenuItem
-            {
-                Header = dcActive ? "Dynamic Controls: On" : "Dynamic Controls: Off",
-                IsChecked = dcActive, IsEnabled = !powerOff
-            };
-            dcItem.Click += (_, _) =>
-            {
-                if (DynamicControls.IsEnabled) SwitchToProfileMode();
-                else SwitchToDcMode();
-                BuildTrayContextMenu();
-            };
-            TrayContextMenu.Items.Add(dcItem);
-            TrayContextMenu.Items.Add(new Separator());
-
-            var exitItem = new Wpf.Ui.Controls.MenuItem
-            {
-                Header = "Exit",
-                Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowExit20 }
-            };
-            exitItem.Click += (_, _) => ExitApplication();
-            TrayContextMenu.Items.Add(exitItem);
-        });
+        var exitItem = new Wpf.Ui.Controls.MenuItem
+        {
+            Header = "Exit",
+            Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowExit20 }
+        };
+        exitItem.Click += (_, _) => ExitApplication();
+        TrayContextMenu.Items.Add(exitItem);
     }
 
     // ══════════════════════════════════════════════════════════════

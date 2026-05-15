@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Runtime.InteropServices;
 
 namespace DispHub.Helpers;
@@ -15,10 +15,10 @@ internal static partial class NativeMethods
     public const uint SWP_SHOWWINDOW = 0x0040;
     public const uint SWP_ASYNCWINDOWPOS = 0x4000;
 
-    [DllImport("user32.dll", SetLastError = true)]
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     public static extern IntPtr FindWindow(string? lpClassName, string? lpWindowName);
 
-    [DllImport("user32.dll", SetLastError = true)]
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter,
         string? lpszClass, string? lpszWindow);
 

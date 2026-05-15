@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 namespace DispHub.Services.Display;
 
 public interface IVibranceService : IDisposable

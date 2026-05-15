@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Media.Animation;
 
@@ -8,7 +8,6 @@ public partial class ProfileFlyoutWindow : Window
 {
     private CancellationTokenSource? _cts;
     private bool _isHiding = true;
-    private const int DisplayDurationMs = 1800;
     private const int AnimationDurationMs = 250;
 
     public ProfileFlyoutWindow()
@@ -55,8 +54,11 @@ public partial class ProfileFlyoutWindow : Window
             BeginAnimation(OpacityProperty, fadeAnim);
         }
 
-        _cts?.Cancel();
-        _cts?.Dispose();
+        if (_cts != null)
+        {
+            await _cts.CancelAsync();
+            _cts.Dispose();
+        }
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
 
@@ -86,6 +88,9 @@ public partial class ProfileFlyoutWindow : Window
                 Top = -9999;
             }
         }
-        catch (TaskCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            // Expected when a new profile switch cancels the previous flyout animation.
+        }
     }
 }

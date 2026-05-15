@@ -1,12 +1,14 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 namespace DispHub.Services.Logging;
 
 public static class Logger
 {
-    private static string? _logPath;
-    private static readonly object _lock = new();
+    private const string DefaultLogFileName = "displayhub.log";
 
-    public static void Initialize(string filename = "displayhub.log")
+    private static string? _logPath;
+    private static readonly Lock _lock = new();
+
+    public static void Initialize(string filename = DefaultLogFileName)
     {
         _logPath = GetWritableLogPath(filename);
     }
@@ -30,13 +32,13 @@ public static class Logger
         WriteToLog(entry);
     }
 
-    public static string LogPath => _logPath ?? "displayhub.log";
+    public static string LogPath => _logPath ?? DefaultLogFileName;
 
     private static void WriteToLog(string entry)
     {
         lock (_lock)
         {
-            string path = _logPath ?? GetWritableLogPath("displayhub.log");
+            string path = _logPath ?? GetWritableLogPath(DefaultLogFileName);
             try
             {
                 File.AppendAllText(path, entry + "\r\n");
@@ -45,11 +47,14 @@ public static class Logger
             {
                 try
                 {
-                    string altPath = Path.Combine(Path.GetTempPath(), "displayhub.log");
+                    string altPath = Path.Combine(Path.GetTempPath(), DefaultLogFileName);
                     File.AppendAllText(altPath, entry + "\r\n");
                     _logPath = altPath;
                 }
-                catch { }
+                catch (IOException)
+                {
+                    // Last-resort fallback: logging itself must never crash the app.
+                }
             }
         }
     }
@@ -73,7 +78,10 @@ public static class Logger
                 File.AppendAllText(path, "");
                 return path;
             }
-            catch { continue; }
+            catch (IOException)
+            {
+                // This candidate path is not writable; try the next one.
+            }
         }
 
         return candidates[0];

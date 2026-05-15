@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -74,7 +74,7 @@ public partial class SettingsPage : Page, INavigationAware
             CloseAppRadio.IsChecked = true;
 
         UpdateMasterToggleLabel();
-        
+
         // Set accent color selection
         int accentIndex = MainWindow.SettingsManager.AccentColor;
         if (accentIndex < 0 || accentIndex >= AccentColorItems.Length)
@@ -84,7 +84,7 @@ public partial class SettingsPage : Page, INavigationAware
         }
 
         AccentColorComboBox.SelectedIndex = accentIndex;
-            
+
         _isLoaded = true;
     }
 

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 namespace DispHub.Constants;
 
 public static class AppConstants
@@ -61,4 +61,10 @@ public static class AppConstants
 
     // Startup Registry
     public const string StartupRegistryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+
+    // Project URLs
+#pragma warning disable S1075 // URIs should not be hardcoded — this IS the centralized constant location
+    public const string GitHubUrl = "https://github.com/qlintenFX/DispHub";
+    public const string GitHubIssuesUrl = "https://github.com/qlintenFX/DispHub/issues/new";
+#pragma warning restore S1075
 }

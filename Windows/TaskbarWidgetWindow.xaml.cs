@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 // Widget positioning approach adapted from FluentFlyout by Hugo Li (unchihugo)
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
@@ -32,7 +31,7 @@ public partial class TaskbarWidgetWindow : Window
         {
             var helper = new WindowInteropHelper(this);
             int exStyle = NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE);
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+            _ = NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
                 exStyle | NativeMethods.WS_EX_NOACTIVATE);
         };
 
@@ -40,10 +39,6 @@ public partial class TaskbarWidgetWindow : Window
         WidgetControl.WidgetClicked += OnWidgetClicked;
     }
 
-    protected override void OnSourceInitialized(EventArgs e)
-    {
-        base.OnSourceInitialized(e);
-    }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -98,7 +93,7 @@ public partial class TaskbarWidgetWindow : Window
 
             int style = NativeMethods.GetWindowLong(_handle, NativeMethods.GWL_STYLE);
             style = (int)(((uint)style & ~NativeMethods.WS_POPUP) | NativeMethods.WS_CHILD);
-            NativeMethods.SetWindowLong(_handle, NativeMethods.GWL_STYLE, style);
+            _ = NativeMethods.SetWindowLong(_handle, NativeMethods.GWL_STYLE, style);
             NativeMethods.SetParent(_handle, _taskbarHandle);
             _isDockedInTaskbar = true;
 
@@ -144,34 +139,40 @@ public partial class TaskbarWidgetWindow : Window
                     }
                     return localCache?.Current.BoundingRectangle ?? Rect.Empty;
                 }
-                catch { return Rect.Empty; }
+                catch (InvalidOperationException)
+                {
+                    // UI Automation element may become stale after explorer restart.
+                    return Rect.Empty;
+                }
             });
 
             _pendingAutomationTasks[automationId] = findTask;
-
-            // Fire-and-forget update of cache when complete
-            _ = findTask.ContinueWith(t =>
-            {
-                if (t.IsCompletedSuccessfully && t.Result != Rect.Empty)
-                {
-                    Dispatcher.BeginInvoke(() =>
-                    {
-                        if (automationId == "WidgetsButton")
-                        {
-                            _widgetButtonElement = localCache;
-                            _widgetButtonBounds = t.Result;
-                        }
-                        else if (automationId == "TaskbarFrame")
-                        {
-                            _taskbarFrameElement = localCache;
-                            _taskbarFrameBounds = t.Result;
-                        }
-                    });
-                }
-            }, TaskScheduler.Default);
+            ScheduleCacheUpdate(findTask, localCache, automationId);
         }
 
         return (false, Rect.Empty);
+    }
+
+    private void ScheduleCacheUpdate(Task<Rect> findTask, AutomationElement? element, string automationId)
+    {
+        _ = findTask.ContinueWith(t =>
+        {
+            if (!t.IsCompletedSuccessfully || t.Result == Rect.Empty) return;
+
+            _ = Dispatcher.BeginInvoke(() =>
+            {
+                if (string.Equals(automationId, "WidgetsButton", StringComparison.Ordinal))
+                {
+                    _widgetButtonElement = element;
+                    _widgetButtonBounds = t.Result;
+                }
+                else if (string.Equals(automationId, "TaskbarFrame", StringComparison.Ordinal))
+                {
+                    _taskbarFrameElement = element;
+                    _taskbarFrameBounds = t.Result;
+                }
+            });
+        }, TaskScheduler.Default);
     }
 
     private Rect? _widgetButtonBounds;
@@ -223,7 +224,8 @@ public partial class TaskbarWidgetWindow : Window
 
             var containerPos = new NativeMethods.POINT
             {
-                X = taskbarRect.Left, Y = taskbarRect.Top
+                X = taskbarRect.Left,
+                Y = taskbarRect.Top
             };
             NativeMethods.ScreenToClient(_taskbarHandle, ref containerPos);
 
@@ -251,7 +253,7 @@ public partial class TaskbarWidgetWindow : Window
 
             IntPtr rgn = NativeMethods.CreateRectRgn(
                 widgetLeft, widgetTop, widgetLeft + widgetPhysicalW, widgetTop + widgetPhysicalH);
-            NativeMethods.SetWindowRgn(_handle, rgn, true);
+            _ = NativeMethods.SetWindowRgn(_handle, rgn, true);
         }
         catch (Exception ex)
         {
@@ -267,75 +269,64 @@ public partial class TaskbarWidgetWindow : Window
         NativeMethods.RECT taskbarRect, int taskbarWidth, int widgetWidth, double dpiScale)
     {
         int position = MainWindow.SettingsManager.TaskbarWidgetPosition;
-        bool autoPadding = MainWindow.SettingsManager.TaskbarWidgetAutoPadding;
         int manualPadding = (int)(MainWindow.SettingsManager.TaskbarWidgetManualPadding * dpiScale);
 
-        switch (position)
+        return position switch
         {
-            case 0: // Left - position after Widgets button (FluentFlyout approach)
-            {
-                int widgetLeft = 20;
+            0 => CalculateLeftPosition(taskbarRect, manualPadding),
+            1 => (taskbarWidth - widgetWidth) / 2 + manualPadding,
+            2 => CalculateRightPosition(taskbarRect, taskbarWidth, widgetWidth, manualPadding),
+            _ => 20
+        };
+    }
 
-                if (autoPadding)
-                {
-                    // Use UI Automation to find WidgetsButton
-                    var (found, wbRect) = GetWidgetsButtonRect();
-                    // Make sure it's on the left side, otherwise ignore
-                    if (found && wbRect.Right < (taskbarRect.Left + taskbarRect.Right) / 2.0)
-                    {
-                        widgetLeft = (int)(wbRect.Right - taskbarRect.Left) + 2;
-                    }
-                }
-
-                return widgetLeft + manualPadding;
-            }
-
-            case 1: // Center - true center of the taskbar (FluentFlyout approach)
-            {
-                int widgetLeft = (taskbarWidth - widgetWidth) / 2;
-                return widgetLeft + manualPadding;
-            }
-
-            case 2: // Right - next to system tray with auto padding for widgets button
-            {
-                int widgetLeft = taskbarWidth - widgetWidth - 20;
-
-                // Try to position next to widgets button if auto padding is enabled
-                if (autoPadding)
-                {
-                    var (found, wbRect) = GetWidgetsButtonRect();
-                    // Make sure it's on the right side, otherwise fall back to tray
-                    if (found && wbRect.Left > (taskbarRect.Left + taskbarRect.Right) / 2.0)
-                    {
-                        widgetLeft = (int)(wbRect.Left - taskbarRect.Left) - widgetWidth - 2;
-                        return widgetLeft + manualPadding;
-                    }
-                }
-
-                // Fall back to position next to system tray
-                try
-                {
-                    if (_trayHandle == IntPtr.Zero)
-                        _trayHandle = NativeMethods.FindWindowEx(
-                            _taskbarHandle, IntPtr.Zero, "TrayNotifyWnd", null);
-
-                    if (_trayHandle != IntPtr.Zero)
-                    {
-                        NativeMethods.GetWindowRect(_trayHandle, out var trayRect);
-                        widgetLeft = trayRect.Left - taskbarRect.Left - widgetWidth - 4;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError("Failed to get tray position", ex);
-                }
-
-                return widgetLeft + manualPadding;
-            }
-
-            default:
-                return 20;
+    private int CalculateLeftPosition(NativeMethods.RECT taskbarRect, int manualPadding)
+    {
+        int widgetLeft = 20;
+        if (MainWindow.SettingsManager.TaskbarWidgetAutoPadding)
+        {
+            var (found, wbRect) = GetWidgetsButtonRect();
+            if (found && wbRect.Right < (taskbarRect.Left + taskbarRect.Right) / 2.0)
+                widgetLeft = (int)(wbRect.Right - taskbarRect.Left) + 2;
         }
+        return widgetLeft + manualPadding;
+    }
+
+    private int CalculateRightPosition(
+        NativeMethods.RECT taskbarRect, int taskbarWidth, int widgetWidth, int manualPadding)
+    {
+        int widgetLeft = taskbarWidth - widgetWidth - 20;
+
+        if (MainWindow.SettingsManager.TaskbarWidgetAutoPadding)
+        {
+            var (found, wbRect) = GetWidgetsButtonRect();
+            if (found && wbRect.Left > (taskbarRect.Left + taskbarRect.Right) / 2.0)
+                return (int)(wbRect.Left - taskbarRect.Left) - widgetWidth - 2 + manualPadding;
+        }
+
+        widgetLeft = GetTrayAlignedPosition(taskbarRect, widgetWidth, widgetLeft);
+        return widgetLeft + manualPadding;
+    }
+
+    private int GetTrayAlignedPosition(NativeMethods.RECT taskbarRect, int widgetWidth, int fallback)
+    {
+        try
+        {
+            if (_trayHandle == IntPtr.Zero)
+                _trayHandle = NativeMethods.FindWindowEx(
+                    _taskbarHandle, IntPtr.Zero, "TrayNotifyWnd", null);
+
+            if (_trayHandle != IntPtr.Zero)
+            {
+                NativeMethods.GetWindowRect(_trayHandle, out var trayRect);
+                return trayRect.Left - taskbarRect.Left - widgetWidth - 4;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError("Failed to get tray position", ex);
+        }
+        return fallback;
     }
 
     private void PositionFloating()
@@ -350,7 +341,7 @@ public partial class TaskbarWidgetWindow : Window
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(2000) };
         _positionTimer.Tick += (_, _) =>
         {
-            Dispatcher.BeginInvoke(CalculateAndSetPosition, DispatcherPriority.Background);
+            _ = Dispatcher.BeginInvoke(CalculateAndSetPosition, DispatcherPriority.Background);
         };
         _positionTimer.Start();
     }
@@ -367,7 +358,7 @@ public partial class TaskbarWidgetWindow : Window
         Close();
     }
 
-    private void OnWidgetClicked()
+    private static void OnWidgetClicked()
     {
         if (!MainWindow.SettingsManager.TaskbarWidgetClickable) return;
         if (Application.Current.MainWindow is MainWindow mw)

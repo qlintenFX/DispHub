@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -67,9 +67,8 @@ public partial class TaskbarWidgetControl : UserControl
         bool blur = MainWindow.SettingsManager.TaskbarWidgetBackgroundBlur;
         bool isDark = ApplicationThemeManager.GetSystemTheme() == SystemTheme.Dark;
 
-        var restColor = blur
-            ? (isDark ? Color.FromArgb(40, 255, 255, 255) : Color.FromArgb(30, 0, 0, 0))
-            : Color.FromArgb(0, 0, 0, 0);
+        var defaultColor = isDark ? Color.FromArgb(40, 255, 255, 255) : Color.FromArgb(30, 0, 0, 0);
+        var restColor = blur ? defaultColor : Color.FromArgb(0, 0, 0, 0);
 
         var colorAnim = new ColorAnimation(restColor, TimeSpan.FromMilliseconds(150));
         BackgroundBrush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnim);

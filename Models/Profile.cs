@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Text.Json.Serialization;
 using DispHub.Constants;
 using System.Windows.Input;

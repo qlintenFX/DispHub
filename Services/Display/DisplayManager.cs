@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Runtime.InteropServices;
 using DispHub.Constants;
 using DispHub.Helpers;
@@ -6,7 +6,7 @@ using DispHub.Services.Logging;
 
 namespace DispHub.Services.Display;
 
-public class DisplayManager : IDisposable
+public sealed class DisplayManager : IDisposable
 {
     [DllImport("gdi32.dll")]
     private static extern bool SetDeviceGammaRamp(IntPtr hDC, ref RAMP ramp);
@@ -32,8 +32,8 @@ public class DisplayManager : IDisposable
     }
 
     private RAMP _originalRamp;
-    private bool _hasOriginalRamp;
-    private bool _apiAvailable = true;
+    private readonly bool _hasOriginalRamp;
+    private readonly bool _apiAvailable = true;
     private readonly IVibranceService _vibranceService;
 
     public bool IsApiAvailable => _apiAvailable;
@@ -63,7 +63,7 @@ public class DisplayManager : IDisposable
                 }
                 finally
                 {
-                    ReleaseDC(IntPtr.Zero, hDC);
+                    _ = ReleaseDC(IntPtr.Zero, hDC);
                 }
             }
             else
@@ -107,7 +107,7 @@ public class DisplayManager : IDisposable
                 double adjustedContrast = contrast * 2.0;
                 value = ((value / AppConstants.GammaRampMaxValue) - 0.5) * adjustedContrast + 0.5;
                 value = Math.Max(0, Math.Min(1, value)) * AppConstants.GammaRampMaxValue;
-                
+
                 // Apply color temperature per channel
                 ramp.Red[i] = (ushort)Math.Round(Math.Clamp(value * rMult, 0, AppConstants.GammaRampMaxValue));
                 ramp.Green[i] = (ushort)Math.Round(Math.Clamp(value * gMult, 0, AppConstants.GammaRampMaxValue));
@@ -119,7 +119,7 @@ public class DisplayManager : IDisposable
             if (hDC != IntPtr.Zero)
             {
                 try { success = SetDeviceGammaRamp(hDC, ref ramp); }
-                finally { ReleaseDC(IntPtr.Zero, hDC); }
+                finally { _ = ReleaseDC(IntPtr.Zero, hDC); }
             }
 
             if (vibrance.HasValue)
@@ -146,7 +146,7 @@ public class DisplayManager : IDisposable
             if (hDC != IntPtr.Zero)
             {
                 try { success = SetDeviceGammaRamp(hDC, ref _originalRamp); }
-                finally { ReleaseDC(IntPtr.Zero, hDC); }
+                finally { _ = ReleaseDC(IntPtr.Zero, hDC); }
             }
             _vibranceService.ResetVibrance();
             return success;
@@ -166,5 +166,9 @@ public class DisplayManager : IDisposable
         return Math.Max(min, Math.Min(max, value));
     }
 
-    public void Dispose() => _vibranceService.Dispose();
+    public void Dispose()
+    {
+        _vibranceService.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

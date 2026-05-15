@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
@@ -19,7 +19,7 @@ public partial class FlyoutPage : Page, INavigationAware
     {
         _isLoaded = false;
         FlyoutEnabledToggle.IsChecked = MainWindow.SettingsManager.FlyoutEnabled;
-        DurationTextBox.Text = MainWindow.SettingsManager.FlyoutDuration.ToString();
+        DurationTextBox.Text = MainWindow.SettingsManager.FlyoutDuration.ToString(System.Globalization.CultureInfo.InvariantCulture);
         _isLoaded = true;
     }
 
@@ -35,7 +35,7 @@ public partial class FlyoutPage : Page, INavigationAware
     private void Duration_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (!_isLoaded) return;
-        if (int.TryParse(DurationTextBox.Text, out int ms) && ms >= 200 && ms <= 10000)
+        if (int.TryParse(DurationTextBox.Text, System.Globalization.CultureInfo.InvariantCulture, out int ms) && ms >= 200 && ms <= 10000)
             MainWindow.SettingsManager.FlyoutDuration = ms;
     }
 }

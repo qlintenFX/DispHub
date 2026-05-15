@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Pages;
 using System.ComponentModel;
 using System.Windows;
@@ -26,7 +26,7 @@ public partial class SettingsWindow : FluentWindow
         // Apply theme first, then accent color
         ApplyTheme(MainWindow.SettingsManager.AppTheme);
         // Small delay to ensure theme is applied before accent
-        Dispatcher.BeginInvoke(() => SettingsPage.ApplyAccentColor(MainWindow.SettingsManager.AccentColor), 
+        _ = Dispatcher.BeginInvoke(() => SettingsPage.ApplyAccentColor(MainWindow.SettingsManager.AccentColor),
             System.Windows.Threading.DispatcherPriority.Loaded);
         RootNavigation.Navigated += (_, _) => ResetScrollPosition();
         RootNavigation.Navigate(typeof(HomePage));
@@ -77,7 +77,7 @@ public partial class SettingsWindow : FluentWindow
 
     private void ResetScrollPosition()
     {
-        Dispatcher.BeginInvoke(() =>
+        _ = Dispatcher.BeginInvoke(() =>
         {
             try
             {
@@ -86,7 +86,10 @@ public partial class SettingsWindow : FluentWindow
 
                 _contentScrollViewer?.ScrollToVerticalOffset(0);
             }
-            catch { }
+            catch (InvalidOperationException)
+            {
+                // Visual tree may not be fully loaded yet during navigation transitions.
+            }
         }, System.Windows.Threading.DispatcherPriority.Loaded);
     }
 

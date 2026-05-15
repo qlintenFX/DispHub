@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Text.Json;
 using DispHub.Constants;
 using DispHub.Models;
@@ -8,6 +8,8 @@ namespace DispHub.Services.Profiles;
 
 public class ProfileManager
 {
+    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+
     private List<Profile> _profiles;
     private readonly string _profilesFilePath;
 
@@ -59,8 +61,7 @@ public class ProfileManager
     {
         try
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(_profiles, options);
+            string json = JsonSerializer.Serialize(_profiles, _jsonOptions);
             File.WriteAllText(_profilesFilePath, json);
         }
         catch (Exception ex)

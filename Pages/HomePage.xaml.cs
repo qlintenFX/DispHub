@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,7 +30,7 @@ public partial class HomePage : Page, INavigationAware
         int profileCount = MainWindow.ProfileManager.Profiles.Count;
 
         // Feature cards
-        ProfileStatusText.Text = $"{profileCount} profile{(profileCount != 1 ? "s" : "")} configured";
+        ProfileStatusText.Text = $"{profileCount.ToString(System.Globalization.CultureInfo.InvariantCulture)} profile{(profileCount != 1 ? "s" : "")} configured";
         DcStatusText.Text = MainWindow.DynamicControls.IsEnabled ? "Enabled" : "Disabled";
         WidgetStatusText.Text = sm.TaskbarWidgetEnabled ? "Enabled" : "Disabled";
         FlyoutStatusText.Text = sm.FlyoutEnabled ? "Enabled" : "Disabled";
@@ -52,11 +52,11 @@ public partial class HomePage : Page, INavigationAware
 
     private void GitHub_Click(object sender, RoutedEventArgs e)
     {
-        Process.Start(new ProcessStartInfo("https://github.com/qlintenFX/DispHub") { UseShellExecute = true });
+        Process.Start(new ProcessStartInfo(AppConstants.GitHubUrl) { UseShellExecute = true });
     }
 
     private void ReportBug_Click(object sender, RoutedEventArgs e)
     {
-        Process.Start(new ProcessStartInfo("https://github.com/qlintenFX/DispHub/issues/new") { UseShellExecute = true });
+        Process.Start(new ProcessStartInfo(AppConstants.GitHubIssuesUrl) { UseShellExecute = true });
     }
 }

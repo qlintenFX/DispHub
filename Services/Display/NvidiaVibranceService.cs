@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Constants;
 using DispHub.NVIDIA;
 using DispHub.Services.Logging;
@@ -25,43 +25,10 @@ public sealed class NvidiaVibranceService : IVibranceService
     {
         try
         {
-            if (!NvidiaApi.Load())
+            if (!TryInitializeNvidiaApi() || !TryValidateGpus())
             {
-                Logger.Log("NVAPI loading failed");
                 _isSupported = false;
                 return;
-            }
-
-            if (!NvidiaApi.Initialize())
-            {
-                Logger.Log("NVAPI initialization failed");
-                _isSupported = false;
-                return;
-            }
-
-            if (!NvidiaApi.EnumPhysicalGPUs(out IntPtr[] gpuHandles, out int gpuCount))
-            {
-                Logger.Log("Failed to enumerate NVIDIA GPUs");
-                _isSupported = false;
-                return;
-            }
-
-            for (int i = 0; i < gpuCount; i++)
-            {
-                if (gpuHandles[i] == IntPtr.Zero) continue;
-                NvSystemType systemType = NvidiaApi.GetGpuSystemType(gpuHandles[i]);
-                if (systemType == NvSystemType.Laptop)
-                {
-                    Logger.Log("NVIDIA laptop GPU - DVC not supported");
-                    _isSupported = false;
-                    return;
-                }
-                if (systemType == NvSystemType.Unknown)
-                {
-                    Logger.Log("NVIDIA GPU system type unknown");
-                    _isSupported = false;
-                    return;
-                }
             }
 
             if (!NvidiaApi.EnumDisplayHandle(0, out _displayHandle))
@@ -71,31 +38,7 @@ public sealed class NvidiaVibranceService : IVibranceService
                 return;
             }
 
-            if (NvidiaApi.HasExtendedDvc &&
-                NvidiaApi.GetDVCInfoEx(_displayHandle, out NvDisplayDvcInfoEx dvcInfoEx) &&
-                dvcInfoEx.MaxLevel > dvcInfoEx.MinLevel)
-            {
-                _useExtendedApi = true;
-                _dvcMin = dvcInfoEx.MinLevel;
-                _dvcMax = dvcInfoEx.MaxLevel;
-                _dvcDefault = dvcInfoEx.DefaultLevel;
-            }
-            else if (NvidiaApi.GetDVCInfo(_displayHandle, out NvDisplayDvcInfo dvcInfo) &&
-                     dvcInfo.MaxLevel > dvcInfo.MinLevel)
-            {
-                _useExtendedApi = false;
-                _dvcMin = dvcInfo.MinLevel;
-                _dvcMax = dvcInfo.MaxLevel;
-                _dvcDefault = AppConstants.NvidiaVibranceDefault;
-            }
-            else
-            {
-                _useExtendedApi = false;
-                _dvcMin = AppConstants.NvidiaVibranceMin;
-                _dvcMax = AppConstants.NvidiaVibranceMax;
-                _dvcDefault = AppConstants.NvidiaVibranceDefault;
-            }
-
+            (_useExtendedApi, _dvcMin, _dvcMax, _dvcDefault) = ResolveDvcRange(_displayHandle);
             _isSupported = true;
             Logger.Log($"NVIDIA vibrance service initialized (DVC: {_dvcMin} to {_dvcMax}, extended: {_useExtendedApi})");
         }
@@ -109,6 +52,65 @@ public sealed class NvidiaVibranceService : IVibranceService
             Logger.LogError("NVIDIA vibrance initialization failed", ex);
             _isSupported = false;
         }
+    }
+
+    private static bool TryInitializeNvidiaApi()
+    {
+        if (!NvidiaApi.Load())
+        {
+            Logger.Log("NVAPI loading failed");
+            return false;
+        }
+        if (!NvidiaApi.Initialize())
+        {
+            Logger.Log("NVAPI initialization failed");
+            return false;
+        }
+        return true;
+    }
+
+    private static bool TryValidateGpus()
+    {
+        if (!NvidiaApi.EnumPhysicalGPUs(out IntPtr[] gpuHandles, out int gpuCount))
+        {
+            Logger.Log("Failed to enumerate NVIDIA GPUs");
+            return false;
+        }
+
+        for (int i = 0; i < gpuCount; i++)
+        {
+            if (gpuHandles[i] == IntPtr.Zero) continue;
+            NvSystemType systemType = NvidiaApi.GetGpuSystemType(gpuHandles[i]);
+            if (systemType == NvSystemType.Laptop)
+            {
+                Logger.Log("NVIDIA laptop GPU - DVC not supported");
+                return false;
+            }
+            if (systemType == NvSystemType.Unknown)
+            {
+                Logger.Log("NVIDIA GPU system type unknown");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static (bool useExtended, int min, int max, int defaultLevel) ResolveDvcRange(IntPtr displayHandle)
+    {
+        if (NvidiaApi.HasExtendedDvc &&
+            NvidiaApi.GetDVCInfoEx(displayHandle, out NvDisplayDvcInfoEx dvcInfoEx) &&
+            dvcInfoEx.MaxLevel > dvcInfoEx.MinLevel)
+        {
+            return (true, dvcInfoEx.MinLevel, dvcInfoEx.MaxLevel, dvcInfoEx.DefaultLevel);
+        }
+
+        if (NvidiaApi.GetDVCInfo(displayHandle, out NvDisplayDvcInfo dvcInfo) &&
+            dvcInfo.MaxLevel > dvcInfo.MinLevel)
+        {
+            return (false, dvcInfo.MinLevel, dvcInfo.MaxLevel, AppConstants.NvidiaVibranceDefault);
+        }
+
+        return (false, AppConstants.NvidiaVibranceMin, AppConstants.NvidiaVibranceMax, AppConstants.NvidiaVibranceDefault);
     }
 
     public bool ApplyVibrance(int value)

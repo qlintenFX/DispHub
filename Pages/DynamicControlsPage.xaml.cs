@@ -1,9 +1,8 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DispHub.Constants;
-using DispHub.Services.Settings;
 using Wpf.Ui.Abstractions.Controls;
 
 namespace DispHub.Pages;
@@ -86,9 +85,9 @@ public partial class DynamicControlsPage : Page, INavigationAware
     private void UpdateValueDisplay()
     {
         var dc = MainWindow.DynamicControls;
-        GammaValueText.Text = dc.Gamma.ToString("F2");
+        GammaValueText.Text = dc.Gamma.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
         ContrastValueText.Text = $"{dc.Contrast * 100:F0}%";
-        VibranceValueText.Text = dc.Vibrance.ToString();
+        VibranceValueText.Text = dc.Vibrance.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
     private void UpdateKeybindLabels()

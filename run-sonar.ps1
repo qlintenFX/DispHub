@@ -15,7 +15,7 @@ dotnet build DispHub.sln
 
 # 3. Run tests and collect code coverage
 Write-Host "Running tests with code coverage..." -ForegroundColor Cyan
-dotnet test DispHub.sln --collect:"XPlat Code Coverage" --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+dotnet test DispHub.sln --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
 # 4. End the scanner (this uploads the results to the dashboard)
 Write-Host "Finalizing analysis and uploading to SonarQube..." -ForegroundColor Cyan
