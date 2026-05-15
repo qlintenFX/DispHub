@@ -1,8 +1,13 @@
 param (
-    [string]$Token = "sqp_57b77fca2c96accdc3473b4b0b8fe0d9f2f9ef22",
+    [string]$Token = $env:SONAR_TOKEN,
     [string]$HostUrl = "http://localhost:9000",
     [string]$ProjectKey = "disphub"
 )
+
+if ([string]::IsNullOrEmpty($Token)) {
+    Write-Host "ERROR: No SonarQube token provided. Set SONAR_TOKEN environment variable or pass -Token parameter." -ForegroundColor Red
+    exit 1
+}
 
 Write-Host "Starting SonarQube Analysis..." -ForegroundColor Cyan
 

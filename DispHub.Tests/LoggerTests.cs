@@ -48,18 +48,24 @@ public class LoggerTests : IDisposable
     public void Log_IgnoresNullOrEmptyMessages()
     {
         Logger.Initialize("test_empty.log");
-        // These should not throw
-        Logger.Log("");
-        Logger.Log(null!);
+        var exception = Record.Exception(() =>
+        {
+            Logger.Log("");
+            Logger.Log(null!);
+        });
+        Assert.Null(exception);
     }
 
     [Fact]
     public void LogError_IgnoresNullOrEmptyMessages()
     {
         Logger.Initialize("test_error_empty.log");
-        // These should not throw
-        Logger.LogError("");
-        Logger.LogError(null!);
+        var exception = Record.Exception(() =>
+        {
+            Logger.LogError("");
+            Logger.LogError(null!);
+        });
+        Assert.Null(exception);
     }
 
     [Fact]
@@ -67,7 +73,7 @@ public class LoggerTests : IDisposable
     {
         Logger.Initialize("test_error.log");
         var ex = new InvalidOperationException("outer",
-            new ArgumentException("inner"));
+            new ArgumentException("inner", "testParam"));
 
         // Should not throw
         Logger.LogError("test error message", ex);
