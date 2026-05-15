@@ -1,4 +1,4 @@
-using DispHub.Helpers;
+﻿using DispHub.Helpers;
 
 namespace DispHub.Tests;
 

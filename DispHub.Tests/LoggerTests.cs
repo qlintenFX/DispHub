@@ -1,4 +1,4 @@
-using DispHub.Services.Logging;
+﻿using DispHub.Services.Logging;
 
 namespace DispHub.Tests;
 
