@@ -10,7 +10,8 @@
     <IsTestProject>true</IsTestProject>
 
     <!-- Test methods use Naming_Convention_Pattern which is correct for tests -->
-    <NoWarn>$(NoWarn);CA1707</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CA1707;1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
