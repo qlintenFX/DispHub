@@ -73,7 +73,7 @@ public class LoggerTests : IDisposable
     {
         Logger.Initialize("test_error.log");
         var ex = new InvalidOperationException("outer",
-            new ArgumentException("inner", "testParam"));
+            new FormatException("inner format error"));
 
         // Should not throw
         Logger.LogError("test error message", ex);
