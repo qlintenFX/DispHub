@@ -9,6 +9,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
     <!-- ── Static Analysis ── -->
     <!-- Use the latest-recommended set of .NET analyzers -->
@@ -22,19 +23,19 @@
     <!-- Suppress specific warnings that are acceptable for this project -->
     <!-- CS4014: fire-and-forget async is intentional in WPF event handlers -->
     <!-- S101:   P/Invoke structs like RECT/POINT must keep native names -->
-    <NoWarn>$(NoWarn);CS4014</NoWarn>
+    <NoWarn>$(NoWarn);CS4014;S101</NoWarn>
   </PropertyGroup>
 
   <!-- ── Roslyn Analyzers ── -->
   <ItemGroup>
     <!-- Meziantou: catches 100+ .NET best-practice violations (null safety, perf, etc.) -->
-    <PackageReference Include="Meziantou.Analyzer" Version="2.0.182">
+    <PackageReference Include="Meziantou.Analyzer">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
 
     <!-- Roslynator: 500+ analyzers, refactorings, and code fixes -->
-    <PackageReference Include="Roslynator.Analyzers" Version="4.12.10">
+    <PackageReference Include="Roslynator.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

@@ -46,6 +46,19 @@ jobs:
       - name: Check code formatting
         run: dotnet format .\DispHub.sln --verify-no-changes --verbosity diagnostic
 
+      - name: Setup Java 17 for SonarQube
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Begin SonarQube analysis
+        run: |
+          dotnet sonarscanner begin /k:"disphub" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml" /d:sonar.qualitygate.wait=true
+
       - name: Build (Release)
         run: dotnet build .\DispHub.sln -c $env:BUILD_CONFIGURATION --no-restore
 
@@ -58,6 +71,9 @@ jobs:
             --collect:"XPlat Code Coverage" `
             --results-directory .\TestResults `
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      - name: End SonarQube analysis
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Upload coverage report
         if: always()
@@ -97,3 +113,59 @@ jobs:
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4
+
+  # ════════════════════════════════════════════════════════════
+  #  SONARQUBE QUALITY GATE  (required when secrets are present)
+  # ════════════════════════════════════════════════════════════
+  sonarqube:
+    name: SonarQube Quality Gate
+    needs: build
+    runs-on: windows-latest
+    timeout-minutes: 20
+    if: >-
+      ${{ secrets.SONAR_TOKEN != '' && secrets.SONAR_HOST_URL != '' && secrets.SONAR_PROJECT_KEY != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore .\DispHub.sln
+
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Add .NET tools to PATH
+        run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Begin SonarQube analysis
+        run: |
+          dotnet sonarscanner begin /k:"$env:SONAR_PROJECT_KEY" /d:sonar.host.url="$env:SONAR_HOST_URL" /d:sonar.token="$env:SONAR_TOKEN" /d:sonar.qualitygate.wait=true /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.exclusions="**/bin/**,**/obj/**,**/plan/**"
+
+      - name: Build (Release)
+        run: dotnet build .\DispHub.sln -c $env:BUILD_CONFIGURATION --no-restore
+
+      - name: Run tests with coverage
+        run: |
+          dotnet test .\DispHub.Tests\DispHub.Tests.csproj `
+            -c $env:BUILD_CONFIGURATION `
+            --no-restore `
+            --verbosity minimal `
+            --collect:"XPlat Code Coverage" `
+            --results-directory .\TestResults `
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      - name: End SonarQube analysis
+        run: dotnet sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
