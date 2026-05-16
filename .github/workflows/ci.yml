@@ -60,7 +60,7 @@ jobs:
           distribution: 'zulu'
 
       - name: Install SonarScanner
-        if: ${{ env.SONAR_TOKEN != '' }}
+        if: ${{ env.SONAR_TOKEN != '' && env.SONAR_ORGANIZATION != '' && env.SONAR_PROJECT_KEY != '' }}
         run: dotnet tool restore
 
       - name: Begin SonarQube analysis
@@ -84,7 +84,9 @@ jobs:
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
       - name: End SonarQube analysis
-        if: ${{ env.SONAR_TOKEN != '' }}
+        if: ${{ env.SONAR_TOKEN != '' && env.SONAR_ORGANIZATION != '' && env.SONAR_PROJECT_KEY != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dotnet sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
 
       - name: Upload coverage report
