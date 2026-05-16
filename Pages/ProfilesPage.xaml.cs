@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Models;
 using DispHub.Services.Logging;
 using System.Windows;
@@ -278,7 +278,7 @@ public partial class ProfilesPage : Page, INavigationAware
         if (_selectedIndex < 0 || _selectedIndex >= profiles.Count) return;
 
         var dialog = new HotkeyDialog { Owner = Window.GetWindow(this) };
-        if (dialog.ShowDialog() != true) return;
+        if (!(dialog.ShowDialog() ?? false)) return;
 
         var profile = profiles[_selectedIndex];
 

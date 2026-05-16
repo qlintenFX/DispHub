@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Abstractions.Controls;
@@ -35,7 +35,7 @@ public partial class TaskbarWidgetPage : Page, INavigationAware
     private void WidgetEnabled_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        bool enabled = WidgetEnabledToggle.IsChecked == true;
+        bool enabled = WidgetEnabledToggle.IsChecked ?? false;
         MainWindow.SettingsManager.TaskbarWidgetEnabled = enabled;
         MainWindow.SetTaskbarWidgetEnabled(enabled);
     }
@@ -50,7 +50,7 @@ public partial class TaskbarWidgetPage : Page, INavigationAware
     private void AutoPadding_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        MainWindow.SettingsManager.TaskbarWidgetAutoPadding = AutoPaddingToggle.IsChecked == true;
+        MainWindow.SettingsManager.TaskbarWidgetAutoPadding = AutoPaddingToggle.IsChecked ?? false;
         MainWindow.RefreshTaskbarWidget();
     }
 
@@ -65,20 +65,20 @@ public partial class TaskbarWidgetPage : Page, INavigationAware
     private void Clickable_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        MainWindow.SettingsManager.TaskbarWidgetClickable = ClickableToggle.IsChecked == true;
+        MainWindow.SettingsManager.TaskbarWidgetClickable = ClickableToggle.IsChecked ?? false;
     }
 
     private void BackgroundBlur_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        MainWindow.SettingsManager.TaskbarWidgetBackgroundBlur = BackgroundBlurToggle.IsChecked == true;
+        MainWindow.SettingsManager.TaskbarWidgetBackgroundBlur = BackgroundBlurToggle.IsChecked ?? false;
         MainWindow.UpdateTaskbarWidgetSettings();
     }
 
     private void HideWhenInactive_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        MainWindow.SettingsManager.TaskbarWidgetHideWhenInactive = HideWhenInactiveToggle.IsChecked == true;
+        MainWindow.SettingsManager.TaskbarWidgetHideWhenInactive = HideWhenInactiveToggle.IsChecked ?? false;
         MainWindow.UpdateTaskbarWidgetSettings();
     }
 }

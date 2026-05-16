@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -120,7 +120,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
     private void DynamicControlsToggle_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        bool enabled = DynamicControlsToggle.IsChecked == true;
+        bool enabled = DynamicControlsToggle.IsChecked ?? false;
 
         if (enabled)
             MainWindow.SwitchToDcMode();
@@ -139,7 +139,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
         if (sender is not Wpf.Ui.Controls.Button { Tag: string action }) return;
 
         var dialog = new HotkeyDialog { Owner = Window.GetWindow(this) };
-        if (dialog.ShowDialog() != true) return;
+        if (!(dialog.ShowDialog() ?? false)) return;
 
         var kb = MainWindow.SettingsManager.DcKeybinds;
         uint vk = (uint)dialog.VirtualKeyCode;
@@ -169,7 +169,7 @@ public partial class DynamicControlsPage : Page, INavigationAware
     private void ChangeDcToggle_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new HotkeyDialog { Owner = Window.GetWindow(this) };
-        if (dialog.ShowDialog() != true) return;
+        if (!(dialog.ShowDialog() ?? false)) return;
 
         MainWindow.SettingsManager.DcToggleKey = (uint)dialog.VirtualKeyCode;
         MainWindow.SettingsManager.DcToggleMod = dialog.Modifiers;

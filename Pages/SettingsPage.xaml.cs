@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -153,13 +153,13 @@ public partial class SettingsPage : Page, INavigationAware
     private void CloseBehavior_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        MainWindow.SettingsManager.CloseToTray = CloseToTrayRadio.IsChecked == true;
+        MainWindow.SettingsManager.CloseToTray = CloseToTrayRadio.IsChecked ?? false;
     }
 
     private void StartWithWindows_Changed(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded) return;
-        MainWindow.SettingsManager.StartWithWindows = StartWithWindowsToggle.IsChecked == true;
+        MainWindow.SettingsManager.StartWithWindows = StartWithWindowsToggle.IsChecked ?? false;
     }
 
     private void TrayLeftClick_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -171,7 +171,7 @@ public partial class SettingsPage : Page, INavigationAware
     private void MasterToggleKeybind_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new HotkeyDialog { Owner = Window.GetWindow(this) };
-        if (dialog.ShowDialog() != true) return;
+        if (!(dialog.ShowDialog() ?? false)) return;
 
         MainWindow.SettingsManager.MasterToggleKey = (uint)dialog.VirtualKeyCode;
         MainWindow.SettingsManager.MasterToggleMod = dialog.Modifiers;
