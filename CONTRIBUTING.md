@@ -128,27 +128,36 @@ Recommended lifecycle for pull requests:
 Before opening a PR:
 
 ```powershell
-dotnet build
+dotnet format .\DispHub.sln --verify-no-changes
+dotnet build .\DispHub.sln -c Release
+dotnet test .\DispHub.Tests\DispHub.Tests.csproj -c Release --collect:"XPlat Code Coverage" --results-directory .\TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 ```
 
 If tests are present for your area, run them too.
 
 ## SonarQube Analysis
 
-We use SonarQube locally to track code quality and technical debt. 
+We use SonarQube in CI (quality gate required). Local runs are optional.
 
-To set up and run the analysis:
+To set up and run the analysis locally:
 
 1. Ensure Docker is running.
 2. Start the SonarQube stack:
    ```powershell
    docker compose up -d
    ```
-3. Run the scan script (this builds the project, runs tests with coverage, and uploads to SonarQube):
+3. Restore the local tools (one-time):
    ```powershell
-   .\run-sonar.ps1
+   dotnet tool restore
    ```
-4. View the dashboard at `http://localhost:9000` (Default login: `admin` / `admin`).
+4. Run the scan (build + tests + coverage + upload):
+   ```powershell
+   dotnet sonarscanner begin /k:"disphub" /d:sonar.host.url="http://localhost:9000" /d:sonar.token="<token>" /d:sonar.qualitygate.wait=true /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.exclusions="**/bin/**,**/obj/**,**/plan/**"
+   dotnet build .\DispHub.sln -c Release
+   dotnet test .\DispHub.sln -c Release --collect:"XPlat Code Coverage" --results-directory .\TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+   dotnet sonarscanner end /d:sonar.token="<token>"
+   ```
+5. View the dashboard at `http://localhost:9000` (default login: `admin` / `admin`).
 
 
 ## Community expectations

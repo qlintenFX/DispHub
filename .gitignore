@@ -34,6 +34,8 @@ packages/
 coverage/
 coverage-*/
 BenchmarkDotNet.Artifacts/
+.sonarqube/
+coveragereport/
 
 ## Windows package artifacts
 *.appxupload
@@ -73,3 +75,5 @@ desktop.ini
 
 ## SonarQube local analysis cache
 .sonarqube/
+# Coverage
+coveragereport/

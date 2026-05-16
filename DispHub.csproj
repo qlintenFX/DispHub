@@ -4,6 +4,8 @@
     <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>x64</Platforms>
@@ -12,11 +14,11 @@
     <RootNamespace>DispHub</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WPF-UI" Version="4.2.0" />
-    <PackageReference Include="WPF-UI.Tray" Version="4.2.0" />
-    <PackageReference Include="MicaWPF" Version="6.3.2" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
-    <PackageReference Include="NLog" Version="6.1.1" />
+    <PackageReference Include="WPF-UI" />
+    <PackageReference Include="WPF-UI.Tray" />
+    <PackageReference Include="MicaWPF" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="NLog" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />

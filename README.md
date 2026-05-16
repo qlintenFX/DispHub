@@ -21,6 +21,24 @@ dotnet build DispHub.sln
 dotnet run --project DispHub.csproj
 ```
 
+### Quality checks (local)
+
+```powershell
+dotnet format .\DispHub.sln --verify-no-changes
+dotnet build .\DispHub.sln -c Release
+dotnet test .\DispHub.Tests\DispHub.Tests.csproj -c Release --collect:"XPlat Code Coverage" --results-directory .\TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+```
+
+### SonarQube (optional local)
+
+```powershell
+dotnet tool restore
+dotnet sonarscanner begin /k:"disphub" /d:sonar.host.url="http://localhost:9000" /d:sonar.token="<token>" /d:sonar.qualitygate.wait=true /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.exclusions="**/bin/**,**/obj/**,**/plan/**"
+dotnet build .\DispHub.sln -c Release
+dotnet test .\DispHub.sln -c Release --collect:"XPlat Code Coverage" --results-directory .\TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+dotnet sonarscanner end /d:sonar.token="<token>"
+```
+
 ### Microsoft Store (optional)
 
 If available, the Microsoft Store listing is an optional convenience purchase. Building from source remains free.

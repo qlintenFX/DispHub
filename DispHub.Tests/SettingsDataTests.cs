@@ -1,4 +1,4 @@
-using DispHub.Constants;
+﻿using DispHub.Constants;
 using DispHub.Services.Settings;
 
 namespace DispHub.Tests;

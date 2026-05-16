@@ -168,9 +168,6 @@ dotnet_naming_style.end_in_async_style.capitalization = pascal_case
 # IDE0005: Remove unnecessary usings
 dotnet_diagnostic.IDE0005.severity = warning
 
-# IDE0055: Fix formatting
-dotnet_diagnostic.IDE0055.severity = suggestion
-
 # CA1822: Mark members as static
 dotnet_diagnostic.CA1822.severity = suggestion
 
@@ -180,57 +177,40 @@ dotnet_diagnostic.CA1848.severity = none
 # S101: Types should be named in PascalCase (SonarQube — allow P/Invoke struct names)
 dotnet_diagnostic.S101.severity = suggestion
 
-# CA1707: Identifiers should not contain underscores — suppressed for Win32 constants (MOD_ALT etc.)
-dotnet_diagnostic.CA1707.severity = suggestion
-
-# CA1711: Identifiers should not have incorrect suffix — NvDisplayDvcInfoEx mirrors NVIDIA API naming
-dotnet_diagnostic.CA1711.severity = suggestion
-
-# CA1001: Types that own disposable fields should be disposable — WPF Windows manage lifecycle via Closed event
-dotnet_diagnostic.CA1001.severity = suggestion
-
-# MA0046: Delegate must have 2 parameters — Action<T> events are idiomatic for lightweight WPF pub/sub
-dotnet_diagnostic.MA0046.severity = suggestion
-
-# MA0048: File name must match type name — allow co-located DTOs/enums in related files
-dotnet_diagnostic.MA0048.severity = suggestion
-
-# MA0051: Method is too long — complex interop/P/Invoke methods need full context in one place
-dotnet_diagnostic.MA0051.severity = suggestion
-[*.cs]
-dotnet_diagnostic.MA0007.severity = none
+# Non-blocking analyzer suppressions (WPF + interop patterns)
+dotnet_diagnostic.CA1001.severity = none
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.IDE0007.severity = none
+dotnet_diagnostic.IDE0008.severity = none
+dotnet_diagnostic.IDE0011.severity = none
+dotnet_diagnostic.IDE0022.severity = none
+dotnet_diagnostic.IDE0028.severity = none
+dotnet_diagnostic.IDE0031.severity = none
+dotnet_diagnostic.IDE0032.severity = none
+dotnet_diagnostic.IDE0045.severity = none
+dotnet_diagnostic.IDE0046.severity = none
+dotnet_diagnostic.IDE0053.severity = none
+dotnet_diagnostic.IDE0055.severity = none
+dotnet_diagnostic.IDE0074.severity = none
+dotnet_diagnostic.IDE0078.severity = none
+dotnet_diagnostic.IDE0290.severity = none
 dotnet_diagnostic.MA0003.severity = none
-dotnet_diagnostic.SYSLIB1054.severity = none
+dotnet_diagnostic.MA0007.severity = none
+dotnet_diagnostic.MA0040.severity = none
+dotnet_diagnostic.MA0046.severity = none
 dotnet_diagnostic.MA0048.severity = none
 dotnet_diagnostic.MA0051.severity = none
-dotnet_diagnostic.MA0102.severity = none
-dotnet_diagnostic.IDE0055.severity = none
-dotnet_diagnostic.IDE0007.severity = none
-dotnet_diagnostic.IDE0022.severity = none
-dotnet_diagnostic.IDE0032.severity = none
-dotnet_diagnostic.RCS1123.severity = none
-dotnet_diagnostic.RCS1001.severity = none
-dotnet_diagnostic.IDE0046.severity = none
-dotnet_diagnostic.IDE0011.severity = none
-dotnet_diagnostic.RCS1037.severity = none
-dotnet_diagnostic.MA0046.severity = none
-dotnet_diagnostic.RCS1146.severity = none
-dotnet_diagnostic.IDE0008.severity = none
-dotnet_diagnostic.IDE0045.severity = none
-dotnet_diagnostic.IDE0028.severity = none
-dotnet_diagnostic.RCS1085.severity = none
-dotnet_diagnostic.IDE0053.severity = none
-dotnet_diagnostic.IDE0290.severity = none
-dotnet_diagnostic.IDE0078.severity = none
-dotnet_diagnostic.RCS1249.severity = none
-dotnet_diagnostic.IDE0074.severity = none
-dotnet_diagnostic.MA0040.severity = none
-dotnet_diagnostic.RCS1003.severity = none
-dotnet_diagnostic.CA1001.severity = none
-dotnet_diagnostic.RCS1036.severity = none
-dotnet_diagnostic.IDE0031.severity = none
-dotnet_diagnostic.RCS1021.severity = none
-dotnet_diagnostic.CA1711.severity = none
-dotnet_diagnostic.MA0089.severity = none
 dotnet_diagnostic.MA0076.severity = none
-dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.MA0089.severity = none
+dotnet_diagnostic.MA0102.severity = none
+dotnet_diagnostic.RCS1001.severity = none
+dotnet_diagnostic.RCS1003.severity = none
+dotnet_diagnostic.RCS1021.severity = none
+dotnet_diagnostic.RCS1036.severity = none
+dotnet_diagnostic.RCS1037.severity = none
+dotnet_diagnostic.RCS1085.severity = none
+dotnet_diagnostic.RCS1123.severity = none
+dotnet_diagnostic.RCS1146.severity = none
+dotnet_diagnostic.RCS1249.severity = none
+dotnet_diagnostic.SYSLIB1054.severity = none

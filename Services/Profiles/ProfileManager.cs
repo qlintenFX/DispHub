@@ -17,11 +17,11 @@ public class ProfileManager
 
     public int IndexOf(Profile profile) => _profiles.IndexOf(profile);
 
-    public ProfileManager()
+    public ProfileManager(string? dataPath = null)
     {
         _profiles = new List<Profile>();
 
-        string appDataPath = AppConstants.AppDataPath;
+        string appDataPath = dataPath ?? AppConstants.AppDataPath;
         if (!Directory.Exists(appDataPath))
             Directory.CreateDirectory(appDataPath);
 

@@ -190,9 +190,9 @@ public class SettingsManager
 
     public void SaveDcKeybinds() => Save();
 
-    public SettingsManager()
+    public SettingsManager(string? dataPath = null)
     {
-        string appDataPath = AppConstants.AppDataPath;
+        string appDataPath = dataPath ?? AppConstants.AppDataPath;
         if (!Directory.Exists(appDataPath))
             Directory.CreateDirectory(appDataPath);
 

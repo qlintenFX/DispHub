@@ -10,6 +10,7 @@ on:
 permissions:
   contents: read
   security-events: write
+  actions: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -28,6 +29,9 @@ jobs:
     name: Build, Test & Lint
     runs-on: windows-latest
     timeout-minutes: 15
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     steps:
       - name: Checkout
@@ -45,7 +49,22 @@ jobs:
 
       - name: Check code formatting
         run: dotnet format .\DispHub.sln --verify-no-changes --verbosity diagnostic
-        continue-on-error: true
+
+      - name: Setup Java 17 for SonarQube
+        if: ${{ env.SONAR_TOKEN != '' }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Install SonarScanner
+        if: ${{ env.SONAR_TOKEN != '' }}
+        run: dotnet tool restore
+
+      - name: Begin SonarQube analysis
+        if: ${{ env.SONAR_TOKEN != '' }}
+        run: |
+          dotnet sonarscanner begin /k:"disphub" /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" /d:sonar.token="${{ env.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml" /d:sonar.coverage.exclusions="**/*.xaml.cs,**/Pages/**,**/Controls/**,**/Windows/**" /d:sonar.qualitygate.wait=true
 
       - name: Build (Release)
         run: dotnet build .\DispHub.sln -c $env:BUILD_CONFIGURATION --no-restore
@@ -60,12 +79,16 @@ jobs:
             --results-directory .\TestResults `
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
+      - name: End SonarQube analysis
+        if: ${{ env.SONAR_TOKEN != '' }}
+        run: dotnet sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
+
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: .\TestResults\**\coverage.opencover.xml
+          path: ./TestResults/**/coverage.opencover.xml
           if-no-files-found: warn
           retention-days: 14
 
@@ -98,3 +121,4 @@ jobs:
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4
+
