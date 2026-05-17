@@ -1,4 +1,4 @@
-﻿using DispHub.Constants;
+using DispHub.Constants;
 using DispHub.Models;
 
 namespace DispHub.Tests;
@@ -32,9 +32,7 @@ public class ProfileExtendedTests
     [Fact]
     public void Name_RejectsNullOrWhitespace()
     {
-        var profile = new Profile();
-
-        profile.Name = null!;
+        var profile = new Profile { Name = null! };
         Assert.Equal("New Profile", profile.Name);
 
         profile.Name = "";
@@ -47,8 +45,7 @@ public class ProfileExtendedTests
     [Fact]
     public void Name_AcceptsValidString()
     {
-        var profile = new Profile();
-        profile.Name = "My Custom Profile";
+        var profile = new Profile { Name = "My Custom Profile" };
         Assert.Equal("My Custom Profile", profile.Name);
     }
 

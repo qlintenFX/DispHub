@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Constants;
 using DispHub.Services.Settings;
 
@@ -38,11 +38,12 @@ public class SettingsManagerTests : IDisposable
     [Fact]
     public void SetProperties_UpdatesDataAndTriggersSave()
     {
-        var manager = new SettingsManager(_testDirPath);
-
-        manager.AppTheme = 2;
-        manager.DynamicControlsEnabled = true;
-        manager.TaskbarWidgetEnabled = true;
+        var manager = new SettingsManager(_testDirPath)
+        {
+            AppTheme = 2,
+            DynamicControlsEnabled = true,
+            TaskbarWidgetEnabled = true
+        };
 
         Assert.Equal(2, manager.AppTheme);
         Assert.True(manager.DynamicControlsEnabled);
@@ -56,7 +57,7 @@ public class SettingsManagerTests : IDisposable
     public void Load_ReadsExistingSettingsFile()
     {
         // First create a manager and simulate a saved file
-        var json = "{\"AppTheme\": 1, \"DynamicControlsEnabled\": true}";
+        const string json = "{\"AppTheme\": 1, \"DynamicControlsEnabled\": true}";
         File.WriteAllText(_testFilePath, json);
 
         var manager = new SettingsManager(_testDirPath);

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -82,7 +82,7 @@ public partial class MainWindow : Window
                 HotkeyManager.RegisterHotkey(p);
 
             // Apply the restored profile on startup
-            if (_activeProfileIndex >= 0 && _activeProfileIndex < ProfileManager.Profiles.Count)
+            if (_activeProfileIndex < ProfileManager.Profiles.Count)
             {
                 var profile = ProfileManager.Profiles[_activeProfileIndex];
                 DisplayManager.ApplySettings(profile.Gamma, profile.Contrast, profile.Vibrance, profile.ColorTemperature);

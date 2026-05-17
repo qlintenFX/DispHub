@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Models;
 using DispHub.Services.Logging;
 using System.Windows;
@@ -322,7 +322,7 @@ public partial class ProfilesPage : Page, INavigationAware
 
         MainWindow.ProfileManager.RemoveProfile(_selectedIndex);
 
-        if (profiles.Count > 0)
+        if (MainWindow.ProfileManager.Profiles.Count > 0)
         {
             _selectedIndex = Math.Min(_selectedIndex, profiles.Count - 1);
             LoadSelectedProfile();
