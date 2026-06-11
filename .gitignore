@@ -35,6 +35,8 @@ coverage/
 coverage-*/
 BenchmarkDotNet.Artifacts/
 .sonarqube/
+.sonarlint/*
+!.sonarlint/connectedMode.json
 coveragereport/
 
 ## Windows package artifacts
@@ -73,7 +75,3 @@ desktop.ini
 ## Owner-local private runbooks/secrets
 .private/
 
-## SonarQube local analysis cache
-.sonarqube/
-# Coverage
-coveragereport/

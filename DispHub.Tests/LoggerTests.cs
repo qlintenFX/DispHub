@@ -1,17 +1,15 @@
-﻿using DispHub.Services.Logging;
+using DispHub.Services.Logging;
 
 namespace DispHub.Tests;
 
 public class LoggerTests : IDisposable
 {
     private readonly string _testLogDir;
-    private readonly string _testLogFile;
 
     public LoggerTests()
     {
         _testLogDir = Path.Combine(Path.GetTempPath(), "DispHubTests_" + Guid.NewGuid().ToString("N")[..8]);
         Directory.CreateDirectory(_testLogDir);
-        _testLogFile = Path.Combine(_testLogDir, "test.log");
     }
 
     public void Dispose()

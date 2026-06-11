@@ -43,9 +43,16 @@ jobs:
           fetch-depth: 0
 
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props') }}
+          restore-keys: nuget-${{ runner.os }}-
 
       - name: Restore dependencies
         run: dotnet restore .\DispHub.sln
@@ -64,12 +71,18 @@ jobs:
         if: ${{ env.SONAR_TOKEN != '' && env.SONAR_ORGANIZATION != '' && env.SONAR_PROJECT_KEY != '' }}
         run: dotnet tool restore
 
-      - name: Begin SonarQube analysis
+      - name: Begin SonarCloud analysis
         if: ${{ env.SONAR_TOKEN != '' && env.SONAR_ORGANIZATION != '' && env.SONAR_PROJECT_KEY != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          dotnet sonarscanner begin /k:"${{ env.SONAR_PROJECT_KEY }}" /o:"${{ env.SONAR_ORGANIZATION }}" /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" /d:sonar.token="${{ env.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml" /d:sonar.coverage.exclusions="**/*.xaml.cs,**/Pages/**,**/Controls/**,**/Windows/**" /d:sonar.qualitygate.wait=true
+          dotnet sonarscanner begin `
+            /k:"${{ env.SONAR_PROJECT_KEY }}" `
+            /o:"${{ env.SONAR_ORGANIZATION }}" `
+            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" `
+            /d:sonar.token="${{ env.SONAR_TOKEN }}" `
+            /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml" `
+            /d:sonar.qualitygate.wait=true
 
       - name: Build (Release)
         run: dotnet build .\DispHub.sln -c $env:BUILD_CONFIGURATION --no-restore
@@ -84,7 +97,7 @@ jobs:
             --results-directory .\TestResults `
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
-      - name: End SonarQube analysis
+      - name: End SonarCloud analysis
         if: ${{ env.SONAR_TOKEN != '' && env.SONAR_ORGANIZATION != '' && env.SONAR_PROJECT_KEY != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,7 +105,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: ./TestResults/**/coverage.opencover.xml
