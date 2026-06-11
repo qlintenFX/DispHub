@@ -123,6 +123,8 @@ jobs:
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" `
             /d:sonar.token="${{ env.SONAR_TOKEN }}" `
             /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml" `
+            /d:sonar.exclusions="**/bin/**,**/obj/**,**/TestResults/**,**/coveragereport/**,**/Packaging/**,**/*.Designer.cs" `
+            /d:sonar.coverage.exclusions="**/*.xaml.cs" `
             /d:sonar.qualitygate.wait=true
 
       - name: Build (Release)
