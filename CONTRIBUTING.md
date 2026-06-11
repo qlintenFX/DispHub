@@ -125,15 +125,18 @@ Recommended lifecycle for pull requests:
 
 ## Code quality
 
-Before opening a PR:
+Before opening a PR, you can run all local quality checks (formatting, compilation, unit tests, coverage collection, and dependency vulnerability audits) using the unified quality script:
 
 ```powershell
-dotnet format .\DispHub.sln --verify-no-changes
-dotnet build .\DispHub.sln -c Release
-dotnet test .\DispHub.Tests\DispHub.Tests.csproj -c Release --collect:"XPlat Code Coverage" --results-directory .\TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+.\run-quality.ps1 -Configuration Release
 ```
 
-If tests are present for your area, run them too.
+If you also wish to run the local SonarCloud analysis at the end of the checks, you can provide the token and include the `-WithSonar` switch:
+
+```powershell
+$env:SONAR_TOKEN = "<your-sonarcloud-token>"
+.\run-quality.ps1 -Configuration Release -WithSonar
+```
 
 ## SonarCloud Analysis
 
@@ -141,16 +144,11 @@ We use SonarCloud in CI (quality gate required). Local runs are optional.
 
 To run the analysis locally:
 
-1. Restore the local tools (one-time):
+1. Run the local scan script:
    ```powershell
-   dotnet tool restore
-   ```
-2. Run the scan (build + tests + coverage + upload):
-   ```powershell
-   dotnet sonarscanner begin /k:"qlintenFX_DispHub" /o:"qlintenfx" /d:sonar.token="<your-sonarcloud-token>" /d:sonar.qualitygate.wait=true
-   dotnet build .\DispHub.sln -c Release
-   dotnet test .\DispHub.sln -c Release --collect:"XPlat Code Coverage" --results-directory .\TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-   dotnet sonarscanner end /d:sonar.token="<your-sonarcloud-token>"
+   $env:SONAR_TOKEN = "<your-sonarcloud-token>"
+   # Point to SonarCloud with the project key:
+   .\run-sonar.ps1 -HostUrl "https://sonarcloud.io" -ProjectKey "qlintenFX_DispHub" -Configuration Release
    ```
 
 ### IDE Integration
