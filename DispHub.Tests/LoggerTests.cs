@@ -1,9 +1,10 @@
-using DispHub.Services.Logging;
+﻿using DispHub.Services.Logging;
 
 namespace DispHub.Tests;
 
 public class LoggerTests : IDisposable
 {
+    private static readonly Lock LoggerStateLock = new();
     private readonly string _testLogDir;
 
     public LoggerTests()
@@ -91,5 +92,39 @@ public class LoggerTests : IDisposable
     {
         // LogPath should always return a non-null value
         Assert.NotNull(Logger.LogPath);
+    }
+
+    [Fact]
+    public void Log_FallsBackToTempPath_WhenConfiguredPathIsNotWritable()
+    {
+        lock (LoggerStateLock)
+        {
+            string failingPath = Path.Combine(
+                _testLogDir,
+                "missing",
+                Guid.NewGuid().ToString("N"),
+                "cannot-write.log");
+
+            var logPathField = typeof(Logger).GetField("_logPath",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            Assert.NotNull(logPathField);
+
+            string? original = (string?)logPathField!.GetValue(null);
+            try
+            {
+                logPathField.SetValue(null, failingPath);
+                Logger.Log("forces fallback");
+
+                string currentPath = Logger.LogPath;
+                string tempPath = Path.GetTempPath();
+                Assert.True(currentPath.Length >= tempPath.Length);
+                Assert.Equal(tempPath, currentPath[..tempPath.Length], ignoreCase: true);
+                Assert.True(File.Exists(currentPath));
+            }
+            finally
+            {
+                logPathField.SetValue(null, original);
+            }
+        }
     }
 }

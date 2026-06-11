@@ -57,6 +57,47 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore .\DispHub.sln
 
+      - name: Audit NuGet vulnerabilities
+        run: |
+          New-Item -ItemType Directory -Path .\artifacts -Force | Out-Null
+          dotnet package list --project .\DispHub.sln --vulnerable --include-transitive --format json --output-version 1 --verbosity minimal | Out-File -FilePath .\artifacts\dependency-audit.json -Encoding utf8
+
+          $audit = Get-Content .\artifacts\dependency-audit.json -Raw | ConvertFrom-Json
+          $vulnerablePackages = @()
+
+          foreach ($project in @($audit.projects)) {
+            if (-not $project.PSObject.Properties.Name.Contains('frameworks')) {
+              continue
+            }
+
+            foreach ($framework in @($project.frameworks)) {
+              foreach ($packageGroupName in 'topLevelPackages', 'transitivePackages') {
+                if (-not $framework.PSObject.Properties.Name.Contains($packageGroupName)) {
+                  continue
+                }
+
+                foreach ($package in @($framework.$packageGroupName)) {
+                  if (-not $package.PSObject.Properties.Name.Contains('vulnerabilities')) {
+                    continue
+                  }
+
+                  $vulnerabilities = @($package.vulnerabilities | Where-Object { $_ -ne $null })
+                  if ($vulnerabilities.Count -gt 0) {
+                    $vulnerablePackages += "$($project.path) :: $($framework.framework) :: $($package.id) $($package.resolvedVersion)"
+                  }
+                }
+              }
+            }
+          }
+
+          if ($vulnerablePackages.Count -gt 0) {
+            Write-Host 'Vulnerable NuGet dependencies detected:' -ForegroundColor Red
+            $vulnerablePackages | ForEach-Object { Write-Host " - $_" -ForegroundColor Red }
+            throw 'Dependency vulnerability audit failed.'
+          }
+
+          Write-Host 'Dependency vulnerability audit passed.' -ForegroundColor Green
+
       - name: Check code formatting
         run: dotnet format .\DispHub.sln --verify-no-changes --verbosity diagnostic
 
@@ -93,6 +134,7 @@ jobs:
             -c $env:BUILD_CONFIGURATION `
             --no-restore `
             --verbosity minimal `
+            --logger "trx;LogFileName=test-results.trx" `
             --collect:"XPlat Code Coverage" `
             --results-directory .\TestResults `
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
@@ -109,5 +151,16 @@ jobs:
         with:
           name: coverage-report
           path: ./TestResults/**/coverage.opencover.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload dependency audit and test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: quality-reports
+          path: |
+            .\artifacts\dependency-audit.json
+            .\TestResults\**\*.trx
           if-no-files-found: warn
           retention-days: 14

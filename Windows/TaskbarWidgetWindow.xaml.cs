@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+﻿// SPDX-License-Identifier: GPL-3.0-or-later
 // Widget positioning approach adapted from FluentFlyout by Hugo Li (unchihugo)
 using System.Windows;
 using System.Windows.Automation;
