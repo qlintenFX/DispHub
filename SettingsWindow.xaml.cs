@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Pages;
 using System.ComponentModel;
 using System.Windows;
@@ -34,8 +34,6 @@ public partial class SettingsWindow : FluentWindow
 
     protected override void OnClosing(CancelEventArgs e)
     {
-        MainWindow.DisplayPowerChanged -= _powerChangedHandler;
-
         if (MainWindow.SettingsManager.CloseToTray)
         {
             e.Cancel = true;
@@ -43,6 +41,7 @@ public partial class SettingsWindow : FluentWindow
             return;
         }
 
+        MainWindow.DisplayPowerChanged -= _powerChangedHandler;
         MainWindow.DisplayManager?.ResetToDefault();
         MainWindow.DisplayManager?.Dispose();
         MainWindow.HotkeyManager?.Dispose();

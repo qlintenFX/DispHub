@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 // Widget positioning approach adapted from FluentFlyout by Hugo Li (unchihugo)
 using System.Windows;
 using System.Windows.Automation;
@@ -127,7 +127,7 @@ public partial class TaskbarWidgetWindow : Window
         if (!_pendingAutomationTasks.TryGetValue(automationId, out var pending) || pending.IsCompleted)
         {
             var localCache = cache;
-            var findTask = Task.Run(() =>
+            var findTask = Task.Run<(AutomationElement? Element, Rect Bounds)>(() =>
             {
                 try
                 {
@@ -137,39 +137,39 @@ public partial class TaskbarWidgetWindow : Window
                         localCache = root.FindFirst(TreeScope.Descendants,
                             new PropertyCondition(AutomationElement.AutomationIdProperty, automationId));
                     }
-                    return localCache?.Current.BoundingRectangle ?? Rect.Empty;
+                    return (localCache, localCache?.Current.BoundingRectangle ?? Rect.Empty);
                 }
                 catch (InvalidOperationException)
                 {
                     // UI Automation element may become stale after explorer restart.
-                    return Rect.Empty;
+                    return (null, Rect.Empty);
                 }
             });
 
             _pendingAutomationTasks[automationId] = findTask;
-            ScheduleCacheUpdate(findTask, localCache, automationId);
+            ScheduleCacheUpdate(findTask, automationId);
         }
 
         return (false, Rect.Empty);
     }
 
-    private void ScheduleCacheUpdate(Task<Rect> findTask, AutomationElement? element, string automationId)
+    private void ScheduleCacheUpdate(Task<(AutomationElement? Element, Rect Bounds)> findTask, string automationId)
     {
         _ = findTask.ContinueWith(t =>
         {
-            if (!t.IsCompletedSuccessfully || t.Result == Rect.Empty) return;
+            if (!t.IsCompletedSuccessfully || t.Result.Bounds == Rect.Empty) return;
 
             _ = Dispatcher.BeginInvoke(() =>
             {
                 if (string.Equals(automationId, "WidgetsButton", StringComparison.Ordinal))
                 {
-                    _widgetButtonElement = element;
-                    _widgetButtonBounds = t.Result;
+                    _widgetButtonElement = t.Result.Element;
+                    _widgetButtonBounds = t.Result.Bounds;
                 }
                 else if (string.Equals(automationId, "TaskbarFrame", StringComparison.Ordinal))
                 {
-                    _taskbarFrameElement = element;
-                    _taskbarFrameBounds = t.Result;
+                    _taskbarFrameElement = t.Result.Element;
+                    _taskbarFrameBounds = t.Result.Bounds;
                 }
             });
         }, TaskScheduler.Default);

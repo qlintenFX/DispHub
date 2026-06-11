@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Text.Json;
 using System.Windows.Threading;
 using DispHub.Constants;
@@ -46,6 +46,7 @@ public class SettingsData
     public bool TaskbarWidgetHideWhenInactive { get; set; }
     public bool FlyoutEnabled { get; set; } = true;
     public int FlyoutDuration { get; set; } = 1800;  // ms
+    public string AppLanguage { get; set; } = "system";
 }
 
 public class SettingsManager
@@ -56,6 +57,7 @@ public class SettingsManager
     private readonly string _settingsFilePath;
     private readonly DispatcherTimer _saveDebounceTimer;
     private bool _savePending;
+    private readonly SemaphoreSlim _writeLock = new(1, 1);
 
     public bool StartWithWindows
     {
@@ -78,6 +80,12 @@ public class SettingsManager
     {
         get => _data.AppTheme;
         set { _data.AppTheme = value; Save(); }
+    }
+
+    public string AppLanguage
+    {
+        get => _data.AppLanguage;
+        set { _data.AppLanguage = value; Save(); }
     }
 
     public int AccentColor
@@ -239,6 +247,7 @@ public class SettingsManager
 
     private async Task SaveToFileAsync()
     {
+        await _writeLock.WaitAsync().ConfigureAwait(false);
         try
         {
             string json = JsonSerializer.Serialize(_data, _jsonOptions);
@@ -247,6 +256,10 @@ public class SettingsManager
         catch (Exception ex)
         {
             Logger.LogError("Failed to save settings", ex);
+        }
+        finally
+        {
+            _writeLock.Release();
         }
     }
 

@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 using DispHub.Models;
 using DispHub.Services.Logging;
 using System.Windows;
@@ -206,14 +206,7 @@ public partial class ProfilesPage : Page, INavigationAware
         string warmthLabel = temp < 40 ? "Warm" : "Neutral";
         ColorTempValueText.Text = temp > 60 ? "Cool" : warmthLabel;
 
-        int kelvin = temp <= Constants.AppConstants.ColorTempNeutralValue
-            ? Constants.AppConstants.ColorTempMinKelvin +
-              (int)Math.Round((temp / (double)Constants.AppConstants.ColorTempNeutralValue) *
-                              (Constants.AppConstants.ColorTempNeutralKelvin - Constants.AppConstants.ColorTempMinKelvin))
-            : Constants.AppConstants.ColorTempNeutralKelvin +
-              (int)Math.Round(((temp - Constants.AppConstants.ColorTempNeutralValue) /
-                               (double)(Constants.AppConstants.ColorTempMax - Constants.AppConstants.ColorTempNeutralValue)) *
-                              (Constants.AppConstants.ColorTempMaxKelvin - Constants.AppConstants.ColorTempNeutralKelvin));
+        int kelvin = (int)Math.Round(Helpers.ColorTemperatureMapper.GetKelvinFromSlider(temp));
 
         ColorTempKelvinText.Text = $"{kelvin.ToString(System.Globalization.CultureInfo.InvariantCulture)} K";
     }

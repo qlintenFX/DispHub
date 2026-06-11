@@ -135,29 +135,31 @@ dotnet test .\DispHub.Tests\DispHub.Tests.csproj -c Release --collect:"XPlat Cod
 
 If tests are present for your area, run them too.
 
-## SonarQube Analysis
+## SonarCloud Analysis
 
-We use SonarQube in CI (quality gate required). Local runs are optional.
+We use SonarCloud in CI (quality gate required). Local runs are optional.
 
-To set up and run the analysis locally:
+To run the analysis locally:
 
-1. Ensure Docker is running.
-2. Start the SonarQube stack:
-   ```powershell
-   docker compose up -d
-   ```
-3. Restore the local tools (one-time):
+1. Restore the local tools (one-time):
    ```powershell
    dotnet tool restore
    ```
-4. Run the scan (build + tests + coverage + upload):
+2. Run the scan (build + tests + coverage + upload):
    ```powershell
-   dotnet sonarscanner begin /k:"disphub" /d:sonar.host.url="http://localhost:9000" /d:sonar.token="<token>" /d:sonar.qualitygate.wait=true /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.exclusions="**/bin/**,**/obj/**,**/plan/**"
+   dotnet sonarscanner begin /k:"qlintenFX_DispHub" /o:"qlintenfx" /d:sonar.token="<your-sonarcloud-token>" /d:sonar.qualitygate.wait=true
    dotnet build .\DispHub.sln -c Release
    dotnet test .\DispHub.sln -c Release --collect:"XPlat Code Coverage" --results-directory .\TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-   dotnet sonarscanner end /d:sonar.token="<token>"
+   dotnet sonarscanner end /d:sonar.token="<your-sonarcloud-token>"
    ```
-5. View the dashboard at `http://localhost:9000` (default login: `admin` / `admin`).
+
+### IDE Integration
+
+For real-time feedback in VS Code:
+1. Install the **SonarLint** extension.
+2. The project's connection configuration is already saved in [.sonarlint/connectedMode.json](file:///c:/vscode%20projects/DisplayHub/.sonarlint/connectedMode.json).
+3. Open your user settings, link your SonarCloud account to the `qlintenfx` organization, and issues will be highlighted directly in your editor as you write code.
+
 
 
 ## Community expectations
