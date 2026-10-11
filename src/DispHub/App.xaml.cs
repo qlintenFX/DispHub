@@ -128,7 +128,7 @@ public partial class App : Application
         };
 
         _controller.Start(hotkeys);
-        _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, _services.GetRequiredService<ILogger<TrayService>>());
+        _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, CreateQuickPanel, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
         _services.GetRequiredService<OsdService>().Attach();
         _services.GetRequiredService<ReviewPrompt>().Attach();
@@ -178,6 +178,7 @@ public partial class App : Application
         services.AddSingleton<DisplaysViewModel>();
         services.AddSingleton<EffectsService>();
         services.AddSingleton<EffectsViewModel>();
+        services.AddSingleton<QuickPanelViewModel>();
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<AboutViewModel>();
         services.AddSingleton<MainViewModel>();
@@ -196,6 +197,14 @@ public partial class App : Application
     }
 
     private void ShowMainWindow() => _services?.GetRequiredService<MainWindow>().ShowAndActivate();
+
+    private QuickPanel CreateQuickPanel()
+    {
+        QuickPanelViewModel viewModel = _services!.GetRequiredService<QuickPanelViewModel>();
+        viewModel.OpenWindow = ShowMainWindow;
+        viewModel.Exit = RequestExit;
+        return new QuickPanel(viewModel);
+    }
 
     private void HandleActivation(string[] args)
     {

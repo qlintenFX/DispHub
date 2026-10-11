@@ -1138,4 +1138,28 @@ It also supports development of DispHub.</value>
   <data name="Template_dimHint" xml:space="preserve">
     <value>Darker than your monitor's lowest brightness setting.</value>
   </data>
+  <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
+    <value>Show the quick panel</value>
+  </data>
+  <data name="Quick_Paused" xml:space="preserve">
+    <value>Paused: original colours</value>
+  </data>
+  <data name="Quick_FromSchedule" xml:space="preserve">
+    <value>{0}, from your schedule</value>
+  </data>
+  <data name="Quick_FromApp" xml:space="preserve">
+    <value>{0}, for the app in front</value>
+  </data>
+  <data name="Quick_Active" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Quick_Adjusting" xml:space="preserve">
+    <value>Adjusting {0}</value>
+  </data>
+  <data name="Quick_EffectsCustom" xml:space="preserve">
+    <value>Your own settings</value>
+  </data>
+  <data name="Quick_Open" xml:space="preserve">
+    <value>Open DispHub</value>
+  </data>
 </root>

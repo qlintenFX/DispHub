@@ -28,11 +28,14 @@ public sealed class TrayService : IDisposable
     private readonly byte[] _normalIcon = LoadResource("Assets/DispHub.ico");
     private readonly byte[] _pausedIcon = LoadResource("Assets/DispHub-paused.ico");
     private readonly DispatcherTimer _retry = new() { Interval = RetryInterval };
+    private readonly Func<Views.QuickPanel> _createPanel;
+    private Views.QuickPanel? _panel;
     private int _retries;
     private bool _paused;
 
-    public TrayService(AppController app, ShellMessageRouter router, nint hostWindow, Action openWindow, Action exit, ILogger logger)
+    public TrayService(AppController app, ShellMessageRouter router, nint hostWindow, Action openWindow, Action exit, Func<Views.QuickPanel> createPanel, ILogger logger)
     {
+        _createPanel = createPanel;
         ArgumentNullException.ThrowIfNull(router);
         _app = app;
         _host = hostWindow;
@@ -95,6 +98,9 @@ public sealed class TrayService : IDisposable
     {
         switch (action)
         {
+            case TrayIconAction.Select when _app.Config.Ui.TrayLeftClick == TrayClickAction.QuickPanel:
+                (_panel ??= _createPanel()).Toggle();
+                break;
             case TrayIconAction.Select when _app.Config.Ui.TrayLeftClick == TrayClickAction.ShowProfileMenu:
             case TrayIconAction.ContextMenu:
                 ShowMenu();

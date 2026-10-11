@@ -170,13 +170,14 @@ public enum TrayClickAction
 {
     OpenWindow,
     ShowProfileMenu,
+    QuickPanel,
 }
 
 public sealed class UiConfig
 {
     public ThemePreference Theme { get; set; } = ThemePreference.System;
     public bool CloseToTray { get; set; } = true;
-    public TrayClickAction TrayLeftClick { get; set; } = TrayClickAction.OpenWindow;
+    public TrayClickAction TrayLeftClick { get; set; } = TrayClickAction.QuickPanel;
     public bool ShowOsd { get; set; } = true;
 
     /// <summary>UI language as a culture name such as "de"; null follows Windows.</summary>

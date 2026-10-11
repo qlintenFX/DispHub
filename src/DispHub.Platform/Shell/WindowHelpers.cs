@@ -19,6 +19,14 @@ public static class WindowHelpers
         _ = PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, style);
     }
 
+    /// <summary>Keeps a window out of Alt+Tab and the taskbar.</summary>
+    public static void MakeToolWindow(nint handle)
+    {
+        var hwnd = (HWND)handle;
+        int style = PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+        _ = PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, style | (int)WINDOW_EX_STYLE.WS_EX_TOOLWINDOW);
+    }
+
     /// <summary>The work area (screen minus taskbar) of the monitor under the mouse, in physical pixels.</summary>
     public static Rectangle WorkAreaUnderCursor()
     {
@@ -30,6 +38,29 @@ public static class WindowHelpers
         RECT work = info.rcWork;
         return Rectangle.FromLTRB(work.left, work.top, work.right, work.bottom);
     }
+
+    /// <summary>The monitor under the mouse and its work area (without the taskbar), in physical pixels.</summary>
+    public static (Rectangle Monitor, Rectangle Work) ScreenUnderCursor()
+    {
+        _ = PInvoke.GetCursorPos(out Point cursor);
+        HMONITOR monitor = PInvoke.MonitorFromPoint(cursor, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        var info = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
+        if (!PInvoke.GetMonitorInfo(monitor, ref info))
+            return (Rectangle.Empty, Rectangle.Empty);
+        RECT m = info.rcMonitor, w = info.rcWork;
+        return (Rectangle.FromLTRB(m.left, m.top, m.right, m.bottom), Rectangle.FromLTRB(w.left, w.top, w.right, w.bottom));
+    }
+
+    /// <summary>Moves and resizes a window in physical pixels and shows it on top, keeping its activation.</summary>
+    public static void PlaceOnTop(nint handle, Rectangle bounds) =>
+        PInvoke.SetWindowPos(
+            (HWND)handle,
+            HWND.HWND_TOPMOST,
+            bounds.X,
+            bounds.Y,
+            bounds.Width,
+            bounds.Height,
+            SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW);
 
     /// <summary>Moves and resizes a window in physical pixels without activating it, and shows it.</summary>
     public static void ShowAt(nint handle, Rectangle bounds) =>
