@@ -1,6 +1,7 @@
 using DispHub.Core.Color;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
+using DispHub.Core.Schedule;
 
 namespace DispHub.Core.Config;
 
@@ -76,7 +77,19 @@ public static class ConfigNormalizer
         if (removedSlots > 0)
             fixes.Add($"Removed {removedSlots} schedule slot(s) pointing at missing profiles.");
         foreach (ScheduleSlot slot in config.Schedule.Slots)
+        {
             slot.FadeMinutes = Math.Clamp(slot.FadeMinutes, 0, 180);
+            slot.OffsetMinutes = Math.Clamp(slot.OffsetMinutes, -ScheduleTimeline.MaxSunOffsetMinutes, ScheduleTimeline.MaxSunOffsetMinutes);
+            if ((slot.Days & ScheduleDays.Every) == ScheduleDays.None)
+                slot.Days = ScheduleDays.Every;
+        }
+        if (config.Schedule.Location is { } location &&
+            (!double.IsFinite(location.Latitude) || !double.IsFinite(location.Longitude) ||
+             Math.Abs(location.Latitude) > 90 || Math.Abs(location.Longitude) > 180))
+        {
+            config.Schedule.Location = null;
+            fixes.Add("Removed an invalid schedule location.");
+        }
 
         config.Hotkeys.TogglePause = ValidHotkeyOrNull(config.Hotkeys.TogglePause);
         config.Hotkeys.NextProfile = ValidHotkeyOrNull(config.Hotkeys.NextProfile);

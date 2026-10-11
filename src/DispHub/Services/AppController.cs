@@ -357,7 +357,7 @@ public sealed class AppController : IDisposable
     private void Evaluate(ChangeSource source)
     {
         var monitorKeys = _colors.Monitors.Select(m => m.Monitor.Key).ToList();
-        var input = new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, _license.IsPro);
+        var input = new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, _license.IsPro, _time.LocalTimeZone);
         RuleOutput output = RuleEngine.Resolve(input);
 
         // A manual pick from another context has ended.

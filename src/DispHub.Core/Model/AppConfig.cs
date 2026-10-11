@@ -73,16 +73,62 @@ public sealed class ScheduleConfig
 {
     public bool Enabled { get; set; }
     public List<ScheduleSlot> Slots { get; set; } = [];
+
+    /// <summary>Where sunrise and sunset are calculated for; null until the user sets it.</summary>
+    public GeoLocation? Location { get; set; }
+}
+
+/// <summary>What a slot's start time is measured from.</summary>
+public enum ScheduleAnchor
+{
+    Time,
+    Sunrise,
+    Sunset,
+}
+
+[Flags]
+public enum ScheduleDays
+{
+    None = 0,
+    Monday = 1,
+    Tuesday = 2,
+    Wednesday = 4,
+    Thursday = 8,
+    Friday = 16,
+    Saturday = 32,
+    Sunday = 64,
+    Weekdays = Monday | Tuesday | Wednesday | Thursday | Friday,
+    Weekend = Saturday | Sunday,
+    Every = Weekdays | Weekend,
 }
 
 public sealed class ScheduleSlot
 {
     public Guid Id { get; set; } = Guid.NewGuid();
+
+    /// <summary>The clock time the slot starts, when <see cref="Anchor"/> is <see cref="ScheduleAnchor.Time"/>.</summary>
     public TimeOnly Start { get; set; }
+
+    public ScheduleAnchor Anchor { get; set; }
+
+    /// <summary>Minutes after sunrise or sunset (negative: before) when anchored to the sun.</summary>
+    public int OffsetMinutes { get; set; }
+
+    public ScheduleDays Days { get; set; } = ScheduleDays.Every;
+
     public Guid ProfileId { get; set; }
 
     /// <summary>Minutes to fade from the previous slot's profile into this one. 0 switches instantly.</summary>
     public int FadeMinutes { get; set; }
+}
+
+public sealed class GeoLocation
+{
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+
+    /// <summary>A place name to show, such as a city.</summary>
+    public string? Name { get; set; }
 }
 
 public sealed class HotkeyConfig
