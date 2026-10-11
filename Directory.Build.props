@@ -16,5 +16,7 @@
     <!-- Allow building with warnings locally while iterating: dotnet build -p:TreatWarningsAsErrors=false -->
 
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- Lets GitHub's Linux-based dependency graph restore these Windows projects. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 </Project>
