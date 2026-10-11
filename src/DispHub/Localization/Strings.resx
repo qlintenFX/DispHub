@@ -616,4 +616,22 @@ It also supports development of DispHub.</value>
   <data name="Warning_ResetTitle" xml:space="preserve">
     <value>Another app is changing your colours</value>
   </data>
+  <data name="Settings_PreviewPicture" xml:space="preserve">
+    <value>Preview picture</value>
+  </data>
+  <data name="Settings_PreviewPictureHint" xml:space="preserve">
+    <value>The photo on each profile, shown with that profile's colours.</value>
+  </data>
+  <data name="Preview_flowers" xml:space="preserve">
+    <value>Wildflowers</value>
+  </data>
+  <data name="Preview_reef" xml:space="preserve">
+    <value>Coral reef</value>
+  </data>
+  <data name="Preview_autumn" xml:space="preserve">
+    <value>Autumn forest</value>
+  </data>
+  <data name="Preview_spring" xml:space="preserve">
+    <value>Hot spring</value>
+  </data>
 </root>

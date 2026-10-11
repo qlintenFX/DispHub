@@ -11,10 +11,26 @@ using DispHub.Services;
 
 namespace DispHub.ViewModels;
 
-public sealed partial class PresetsViewModel(AppController app, GalleryService gallery, IUpgradeService upgrade)
-    : PageViewModel(Loc.Get("Nav_Presets"), Wpf.Ui.Controls.SymbolRegular.Library24)
+public sealed partial class PresetsViewModel : PageViewModel
 {
+    private readonly AppController _app;
+    private readonly GalleryService _gallery;
+    private readonly IUpgradeService _upgrade;
     private bool _loaded;
+
+    public PresetsViewModel(AppController app, GalleryService gallery, IUpgradeService upgrade)
+        : base(Loc.Get("Nav_Presets"), Wpf.Ui.Controls.SymbolRegular.Library24)
+    {
+        _app = app;
+        _gallery = gallery;
+        _upgrade = upgrade;
+        // The preview picture is a setting.
+        app.ConfigChanged += (_, _) =>
+        {
+            foreach (PresetItemViewModel item in Presets)
+                item.RefreshPreview();
+        };
+    }
 
     public ObservableCollection<PresetItemViewModel> Presets { get; } = [];
 
@@ -37,7 +53,7 @@ public sealed partial class PresetsViewModel(AppController app, GalleryService g
         IsLoading = true;
         try
         {
-            foreach ((GalleryEntry entry, SharedPreset preset) in await gallery.LoadAsync())
+            foreach ((GalleryEntry entry, SharedPreset preset) in await _gallery.LoadAsync())
                 Presets.Add(new PresetItemViewModel(entry, preset, this));
         }
         finally
@@ -49,12 +65,12 @@ public sealed partial class PresetsViewModel(AppController app, GalleryService g
     /// <summary>Adds a preset as a new profile and shows it straight away. Returns false if the profile limit was hit.</summary>
     public bool Add(SharedPreset preset)
     {
-        if (app.AddProfile(preset.Color, preset.Name) is not { } profile)
+        if (_app.AddProfile(preset.Color, preset.Name) is not { } profile)
         {
-            upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
             return false;
         }
-        app.ActivateProfile(profile.Id, ChangeSource.Editor);
+        _app.ActivateProfile(profile.Id, ChangeSource.Editor);
         Message = Loc.Format("Presets_Added", profile.Name);
         return true;
     }
@@ -81,7 +97,11 @@ public sealed partial class PresetItemViewModel(GalleryEntry entry, SharedPreset
     public string Description => entry.Description;
     public string Tags => string.Join(" · ", entry.Tags);
     public string Summary => ProfileItemViewModel.Describe(preset.Color);
-    public ImageSource Preview { get; } = Controls.ColorPreview.Render(preset.Color);
+
+    [ObservableProperty]
+    public partial ImageSource Preview { get; set; } = Controls.ColorPreview.Render(preset.Color);
+
+    public void RefreshPreview() => Preview = Controls.ColorPreview.Render(preset.Color);
 
     [ObservableProperty]
     public partial bool Copied { get; set; }

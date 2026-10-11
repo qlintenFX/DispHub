@@ -51,6 +51,21 @@ public sealed partial class SettingsViewModel : PageViewModel
         LanguageNeedsRestart = true;
     }
 
+    public IReadOnlyList<PreviewPictureChoice> PreviewPictures { get; } =
+        [.. Controls.ColorPreview.Pictures.Select(p => new PreviewPictureChoice(p, Loc.Get($"Preview_{p}"), Controls.ColorPreview.Original(p)))];
+
+    [ObservableProperty]
+    public partial PreviewPictureChoice? PreviewPicture { get; set; }
+
+    partial void OnPreviewPictureChanged(PreviewPictureChoice? value)
+    {
+        if (_loading || value is null || value.Id == Controls.ColorPreview.Picture)
+            return;
+        // Switch first: saving raises ConfigChanged, which redraws every preview.
+        Controls.ColorPreview.Use(value.Id);
+        Save(c => c.Ui.PreviewPicture = value.Id);
+    }
+
     [RelayCommand]
     private static void Restart() => ((App)System.Windows.Application.Current).RequestRestart();
 
@@ -141,6 +156,7 @@ public sealed partial class SettingsViewModel : PageViewModel
             UiConfig ui = _app.Config.Ui;
             Theme = ui.Theme;
             Language = LanguageChoices.FirstOrDefault(l => l.Code == ui.Language) ?? LanguageChoices[0];
+            PreviewPicture = PreviewPictures.FirstOrDefault(p => p.Id == Controls.ColorPreview.Picture);
             CloseToTray = ui.CloseToTray;
             TrayLeftClick = ui.TrayLeftClick;
             ShowOsd = ui.ShowOsd;
@@ -268,6 +284,11 @@ public sealed partial class MonitorItemViewModel : ObservableObject
 }
 
 public sealed record LanguageChoice(string? Code, string Name)
+{
+    public override string ToString() => Name;
+}
+
+public sealed record PreviewPictureChoice(string Id, string Name, System.Windows.Media.ImageSource Image)
 {
     public override string ToString() => Name;
 }

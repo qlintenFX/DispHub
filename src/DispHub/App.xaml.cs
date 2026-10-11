@@ -95,6 +95,7 @@ public partial class App : Application
 
         _controller = _services.GetRequiredService<AppController>();
         _services.GetRequiredService<ThemeService>().Apply(_controller.Config.Ui.Theme);
+        ColorPreview.Use(_controller.Config.Ui.PreviewPicture);
 
         // The hidden host window owns the tray icon and receives hotkeys and system broadcasts.
         var host = new Window

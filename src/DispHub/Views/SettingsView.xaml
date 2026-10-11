@@ -59,6 +59,38 @@
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
+        <StackPanel Margin="0,0,260,0">
+          <TextBlock Text="{l:Tr Settings_PreviewPicture}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_PreviewPictureHint}" />
+        </StackPanel>
+        <ComboBox
+          MinWidth="240"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Center"
+          ItemsSource="{Binding PreviewPictures}"
+          SelectedItem="{Binding PreviewPicture}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type vm:PreviewPictureChoice}">
+              <StackPanel Orientation="Horizontal">
+                <Border
+                  Width="72"
+                  Height="14"
+                  Margin="0,0,10,0"
+                  VerticalAlignment="Center"
+                  CornerRadius="3">
+                  <Border.Background>
+                    <ImageBrush ImageSource="{Binding Image}" Stretch="UniformToFill" />
+                  </Border.Background>
+                </Border>
+                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+              </StackPanel>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
         <StackPanel>
           <TextBlock Text="{l:Tr Settings_TrayClick}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_TrayClickHint}" />

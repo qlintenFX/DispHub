@@ -33,6 +33,17 @@ public sealed partial class LocalizationTests
     }
 
     [Fact]
+    public void EveryPreviewPictureHasANameAndAnImage()
+    {
+        HashSet<string> english = Keys(Path.Combine(LocalizationDir, "Strings.resx"));
+        foreach (string picture in DispHub.Controls.ColorPreview.Pictures)
+        {
+            Assert.Contains($"Preview_{picture}", english);
+            Assert.True(File.Exists(Path.Combine(Root, "src", "DispHub", "Assets", "Previews", picture + ".jpg")), picture);
+        }
+    }
+
+    [Fact]
     public void EnumValuesShownInTheUiHaveNames()
     {
         HashSet<string> english = Keys(Path.Combine(LocalizationDir, "Strings.resx"));
