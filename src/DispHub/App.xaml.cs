@@ -132,6 +132,7 @@ public partial class App : Application
         _tray.Show();
         _services.GetRequiredService<OsdService>().Attach();
         _services.GetRequiredService<ReviewPrompt>().Attach();
+        _services.GetRequiredService<EffectsService>().Apply();
 
         _instance.Activated += (_, forwarded) => Dispatcher.BeginInvoke(() => HandleActivation(forwarded));
         _instance.StartListening();
@@ -175,6 +176,8 @@ public partial class App : Application
         services.AddSingleton<GalleryService>();
         services.AddSingleton<PresetsViewModel>();
         services.AddSingleton<AutomationViewModel>();
+        services.AddSingleton<EffectsService>();
+        services.AddSingleton<EffectsViewModel>();
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<AboutViewModel>();
         services.AddSingleton<MainViewModel>();

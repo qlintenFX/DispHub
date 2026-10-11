@@ -25,6 +25,9 @@ public sealed class AppConfig
     public ScheduleConfig Schedule { get; set; } = new();
     public HotkeyConfig Hotkeys { get; set; } = new();
     public UiConfig Ui { get; set; } = new();
+
+    /// <summary>Screen effects (colour grade and overlay). Prototype.</summary>
+    public Effects.EffectsConfig Effects { get; set; } = new();
 }
 
 public sealed class Profile

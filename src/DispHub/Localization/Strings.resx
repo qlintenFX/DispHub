@@ -649,4 +649,139 @@ It also supports development of DispHub.</value>
   <data name="Tray_StillRunningText" xml:space="preserve">
     <value>It keeps your profiles and hotkeys working from the notification area. Select this to keep its icon on the taskbar.</value>
   </data>
+  <data name="Nav_Effects" xml:space="preserve">
+    <value>Effects</value>
+  </data>
+  <data name="Effects_Title" xml:space="preserve">
+    <value>Effects</value>
+  </data>
+  <data name="Effects_PreviewBadge" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Effects_Subtitle" xml:space="preserve">
+    <value>Film, camera and retro looks for the whole screen: a colour grade plus grain, vignette and scanlines.</value>
+  </data>
+  <data name="Effects_ProblemTitle" xml:space="preserve">
+    <value>Effects couldn't start</value>
+  </data>
+  <data name="Effects_ProblemColour" xml:space="preserve">
+    <value>Windows didn't accept the colour grade. Magnifier colour filters may be in use.</value>
+  </data>
+  <data name="Effects_ProblemOverlay" xml:space="preserve">
+    <value>Your graphics driver couldn't start the grain and vignette layer.</value>
+  </data>
+  <data name="Effects_Preset" xml:space="preserve">
+    <value>Start from a look</value>
+  </data>
+  <data name="Effects_PresetHint" xml:space="preserve">
+    <value>Every value below stays adjustable.</value>
+  </data>
+  <data name="Effects_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Effects_Look" xml:space="preserve">
+    <value>Colour grade</value>
+  </data>
+  <data name="Effects_LookHint" xml:space="preserve">
+    <value>Applied by Windows to the whole screen at no cost. It shows in screenshots and recordings.</value>
+  </data>
+  <data name="Effects_Saturation" xml:space="preserve">
+    <value>Saturation</value>
+  </data>
+  <data name="Effects_Contrast" xml:space="preserve">
+    <value>Contrast</value>
+  </data>
+  <data name="Effects_Fade" xml:space="preserve">
+    <value>Fade</value>
+  </data>
+  <data name="Effects_Sepia" xml:space="preserve">
+    <value>Sepia</value>
+  </data>
+  <data name="Effects_TintHue" xml:space="preserve">
+    <value>Tint colour</value>
+  </data>
+  <data name="Effects_TintStrength" xml:space="preserve">
+    <value>Tint strength</value>
+  </data>
+  <data name="Effects_Texture" xml:space="preserve">
+    <value>Texture</value>
+  </data>
+  <data name="Effects_TextureHint" xml:space="preserve">
+    <value>Drawn over the screen by your graphics card. Clicks go straight through.</value>
+  </data>
+  <data name="Effects_Grain" xml:space="preserve">
+    <value>Film grain</value>
+  </data>
+  <data name="Effects_Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Effects_GrainSize" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Effects_GrainSpeed" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="Effects_Vignette" xml:space="preserve">
+    <value>Vignette</value>
+  </data>
+  <data name="Effects_VignetteSize" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Effects_VignetteSoftness" xml:space="preserve">
+    <value>Softness</value>
+  </data>
+  <data name="Effects_Scanlines" xml:space="preserve">
+    <value>Scanlines</value>
+  </data>
+  <data name="Effects_ScanlineSpacing" xml:space="preserve">
+    <value>Spacing</value>
+  </data>
+  <data name="Effects_Film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Effects_Flicker" xml:space="preserve">
+    <value>Flicker</value>
+  </data>
+  <data name="Effects_Letterbox" xml:space="preserve">
+    <value>Letterbox</value>
+  </data>
+  <data name="Effects_LetterboxOff" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Effects_Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Effects_HideFullScreen" xml:space="preserve">
+    <value>Step aside for full-screen games</value>
+  </data>
+  <data name="Effects_HideFullScreenHint" xml:space="preserve">
+    <value>Hides the texture layer while a full-screen app is in front, so it can't add input lag.</value>
+  </data>
+  <data name="Effects_HideCapture" xml:space="preserve">
+    <value>Keep the texture out of recordings</value>
+  </data>
+  <data name="Effects_HideCaptureHint" xml:space="preserve">
+    <value>Grain, vignette and scanlines stay on your screen only. The colour grade always records.</value>
+  </data>
+  <data name="EffectPreset_film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="EffectPreset_blackAndWhite" xml:space="preserve">
+    <value>Black and white film</value>
+  </data>
+  <data name="EffectPreset_sepia" xml:space="preserve">
+    <value>Sepia print</value>
+  </data>
+  <data name="EffectPreset_camcorder" xml:space="preserve">
+    <value>Camcorder</value>
+  </data>
+  <data name="EffectPreset_bodycam" xml:space="preserve">
+    <value>Bodycam</value>
+  </data>
+  <data name="EffectPreset_nightVision" xml:space="preserve">
+    <value>Night vision</value>
+  </data>
+  <data name="EffectPreset_cinema" xml:space="preserve">
+    <value>Cinema</value>
+  </data>
 </root>

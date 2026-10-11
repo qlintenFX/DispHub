@@ -1,0 +1,235 @@
+<UserControl
+  x:Class="DispHub.Views.EffectsView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ctl="clr-namespace:DispHub.Controls"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
+  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+  xmlns:vm="clr-namespace:DispHub.ViewModels"
+  d:DataContext="{d:DesignInstance Type=vm:EffectsViewModel}"
+  mc:Ignorable="d">
+  <UserControl.Resources>
+    <Style x:Key="Row" TargetType="Grid">
+      <Setter Property="Margin" Value="0,5" />
+    </Style>
+    <Style x:Key="Label" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style x:Key="Value" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Right" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Grid.Column" Value="2" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type Slider}}" TargetType="Slider">
+      <Setter Property="Grid.Column" Value="1" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="IsSnapToTickEnabled" Value="True" />
+      <Setter Property="TickFrequency" Value="1" />
+    </Style>
+  </UserControl.Resources>
+
+  <StackPanel>
+    <Grid>
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Effects_Title}" />
+        <Border
+          Margin="12,6,0,0"
+          Padding="7,2"
+          VerticalAlignment="Center"
+          Background="{DynamicResource AccentFillColorDefaultBrush}"
+          CornerRadius="4">
+          <TextBlock
+            FontSize="11"
+            Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+            Text="{l:Tr Effects_PreviewBadge}" />
+        </Border>
+      </StackPanel>
+      <ui:ToggleSwitch
+        HorizontalAlignment="Right"
+        VerticalAlignment="Center"
+        Content="{Binding Enabled, Converter={x:Static ctl:ActiveTextConverter.Instance}}"
+        IsChecked="{Binding Enabled}" />
+    </Grid>
+    <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Effects_Subtitle}" />
+    <ui:InfoBar
+      Title="{l:Tr Effects_ProblemTitle}"
+      Margin="0,0,0,12"
+      IsClosable="False"
+      IsOpen="True"
+      Visibility="{Binding Problem, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}"
+      Message="{Binding Problem}"
+      Severity="Warning" />
+
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,260,0">
+          <TextBlock Text="{l:Tr Effects_Preset}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_PresetHint}" />
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+          <ComboBox
+            MinWidth="180"
+            Margin="0,0,8,0"
+            ItemsSource="{Binding Presets}"
+            SelectedItem="{Binding Preset}" />
+          <ui:Button Command="{Binding ResetCommand}" Content="{l:Tr Effects_Reset}" Icon="{ui:SymbolIcon ArrowReset24}" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Look}" />
+    <TextBlock Margin="0,-6,0,8" Style="{StaticResource Hint}" Text="{l:Tr Effects_LookHint}" />
+    <Border Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Saturation}" />
+          <Slider Maximum="200" Minimum="0" Value="{Binding Saturation}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Saturation, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Contrast}" />
+          <Slider Maximum="150" Minimum="50" Value="{Binding Contrast}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Contrast, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Fade}" />
+          <Slider Maximum="30" Minimum="0" Value="{Binding Fade}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Fade, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Sepia}" />
+          <Slider Maximum="100" Minimum="0" Value="{Binding Sepia}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Sepia, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_TintHue}" />
+          <Slider Maximum="359" Minimum="0" Value="{Binding TintHue}">
+            <Slider.Background>
+              <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Offset="0" Color="#FF4040" />
+                <GradientStop Offset="0.17" Color="#FFFF40" />
+                <GradientStop Offset="0.33" Color="#40FF40" />
+                <GradientStop Offset="0.5" Color="#40FFFF" />
+                <GradientStop Offset="0.67" Color="#4040FF" />
+                <GradientStop Offset="0.83" Color="#FF40FF" />
+                <GradientStop Offset="1" Color="#FF4040" />
+              </LinearGradientBrush>
+            </Slider.Background>
+          </Slider>
+          <TextBlock Style="{StaticResource Value}" Text="{Binding TintHue, StringFormat={}{0:0}°}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_TintStrength}" />
+          <Slider Maximum="100" Minimum="0" Value="{Binding TintStrength}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding TintStrength, StringFormat={}{0:0}%}" />
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Texture}" />
+    <TextBlock Margin="0,-6,0,8" Style="{StaticResource Hint}" Text="{l:Tr Effects_TextureHint}" />
+    <Border Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <TextBlock Margin="0,2,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Grain}" />
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Amount}" />
+          <Slider Maximum="100" Minimum="0" Value="{Binding Grain}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Grain, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_GrainSize}" />
+          <Slider Maximum="4" Minimum="1" TickFrequency="0.1" Value="{Binding GrainSize}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding GrainSize, StringFormat={}{0:0.0} px}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_GrainSpeed}" />
+          <Slider Maximum="30" Minimum="0" Value="{Binding GrainFps}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding GrainFps, StringFormat={}{0:0} fps}" />
+        </Grid>
+
+        <TextBlock Margin="0,14,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Vignette}" />
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Amount}" />
+          <Slider Maximum="100" Minimum="0" Value="{Binding Vignette}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Vignette, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_VignetteSize}" />
+          <Slider Maximum="150" Minimum="30" Value="{Binding VignetteSize}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding VignetteSize, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_VignetteSoftness}" />
+          <Slider Maximum="100" Minimum="5" Value="{Binding VignetteSoftness}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding VignetteSoftness, StringFormat={}{0:0}%}" />
+        </Grid>
+
+        <TextBlock Margin="0,14,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Scanlines}" />
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Amount}" />
+          <Slider Maximum="100" Minimum="0" Value="{Binding Scanlines}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Scanlines, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_ScanlineSpacing}" />
+          <Slider Maximum="8" Minimum="2" Value="{Binding ScanlineSpacing}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding ScanlineSpacing, StringFormat={}{0:0} px}" />
+        </Grid>
+
+        <TextBlock Margin="0,14,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Film}" />
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Flicker}" />
+          <Slider Maximum="100" Minimum="0" Value="{Binding Flicker}" />
+          <TextBlock Style="{StaticResource Value}" Text="{Binding Flicker, StringFormat={}{0:0}%}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Letterbox}" />
+          <ComboBox
+            Grid.Column="1"
+            MinWidth="160"
+            HorizontalAlignment="Left"
+            ItemsSource="{Binding Letterboxes}"
+            SelectedItem="{Binding Letterbox}" />
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Options}" />
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,80,0">
+          <TextBlock Text="{l:Tr Effects_HideFullScreen}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_HideFullScreenHint}" />
+        </StackPanel>
+        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HideOverFullScreen}" />
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,80,0">
+          <TextBlock Text="{l:Tr Effects_HideCapture}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_HideCaptureHint}" />
+        </StackPanel>
+        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HideOverlayFromCapture}" />
+      </Grid>
+    </Border>
+  </StackPanel>
+</UserControl>

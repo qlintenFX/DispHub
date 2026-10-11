@@ -304,6 +304,9 @@ public sealed class AppController : IDisposable
         Evaluate(ChangeSource.Editor);
     }
 
+    /// <summary>Saves <see cref="AppConfig.Effects"/>. Effects don't affect profiles, so nothing else is redrawn.</summary>
+    public void EffectsChanged() => ScheduleSave();
+
     public void OnDisplayChanged() => _colors.RefreshDisplays();
 
     internal void OnForegroundChanged()

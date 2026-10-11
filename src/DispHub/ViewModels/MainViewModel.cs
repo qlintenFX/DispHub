@@ -21,6 +21,7 @@ public sealed partial class MainViewModel : ObservableObject
         ProfilesViewModel profiles,
         PresetsViewModel presets,
         AutomationViewModel automation,
+        EffectsViewModel effects,
         SettingsViewModel settings,
         AboutViewModel about,
         ILicenseService license,
@@ -28,7 +29,7 @@ public sealed partial class MainViewModel : ObservableObject
     {
         _license = license;
         _upgrade = upgrade;
-        Pages = [profiles, presets, automation, settings, about];
+        Pages = [profiles, presets, automation, effects, settings, about];
         SelectedPage = profiles;
         _license.Changed += (_, _) => System.Windows.Application.Current?.Dispatcher.BeginInvoke(RefreshLicense);
         RefreshLicense();
