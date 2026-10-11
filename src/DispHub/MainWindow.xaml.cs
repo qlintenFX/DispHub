@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interop;
+using DispHub.Localization;
 using DispHub.Platform.Shell;
 using DispHub.Services;
 using DispHub.ViewModels;
@@ -53,7 +54,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 
         e.Cancel = true;
         Hide();
-        _osd.ShowHint("DispHub is still running", "Find it in the notification area");
+        _osd.ShowHint(Loc.Get("Osd_StillRunning"), Loc.Get("Osd_StillRunningHint"));
         MemoryTrim.Schedule();
     }
 }

@@ -5,18 +5,19 @@
   xmlns:ctl="clr-namespace:DispHub.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   d:DataContext="{d:DesignInstance Type=vm:PresetsViewModel}"
   mc:Ignorable="d">
   <StackPanel>
-    <TextBlock Style="{StaticResource PageTitle}" Text="Presets" />
-    <TextBlock Style="{StaticResource PageSubtitle}" Text="Ready-made looks from the community. Add one to try it instantly; it becomes a profile you can tweak." />
+    <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Presets_Title}" />
+    <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Presets_Subtitle}" />
 
     <Border Style="{StaticResource SettingCard}">
       <StackPanel>
-        <TextBlock Text="Add a preset from a link" />
-        <TextBlock Style="{StaticResource Hint}" Text="Paste a link someone shared (it starts with disphub://preset). To share your own, open a profile and click Share." />
+        <TextBlock Text="{l:Tr Presets_ImportTitle}" />
+        <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Presets_ImportHint}" />
         <Grid Margin="0,10,0,0">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -32,7 +33,7 @@
             Margin="8,0,0,0"
             Appearance="Primary"
             Command="{Binding ImportCommand}"
-            Content="Add" />
+            Content="{l:Tr Common_Add}" />
         </Grid>
       </StackPanel>
     </Border>
@@ -43,13 +44,13 @@
       Visibility="{Binding Message, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
 
     <Grid Margin="0,8,0,0">
-      <TextBlock Style="{StaticResource SectionHeader}" Text="Gallery" />
+      <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Presets_Gallery}" />
       <ui:HyperlinkButton
         Margin="0,16,0,0"
         HorizontalAlignment="Right"
         VerticalAlignment="Center"
         Command="{Binding ContributeCommand}"
-        Content="Submit your preset" />
+        Content="{l:Tr Presets_Submit}" />
     </Grid>
     <ui:ProgressRing
       Margin="0,24"
@@ -93,8 +94,8 @@
                   Margin="0,0,8,0"
                   Command="{Binding CopyLinkCommand}"
                   Icon="{ui:SymbolIcon Link24}"
-                  ToolTip="Copy share link" />
-                <ui:Button Command="{Binding AddCommand}" Content="Add" />
+                  ToolTip="{l:Tr Presets_CopyLink}" />
+                <ui:Button Command="{Binding AddCommand}" Content="{l:Tr Common_Add}" />
               </StackPanel>
             </Grid>
           </Border>

@@ -6,12 +6,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DispHub.Core.Model;
 using DispHub.Core.Sharing;
+using DispHub.Localization;
 using DispHub.Services;
 
 namespace DispHub.ViewModels;
 
 public sealed partial class PresetsViewModel(AppController app, GalleryService gallery, IUpgradeService upgrade)
-    : PageViewModel("Presets", Wpf.Ui.Controls.SymbolRegular.Library24)
+    : PageViewModel(Loc.Get("Nav_Presets"), Wpf.Ui.Controls.SymbolRegular.Library24)
 {
     private bool _loaded;
 
@@ -50,11 +51,11 @@ public sealed partial class PresetsViewModel(AppController app, GalleryService g
     {
         if (app.AddProfile(preset.Color, preset.Name) is not { } profile)
         {
-            upgrade.ShowUpgrade($"Adding more than {Core.Licensing.FeatureGate.FreeProfileLimit} profiles");
+            upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
             return false;
         }
         app.ActivateProfile(profile.Id, ChangeSource.Editor);
-        Message = $"Added \"{profile.Name}\" and switched to it. Fine-tune it on the Profiles page.";
+        Message = Loc.Format("Presets_Added", profile.Name);
         return true;
     }
 
@@ -63,7 +64,7 @@ public sealed partial class PresetsViewModel(AppController app, GalleryService g
     {
         if (!SharedPreset.TryParse(ImportText, out SharedPreset? preset))
         {
-            Message = "That doesn't look like a DispHub preset link. It should start with disphub://preset";
+            Message = Loc.Get("Presets_InvalidLink");
             return;
         }
         if (Add(preset))

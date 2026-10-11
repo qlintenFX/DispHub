@@ -5,6 +5,7 @@
   xmlns:ctl="clr-namespace:DispHub.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   d:DataContext="{d:DesignInstance Type=vm:ProfilesViewModel}"
@@ -17,13 +18,13 @@
 
   <StackPanel>
     <Grid>
-      <TextBlock Style="{StaticResource PageTitle}" Text="Profiles" />
+      <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Profiles_Title}" />
       <ui:ToggleSwitch
         HorizontalAlignment="Right"
         VerticalAlignment="Center"
         Content="{Binding IsActive, Converter={x:Static ctl:ActiveTextConverter.Instance}}"
         IsChecked="{Binding IsActive}"
-        ToolTip="Turn off to show your displays' original colours" />
+        ToolTip="{l:Tr Profiles_PauseTooltip}" />
     </Grid>
     <TextBlock Style="{StaticResource PageSubtitle}" Text="{Binding StatusText}" />
 
@@ -89,7 +90,7 @@
                 <TextBlock
                   FontSize="11"
                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                  Text="On" />
+                  Text="{l:Tr Common_On}" />
               </Border>
             </Grid>
             <TextBlock
@@ -113,7 +114,7 @@
                 FontSize="13"
                 Foreground="{DynamicResource SystemFillColorCautionBrush}"
                 Symbol="Warning24"
-                ToolTip="This hotkey is in use by another app"
+                ToolTip="{l:Tr Profiles_HotkeyInUse}"
                 Visibility="{Binding HasHotkeyProblem, Converter={StaticResource BoolToVisibility}}" />
             </StackPanel>
           </StackPanel>
@@ -126,28 +127,28 @@
         Margin="0,0,8,8"
         Appearance="Primary"
         Command="{Binding AddProfileCommand}"
-        Content="New profile"
+        Content="{l:Tr Profiles_New}"
         Icon="{ui:SymbolIcon Add24}" />
       <ui:Button
         Margin="0,0,8,8"
         Command="{Binding DuplicateProfileCommand}"
-        Content="Duplicate"
+        Content="{l:Tr Profiles_Duplicate}"
         Icon="{ui:SymbolIcon Copy24}" />
       <ui:Button
         Margin="0,0,8,8"
         Command="{Binding DeleteProfileCommand}"
-        Content="Delete"
+        Content="{l:Tr Profiles_Delete}"
         Icon="{ui:SymbolIcon Delete24}" />
       <ui:Button
         Margin="0,0,4,8"
         Command="{Binding MoveLeftCommand}"
         Icon="{ui:SymbolIcon ArrowLeft24}"
-        ToolTip="Move left" />
+        ToolTip="{l:Tr Profiles_MoveLeft}" />
       <ui:Button
         Margin="0,0,8,8"
         Command="{Binding MoveRightCommand}"
         Icon="{ui:SymbolIcon ArrowRight24}"
-        ToolTip="Move right" />
+        ToolTip="{l:Tr Profiles_MoveRight}" />
     </WrapPanel>
     <TextBlock
       Margin="0,0,0,4"
@@ -174,18 +175,18 @@
             FontSize="18"
             FontWeight="SemiBold"
             MaxLength="40"
-            PlaceholderText="Profile name"
+            PlaceholderText="{l:Tr Profiles_NamePlaceholder}"
             ctl:CommitOnEnter.IsEnabled="True"
             Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
           <StackPanel Grid.Column="1" Orientation="Horizontal">
             <ui:Button
               Margin="0,0,8,0"
               Command="{Binding ShareCommand}"
-              Content="Share"
+              Content="{l:Tr Profiles_Share}"
               Icon="{ui:SymbolIcon Share24}" />
             <ui:Button
               Command="{Binding ResetCommand}"
-              Content="Reset to original"
+              Content="{l:Tr Profiles_Reset}"
               Icon="{ui:SymbolIcon ArrowReset24}" />
           </StackPanel>
         </Grid>
@@ -206,7 +207,7 @@
               Margin="0,0,10,0"
               FontSize="18"
               Symbol="Desktop24" />
-            <TextBlock Text="Apply to" />
+            <TextBlock Text="{l:Tr Profiles_ApplyTo}" />
           </StackPanel>
           <ComboBox
             Grid.Column="1"
@@ -217,7 +218,7 @@
             Grid.Column="2"
             Margin="8,0,0,0"
             Command="{Binding ClearOverrideCommand}"
-            Content="Use the main settings on this display"
+            Content="{l:Tr Profiles_UseMainSettings}"
             Visibility="{Binding HasOverride, Converter={StaticResource BoolToVisibility}}" />
         </Grid>
 
@@ -229,7 +230,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="BrightnessHigh24" />
-            <TextBlock Text="Brightness" />
+            <TextBlock Text="{l:Tr Profiles_Brightness}" />
           </StackPanel>
           <Slider
             Grid.Column="1"
@@ -253,7 +254,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="DarkTheme24" />
-            <TextBlock Text="Contrast" />
+            <TextBlock Text="{l:Tr Profiles_Contrast}" />
           </StackPanel>
           <Slider
             Grid.Column="1"
@@ -277,7 +278,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="DataLine24" />
-            <TextBlock Text="Gamma" />
+            <TextBlock Text="{l:Tr Profiles_Gamma}" />
           </StackPanel>
           <Slider
             Grid.Column="1"
@@ -301,7 +302,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="WeatherSunny24" />
-            <TextBlock Text="Colour temperature" />
+            <TextBlock Text="{l:Tr Profiles_Temperature}" />
           </StackPanel>
           <Slider
             Grid.Column="1"
@@ -325,7 +326,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Color24" />
-            <TextBlock Text="Vibrance" />
+            <TextBlock Text="{l:Tr Profiles_Vibrance}" />
           </StackPanel>
           <Slider
             Grid.Column="1"
@@ -355,7 +356,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Keyboard24" />
-            <TextBlock Text="Hotkey" />
+            <TextBlock Text="{l:Tr Profiles_Hotkey}" />
           </StackPanel>
           <StackPanel Grid.Column="1" Orientation="Horizontal">
             <ctl:HotkeyBox Gesture="{Binding Hotkey}" />
@@ -369,7 +370,7 @@
         <TextBlock
           Margin="180,6,0,0"
           Style="{StaticResource Hint}"
-          Text="Click, then press keys. Backspace clears. Works anywhere, even in games." />
+          Text="{l:Tr Profiles_HotkeyHint}" />
       </StackPanel>
     </Border>
   </StackPanel>

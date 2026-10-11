@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Interop;
 using DispHub.Core.Licensing;
 using DispHub.Core.Model;
+using DispHub.Localization;
 using DispHub.Platform.Store;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -26,15 +27,9 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
         var box = new Wpf.Ui.Controls.MessageBox
         {
             Title = "DispHub Pro",
-            Content = $"{feature} is part of DispHub Pro.\n\n" +
-                      "Pro is a one-time purchase that unlocks:\n" +
-                      "• Per-app profiles that switch automatically\n" +
-                      "• Schedules with smooth fades\n" +
-                      "• Different settings per display\n" +
-                      $"• More than {FeatureGate.FreeProfileLimit} profiles\n\n" +
-                      "It also supports development of DispHub.",
-            PrimaryButtonText = "Get Pro",
-            CloseButtonText = "Not now",
+            Content = Loc.Format("Upgrade_Body", feature, FeatureGate.FreeProfileLimit),
+            PrimaryButtonText = Loc.Get("Common_GetPro"),
+            CloseButtonText = Loc.Get("Upgrade_NotNow"),
             Owner = ShowMainWindow(),
         };
         if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary)
@@ -49,9 +44,9 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
         {
             var box = new Wpf.Ui.Controls.MessageBox
             {
-                Title = "Purchase didn't go through",
-                Content = "The Microsoft Store couldn't complete the purchase. Check your connection and try again.",
-                CloseButtonText = "OK",
+                Title = Loc.Get("Upgrade_FailedTitle"),
+                Content = Loc.Get("Upgrade_FailedText"),
+                CloseButtonText = Loc.Get("Common_OK"),
                 Owner = window,
             };
             await box.ShowDialogAsync();

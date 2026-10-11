@@ -191,3 +191,24 @@ internal sealed class TempDirectory : IDisposable
         }
     }
 }
+
+public sealed class ConfigLanguageTests : IDisposable
+{
+    private readonly TempDirectory _dir = new();
+
+    public void Dispose() => _dir.Dispose();
+
+    [Fact]
+    public void PeekLanguage_ReadsSavedChoiceOrNull()
+    {
+        var store = new ConfigStore(_dir.Path);
+        AppConfig config = store.Load().Config;
+        Assert.Null(ConfigStore.PeekLanguage(_dir.Path));
+
+        config.Ui.Language = "nl";
+        store.Save(config);
+
+        Assert.Equal("nl", ConfigStore.PeekLanguage(_dir.Path));
+        Assert.Null(ConfigStore.PeekLanguage(Path.Combine(_dir.Path, "missing")));
+    }
+}

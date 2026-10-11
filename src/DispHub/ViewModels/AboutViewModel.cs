@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Store;
 using DispHub.Services;
@@ -18,7 +19,7 @@ public sealed partial class AboutViewModel : PageViewModel
     private readonly IUpgradeService _upgrade;
 
     public AboutViewModel(AppController app, ILicenseService license, IUpgradeService upgrade)
-        : base("About", Wpf.Ui.Controls.SymbolRegular.Info24)
+        : base(Loc.Get("Nav_About"), Wpf.Ui.Controls.SymbolRegular.Info24)
     {
         _app = app;
         _license = license;
@@ -56,14 +57,14 @@ public sealed partial class AboutViewModel : PageViewModel
     private void CopyDiagnostics()
     {
         Clipboard.SetText(Diagnostics.Describe(_app.Monitors, Version));
-        CopiedMessage = "Copied. Paste it into your GitHub issue.";
+        CopiedMessage = Loc.Get("About_Copied");
     }
 
     private void RefreshLicense()
     {
         Edition = _license.IsPro
-            ? (_license.CanPurchase ? "DispHub Pro" : "DispHub (all features)")
-            : "DispHub Free";
+            ? Loc.Get(_license.CanPurchase ? "About_EditionPro" : "About_EditionAll")
+            : Loc.Get("About_EditionFree");
         CanUpgrade = _license.CanPurchase && !_license.IsPro;
     }
 }

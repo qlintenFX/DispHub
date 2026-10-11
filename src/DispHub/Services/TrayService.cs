@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using DispHub.Core.Model;
+using DispHub.Localization;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Tray.Controls;
 using MenuItem = System.Windows.Controls.MenuItem;
@@ -73,7 +74,7 @@ public sealed class TrayService : IDisposable
     private void Refresh()
     {
         Profile? active = _app.Current?.ProfileId is { } id ? _app.FindProfile(id) : null;
-        _icon.TooltipText = _app.Config.IsPaused ? "DispHub · Paused" : $"DispHub · {active?.Name ?? "Ready"}";
+        _icon.TooltipText = _app.Config.IsPaused ? Loc.Get("Tray_Paused") : Loc.Format("Tray_Active", active?.Name ?? Loc.Get("Tray_Ready"));
         _icon.Menu = BuildMenu(active);
     }
 
@@ -94,15 +95,15 @@ public sealed class TrayService : IDisposable
             menu.Items.Add(item);
         }
         if (_app.Config.Profiles.Count > MaxMenuProfiles)
-            menu.Items.Add(Item("More profiles…", SymbolRegular.MoreHorizontal24, _openWindow));
+            menu.Items.Add(Item(Loc.Get("Tray_MoreProfiles"), SymbolRegular.MoreHorizontal24, _openWindow));
 
         menu.Items.Add(new Separator());
         menu.Items.Add(_app.Config.IsPaused
-            ? Item("Resume", SymbolRegular.Play24, () => _app.TogglePause(ChangeSource.Tray))
-            : Item("Pause (original colours)", SymbolRegular.Pause24, () => _app.TogglePause(ChangeSource.Tray)));
-        menu.Items.Add(Item("Open DispHub", SymbolRegular.Open24, _openWindow));
+            ? Item(Loc.Get("Tray_Resume"), SymbolRegular.Play24, () => _app.TogglePause(ChangeSource.Tray))
+            : Item(Loc.Get("Tray_Pause"), SymbolRegular.Pause24, () => _app.TogglePause(ChangeSource.Tray)));
+        menu.Items.Add(Item(Loc.Get("Tray_Open"), SymbolRegular.Open24, _openWindow));
         menu.Items.Add(new Separator());
-        menu.Items.Add(Item("Exit", SymbolRegular.Dismiss24, _exit));
+        menu.Items.Add(Item(Loc.Get("Tray_Exit"), SymbolRegular.Dismiss24, _exit));
         return menu;
     }
 

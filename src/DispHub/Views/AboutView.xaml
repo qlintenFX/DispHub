@@ -5,6 +5,7 @@
   xmlns:ctl="clr-namespace:DispHub.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   d:DataContext="{d:DesignInstance Type=vm:AboutViewModel}"
@@ -21,7 +22,7 @@
         <TextBlock Style="{StaticResource Hint}">
           <Run Text="{Binding Edition, Mode=OneWay}" />
           <Run Text="·" />
-          <Run Text="Version" />
+          <Run Text="{l:Tr About_Version}" />
           <Run Text="{x:Static vm:AboutViewModel.Version}" />
         </TextBlock>
       </StackPanel>
@@ -31,32 +32,32 @@
       <Grid>
         <StackPanel Margin="0,0,140,0">
           <TextBlock FontWeight="SemiBold" Text="DispHub Pro" />
-          <TextBlock Style="{StaticResource Hint}" Text="Per-app profiles, schedules with fades, per-display settings and unlimited profiles. One-time purchase." />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Pro_LongPitch}" />
         </StackPanel>
         <ui:Button
           HorizontalAlignment="Right"
           Appearance="Primary"
           Command="{Binding UpgradeCommand}"
-          Content="Get Pro" />
+          Content="{l:Tr Common_GetPro}" />
       </Grid>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="A note from the developer" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_NoteHeader}" />
     <Border Padding="20,16" Style="{StaticResource SettingCard}">
       <StackPanel>
-        <TextBlock TextWrapping="Wrap" Text="Hi, I'm Quinten. I built DispHub because I kept opening three different control panels just to make a game look right or to make my screen easier on the eyes at night. I wanted one small, quiet app that does it properly and looks like it belongs on Windows." />
-        <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="DispHub is made by one person, in spare time, with a lot of care. If it makes your screen a little nicer to look at, that means a lot. Ideas and bug reports are always welcome on GitHub; I read every one." />
-        <TextBlock Margin="0,10,0,0" FontStyle="Italic" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Thank you for using DispHub. — Quinten (qlintenFX)" />
+        <TextBlock TextWrapping="Wrap" Text="{l:Tr About_Note1}" />
+        <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="{l:Tr About_Note2}" />
+        <TextBlock Margin="0,10,0,0" FontStyle="Italic" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{l:Tr About_NoteSignature}" />
       </StackPanel>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="Credits" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_Credits}" />
     <Border Style="{StaticResource SettingCard}">
       <StackPanel>
         <Grid Margin="0,0,0,10">
           <StackPanel Margin="0,0,140,0">
-            <TextBlock Text="FluentFlyout by unchihugo" />
-            <TextBlock Style="{StaticResource Hint}" Text="A beautifully crafted Windows utility that inspired much of how DispHub looks and feels." />
+            <TextBlock Text="{l:Tr About_FluentFlyout}" />
+            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_FluentFlyoutHint}" />
           </StackPanel>
           <ui:HyperlinkButton
             HorizontalAlignment="Right"
@@ -66,8 +67,8 @@
         </Grid>
         <Grid Margin="0,0,0,10">
           <StackPanel Margin="0,0,140,0">
-            <TextBlock Text="WPF UI by lepo.co" />
-            <TextBlock Style="{StaticResource Hint}" Text="The Fluent controls, Mica window and tray icon." />
+            <TextBlock Text="{l:Tr About_WpfUi}" />
+            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_WpfUiHint}" />
           </StackPanel>
           <ui:HyperlinkButton
             HorizontalAlignment="Right"
@@ -77,65 +78,65 @@
         </Grid>
         <Grid>
           <StackPanel Margin="0,0,140,0">
-            <TextBlock Text="Everyone who tests, translates and shares presets" />
-            <TextBlock Style="{StaticResource Hint}" Text="DispHub gets better with every report and preset. Thank you." />
+            <TextBlock Text="{l:Tr About_Community}" />
+            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_CommunityHint}" />
           </StackPanel>
           <ui:HyperlinkButton
             HorizontalAlignment="Right"
             Command="{Binding OpenUrlCommand}"
             CommandParameter="https://github.com/qlintenFX/DispHub/graphs/contributors"
-            Content="Contributors" />
+            Content="{l:Tr About_Contributors}" />
         </Grid>
       </StackPanel>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="Help and feedback" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_Help}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel Margin="0,0,220,0">
-          <TextBlock Text="Report a problem or suggest a feature" />
-          <TextBlock Style="{StaticResource Hint}" Text="Include the diagnostics so we can see your displays and GPU setup." />
+          <TextBlock Text="{l:Tr About_Report}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_ReportHint}" />
           <TextBlock Style="{StaticResource Hint}" Text="{Binding CopiedMessage}" />
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
           <ui:Button
             Margin="0,0,8,0"
             Command="{Binding CopyDiagnosticsCommand}"
-            Content="Copy diagnostics" />
+            Content="{l:Tr About_CopyDiagnostics}" />
           <ui:Button
             Command="{Binding OpenUrlCommand}"
             CommandParameter="https://github.com/qlintenFX/DispHub/issues/new/choose"
-            Content="Open GitHub" />
+            Content="{l:Tr About_OpenGitHub}" />
         </StackPanel>
       </Grid>
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <TextBlock VerticalAlignment="Center" Text="Log files" />
+        <TextBlock VerticalAlignment="Center" Text="{l:Tr About_Logs}" />
         <ui:Button
           HorizontalAlignment="Right"
           Command="{Binding OpenLogsCommand}"
-          Content="Open folder" />
+          Content="{l:Tr About_OpenFolder}" />
       </Grid>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="About" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_About}" />
     <Border Style="{StaticResource SettingCard}">
       <StackPanel>
-        <TextBlock Style="{StaticResource Hint}" Text="DispHub is open source under the GNU General Public License v3.0. It stores everything on your PC and sends no telemetry." />
+        <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_Licence}" />
         <WrapPanel Margin="0,10,0,0">
           <ui:HyperlinkButton
             Command="{Binding OpenUrlCommand}"
             CommandParameter="https://github.com/qlintenFX/DispHub"
-            Content="Source code" />
+            Content="{l:Tr About_SourceCode}" />
           <ui:HyperlinkButton
             Command="{Binding OpenUrlCommand}"
             CommandParameter="https://github.com/qlintenFX/DispHub/blob/main/PRIVACY.md"
-            Content="Privacy" />
+            Content="{l:Tr About_Privacy}" />
           <ui:HyperlinkButton
             Command="{Binding OpenUrlCommand}"
             CommandParameter="https://github.com/qlintenFX/DispHub/blob/main/THIRD_PARTY_NOTICES.md"
-            Content="Third-party notices" />
+            Content="{l:Tr About_Notices}" />
         </WrapPanel>
       </StackPanel>
     </Border>

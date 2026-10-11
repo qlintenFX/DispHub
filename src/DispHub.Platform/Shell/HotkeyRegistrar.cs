@@ -13,7 +13,7 @@ public interface IHotkeyRegistrar
 
     /// <summary>
     /// Makes the registered hotkeys match <paramref name="desired"/> (action ID to gesture) and returns, per action
-    /// that couldn't be registered, a short reason.
+    /// that couldn't be registered, a reason as a localisation key (Hotkey_InUseElsewhere, Hotkey_Duplicate, Hotkey_Refused).
     /// </summary>
     IReadOnlyDictionary<string, string> Sync(IReadOnlyDictionary<string, HotkeyGesture> desired);
 
@@ -83,9 +83,9 @@ public sealed class HotkeyRegistrar(nint windowHandle) : IHotkeyRegistrar
             if (_registered.ContainsKey(action))
                 continue;
 
-            if (claimed.TryGetValue(gesture, out string? owner))
+            if (claimed.ContainsKey(gesture))
             {
-                failures[action] = $"Already used by {owner}";
+                failures[action] = "Hotkey_Duplicate";
                 continue;
             }
 
@@ -100,8 +100,8 @@ public sealed class HotkeyRegistrar(nint windowHandle) : IHotkeyRegistrar
             else
             {
                 failures[action] = Marshal.GetLastPInvokeError() == ErrorHotkeyAlreadyRegistered
-                    ? "Used by another app"
-                    : "Windows refused this hotkey";
+                    ? "Hotkey_InUseElsewhere"
+                    : "Hotkey_Refused";
             }
         }
         return failures;

@@ -21,6 +21,6 @@ public partial class AutomationView : UserControl
             RunningAppsMenu.Items.Add(item);
         }
         if (RunningAppsMenu.Items.Count == 0)
-            RunningAppsMenu.Items.Add(new MenuItem { Header = "No apps with a window are running", IsEnabled = false });
+            RunningAppsMenu.Items.Add(new MenuItem { Header = Localization.Loc.Get("Automation_NoRunningApps"), IsEnabled = false });
     }
 }

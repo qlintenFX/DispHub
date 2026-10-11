@@ -5,6 +5,7 @@ using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DispHub.Core.Model;
+using DispHub.Localization;
 using DispHub.Services;
 
 namespace DispHub.ViewModels;
@@ -16,7 +17,7 @@ public sealed partial class AutomationViewModel : PageViewModel
     private bool _loading;
 
     public AutomationViewModel(AppController app, IUpgradeService upgrade)
-        : base("Automation", Wpf.Ui.Controls.SymbolRegular.Flash24)
+        : base(Loc.Get("Nav_Automation"), Wpf.Ui.Controls.SymbolRegular.Flash24)
     {
         _app = app;
         _upgrade = upgrade;
@@ -52,7 +53,7 @@ public sealed partial class AutomationViewModel : PageViewModel
     {
         if (!IsPro)
         {
-            _upgrade.ShowUpgrade("Per-app profiles");
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_AppRules"));
             return;
         }
 
@@ -73,7 +74,7 @@ public sealed partial class AutomationViewModel : PageViewModel
     {
         if (!IsPro)
         {
-            _upgrade.ShowUpgrade("Schedules");
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_Schedules"));
             return;
         }
 
@@ -114,8 +115,8 @@ public sealed partial class AutomationViewModel : PageViewModel
     {
         var dialog = new Microsoft.Win32.OpenFileDialog
         {
-            Title = "Choose a program",
-            Filter = "Programs (*.exe)|*.exe",
+            Title = Loc.Get("Automation_ChooseProgram"),
+            Filter = Loc.Get("Automation_ProgramsFilter"),
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
         };
         return dialog.ShowDialog() == true ? dialog.FileName : null;

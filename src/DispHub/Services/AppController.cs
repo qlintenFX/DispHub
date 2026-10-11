@@ -6,6 +6,7 @@ using DispHub.Core.Hotkeys;
 using DispHub.Core.Licensing;
 using DispHub.Core.Model;
 using DispHub.Core.Rules;
+using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Shell;
 using DispHub.Platform.Store;
@@ -213,7 +214,7 @@ public sealed class AppController : IDisposable
     {
         if (!Features.CanAddProfile(Config.Profiles.Count))
             return null;
-        var profile = new Profile { Name = UniqueName(name ?? "New profile"), Color = color ?? ColorSettings.Neutral };
+        var profile = new Profile { Name = UniqueName(name ?? Loc.Get("Profiles_NewName")), Color = color ?? ColorSettings.Neutral };
         Config.Profiles.Add(profile);
         ScheduleSave();
         ConfigChanged?.Invoke(this, EventArgs.Empty);
@@ -221,7 +222,7 @@ public sealed class AppController : IDisposable
     }
 
     public Profile? DuplicateProfile(Guid profileId) =>
-        FindProfile(profileId) is { } source ? AddProfile(source.Color, $"{source.Name} copy") : null;
+        FindProfile(profileId) is { } source ? AddProfile(source.Color, Loc.Format("Profiles_CopyName", source.Name)) : null;
 
     public bool DeleteProfile(Guid profileId)
     {

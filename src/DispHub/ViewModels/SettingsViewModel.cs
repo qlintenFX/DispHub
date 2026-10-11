@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
+using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Gamma;
 using DispHub.Platform.Shell;
@@ -18,7 +19,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     private bool _loading;
 
     public SettingsViewModel(AppController app, IAutostart autostart, ThemeService theme)
-        : base("Settings", Wpf.Ui.Controls.SymbolRegular.Settings24)
+        : base(Loc.Get("Nav_Settings"), Wpf.Ui.Controls.SymbolRegular.Settings24)
     {
         _app = app;
         _autostart = autostart;
@@ -31,6 +32,27 @@ public sealed partial class SettingsViewModel : PageViewModel
     }
 
     public IReadOnlyList<ThemePreference> Themes { get; } = Enum.GetValues<ThemePreference>();
+
+    public IReadOnlyList<LanguageChoice> LanguageChoices { get; } =
+        [new LanguageChoice(null, Loc.Get("Settings_LanguageWindows")), .. Loc.Languages.Select(l => new LanguageChoice(l, Loc.NativeName(l)))];
+
+    [ObservableProperty]
+    public partial LanguageChoice? Language { get; set; }
+
+    [ObservableProperty]
+    public partial bool LanguageNeedsRestart { get; set; }
+
+    partial void OnLanguageChanged(LanguageChoice? value)
+    {
+        if (_loading || value is null || value.Code == _app.Config.Ui.Language)
+            return;
+        _app.Config.Ui.Language = value.Code;
+        _app.SettingsChanged();
+        LanguageNeedsRestart = true;
+    }
+
+    [RelayCommand]
+    private static void Restart() => ((App)System.Windows.Application.Current).RequestRestart();
 
     public IReadOnlyList<TrayClickAction> TrayActions { get; } = Enum.GetValues<TrayClickAction>();
 
@@ -99,7 +121,7 @@ public sealed partial class SettingsViewModel : PageViewModel
         catch (Exception ex) when (ex is UnauthorizedAccessException or System.Runtime.InteropServices.COMException or System.Security.SecurityException)
         {
             await LoadAutostartAsync();
-            LaunchAtLoginNote = "Windows didn't allow changing the startup setting.";
+            LaunchAtLoginNote = Loc.Get("Settings_StartupDenied");
         }
     }
 
@@ -118,6 +140,7 @@ public sealed partial class SettingsViewModel : PageViewModel
         {
             UiConfig ui = _app.Config.Ui;
             Theme = ui.Theme;
+            Language = LanguageChoices.FirstOrDefault(l => l.Code == ui.Language) ?? LanguageChoices[0];
             CloseToTray = ui.CloseToTray;
             TrayLeftClick = ui.TrayLeftClick;
             ShowOsd = ui.ShowOsd;
@@ -149,7 +172,7 @@ public sealed partial class SettingsViewModel : PageViewModel
         }
         catch (Exception ex) when (ex is UnauthorizedAccessException or System.Runtime.InteropServices.COMException)
         {
-            LaunchAtLoginNote = "Couldn't read the startup setting.";
+            LaunchAtLoginNote = Loc.Get("Settings_StartupUnreadable");
         }
     }
 
@@ -160,8 +183,8 @@ public sealed partial class SettingsViewModel : PageViewModel
         _loading = false;
         LaunchAtLoginNote = state switch
         {
-            AutostartState.DisabledByUser => "Turned off in Task Manager. Turn it back on in Settings > Apps > Startup.",
-            AutostartState.DisabledByPolicy => "Your organisation's policy blocks startup apps.",
+            AutostartState.DisabledByUser => Loc.Get("Settings_StartupDisabledByUser"),
+            AutostartState.DisabledByPolicy => Loc.Get("Settings_StartupDisabledByPolicy"),
             _ => null,
         };
     }
@@ -187,10 +210,10 @@ public sealed partial class SettingsViewModel : PageViewModel
     private string? DescribeHotkeyFailures()
     {
         var failures = new List<string>();
-        foreach ((string action, string label) in new[] { (AppController.PauseAction, "Pause"), (AppController.NextAction, "Next profile"), (AppController.PreviousAction, "Previous profile") })
+        foreach ((string action, string label) in new[] { (AppController.PauseAction, Loc.Get("Settings_Pause")), (AppController.NextAction, Loc.Get("Settings_Next")), (AppController.PreviousAction, Loc.Get("Settings_Previous")) })
         {
             if (_app.HotkeyFailures.TryGetValue(action, out string? reason))
-                failures.Add($"{label}: {reason}");
+                failures.Add(Loc.Format("Settings_HotkeyFailure", label, Loc.Get(reason)));
         }
         return failures.Count == 0 ? null : string.Join(Environment.NewLine, failures);
     }
@@ -205,7 +228,7 @@ public sealed partial class MonitorItemViewModel : ObservableObject
     {
         _app = app;
         _key = status.Monitor.Key;
-        Name = status.Monitor.Name + (status.Monitor.IsPrimary ? " (main)" : "");
+        Name = status.Monitor.IsPrimary ? Loc.Format("Monitor_Main", status.Monitor.Name) : status.Monitor.Name;
         Details = Describe(status);
         Excluded = app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config) && config.Excluded;
     }
@@ -234,12 +257,17 @@ public sealed partial class MonitorItemViewModel : ObservableObject
     {
         string colours = status.State switch
         {
-            MonitorColorState.Applied => "Colours applied",
-            MonitorColorState.Limited => "Limited by Windows",
-            MonitorColorState.Unsupported => "Gamma not supported",
-            MonitorColorState.Hdr => "HDR on (gamma unavailable)",
-            _ => "Original colours",
+            MonitorColorState.Applied => Loc.Get("Monitor_Applied"),
+            MonitorColorState.Limited => Loc.Get("Monitor_Limited"),
+            MonitorColorState.Unsupported => Loc.Get("Monitor_Unsupported"),
+            MonitorColorState.Hdr => Loc.Get("Monitor_Hdr"),
+            _ => Loc.Get("Monitor_Original"),
         };
-        return $"{status.Monitor.DeviceName.TrimStart('\\', '.')} · {colours} · {(status.SupportsVibrance ? "Vibrance supported" : "No vibrance")}";
+        return $"{status.Monitor.DeviceName.TrimStart('\\', '.')} · {colours} · {Loc.Get(status.SupportsVibrance ? "Monitor_Vibrance" : "Monitor_NoVibrance")}";
     }
+}
+
+public sealed record LanguageChoice(string? Code, string Name)
+{
+    public override string ToString() => Name;
 }
