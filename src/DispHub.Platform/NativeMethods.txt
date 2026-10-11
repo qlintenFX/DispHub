@@ -119,3 +119,15 @@ IDCompositionVisual
 D3DCompile
 ID3DBlob
 DXGI_ERROR_DEVICE_REMOVED
+
+// Apps page: running programs and their icons
+EnumWindows
+GetWindowText
+GetWindowTextLength
+IsWindowVisible
+GetWindow
+DwmGetWindowAttribute
+DWMWINDOWATTRIBUTE
+SHDefExtractIcon
+EnumDisplaySettings
+ENUM_DISPLAY_SETTINGS_MODE

@@ -65,6 +65,9 @@ public sealed class AppRule
     /// <summary>Executable file name such as "cs2.exe", or a full path.</summary>
     public string Executable { get; set; } = "";
 
+    /// <summary>Where the program was found, for its name and icon; matching uses <see cref="Executable"/>.</summary>
+    public string? Path { get; set; }
+
     public Guid ProfileId { get; set; }
 }
 
@@ -138,6 +141,24 @@ public sealed class HotkeyConfig
     public string? PreviousProfile { get; set; }
 }
 
+public enum WindowBackdrop
+{
+    Mica,
+    MicaAlt,
+    Acrylic,
+    Solid,
+}
+
+public enum OsdPosition
+{
+    TopLeft,
+    TopCenter,
+    TopRight,
+    BottomLeft,
+    BottomCenter,
+    BottomRight,
+}
+
 public enum ThemePreference
 {
     System,
@@ -167,4 +188,23 @@ public sealed class UiConfig
 
     /// <summary>The one-time "still running" notification was shown.</summary>
     public bool TrayHintShown { get; set; }
+
+    /// <summary>The page the window opens on, by name; null for Profiles.</summary>
+    public string? StartPage { get; set; }
+
+    /// <summary>Accent colour as #RRGGBB; null follows Windows.</summary>
+    public string? AccentColor { get; set; }
+
+    public WindowBackdrop Backdrop { get; set; } = WindowBackdrop.Mica;
+
+    /// <summary>Show the navigation as icons only.</summary>
+    public bool CompactNavigation { get; set; }
+
+    /// <summary>Text and control size, 0.9 to 1.25.</summary>
+    public double TextScale { get; set; } = 1.0;
+
+    /// <summary>Turn off animated scrolling and transitions, whatever Windows' animation setting is.</summary>
+    public bool ReduceMotion { get; set; }
+
+    public OsdPosition OsdPosition { get; set; } = OsdPosition.BottomCenter;
 }

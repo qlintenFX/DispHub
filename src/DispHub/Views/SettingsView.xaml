@@ -14,16 +14,49 @@
     <DataTemplate x:Key="EnumItem">
       <TextBlock Text="{Binding Converter={x:Static ctl:EnumWordsConverter.Instance}}" />
     </DataTemplate>
+    <Style x:Key="Swatch" TargetType="ListBoxItem">
+      <Setter Property="Margin" Value="0,0,8,8" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+      <Setter Property="ToolTip" Value="{Binding Name}" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <Grid>
+              <Ellipse
+                x:Name="Ring"
+                Width="34"
+                Height="34"
+                Stroke="Transparent"
+                StrokeThickness="2" />
+              <Ellipse
+                Width="26"
+                Height="26"
+                Fill="{Binding Swatch}" />
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Ring" Property="Stroke" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+              </Trigger>
+              <Trigger Property="IsSelected" Value="True">
+                <Setter TargetName="Ring" Property="Stroke" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
   </UserControl.Resources>
 
   <StackPanel>
     <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Settings_Title}" />
     <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Settings_Subtitle}" />
 
+    <!-- General -->
     <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_General}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel>
+        <StackPanel Margin="0,0,80,0">
           <TextBlock Text="{l:Tr Settings_StartWithWindows}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_StartWithWindowsHint}" />
           <TextBlock
@@ -36,7 +69,7 @@
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel>
+        <StackPanel Margin="0,0,80,0">
           <TextBlock Text="{l:Tr Settings_KeepRunning}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_KeepRunningHint}" />
         </StackPanel>
@@ -45,16 +78,130 @@
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel>
+        <StackPanel Margin="0,0,240,0">
+          <TextBlock Text="{l:Tr Settings_TrayClick}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_TrayClickHint}" />
+        </StackPanel>
+        <ComboBox
+          MinWidth="220"
+          HorizontalAlignment="Right"
+          ItemTemplate="{StaticResource EnumItem}"
+          ItemsSource="{Binding TrayActions}"
+          SelectedItem="{Binding TrayLeftClick}" />
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,240,0">
+          <TextBlock Text="{l:Tr Settings_Language}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_LanguageHint}" />
+          <StackPanel
+            Margin="0,6,0,0"
+            Orientation="Horizontal"
+            Visibility="{Binding LanguageNeedsRestart, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock
+              Margin="0,0,10,0"
+              VerticalAlignment="Center"
+              Style="{StaticResource Hint}"
+              Text="{l:Tr Settings_LanguageRestart}" />
+            <ui:Button
+              Appearance="Primary"
+              Command="{Binding RestartCommand}"
+              Content="{l:Tr Settings_RestartNow}" />
+          </StackPanel>
+        </StackPanel>
+        <ComboBox
+          MinWidth="220"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Top"
+          ItemsSource="{Binding LanguageChoices}"
+          SelectedItem="{Binding Language}" />
+      </Grid>
+    </Border>
+
+    <!-- Appearance -->
+    <Grid>
+      <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_Appearance}" />
+      <ui:HyperlinkButton
+        Margin="0,16,0,0"
+        Padding="6,2"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom"
+        Command="{Binding ResetAppearanceCommand}"
+        Content="{l:Tr Settings_ResetAppearance}" />
+    </Grid>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,240,0">
           <TextBlock Text="{l:Tr Settings_Theme}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_ThemeHint}" />
         </StackPanel>
         <ComboBox
-          MinWidth="160"
+          MinWidth="220"
           HorizontalAlignment="Right"
           ItemTemplate="{StaticResource EnumItem}"
           ItemsSource="{Binding Themes}"
           SelectedItem="{Binding Theme}" />
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <TextBlock Text="{l:Tr Settings_Accent}" />
+        <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_AccentHint}" />
+        <ListBox
+          Margin="0,10,0,-8"
+          Background="Transparent"
+          BorderThickness="0"
+          ItemContainerStyle="{StaticResource Swatch}"
+          ItemsSource="{Binding Accents}"
+          SelectedItem="{Binding Accent}">
+          <ListBox.Template>
+            <ControlTemplate TargetType="ListBox">
+              <ItemsPresenter />
+            </ControlTemplate>
+          </ListBox.Template>
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+        </ListBox>
+      </StackPanel>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,240,0">
+          <TextBlock Text="{l:Tr Settings_Backdrop}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_BackdropHint}" />
+        </StackPanel>
+        <ComboBox
+          MinWidth="220"
+          HorizontalAlignment="Right"
+          ItemTemplate="{StaticResource EnumItem}"
+          ItemsSource="{Binding Backdrops}"
+          SelectedItem="{Binding Backdrop}" />
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,240,0">
+          <TextBlock Text="{l:Tr Settings_TextSize}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_TextSizeHint}" />
+        </StackPanel>
+        <ComboBox
+          MinWidth="220"
+          HorizontalAlignment="Right"
+          ItemsSource="{Binding TextScales}"
+          SelectedItem="{Binding TextScale}" />
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,80,0">
+          <TextBlock Text="{l:Tr Settings_CompactNav}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_CompactNavHint}" />
+        </StackPanel>
+        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding CompactNavigation}" />
       </Grid>
     </Border>
     <Border Style="{StaticResource SettingCard}">
@@ -91,56 +238,48 @@
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel>
-          <TextBlock Text="{l:Tr Settings_TrayClick}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_TrayClickHint}" />
+        <StackPanel Margin="0,0,240,0">
+          <TextBlock Text="{l:Tr Settings_StartPage}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_StartPageHint}" />
         </StackPanel>
         <ComboBox
-          MinWidth="200"
+          MinWidth="220"
           HorizontalAlignment="Right"
-          ItemTemplate="{StaticResource EnumItem}"
-          ItemsSource="{Binding TrayActions}"
-          SelectedItem="{Binding TrayLeftClick}" />
+          ItemsSource="{Binding StartPages}"
+          SelectedItem="{Binding StartPage}" />
       </Grid>
     </Border>
-
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel Margin="0,0,240,0">
-          <TextBlock Text="{l:Tr Settings_Language}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_LanguageHint}" />
-          <StackPanel
-            Margin="0,6,0,0"
-            Orientation="Horizontal"
-            Visibility="{Binding LanguageNeedsRestart, Converter={StaticResource BoolToVisibility}}">
-            <TextBlock
-              Margin="0,0,10,0"
-              VerticalAlignment="Center"
-              Style="{StaticResource Hint}"
-              Text="{l:Tr Settings_LanguageRestart}" />
-            <ui:Button
-              Appearance="Primary"
-              Command="{Binding RestartCommand}"
-              Content="{l:Tr Settings_RestartNow}" />
-          </StackPanel>
+        <StackPanel Margin="0,0,80,0">
+          <TextBlock Text="{l:Tr Settings_ReduceMotion}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_ReduceMotionHint}" />
         </StackPanel>
-        <ComboBox
-          MinWidth="200"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Top"
-          ItemsSource="{Binding LanguageChoices}"
-          SelectedItem="{Binding Language}" />
+        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ReduceMotion}" />
       </Grid>
     </Border>
 
+    <!-- On-screen display -->
     <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_Osd}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel>
+        <StackPanel Margin="0,0,80,0">
           <TextBlock Text="{l:Tr Settings_OsdToggle}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_OsdHint}" />
         </StackPanel>
         <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ShowOsd}" />
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <TextBlock VerticalAlignment="Center" Text="{l:Tr Settings_OsdPosition}" />
+        <ComboBox
+          MinWidth="220"
+          HorizontalAlignment="Right"
+          IsEnabled="{Binding ShowOsd}"
+          ItemTemplate="{StaticResource EnumItem}"
+          ItemsSource="{Binding OsdPositions}"
+          SelectedItem="{Binding OsdPosition}" />
       </Grid>
     </Border>
     <Border Style="{StaticResource SettingCard}">
@@ -164,10 +303,11 @@
       </Grid>
     </Border>
 
+    <!-- Hotkeys -->
     <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_Hotkeys}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel>
+        <StackPanel Margin="0,0,200,0">
           <TextBlock Text="{l:Tr Settings_Pause}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_PauseHint}" />
         </StackPanel>
@@ -191,44 +331,5 @@
       Style="{StaticResource ErrorText}"
       Text="{Binding HotkeyError}"
       Visibility="{Binding HotkeyError, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
-
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_Displays}" />
-    <ItemsControl ItemsSource="{Binding Monitors}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate DataType="{x:Type vm:MonitorItemViewModel}">
-          <Border Style="{StaticResource SettingCard}">
-            <Grid>
-              <StackPanel>
-                <TextBlock Text="{Binding Name}" />
-                <TextBlock Style="{StaticResource Hint}" Text="{Binding Details}" />
-              </StackPanel>
-              <CheckBox
-                HorizontalAlignment="Right"
-                Content="{l:Tr Settings_LeaveAlone}"
-                IsChecked="{Binding Excluded}" />
-            </Grid>
-          </Border>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
-    <Border Style="{StaticResource SettingCard}">
-      <Grid>
-        <StackPanel Margin="0,0,180,0">
-          <TextBlock Text="{l:Tr Settings_FullRange}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_FullRangeHint}" />
-        </StackPanel>
-        <ui:Button
-          HorizontalAlignment="Right"
-          Command="{Binding EnableExtendedGammaRangeCommand}"
-          Content="{l:Tr Settings_AllowFullRange}"
-          Visibility="{Binding ExtendedGammaRange, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
-        <TextBlock
-          HorizontalAlignment="Right"
-          VerticalAlignment="Center"
-          Style="{StaticResource Hint}"
-          Text="{l:Tr Common_Enabled}"
-          Visibility="{Binding ExtendedGammaRange, Converter={StaticResource BoolToVisibility}}" />
-      </Grid>
-    </Border>
   </StackPanel>
 </UserControl>

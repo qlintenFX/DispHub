@@ -23,7 +23,7 @@ public sealed class OsdService(AppController app)
             return;
         _hintShown = true;
         _window ??= new OsdWindow();
-        _window.Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3));
+        _window.Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3), app.Config.Ui.OsdPosition);
     }
 
     private void OnStateChanged(ChangeSource source)
@@ -35,13 +35,13 @@ public sealed class OsdService(AppController app)
         TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
         if (app.Config.IsPaused)
         {
-            _window.Flash(Loc.Get("Osd_Paused"), Loc.Get("Summary_Original"), SymbolRegular.Pause24, duration);
+            _window.Flash(Loc.Get("Osd_Paused"), Loc.Get("Summary_Original"), SymbolRegular.Pause24, duration, app.Config.Ui.OsdPosition);
             return;
         }
 
         Profile? profile = app.Current?.ProfileId is { } id ? app.FindProfile(id) : null;
         if (profile is not null)
-            _window.Flash(profile.Name, ViewModels.ProfileItemViewModel.Describe(profile.Color), SymbolRegular.Color24, duration);
+            _window.Flash(profile.Name, ViewModels.ProfileItemViewModel.Describe(profile.Color), SymbolRegular.Color24, duration, app.Config.Ui.OsdPosition);
     }
 }
 

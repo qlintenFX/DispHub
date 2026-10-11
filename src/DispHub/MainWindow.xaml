@@ -9,9 +9,9 @@
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   Title="DispHub"
-  Width="1060"
-  Height="740"
-  MinWidth="780"
+  Width="1100"
+  Height="760"
+  MinWidth="760"
   MinHeight="520"
   d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
   ExtendsContentIntoTitleBar="True"
@@ -20,6 +20,19 @@
   WindowCornerPreference="Round"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
+  <Window.Resources>
+    <DataTemplate x:Key="NavEntry" DataType="{x:Type vm:PageViewModel}">
+      <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
+        <ui:SymbolIcon FontSize="18" Symbol="{Binding Icon}" />
+        <TextBlock
+          Margin="12,0,0,0"
+          VerticalAlignment="Center"
+          Text="{Binding Title}"
+          Visibility="{Binding DataContext.IsNavExpanded, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibility}}" />
+      </StackPanel>
+    </DataTemplate>
+  </Window.Resources>
+
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -33,21 +46,33 @@
     </ui:TitleBar>
 
     <Grid Grid.Row="1">
+      <Grid.LayoutTransform>
+        <ScaleTransform ScaleX="{Binding TextScale}" ScaleY="{Binding TextScale}" />
+      </Grid.LayoutTransform>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="210" />
+        <ColumnDefinition Width="{Binding NavWidth}" />
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
 
-      <DockPanel Margin="8,4,8,12">
+      <DockPanel Margin="8,4,8,10">
+        <ListBox
+          Background="Transparent"
+          BorderThickness="0"
+          DockPanel.Dock="Bottom"
+          ItemContainerStyle="{StaticResource NavItem}"
+          ItemTemplate="{StaticResource NavEntry}"
+          ItemsSource="{Binding FooterPages}"
+          SelectedItem="{Binding SelectedFooterPage}" />
+
         <Border
-          Margin="0,8,0,0"
+          Margin="0,8,0,8"
           Padding="12"
           Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
           BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
           BorderThickness="1"
           CornerRadius="8"
           DockPanel.Dock="Bottom"
-          Visibility="{Binding ShowUpgrade, Converter={StaticResource BoolToVisibility}}">
+          Visibility="{Binding ShowUpgradeCard, Converter={StaticResource BoolToVisibility}}">
           <StackPanel>
             <TextBlock FontWeight="SemiBold" Text="DispHub Pro" />
             <TextBlock
@@ -66,20 +91,9 @@
           Background="Transparent"
           BorderThickness="0"
           ItemContainerStyle="{StaticResource NavItem}"
+          ItemTemplate="{StaticResource NavEntry}"
           ItemsSource="{Binding Pages}"
-          SelectedItem="{Binding SelectedPage}">
-          <ListBox.ItemTemplate>
-            <DataTemplate DataType="{x:Type vm:PageViewModel}">
-              <StackPanel Orientation="Horizontal">
-                <ui:SymbolIcon
-                  Margin="0,0,12,0"
-                  FontSize="18"
-                  Symbol="{Binding Icon}" />
-                <TextBlock VerticalAlignment="Center" Text="{Binding Title}" />
-              </StackPanel>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
+          SelectedItem="{Binding SelectedTopPage}" />
       </DockPanel>
 
       <Border
@@ -90,7 +104,7 @@
         CornerRadius="8,0,0,0">
         <ctl:SmoothScrollViewer x:Name="PageScroller">
           <ContentControl
-            MaxWidth="920"
+            MaxWidth="960"
             Margin="36,28,36,36"
             Content="{Binding SelectedPage}"
             Focusable="False" />

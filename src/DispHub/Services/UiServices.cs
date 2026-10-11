@@ -61,45 +61,74 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
     }
 }
 
+/// <summary>Applies the Appearance settings: theme, accent colour and window backdrop.</summary>
 public sealed class ThemeService
 {
-    private Window? _window;
+    private Wpf.Ui.Controls.FluentWindow? _window;
     private bool _watching;
+    private UiConfig _ui = new();
 
-    public void Apply(ThemePreference preference)
+    /// <summary>Accent colours to choose from: Windows' own palette.</summary>
+    public static IReadOnlyList<string> AccentPalette { get; } =
+    [
+        "#0078D4", "#0099BC", "#00B294", "#10893E", "#498205", "#FFB900", "#F7630C", "#DA3B01",
+        "#E81123", "#E3008C", "#B146C2", "#744DA9", "#5D5A58", "#68768A",
+    ];
+
+    public void Apply(UiConfig ui)
     {
-        switch (preference)
+        ArgumentNullException.ThrowIfNull(ui);
+        _ui = ui;
+        WindowBackdropType backdrop = Backdrop(ui.Backdrop);
+        bool systemAccent = ui.AccentColor is null;
+        switch (ui.Theme)
         {
             case ThemePreference.Light:
-                ApplicationThemeManager.Apply(ApplicationTheme.Light, WindowBackdropType.Mica);
+                ApplicationThemeManager.Apply(ApplicationTheme.Light, backdrop, updateAccent: systemAccent);
                 break;
             case ThemePreference.Dark:
-                ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Mica);
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark, backdrop, updateAccent: systemAccent);
                 break;
             default:
-                ApplicationThemeManager.ApplySystemTheme(updateAccent: true);
+                ApplicationThemeManager.ApplySystemTheme(updateAccent: systemAccent);
                 break;
         }
+        if (ui.AccentColor is { } hex && System.Windows.Media.ColorConverter.ConvertFromString(hex) is System.Windows.Media.Color accent)
+            ApplicationAccentColorManager.Apply(accent, ApplicationThemeManager.GetAppTheme());
 
-        // Follow live Windows theme changes only when the user chose "System". The watcher needs a loaded window.
         if (_window is not { IsLoaded: true })
             return;
-        if (_watching && preference != ThemePreference.System)
+        if (_window.WindowBackdropType != backdrop)
+            _window.WindowBackdropType = backdrop;
+
+        // Follow live Windows theme changes only when the user chose "System". The watcher needs a loaded window.
+        if (_watching)
         {
             SystemThemeWatcher.UnWatch(_window);
             _watching = false;
         }
-        else if (!_watching && preference == ThemePreference.System)
+        if (ui.Theme == ThemePreference.System)
         {
-            SystemThemeWatcher.Watch(_window, WindowBackdropType.Mica, updateAccents: true);
+            SystemThemeWatcher.Watch(_window, backdrop, updateAccents: systemAccent);
             _watching = true;
         }
     }
 
     /// <summary>Call once the window has loaded.</summary>
-    public void Attach(Window window, ThemePreference preference)
+    public void Attach(Wpf.Ui.Controls.FluentWindow window, UiConfig ui)
     {
         _window = window;
-        Apply(preference);
+        window.WindowBackdropType = Backdrop(ui.Backdrop);
+        Apply(ui);
     }
+
+    public void Reapply() => Apply(_ui);
+
+    private static WindowBackdropType Backdrop(Core.Model.WindowBackdrop backdrop) => backdrop switch
+    {
+        Core.Model.WindowBackdrop.MicaAlt => WindowBackdropType.Tabbed,
+        Core.Model.WindowBackdrop.Acrylic => WindowBackdropType.Acrylic,
+        Core.Model.WindowBackdrop.Solid => WindowBackdropType.None,
+        _ => WindowBackdropType.Mica,
+    };
 }

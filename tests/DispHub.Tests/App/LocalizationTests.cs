@@ -47,7 +47,7 @@ public sealed partial class LocalizationTests
     public void EnumValuesShownInTheUiHaveNames()
     {
         HashSet<string> english = Keys(Path.Combine(LocalizationDir, "Strings.resx"));
-        foreach (Type type in new[] { typeof(DispHub.Core.Model.ThemePreference), typeof(DispHub.Core.Model.TrayClickAction) })
+        foreach (Type type in new[] { typeof(DispHub.Core.Model.ThemePreference), typeof(DispHub.Core.Model.TrayClickAction), typeof(DispHub.Core.Model.WindowBackdrop), typeof(DispHub.Core.Model.OsdPosition) })
         {
             foreach (string value in Enum.GetNames(type))
                 Assert.Contains($"Enum_{type.Name}_{value}", english);

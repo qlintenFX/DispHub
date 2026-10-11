@@ -49,7 +49,7 @@
       <ui:ToggleSwitch
         HorizontalAlignment="Right"
         VerticalAlignment="Center"
-        Content="{Binding Enabled, Converter={x:Static ctl:ActiveTextConverter.Instance}}"
+        Content="{Binding Enabled, Converter={x:Static ctl:OnOffConverter.Instance}}"
         IsChecked="{Binding Enabled}" />
     </Grid>
     <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Effects_Subtitle}" />

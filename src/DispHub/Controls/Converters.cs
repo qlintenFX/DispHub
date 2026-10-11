@@ -49,3 +49,24 @@ public sealed class NullToCollapsedConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }
+
+public sealed class InverseBoolConverter : IValueConverter
+{
+    public static InverseBoolConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is not true;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value is not true;
+}
+
+/// <summary>"On" or "Off" next to a toggle switch.</summary>
+public sealed class OnOffConverter : IValueConverter
+{
+    public static OnOffConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Loc.Get(value is true ? "Common_On" : "Common_Off");
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}

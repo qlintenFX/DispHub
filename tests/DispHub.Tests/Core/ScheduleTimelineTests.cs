@@ -132,3 +132,34 @@ public sealed class ScheduleTimelineTests
         Assert.Equal(Monday.ToDateTime(new TimeOnly(21, 15, 2)), output.NextEvaluation);
     }
 }
+
+public sealed class PlacesTests
+{
+    [Fact]
+    public void EveryPlace_HasValidCoordinatesAndAUniqueName()
+    {
+        Assert.All(Places.All, p =>
+        {
+            Assert.InRange(p.Latitude, -90, 90);
+            Assert.InRange(p.Longitude, -180, 180);
+            Assert.Equal(2, p.Country.Length);
+        });
+        Assert.Equal(Places.All.Count, Places.All.Select(p => p.Name).Distinct().Count());
+    }
+
+    [Fact]
+    public void Search_IgnoresCaseAndAccents()
+    {
+        Assert.Equal("Bogotá", Places.Search("bogota")[0].Name);
+        Assert.Equal("São Paulo", Places.Search("sao p")[0].Name);
+        Assert.Contains(Places.Search("york"), p => p.Name == "New York");
+    }
+
+    [Fact]
+    public void ForCountry_GivesTheCapitalOrMainCity()
+    {
+        Assert.Equal("Amsterdam", Places.ForCountry("NL")!.Name);
+        Assert.Equal("Washington", Places.ForCountry("us")!.Name);
+        Assert.Null(Places.ForCountry("XX"));
+    }
+}

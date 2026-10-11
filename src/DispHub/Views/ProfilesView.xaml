@@ -130,6 +130,30 @@
         Content="{l:Tr Profiles_New}"
         Icon="{ui:SymbolIcon Add24}" />
       <ui:Button
+        x:Name="TemplatesButton"
+        Margin="0,0,8,8"
+        Click="OnTemplatesClick"
+        Content="{l:Tr Profiles_FromTemplate}"
+        Icon="{ui:SymbolIcon Sparkle24}">
+        <ui:Button.ContextMenu>
+          <ContextMenu ItemsSource="{Binding Templates}">
+            <ContextMenu.ItemContainerStyle>
+              <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
+                <Setter Property="Header" Value="{Binding Name}" />
+                <Setter Property="ToolTip" Value="{Binding Description}" />
+                <Setter Property="Command" Value="{Binding DataContext.AddFromTemplateCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                <Setter Property="CommandParameter" Value="{Binding Key}" />
+              </Style>
+            </ContextMenu.ItemContainerStyle>
+          </ContextMenu>
+        </ui:Button.ContextMenu>
+      </ui:Button>
+      <ui:Button
+        Margin="0,0,8,8"
+        Command="{Binding StartImportCommand}"
+        Content="{l:Tr Profiles_FromLink}"
+        Icon="{ui:SymbolIcon Link24}" />
+      <ui:Button
         Margin="0,0,8,8"
         Command="{Binding DuplicateProfileCommand}"
         Content="{l:Tr Profiles_Duplicate}"
@@ -155,6 +179,42 @@
       Style="{StaticResource Hint}"
       Text="{x:Static vm:ProfilesViewModel.ProfileLimitText}"
       Visibility="{Binding CanAddProfile, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+
+    <!-- Add a profile someone shared -->
+    <Border Style="{StaticResource SettingCard}" Visibility="{Binding IsImporting, Converter={StaticResource BoolToVisibility}}">
+      <StackPanel>
+        <TextBlock Text="{l:Tr Presets_ImportTitle}" />
+        <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Presets_ImportHint}" />
+        <Grid Margin="0,10,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <ui:TextBox PlaceholderText="disphub://preset?name=…" Text="{Binding ImportText, UpdateSourceTrigger=PropertyChanged}">
+            <ui:TextBox.InputBindings>
+              <KeyBinding Key="Enter" Command="{Binding ImportCommand}" />
+            </ui:TextBox.InputBindings>
+          </ui:TextBox>
+          <ui:Button
+            Grid.Column="1"
+            Margin="8,0,0,0"
+            Appearance="Primary"
+            Command="{Binding ImportCommand}"
+            Content="{l:Tr Common_Add}" />
+          <ui:Button
+            Grid.Column="2"
+            Margin="8,0,0,0"
+            Command="{Binding CancelImportCommand}"
+            Content="{l:Tr Common_Cancel}" />
+        </Grid>
+        <TextBlock
+          Margin="0,6,0,0"
+          Style="{StaticResource ErrorText}"
+          Text="{Binding ImportError}"
+          Visibility="{Binding ImportError, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
+      </StackPanel>
+    </Border>
 
     <!-- Editor -->
     <Border
@@ -190,20 +250,11 @@
               Icon="{ui:SymbolIcon ArrowReset24}" />
           </StackPanel>
         </Grid>
-        <StackPanel
+        <TextBlock
           Margin="0,-4,0,8"
-          Orientation="Horizontal"
-          Visibility="{Binding ShareMessage, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}">
-          <TextBlock
-            VerticalAlignment="Center"
-            Style="{StaticResource Hint}"
-            Text="{Binding ShareMessage}" />
-          <ui:HyperlinkButton
-            Margin="8,0,0,0"
-            Padding="4,2"
-            Command="{Binding SubmitToGalleryCommand}"
-            Content="{l:Tr Profiles_SubmitToGallery}" />
-        </StackPanel>
+          Style="{StaticResource Hint}"
+          Text="{Binding ShareMessage}"
+          Visibility="{Binding ShareMessage, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
 
         <Grid Margin="0,0,0,8" Visibility="{Binding ShowDisplayPicker, Converter={StaticResource BoolToVisibility}}">
           <Grid.ColumnDefinitions>

@@ -7,6 +7,7 @@ using DispHub.Core.Color;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
 using DispHub.Core.Rules;
+using DispHub.Core.Sharing;
 using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Gamma;
@@ -85,6 +86,64 @@ public sealed partial class ProfilesViewModel : PageViewModel
             Select(profile.Id);
         else
             _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
+    }
+
+    /// <summary>Starting points for a new profile.</summary>
+    public IReadOnlyList<TemplateChoice> Templates { get; } =
+        [.. ProfileTemplates.All.Select(t => new TemplateChoice(t.Key, Loc.Get($"Template_{t.Key}"), Loc.Get($"Template_{t.Key}Hint")))];
+
+    [ObservableProperty]
+    public partial bool IsImporting { get; set; }
+
+    [ObservableProperty]
+    public partial string ImportText { get; set; } = "";
+
+    [ObservableProperty]
+    public partial string? ImportError { get; set; }
+
+    [RelayCommand]
+    private void AddFromTemplate(string? key)
+    {
+        if (ProfileTemplates.All.FirstOrDefault(t => t.Key == key) is not { } template)
+            return;
+        AddPreset(new SharedPreset(Loc.Get($"Template_{template.Key}"), template.Color));
+    }
+
+    [RelayCommand]
+    private void StartImport()
+    {
+        ImportText = "";
+        ImportError = null;
+        IsImporting = true;
+    }
+
+    [RelayCommand]
+    private void CancelImport() => IsImporting = false;
+
+    [RelayCommand]
+    private void Import()
+    {
+        if (!SharedPreset.TryParse(ImportText, out SharedPreset? preset))
+        {
+            ImportError = Loc.Get("Presets_InvalidLink");
+            return;
+        }
+        if (AddPreset(preset))
+            IsImporting = false;
+    }
+
+    /// <summary>Adds a shared or template profile and shows it. Returns false if the free profile limit was hit.</summary>
+    public bool AddPreset(SharedPreset preset)
+    {
+        ArgumentNullException.ThrowIfNull(preset);
+        if (_app.AddProfile(preset.Color, preset.Name) is not { } profile)
+        {
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
+            return false;
+        }
+        _app.ActivateProfile(profile.Id, ChangeSource.Editor);
+        Select(profile.Id);
+        return true;
     }
 
     [RelayCommand]
@@ -419,15 +478,6 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     }
 
     [RelayCommand]
-    private void SubmitToGallery()
-    {
-        if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
-            return;
-        Uri form = Core.Sharing.GallerySubmission.For(new Core.Sharing.SharedPreset(profile.Name, profile.Color));
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(form.AbsoluteUri) { UseShellExecute = true });
-    }
-
-    [RelayCommand]
     private void Reset()
     {
         if (!HasProfile)
@@ -496,3 +546,5 @@ public sealed record WarningViewModel(
 {
     public bool HasAction => ActionText is not null;
 }
+
+public sealed record TemplateChoice(string Key, string Name, string Description);

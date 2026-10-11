@@ -1,11 +1,9 @@
-using System.Collections.ObjectModel;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
 using DispHub.Localization;
-using DispHub.Platform;
-using DispHub.Platform.Gamma;
 using DispHub.Platform.Shell;
 using DispHub.Services;
 
@@ -25,37 +23,70 @@ public sealed partial class SettingsViewModel : PageViewModel
         _autostart = autostart;
         _theme = theme;
         _app.ConfigChanged += (_, _) => Load();
-        _app.MonitorsChanged += (_, _) => LoadMonitors();
+        Accents = [new AccentChoice(null, Loc.Get("Settings_AccentWindows"), SystemAccentBrush()), .. ThemeService.AccentPalette.Select(a => new AccentChoice(a, a, Brush(a)))];
         Load();
-        LoadMonitors();
         _ = LoadAutostartAsync();
     }
 
     public IReadOnlyList<ThemePreference> Themes { get; } = Enum.GetValues<ThemePreference>();
+    public IReadOnlyList<WindowBackdrop> Backdrops { get; } = Enum.GetValues<WindowBackdrop>();
+    public IReadOnlyList<TrayClickAction> TrayActions { get; } = Enum.GetValues<TrayClickAction>();
+    public IReadOnlyList<OsdPosition> OsdPositions { get; } = Enum.GetValues<OsdPosition>();
+    public IReadOnlyList<AccentChoice> Accents { get; }
+
+    public IReadOnlyList<ScaleChoice> TextScales { get; } =
+        [new(0.9, "90 %"), new(1.0, Loc.Get("Settings_TextNormal")), new(1.1, "110 %"), new(1.25, "125 %")];
 
     public IReadOnlyList<LanguageChoice> LanguageChoices { get; } =
         [new LanguageChoice(null, Loc.Get("Settings_LanguageWindows")), .. Loc.Languages.Select(l => new LanguageChoice(l, Loc.NativeName(l)))];
 
-    [ObservableProperty]
-    public partial LanguageChoice? Language { get; set; }
-
-    [ObservableProperty]
-    public partial bool LanguageNeedsRestart { get; set; }
-
-    partial void OnLanguageChanged(LanguageChoice? value)
-    {
-        if (_loading || value is null || value.Code == _app.Config.Ui.Language)
-            return;
-        _app.Config.Ui.Language = value.Code;
-        _app.SettingsChanged();
-        LanguageNeedsRestart = true;
-    }
-
     public IReadOnlyList<PreviewPictureChoice> PreviewPictures { get; } =
         [.. Controls.ColorPreview.Pictures.Select(p => new PreviewPictureChoice(p, Loc.Get($"Preview_{p}"), Controls.ColorPreview.Original(p)))];
 
-    [ObservableProperty]
-    public partial PreviewPictureChoice? PreviewPicture { get; set; }
+    /// <summary>Filled in by the main window: the pages the window can open on.</summary>
+    public IReadOnlyList<StartPageChoice> StartPages { get; set; } = [];
+
+    [ObservableProperty] public partial ThemePreference Theme { get; set; }
+    [ObservableProperty] public partial AccentChoice? Accent { get; set; }
+    [ObservableProperty] public partial WindowBackdrop Backdrop { get; set; }
+    [ObservableProperty] public partial bool CompactNavigation { get; set; }
+    [ObservableProperty] public partial ScaleChoice? TextScale { get; set; }
+    [ObservableProperty] public partial bool ReduceMotion { get; set; }
+    [ObservableProperty] public partial PreviewPictureChoice? PreviewPicture { get; set; }
+    [ObservableProperty] public partial StartPageChoice? StartPage { get; set; }
+    [ObservableProperty] public partial LanguageChoice? Language { get; set; }
+    [ObservableProperty] public partial bool LanguageNeedsRestart { get; set; }
+    [ObservableProperty] public partial bool CloseToTray { get; set; }
+    [ObservableProperty] public partial TrayClickAction TrayLeftClick { get; set; }
+    [ObservableProperty] public partial bool ShowOsd { get; set; }
+    [ObservableProperty] public partial double OsdSeconds { get; set; }
+    [ObservableProperty] public partial OsdPosition OsdPosition { get; set; }
+    [ObservableProperty] public partial bool LaunchAtLogin { get; set; }
+    [ObservableProperty] public partial string? LaunchAtLoginNote { get; set; }
+    [ObservableProperty] public partial string? PauseHotkey { get; set; }
+    [ObservableProperty] public partial string? NextHotkey { get; set; }
+    [ObservableProperty] public partial string? PreviousHotkey { get; set; }
+    [ObservableProperty] public partial string? HotkeyError { get; set; }
+
+    partial void OnThemeChanged(ThemePreference value) => SaveAppearance(c => c.Ui.Theme = value);
+
+    partial void OnAccentChanged(AccentChoice? value)
+    {
+        if (value is not null)
+            SaveAppearance(c => c.Ui.AccentColor = value.Hex);
+    }
+
+    partial void OnBackdropChanged(WindowBackdrop value) => SaveAppearance(c => c.Ui.Backdrop = value);
+
+    partial void OnCompactNavigationChanged(bool value) => Save(c => c.Ui.CompactNavigation = value);
+
+    partial void OnTextScaleChanged(ScaleChoice? value)
+    {
+        if (value is not null)
+            Save(c => c.Ui.TextScale = value.Scale);
+    }
+
+    partial void OnReduceMotionChanged(bool value) => Save(c => c.Ui.ReduceMotion = value);
 
     partial void OnPreviewPictureChanged(PreviewPictureChoice? value)
     {
@@ -66,50 +97,20 @@ public sealed partial class SettingsViewModel : PageViewModel
         Save(c => c.Ui.PreviewPicture = value.Id);
     }
 
-    [RelayCommand]
-    private static void Restart() => ((App)System.Windows.Application.Current).RequestRestart();
+    partial void OnStartPageChanged(StartPageChoice? value)
+    {
+        if (value is not null)
+            Save(c => c.Ui.StartPage = value.Key);
+    }
 
-    public IReadOnlyList<TrayClickAction> TrayActions { get; } = Enum.GetValues<TrayClickAction>();
-
-    public ObservableCollection<MonitorItemViewModel> Monitors { get; } = [];
-
-    [ObservableProperty]
-    public partial ThemePreference Theme { get; set; }
-
-    [ObservableProperty]
-    public partial bool CloseToTray { get; set; }
-
-    [ObservableProperty]
-    public partial TrayClickAction TrayLeftClick { get; set; }
-
-    [ObservableProperty]
-    public partial bool ShowOsd { get; set; }
-
-    [ObservableProperty]
-    public partial double OsdSeconds { get; set; }
-
-    [ObservableProperty]
-    public partial bool LaunchAtLogin { get; set; }
-
-    [ObservableProperty]
-    public partial string? LaunchAtLoginNote { get; set; }
-
-    [ObservableProperty]
-    public partial string? PauseHotkey { get; set; }
-
-    [ObservableProperty]
-    public partial string? NextHotkey { get; set; }
-
-    [ObservableProperty]
-    public partial string? PreviousHotkey { get; set; }
-
-    [ObservableProperty]
-    public partial string? HotkeyError { get; set; }
-
-    [ObservableProperty]
-    public partial bool ExtendedGammaRange { get; set; }
-
-    partial void OnThemeChanged(ThemePreference value) => Save(c => c.Ui.Theme = value, () => _theme.Apply(value));
+    partial void OnLanguageChanged(LanguageChoice? value)
+    {
+        if (_loading || value is null || value.Code == _app.Config.Ui.Language)
+            return;
+        _app.Config.Ui.Language = value.Code;
+        _app.SettingsChanged();
+        LanguageNeedsRestart = true;
+    }
 
     partial void OnCloseToTrayChanged(bool value) => Save(c => c.Ui.CloseToTray = value);
 
@@ -118,6 +119,8 @@ public sealed partial class SettingsViewModel : PageViewModel
     partial void OnShowOsdChanged(bool value) => Save(c => c.Ui.ShowOsd = value);
 
     partial void OnOsdSecondsChanged(double value) => Save(c => c.Ui.OsdDurationMs = (int)Math.Round(value * 1000));
+
+    partial void OnOsdPositionChanged(OsdPosition value) => Save(c => c.Ui.OsdPosition = value);
 
     partial void OnPauseHotkeyChanged(string? value) => SetHotkey(AppController.PauseAction, value);
 
@@ -141,11 +144,20 @@ public sealed partial class SettingsViewModel : PageViewModel
     }
 
     [RelayCommand]
-    private void EnableExtendedGammaRange()
+    private static void Restart() => ((App)System.Windows.Application.Current).RequestRestart();
+
+    [RelayCommand]
+    private void ResetAppearance()
     {
-        if (GammaRange.TryEnableExtended())
-            _app.OnDisplayChanged();
-        ExtendedGammaRange = GammaRange.IsExtended;
+        UiConfig ui = _app.Config.Ui;
+        ui.Theme = ThemePreference.System;
+        ui.AccentColor = null;
+        ui.Backdrop = WindowBackdrop.Mica;
+        ui.CompactNavigation = false;
+        ui.TextScale = 1.0;
+        ui.ReduceMotion = false;
+        _app.SettingsChanged();
+        _theme.Apply(ui);
     }
 
     private void Load()
@@ -155,16 +167,22 @@ public sealed partial class SettingsViewModel : PageViewModel
         {
             UiConfig ui = _app.Config.Ui;
             Theme = ui.Theme;
-            Language = LanguageChoices.FirstOrDefault(l => l.Code == ui.Language) ?? LanguageChoices[0];
+            Accent = Accents.FirstOrDefault(a => string.Equals(a.Hex, ui.AccentColor, StringComparison.OrdinalIgnoreCase)) ?? Accents[0];
+            Backdrop = ui.Backdrop;
+            CompactNavigation = ui.CompactNavigation;
+            TextScale = TextScales.MinBy(s => Math.Abs(s.Scale - ui.TextScale));
+            ReduceMotion = ui.ReduceMotion;
             PreviewPicture = PreviewPictures.FirstOrDefault(p => p.Id == Controls.ColorPreview.Picture);
+            StartPage = StartPages.FirstOrDefault(p => p.Key == ui.StartPage) ?? (StartPages.Count > 0 ? StartPages[0] : null);
+            Language = LanguageChoices.FirstOrDefault(l => l.Code == ui.Language) ?? LanguageChoices[0];
             CloseToTray = ui.CloseToTray;
             TrayLeftClick = ui.TrayLeftClick;
             ShowOsd = ui.ShowOsd;
             OsdSeconds = ui.OsdDurationMs / 1000.0;
+            OsdPosition = ui.OsdPosition;
             PauseHotkey = _app.Config.Hotkeys.TogglePause;
             NextHotkey = _app.Config.Hotkeys.NextProfile;
             PreviousHotkey = _app.Config.Hotkeys.PreviousProfile;
-            ExtendedGammaRange = GammaRange.IsExtended;
             HotkeyError = DescribeHotkeyFailures();
         }
         finally
@@ -173,11 +191,11 @@ public sealed partial class SettingsViewModel : PageViewModel
         }
     }
 
-    private void LoadMonitors()
+    internal void SetStartPages(IEnumerable<PageViewModel> pages)
     {
-        Monitors.Clear();
-        foreach (MonitorStatus status in _app.Monitors)
-            Monitors.Add(new MonitorItemViewModel(_app, status));
+        StartPages = [.. pages.Select(p => new StartPageChoice(p.Key, p.Title))];
+        OnPropertyChanged(nameof(StartPages));
+        Load();
     }
 
     private async Task LoadAutostartAsync()
@@ -205,13 +223,21 @@ public sealed partial class SettingsViewModel : PageViewModel
         };
     }
 
-    private void Save(Action<AppConfig> change, Action? then = null)
+    private void Save(Action<AppConfig> change)
     {
         if (_loading)
             return;
         change(_app.Config);
         _app.SettingsChanged();
-        then?.Invoke();
+    }
+
+    private void SaveAppearance(Action<AppConfig> change)
+    {
+        if (_loading)
+            return;
+        change(_app.Config);
+        _theme.Apply(_app.Config.Ui);
+        _app.SettingsChanged();
     }
 
     private void SetHotkey(string action, string? value)
@@ -233,54 +259,16 @@ public sealed partial class SettingsViewModel : PageViewModel
         }
         return failures.Count == 0 ? null : string.Join(Environment.NewLine, failures);
     }
-}
 
-public sealed partial class MonitorItemViewModel : ObservableObject
-{
-    private readonly AppController _app;
-    private readonly string _key;
-
-    public MonitorItemViewModel(AppController app, MonitorStatus status)
+    private static SolidColorBrush Brush(string hex)
     {
-        _app = app;
-        _key = status.Monitor.Key;
-        Name = status.Monitor.IsPrimary ? Loc.Format("Monitor_Main", status.Monitor.Name) : status.Monitor.Name;
-        Details = Describe(status);
-        Excluded = app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config) && config.Excluded;
+        var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
+        brush.Freeze();
+        return brush;
     }
 
-    public string Name { get; }
-
-    public string Details { get; }
-
-    [ObservableProperty]
-    public partial bool Excluded { get; set; }
-
-    partial void OnExcludedChanged(bool value)
-    {
-        if (!_app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config))
-        {
-            config = new MonitorConfig { Name = Name };
-            _app.Config.Monitors[_key] = config;
-        }
-        if (config.Excluded == value)
-            return;
-        config.Excluded = value;
-        _app.SettingsChanged();
-    }
-
-    private static string Describe(MonitorStatus status)
-    {
-        string colours = status.State switch
-        {
-            MonitorColorState.Applied => Loc.Get("Monitor_Applied"),
-            MonitorColorState.Limited => Loc.Get("Monitor_Limited"),
-            MonitorColorState.Unsupported => Loc.Get("Monitor_Unsupported"),
-            MonitorColorState.Hdr => Loc.Get("Monitor_Hdr"),
-            _ => Loc.Get("Monitor_Original"),
-        };
-        return $"{status.Monitor.DeviceName.TrimStart('\\', '.')} · {colours} · {Loc.Get(status.SupportsVibrance ? "Monitor_Vibrance" : "Monitor_NoVibrance")}";
-    }
+    private static Brush SystemAccentBrush() =>
+        System.Windows.Application.Current?.TryFindResource("SystemAccentColorPrimaryBrush") as Brush ?? Brushes.SteelBlue;
 }
 
 public sealed record LanguageChoice(string? Code, string Name)
@@ -288,7 +276,22 @@ public sealed record LanguageChoice(string? Code, string Name)
     public override string ToString() => Name;
 }
 
-public sealed record PreviewPictureChoice(string Id, string Name, System.Windows.Media.ImageSource Image)
+public sealed record PreviewPictureChoice(string Id, string Name, ImageSource Image)
+{
+    public override string ToString() => Name;
+}
+
+public sealed record AccentChoice(string? Hex, string Name, Brush Swatch)
+{
+    public override string ToString() => Name;
+}
+
+public sealed record ScaleChoice(double Scale, string Name)
+{
+    public override string ToString() => Name;
+}
+
+public sealed record StartPageChoice(string Key, string Name)
 {
     public override string ToString() => Name;
 }

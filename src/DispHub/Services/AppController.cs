@@ -95,6 +95,12 @@ public sealed class AppController : IDisposable
 
     public IReadOnlyList<MonitorStatus> Monitors => _colors.Monitors;
 
+    /// <summary>Full path of the program in front, if known.</summary>
+    public string? ForegroundExecutable => _foreground.Current;
+
+    /// <summary>The program in front changed (on the UI thread).</summary>
+    public event EventHandler? ForegroundChanged;
+
     /// <summary>Hotkeys that couldn't be registered, keyed by action ID.</summary>
     public IReadOnlyDictionary<string, string> HotkeyFailures { get; private set; } = new Dictionary<string, string>();
 
@@ -314,6 +320,7 @@ public sealed class AppController : IDisposable
         // Only re-evaluate when it can matter, so switching windows costs nothing without app rules.
         if (Config.AppRules.Count > 0 || _manual is not null)
             Evaluate(ChangeSource.Automation);
+        ForegroundChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnMonitorsChanged()

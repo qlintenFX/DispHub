@@ -94,7 +94,7 @@ public partial class App : Application
         await _services.GetRequiredService<ILicenseService>().InitializeAsync();
 
         _controller = _services.GetRequiredService<AppController>();
-        _services.GetRequiredService<ThemeService>().Apply(_controller.Config.Ui.Theme);
+        _services.GetRequiredService<ThemeService>().Apply(_controller.Config.Ui);
         ColorPreview.Use(_controller.Config.Ui.PreviewPicture);
 
         // The hidden host window owns the tray icon and receives hotkeys and system broadcasts.
@@ -173,9 +173,9 @@ public partial class App : Application
         services.AddSingleton<IUpgradeService>(sp => new UpgradeService(
             sp.GetRequiredService<ILicenseService>(), () => sp.GetRequiredService<MainWindow>()));
         services.AddSingleton<ProfilesViewModel>();
-        services.AddSingleton<GalleryService>();
-        services.AddSingleton<PresetsViewModel>();
-        services.AddSingleton<AutomationViewModel>();
+        services.AddSingleton<ScheduleViewModel>();
+        services.AddSingleton<AppsViewModel>();
+        services.AddSingleton<DisplaysViewModel>();
         services.AddSingleton<EffectsService>();
         services.AddSingleton<EffectsViewModel>();
         services.AddSingleton<SettingsViewModel>();
@@ -240,7 +240,7 @@ public partial class App : Application
             Owner = window,
         };
         if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary &&
-            _services.GetRequiredService<PresetsViewModel>().Add(preset))
+            _services.GetRequiredService<ProfilesViewModel>().AddPreset(preset))
         {
             _services.GetRequiredService<MainViewModel>().Navigate<ProfilesViewModel>();
         }

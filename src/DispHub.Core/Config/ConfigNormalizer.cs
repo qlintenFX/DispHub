@@ -95,6 +95,9 @@ public static class ConfigNormalizer
         config.Hotkeys.NextProfile = ValidHotkeyOrNull(config.Hotkeys.NextProfile);
         config.Hotkeys.PreviousProfile = ValidHotkeyOrNull(config.Hotkeys.PreviousProfile);
         config.Ui.OsdDurationMs = Math.Clamp(config.Ui.OsdDurationMs, 500, 10_000);
+        config.Ui.TextScale = double.IsFinite(config.Ui.TextScale) ? Math.Clamp(config.Ui.TextScale, 0.9, 1.25) : 1.0;
+        if (config.Ui.AccentColor is { } accent && !System.Text.RegularExpressions.Regex.IsMatch(accent, "^#[0-9A-Fa-f]{6}$"))
+            config.Ui.AccentColor = null;
 
         return fixes;
     }

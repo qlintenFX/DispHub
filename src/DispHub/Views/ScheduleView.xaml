@@ -1,0 +1,298 @@
+<UserControl
+  x:Class="DispHub.Views.ScheduleView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ctl="clr-namespace:DispHub.Controls"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
+  xmlns:sch="clr-namespace:DispHub.Core.Schedule;assembly=DispHub.Core"
+  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+  xmlns:vm="clr-namespace:DispHub.ViewModels"
+  d:DataContext="{d:DesignInstance Type=vm:ScheduleViewModel}"
+  mc:Ignorable="d">
+  <StackPanel>
+    <Grid>
+      <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Schedule_Title}" />
+      <ui:ToggleSwitch
+        HorizontalAlignment="Right"
+        VerticalAlignment="Center"
+        Content="{Binding Enabled, Converter={x:Static ctl:OnOffConverter.Instance}}"
+        IsChecked="{Binding Enabled}" />
+    </Grid>
+    <TextBlock Style="{StaticResource PageSubtitle}" Text="{Binding StatusText}" />
+
+    <ui:InfoBar
+      Title="DispHub Pro"
+      Margin="0,0,0,12"
+      IsClosable="False"
+      IsOpen="True"
+      Message="{l:Tr Schedule_ProHint}"
+      Severity="Informational"
+      Visibility="{Binding IsPro, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+
+    <!-- The day view -->
+    <Border Padding="20,16,20,14" Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <ListBox
+          Margin="0,0,0,10"
+          Background="Transparent"
+          BorderThickness="0"
+          ItemContainerStyle="{StaticResource Chip}"
+          ItemsSource="{Binding Days}"
+          SelectedItem="{Binding SelectedDay}">
+          <ListBox.Template>
+            <ControlTemplate TargetType="ListBox">
+              <ItemsPresenter />
+            </ControlTemplate>
+          </ListBox.Template>
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+        </ListBox>
+        <ctl:DayTimeline
+          x:Name="Timeline"
+          Now="{Binding Now}"
+          Segments="{Binding Segments}"
+          SelectedSlot="{Binding SelectedSlotId}"
+          Sunrise="{Binding Sunrise}"
+          Sunset="{Binding Sunset}" />
+        <TextBlock
+          Margin="0,6,0,0"
+          Style="{StaticResource Hint}"
+          Text="{l:Tr Schedule_DayHint}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Slots -->
+    <Grid Margin="0,8,0,0">
+      <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Schedule_Slots}" />
+      <StackPanel
+        Margin="0,14,0,0"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom"
+        Orientation="Horizontal">
+        <ui:Button
+          x:Name="TemplatesButton"
+          Margin="0,0,8,0"
+          Click="OnTemplatesClick"
+          Content="{l:Tr Schedule_Templates}"
+          Icon="{ui:SymbolIcon Sparkle24}">
+          <ui:Button.ContextMenu>
+            <ContextMenu>
+              <MenuItem
+                Command="{Binding ApplyTemplateCommand}"
+                CommandParameter="sunset"
+                Header="{l:Tr Schedule_TemplateSunset}" />
+              <MenuItem
+                Command="{Binding ApplyTemplateCommand}"
+                CommandParameter="workweek"
+                Header="{l:Tr Schedule_TemplateWorkWeek}" />
+              <MenuItem
+                Command="{Binding ApplyTemplateCommand}"
+                CommandParameter="latenight"
+                Header="{l:Tr Schedule_TemplateLateNight}" />
+            </ContextMenu>
+          </ui:Button.ContextMenu>
+        </ui:Button>
+        <ui:Button
+          Appearance="Primary"
+          Command="{Binding AddSlotCommand}"
+          Content="{l:Tr Schedule_AddSlot}"
+          Icon="{ui:SymbolIcon Add24}" />
+      </StackPanel>
+    </Grid>
+
+    <Border Style="{StaticResource SettingCard}" Visibility="{Binding HasSlots, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
+      <StackPanel Margin="0,8">
+        <TextBlock HorizontalAlignment="Center" Text="{l:Tr Schedule_EmptyTitle}" />
+        <TextBlock
+          Margin="0,4,0,0"
+          HorizontalAlignment="Center"
+          Style="{StaticResource Hint}"
+          Text="{l:Tr Schedule_EmptyHint}" />
+      </StackPanel>
+    </Border>
+
+    <ItemsControl ItemsSource="{Binding Slots}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type vm:ScheduleSlotItem}">
+          <Border Padding="16,12" Style="{StaticResource SelectableCard}">
+            <Border.InputBindings>
+              <MouseBinding Command="{Binding SelectCommand}" MouseAction="LeftClick" />
+            </Border.InputBindings>
+            <StackPanel>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="190" />
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border
+                  Width="44"
+                  Height="30"
+                  Margin="0,0,12,0"
+                  VerticalAlignment="Center"
+                  CornerRadius="4">
+                  <Border.Background>
+                    <ImageBrush ImageSource="{Binding Profile.Preview}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill" />
+                  </Border.Background>
+                </Border>
+                <ComboBox
+                  Grid.Column="1"
+                  VerticalAlignment="Center"
+                  ItemsSource="{Binding Profiles}"
+                  SelectedItem="{Binding Profile}"
+                  ToolTip="{l:Tr Schedule_Profile}" />
+                <ComboBox
+                  Grid.Column="2"
+                  MinWidth="130"
+                  Margin="8,0,0,0"
+                  VerticalAlignment="Center"
+                  ItemsSource="{Binding Anchors}"
+                  SelectedItem="{Binding Anchor}"
+                  ToolTip="{l:Tr Schedule_StartsWhen}" />
+                <Grid Grid.Column="3" Margin="8,0,0,0">
+                  <ui:TextBox
+                    Width="96"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    ctl:CommitOnEnter.IsEnabled="True"
+                    Text="{Binding Time, UpdateSourceTrigger=LostFocus}"
+                    ToolTip="{l:Tr Schedule_TimeHint}"
+                    Visibility="{Binding IsTimeAnchor, Converter={StaticResource BoolToVisibility}}" />
+                  <Grid VerticalAlignment="Center" Visibility="{Binding IsSunAnchor, Converter={StaticResource BoolToVisibility}}">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" MinWidth="90" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Slider
+                      VerticalAlignment="Center"
+                      IsSnapToTickEnabled="True"
+                      Maximum="240"
+                      Minimum="-240"
+                      TickFrequency="5"
+                      Value="{Binding Offset}" />
+                    <TextBlock
+                      Grid.Column="1"
+                      MinWidth="110"
+                      Margin="8,0,0,0"
+                      VerticalAlignment="Center"
+                      Style="{StaticResource Hint}"
+                      Text="{Binding OffsetText}" />
+                  </Grid>
+                </Grid>
+                <ComboBox
+                  Grid.Column="4"
+                  MinWidth="104"
+                  Margin="8,0,0,0"
+                  VerticalAlignment="Center"
+                  ItemsSource="{Binding Fades}"
+                  SelectedItem="{Binding Fade}"
+                  ToolTip="{l:Tr Schedule_FadeHint}" />
+                <ui:Button
+                  Grid.Column="5"
+                  Margin="8,0,0,0"
+                  VerticalAlignment="Center"
+                  Appearance="Transparent"
+                  Command="{Binding RemoveCommand}"
+                  Icon="{ui:SymbolIcon Delete24}"
+                  ToolTip="{l:Tr Schedule_Remove}" />
+              </Grid>
+              <Grid Margin="56,10,0,0">
+                <ItemsControl ItemsSource="{Binding Days}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:DayToggle}">
+                      <ToggleButton
+                        Content="{Binding Label}"
+                        IsChecked="{Binding IsOn}"
+                        Style="{StaticResource ChipToggle}" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                  <TextBlock
+                    Margin="0,0,12,0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource ErrorText}"
+                    Text="{l:Tr Schedule_TimeInvalid}"
+                    Visibility="{Binding TimeIsInvalid, Converter={StaticResource BoolToVisibility}}" />
+                  <TextBlock
+                    VerticalAlignment="Center"
+                    Style="{StaticResource Hint}"
+                    Text="{Binding StartsText}" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <!-- Location -->
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Schedule_Location}" />
+    <Border Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <Grid>
+          <StackPanel Margin="0,0,200,0" VerticalAlignment="Center">
+            <TextBlock Text="{Binding LocationText}" TextWrapping="Wrap" />
+            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Schedule_LocationHint}" />
+            <TextBlock
+              Style="{StaticResource ErrorText}"
+              Text="{Binding LocationError}"
+              Visibility="{Binding LocationError, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
+          </StackPanel>
+          <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <ui:ProgressRing
+              Width="18"
+              Height="18"
+              Margin="0,0,10,0"
+              IsIndeterminate="True"
+              Visibility="{Binding IsLocating, Converter={StaticResource BoolToVisibility}}" />
+            <ui:Button
+              VerticalAlignment="Center"
+              Command="{Binding UseMyLocationCommand}"
+              Content="{l:Tr Schedule_UseMyLocation}"
+              Icon="{ui:SymbolIcon Location24}" />
+          </StackPanel>
+        </Grid>
+        <ui:TextBox
+          Margin="0,12,0,0"
+          Icon="{ui:SymbolIcon Search24}"
+          PlaceholderText="{l:Tr Schedule_SearchCity}"
+          Text="{Binding LocationQuery, UpdateSourceTrigger=PropertyChanged}" />
+        <ItemsControl Margin="0,6,0,0" ItemsSource="{Binding LocationResults}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type sch:Place}">
+              <ui:Button
+                Margin="0,4,6,0"
+                Command="{Binding DataContext.ChoosePlaceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding}"
+                Icon="{ui:SymbolIcon Location24}">
+                <TextBlock>
+                  <Run Text="{Binding Name, Mode=OneWay}" />
+                  <Run Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding Country, Mode=OneWay}" />
+                </TextBlock>
+              </ui:Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </Border>
+  </StackPanel>
+</UserControl>

@@ -19,7 +19,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         _theme = theme;
         DataContext = viewModel;
         InitializeComponent();
-        Loaded += (_, _) => _theme.Attach(this, _app.Config.Ui.Theme);
+        Loaded += (_, _) => _theme.Attach(this, _app.Config.Ui);
         Activated += async (_, _) => await review.OnWindowActivatedAsync(this);
         viewModel.PropertyChanged += (_, e) =>
         {

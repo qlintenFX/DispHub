@@ -784,4 +784,358 @@ It also supports development of DispHub.</value>
   <data name="EffectPreset_cinema" xml:space="preserve">
     <value>Cinema</value>
   </data>
+  <data name="Nav_Schedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="Nav_Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Nav_Displays" xml:space="preserve">
+    <value>Displays</value>
+  </data>
+  <data name="Common_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Schedule_Title" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="Schedule_ProHint" xml:space="preserve">
+    <value>Schedules run with DispHub Pro. You can build one here and see exactly what it will do first.</value>
+  </data>
+  <data name="Schedule_DayHint" xml:space="preserve">
+    <value>Drag a handle to move a slot. Picking a profile yourself keeps it until the next slot starts.</value>
+  </data>
+  <data name="Schedule_Slots" xml:space="preserve">
+    <value>Slots</value>
+  </data>
+  <data name="Schedule_Templates" xml:space="preserve">
+    <value>Start from</value>
+  </data>
+  <data name="Schedule_TemplateSunset" xml:space="preserve">
+    <value>Night after sunset</value>
+  </data>
+  <data name="Schedule_TemplateWorkWeek" xml:space="preserve">
+    <value>Work week and weekend</value>
+  </data>
+  <data name="Schedule_TemplateLateNight" xml:space="preserve">
+    <value>Sunset, then dim late at night</value>
+  </data>
+  <data name="Schedule_AddSlot" xml:space="preserve">
+    <value>Add slot</value>
+  </data>
+  <data name="Schedule_EmptyTitle" xml:space="preserve">
+    <value>No slots yet</value>
+  </data>
+  <data name="Schedule_EmptyHint" xml:space="preserve">
+    <value>Start from a ready-made schedule or add a slot.</value>
+  </data>
+  <data name="Schedule_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Schedule_StartsWhen" xml:space="preserve">
+    <value>Starts</value>
+  </data>
+  <data name="Schedule_TimeHint" xml:space="preserve">
+    <value>Start time, for example 21:30</value>
+  </data>
+  <data name="Schedule_FadeHint" xml:space="preserve">
+    <value>How long it takes to fade in</value>
+  </data>
+  <data name="Schedule_Remove" xml:space="preserve">
+    <value>Remove slot</value>
+  </data>
+  <data name="Schedule_TimeInvalid" xml:space="preserve">
+    <value>Use a time like 21:30</value>
+  </data>
+  <data name="Schedule_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="Schedule_LocationHint" xml:space="preserve">
+    <value>Only used on this PC to work out sunrise and sunset.</value>
+  </data>
+  <data name="Schedule_UseMyLocation" xml:space="preserve">
+    <value>Use my location</value>
+  </data>
+  <data name="Schedule_SearchCity" xml:space="preserve">
+    <value>Search for a city</value>
+  </data>
+  <data name="Schedule_AtTime" xml:space="preserve">
+    <value>At a time</value>
+  </data>
+  <data name="Schedule_Sunrise" xml:space="preserve">
+    <value>At sunrise</value>
+  </data>
+  <data name="Schedule_Sunset" xml:space="preserve">
+    <value>At sunset</value>
+  </data>
+  <data name="Schedule_Instant" xml:space="preserve">
+    <value>Instant</value>
+  </data>
+  <data name="Schedule_Minutes" xml:space="preserve">
+    <value>{0} min fade</value>
+  </data>
+  <data name="Schedule_LocationDenied" xml:space="preserve">
+    <value>Windows didn't allow DispHub to see your location. Search for a city instead, or turn on location access in Windows Settings.</value>
+  </data>
+  <data name="Schedule_LocationUnavailable" xml:space="preserve">
+    <value>Windows couldn't find your location right now. Search for a city instead.</value>
+  </data>
+  <data name="Schedule_Near" xml:space="preserve">
+    <value>Near {0}</value>
+  </data>
+  <data name="Schedule_StatusEmpty" xml:space="preserve">
+    <value>Switch profiles by time of day, or follow sunrise and sunset.</value>
+  </data>
+  <data name="Schedule_StatusOff" xml:space="preserve">
+    <value>The schedule is off. Turn it on to switch profiles automatically.</value>
+  </data>
+  <data name="Schedule_StatusPro" xml:space="preserve">
+    <value>Preview only: the schedule runs with DispHub Pro.</value>
+  </data>
+  <data name="Schedule_DayAndTime" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="Schedule_StatusRunning" xml:space="preserve">
+    <value>{0} now. {1} from {2}.</value>
+  </data>
+  <data name="Schedule_NoLocation" xml:space="preserve">
+    <value>Set a location to use sunrise and sunset. Until then they're {0} and {1}.</value>
+  </data>
+  <data name="Schedule_LocationSun" xml:space="preserve">
+    <value>{0}: sunrise {1}, sunset {2}</value>
+  </data>
+  <data name="Schedule_LocationPolar" xml:space="preserve">
+    <value>{0}: the sun doesn't rise or set on this day</value>
+  </data>
+  <data name="Schedule_AtSunrise" xml:space="preserve">
+    <value>At sunrise</value>
+  </data>
+  <data name="Schedule_AtSunset" xml:space="preserve">
+    <value>At sunset</value>
+  </data>
+  <data name="Schedule_Before" xml:space="preserve">
+    <value>{0} min before</value>
+  </data>
+  <data name="Schedule_After" xml:space="preserve">
+    <value>{0} min after</value>
+  </data>
+  <data name="Schedule_StartsAt" xml:space="preserve">
+    <value>Starts at {0} on this day</value>
+  </data>
+  <data name="Apps_Title" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Apps_Subtitle" xml:space="preserve">
+    <value>Use a profile automatically while an app is in front, and go back to your normal profile when you switch away.</value>
+  </data>
+  <data name="Apps_ProHint" xml:space="preserve">
+    <value>App profiles run with DispHub Pro. You can add apps now; they start switching when you upgrade.</value>
+  </data>
+  <data name="Apps_LastInFront" xml:space="preserve">
+    <value>Last app in front</value>
+  </data>
+  <data name="Apps_AddThis" xml:space="preserve">
+    <value>Add this app</value>
+  </data>
+  <data name="Apps_Rules" xml:space="preserve">
+    <value>Your apps</value>
+  </data>
+  <data name="Apps_AddApp" xml:space="preserve">
+    <value>Add app</value>
+  </data>
+  <data name="Apps_PickTitle" xml:space="preserve">
+    <value>Pick a running app</value>
+  </data>
+  <data name="Apps_Browse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="Apps_Search" xml:space="preserve">
+    <value>Search running apps</value>
+  </data>
+  <data name="Apps_EmptyTitle" xml:space="preserve">
+    <value>No apps yet</value>
+  </data>
+  <data name="Apps_EmptyHint" xml:space="preserve">
+    <value>Add a game or app and choose the profile it should use.</value>
+  </data>
+  <data name="Apps_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Apps_OrderHint" xml:space="preserve">
+    <value>If an app appears twice, the first rule in the list wins.</value>
+  </data>
+  <data name="Apps_ChooseProgram" xml:space="preserve">
+    <value>Choose a program</value>
+  </data>
+  <data name="Apps_ProgramsFilter" xml:space="preserve">
+    <value>Programs (*.exe)|*.exe</value>
+  </data>
+  <data name="Apps_NothingYet" xml:space="preserve">
+    <value>Nothing yet</value>
+  </data>
+  <data name="Apps_ForegroundRule" xml:space="preserve">
+    <value>Uses {0} while it's in front</value>
+  </data>
+  <data name="Apps_ForegroundRulePro" xml:space="preserve">
+    <value>Would use {0} with DispHub Pro</value>
+  </data>
+  <data name="Apps_ForegroundNoRule" xml:space="preserve">
+    <value>Uses your normal profile</value>
+  </data>
+  <data name="Displays_Title" xml:space="preserve">
+    <value>Displays</value>
+  </data>
+  <data name="Displays_Subtitle" xml:space="preserve">
+    <value>What DispHub can change on each connected display.</value>
+  </data>
+  <data name="Displays_BuiltIn" xml:space="preserve">
+    <value>Built-in display</value>
+  </data>
+  <data name="Displays_External" xml:space="preserve">
+    <value>External display</value>
+  </data>
+  <data name="Displays_ColoursYes" xml:space="preserve">
+    <value>Colours: yes</value>
+  </data>
+  <data name="Displays_ColoursLimited" xml:space="preserve">
+    <value>Colours: limited range</value>
+  </data>
+  <data name="Displays_ColoursHdr" xml:space="preserve">
+    <value>Colours: not while HDR is on</value>
+  </data>
+  <data name="Displays_ColoursNo" xml:space="preserve">
+    <value>Colours: not supported</value>
+  </data>
+  <data name="Displays_VibranceYes" xml:space="preserve">
+    <value>Vibrance: yes</value>
+  </data>
+  <data name="Displays_VibranceNo" xml:space="preserve">
+    <value>Vibrance: no</value>
+  </data>
+  <data name="Displays_Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="Displays_LeaveAlone" xml:space="preserve">
+    <value>Leave alone</value>
+  </data>
+  <data name="Displays_Colours" xml:space="preserve">
+    <value>Colour range</value>
+  </data>
+  <data name="Settings_AccentWindows" xml:space="preserve">
+    <value>Same as Windows</value>
+  </data>
+  <data name="Settings_TextNormal" xml:space="preserve">
+    <value>100 % (normal)</value>
+  </data>
+  <data name="Settings_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Settings_ResetAppearance" xml:space="preserve">
+    <value>Reset appearance</value>
+  </data>
+  <data name="Settings_Accent" xml:space="preserve">
+    <value>Accent colour</value>
+  </data>
+  <data name="Settings_AccentHint" xml:space="preserve">
+    <value>Used for buttons, selection and the active profile.</value>
+  </data>
+  <data name="Settings_Backdrop" xml:space="preserve">
+    <value>Window background</value>
+  </data>
+  <data name="Settings_BackdropHint" xml:space="preserve">
+    <value>Mica and acrylic let your wallpaper's colour show through.</value>
+  </data>
+  <data name="Settings_TextSize" xml:space="preserve">
+    <value>Text size</value>
+  </data>
+  <data name="Settings_TextSizeHint" xml:space="preserve">
+    <value>Makes everything in DispHub's window larger or smaller.</value>
+  </data>
+  <data name="Settings_CompactNav" xml:space="preserve">
+    <value>Compact navigation</value>
+  </data>
+  <data name="Settings_CompactNavHint" xml:space="preserve">
+    <value>Show the pages on the left as icons only.</value>
+  </data>
+  <data name="Settings_StartPage" xml:space="preserve">
+    <value>Open on</value>
+  </data>
+  <data name="Settings_StartPageHint" xml:space="preserve">
+    <value>The page DispHub's window shows first.</value>
+  </data>
+  <data name="Settings_ReduceMotion" xml:space="preserve">
+    <value>Reduce motion</value>
+  </data>
+  <data name="Settings_ReduceMotionHint" xml:space="preserve">
+    <value>Scroll without animation, whatever Windows' animation setting is.</value>
+  </data>
+  <data name="Settings_OsdPosition" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Mica" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Enum_WindowBackdrop_MicaAlt" xml:space="preserve">
+    <value>Mica alt</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Acrylic" xml:space="preserve">
+    <value>Acrylic</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
+    <value>Solid</value>
+  </data>
+  <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
+    <value>Top left</value>
+  </data>
+  <data name="Enum_OsdPosition_TopCenter" xml:space="preserve">
+    <value>Top centre</value>
+  </data>
+  <data name="Enum_OsdPosition_TopRight" xml:space="preserve">
+    <value>Top right</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomLeft" xml:space="preserve">
+    <value>Bottom left</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomCenter" xml:space="preserve">
+    <value>Bottom centre</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomRight" xml:space="preserve">
+    <value>Bottom right</value>
+  </data>
+  <data name="Profiles_FromTemplate" xml:space="preserve">
+    <value>From a template</value>
+  </data>
+  <data name="Profiles_FromLink" xml:space="preserve">
+    <value>From a link</value>
+  </data>
+  <data name="Template_vivid" xml:space="preserve">
+    <value>Vivid</value>
+  </data>
+  <data name="Template_vividHint" xml:space="preserve">
+    <value>Richer colour for photos, videos and games.</value>
+  </data>
+  <data name="Template_shadows" xml:space="preserve">
+    <value>Shadow detail</value>
+  </data>
+  <data name="Template_shadowsHint" xml:space="preserve">
+    <value>Lifts dark areas so detail in shadows is easier to see.</value>
+  </data>
+  <data name="Template_film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Template_filmHint" xml:space="preserve">
+    <value>Deeper blacks and a little more contrast for films and series.</value>
+  </data>
+  <data name="Template_evening" xml:space="preserve">
+    <value>Evening</value>
+  </data>
+  <data name="Template_eveningHint" xml:space="preserve">
+    <value>Warmer, gentler light after sunset.</value>
+  </data>
+  <data name="Template_dim" xml:space="preserve">
+    <value>Dim room</value>
+  </data>
+  <data name="Template_dimHint" xml:space="preserve">
+    <value>Darker than your monitor's lowest brightness setting.</value>
+  </data>
 </root>

@@ -33,6 +33,9 @@ public class SmoothScrollViewer : ScrollViewer
     /// <summary>Precision touchpads send many small steps and add their own momentum; light smoothing only.</summary>
     private static readonly TimeSpan TouchpadDuration = TimeSpan.FromMilliseconds(90);
 
+    /// <summary>The user turned off animations in DispHub's settings.</summary>
+    public static bool ReduceMotion { get; set; }
+
     private readonly ScrollMotion _motion = new();
     private readonly FrameClock _clock = new();
     private double _shown;
@@ -101,7 +104,7 @@ public class SmoothScrollViewer : ScrollViewer
         if (Math.Abs(target - _motion.Target) < 0.01)
             return _animating;
 
-        TimeSpan duration = !SystemParameters.ClientAreaAnimation ? TimeSpan.Zero
+        TimeSpan duration = !SystemParameters.ClientAreaAnimation || ReduceMotion ? TimeSpan.Zero
             : Math.Abs(delta) < Mouse.MouseWheelDeltaForOneLine ? TouchpadDuration
             : WheelDuration;
         _motion.AnimateTo(target, duration);
