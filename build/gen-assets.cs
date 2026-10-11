@@ -7,6 +7,9 @@
 
 // Draws the DispHub icon and writes every size the app and the MSIX package need.
 // Run from the repo root: dotnet run build/gen-assets.cs
+//
+// The icon is a monitor whose screen shows a vivid gradient meeting the original dark screen along a wave:
+// "your display, tuned". It is drawn as vectors so every size from 16 px to 1024 px stays crisp.
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -22,9 +25,9 @@ var thread = new Thread(() =>
 {
     // App icon (multi-size .ico) and a PNG for in-app use.
     WriteIco(Path.Combine(appAssets, "DispHub.ico"), [16, 20, 24, 32, 40, 48, 64, 96, 128, 256]);
-    SavePng(Icon(256, plate: true), Path.Combine(appAssets, "DispHub.png"));
+    SavePng(Icon(256, plate: false), Path.Combine(appAssets, "DispHub.png"));
 
-    // MSIX visual assets. Plated tiles use the dark rounded square; unplated taskbar icons are transparent.
+    // MSIX visual assets. Tiles use the light rounded plate; taskbar/Start icons are unplated.
     foreach ((string scale, double factor) in new[] { ("100", 1.0), ("125", 1.25), ("150", 1.5), ("200", 2.0), ("400", 4.0) })
     {
         SavePng(Icon(Round(44 * factor), plate: false), Path.Combine(packageAssets, $"Square44x44Logo.scale-{scale}.png"));
@@ -51,6 +54,8 @@ Console.WriteLine("Assets written.");
 
 static int Round(double value) => (int)Math.Round(value);
 
+static Color Hex(uint rgb) => Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
+
 static BitmapSource Icon(int size, bool plate)
 {
     var visual = new DrawingVisual();
@@ -59,30 +64,89 @@ static BitmapSource Icon(int size, bool plate)
         double s = size;
         if (plate)
         {
-            var background = new LinearGradientBrush(Color.FromRgb(0x2D, 0x31, 0x3D), Color.FromRgb(0x14, 0x16, 0x1C), 90);
-            dc.DrawRoundedRectangle(background, null, new Rect(0, 0, s, s), s * 0.22, s * 0.22);
+            var background = new LinearGradientBrush(Hex(0xFBFCFD), Hex(0xE6E9EE), 90);
+            dc.DrawRoundedRectangle(background, new Pen(new SolidColorBrush(Hex(0xD3D8DF)), Math.Max(1, s / 256)),
+                new Rect(0.5, 0.5, s - 1, s - 1), s * 0.22, s * 0.22);
         }
 
-        // Small sizes get a thicker ring so it still reads at 16 px.
-        double inset = plate ? 0.14 : 0.04;
-        double thickness = size <= 24 ? 0.20 : 0.14;
-        DrawHueRing(dc, new Point(s / 2, s / 2), s * (0.5 - inset), s * (0.5 - inset - thickness));
-
-        // Half-filled circle: the universal "contrast" symbol.
-        double r = s * (0.5 - inset - thickness - (size <= 24 ? 0.06 : 0.08));
-        var center = new Point(s / 2, s / 2);
-        double stroke = Math.Max(1, s * 0.035);
-        var white = new SolidColorBrush(Color.FromRgb(0xF4, 0xF5, 0xF7));
-        if (!plate)
-            dc.DrawEllipse(new SolidColorBrush(Color.FromRgb(0x1B, 0x1D, 0x24)), null, center, r, r);
-        dc.DrawEllipse(null, new Pen(white, stroke), center, r - (stroke / 2), r - (stroke / 2));
-        var half = new PathGeometry();
-        var figure = new PathFigure { StartPoint = new Point(center.X, center.Y - r), IsClosed = true };
-        figure.Segments.Add(new ArcSegment(new Point(center.X, center.Y + r), new Size(r, r), 0, false, SweepDirection.Clockwise, true));
-        half.Figures.Add(figure);
-        dc.DrawGeometry(white, null, half);
+        // Plated icons leave room around the monitor; unplated ones fill the canvas.
+        double area = plate ? 0.68 : 1.0;
+        double origin = (1 - area) / 2 * s;
+        DrawMonitor(dc, origin, origin + (plate ? s * 0.02 : 0), s * area, size);
     }
     return Render(visual, size, size);
+}
+
+static void DrawMonitor(DrawingContext dc, double x, double y, double w, int pixelSize)
+{
+    bool tiny = pixelSize <= 24;
+    double bezel = w * (tiny ? 0.07 : 0.05);
+    double bodyHeight = w * 0.66;
+    var body = new Rect(x, y + (w * 0.06), w, bodyHeight);
+
+    // Soft shadow under the monitor (skipped at tiny sizes where it only blurs the outline).
+    if (!tiny)
+    {
+        for (int i = 4; i >= 1; i--)
+        {
+            double spread = w * 0.012 * i;
+            var shadow = new Rect(body.X - spread + (w * 0.01), body.Y + (w * 0.03) - spread, body.Width + (2 * spread) - (w * 0.02), body.Height + (2 * spread));
+            dc.DrawRoundedRectangle(new SolidColorBrush(Color.FromArgb(10, 20, 30, 50)), null, shadow, (w * 0.075) + spread, (w * 0.075) + spread);
+        }
+    }
+
+    // Bezel.
+    var bezelBrush = new LinearGradientBrush(Hex(0xFFFFFF), Hex(0xD9DDE3), 90);
+    dc.DrawRoundedRectangle(bezelBrush, new Pen(new SolidColorBrush(Hex(0xB9C0CA)), Math.Max(0.75, w / 220)),
+        body, w * 0.075, w * 0.075);
+
+    // Screen: vivid gradient on the left, the original dark screen on the right, split by a wave.
+    var screen = new Rect(body.X + bezel, body.Y + bezel, body.Width - (2 * bezel), body.Height - (2 * bezel));
+    double r = w * 0.035;
+    dc.PushClip(new RectangleGeometry(screen, r, r));
+
+    var dark = new LinearGradientBrush(Hex(0x48515F), Hex(0x232831), new Point(0, 0), new Point(1, 1));
+    dc.DrawRectangle(dark, null, screen);
+
+    var vivid = new LinearGradientBrush { StartPoint = new Point(0.15, 0), EndPoint = new Point(0.35, 1) };
+    vivid.GradientStops.Add(new GradientStop(Hex(0x2DD4F0), 0.0));
+    vivid.GradientStops.Add(new GradientStop(Hex(0x3B82F6), 0.32));
+    vivid.GradientStops.Add(new GradientStop(Hex(0x2CC2B2), 0.56));
+    vivid.GradientStops.Add(new GradientStop(Hex(0xF5B32B), 0.8));
+    vivid.GradientStops.Add(new GradientStop(Hex(0xF97316), 1.0));
+
+    double sx = screen.X, sy = screen.Y, sw = screen.Width, sh = screen.Height;
+    var wave = new StreamGeometry();
+    using (StreamGeometryContext g = wave.Open())
+    {
+        g.BeginFigure(new Point(sx - 1, sy - 1), isFilled: true, isClosed: true);
+        g.LineTo(new Point(sx + (sw * 0.70), sy - 1), true, false);
+        g.BezierTo(
+            new Point(sx + (sw * 0.48), sy + (sh * 0.30)),
+            new Point(sx + (sw * 0.70), sy + (sh * 0.62)),
+            new Point(sx + (sw * 0.44), sy + sh + 1),
+            true,
+            false);
+        g.LineTo(new Point(sx - 1, sy + sh + 1), true, false);
+    }
+    wave.Freeze();
+    dc.DrawGeometry(vivid, null, wave);
+
+    // A thin highlight along the wave edge makes the split read as a sweep, not a crack.
+    if (!tiny)
+        dc.DrawGeometry(null, new Pen(new SolidColorBrush(Color.FromArgb(90, 255, 255, 255)), Math.Max(0.6, w / 160)), wave);
+
+    dc.Pop();
+
+    // Stand.
+    var standBrush = new LinearGradientBrush(Hex(0xF3F4F6), Hex(0xC9CED6), 90);
+    var standPen = new Pen(new SolidColorBrush(Hex(0xB9C0CA)), Math.Max(0.75, w / 260));
+    double neckWidth = w * (tiny ? 0.22 : 0.16);
+    var neck = new Rect(x + ((w - neckWidth) / 2), body.Bottom - (w * 0.01), neckWidth, w * 0.13);
+    dc.DrawRectangle(standBrush, null, neck);
+    double baseWidth = w * (tiny ? 0.56 : 0.46);
+    var foot = new Rect(x + ((w - baseWidth) / 2), neck.Bottom - (w * 0.015), baseWidth, w * (tiny ? 0.08 : 0.06));
+    dc.DrawRoundedRectangle(standBrush, standPen, foot, w * 0.03, w * 0.03);
 }
 
 static BitmapSource Wide(int width, int height)
@@ -90,53 +154,12 @@ static BitmapSource Wide(int width, int height)
     var visual = new DrawingVisual();
     using (DrawingContext dc = visual.RenderOpen())
     {
-        var background = new LinearGradientBrush(Color.FromRgb(0x2D, 0x31, 0x3D), Color.FromRgb(0x14, 0x16, 0x1C), 90);
+        var background = new LinearGradientBrush(Hex(0xFBFCFD), Hex(0xE6E9EE), 90);
         dc.DrawRectangle(background, null, new Rect(0, 0, width, height));
-        BitmapSource icon = Icon((int)(height * 0.8), plate: false);
-        dc.DrawImage(icon, new Rect((width - icon.PixelWidth) / 2.0, (height - icon.PixelHeight) / 2.0, icon.PixelWidth, icon.PixelHeight));
+        double w = height * 0.7;
+        DrawMonitor(dc, (width - w) / 2, (height - (w * 0.92)) / 2, w, (int)w);
     }
     return Render(visual, width, height);
-}
-
-static void DrawHueRing(DrawingContext dc, Point center, double outer, double inner)
-{
-    const int Segments = 720;
-    for (int i = 0; i < Segments; i++)
-    {
-        // Start at the top, go clockwise; overlap each wedge slightly to hide seams.
-        double a0 = ((i / (double)Segments) * 360) - 90;
-        double a1 = (((i + 1.6) / Segments) * 360) - 90;
-        var geometry = new PathGeometry();
-        var figure = new PathFigure { StartPoint = Polar(center, outer, a0), IsClosed = true };
-        figure.Segments.Add(new ArcSegment(Polar(center, outer, a1), new Size(outer, outer), 0, false, SweepDirection.Clockwise, true));
-        figure.Segments.Add(new LineSegment(Polar(center, inner, a1), true));
-        figure.Segments.Add(new ArcSegment(Polar(center, inner, a0), new Size(inner, inner), 0, false, SweepDirection.Counterclockwise, true));
-        geometry.Figures.Add(figure);
-        dc.DrawGeometry(new SolidColorBrush(Hue(i * 360.0 / Segments)), null, geometry);
-    }
-}
-
-static Point Polar(Point c, double r, double degrees)
-{
-    double rad = degrees * Math.PI / 180;
-    return new Point(c.X + (r * Math.Cos(rad)), c.Y + (r * Math.Sin(rad)));
-}
-
-static Color Hue(double h)
-{
-    // HSV with S = 0.85, V = 1.
-    double s = 0.85, v = 1.0;
-    double c = v * s, x = c * (1 - Math.Abs(((h / 60) % 2) - 1)), m = v - c;
-    (double r, double g, double b) = h switch
-    {
-        < 60 => (c, x, 0.0),
-        < 120 => (x, c, 0.0),
-        < 180 => (0.0, c, x),
-        < 240 => (0.0, x, c),
-        < 300 => (x, 0.0, c),
-        _ => (c, 0.0, x),
-    };
-    return Color.FromRgb((byte)((r + m) * 255), (byte)((g + m) * 255), (byte)((b + m) * 255));
 }
 
 static BitmapSource Render(Visual visual, int width, int height)
@@ -161,7 +184,7 @@ static void WriteIco(string path, int[] sizes)
     var images = sizes.Select(size =>
     {
         var encoder = new PngBitmapEncoder();
-        encoder.Frames.Add(BitmapFrame.Create(Icon(size, plate: size >= 48)));
+        encoder.Frames.Add(BitmapFrame.Create(Icon(size, plate: false)));
         using var memory = new MemoryStream();
         encoder.Save(memory);
         return (size, data: memory.ToArray());

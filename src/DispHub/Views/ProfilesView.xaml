@@ -69,12 +69,11 @@
       <ListBox.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:ProfileItemViewModel}">
           <StackPanel>
-            <Rectangle
-              Height="8"
-              Margin="0,0,0,10"
-              Fill="{Binding Preview}"
-              RadiusX="4"
-              RadiusY="4" />
+            <Border Height="84" Margin="0,0,0,10" CornerRadius="5">
+              <Border.Background>
+                <ImageBrush ImageSource="{Binding Preview}" Stretch="UniformToFill" />
+              </Border.Background>
+            </Border>
             <Grid>
               <TextBlock
                 FontSize="14"

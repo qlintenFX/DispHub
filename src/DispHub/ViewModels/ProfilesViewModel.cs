@@ -259,7 +259,7 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
     public partial string Summary { get; set; } = Describe(profile.Color);
 
     [ObservableProperty]
-    public partial Brush Preview { get; set; } = PreviewBrush(profile.Color);
+    public partial ImageSource Preview { get; set; } = Controls.ColorPreview.Render(profile.Color);
 
     public void Update(Profile source, bool isActive, string? hotkeyFailure)
     {
@@ -268,7 +268,7 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
         HasHotkeyProblem = hotkeyFailure is not null;
         IsActive = isActive;
         Summary = Describe(source.Color);
-        Preview = PreviewBrush(source.Color);
+        Preview = Controls.ColorPreview.Render(source.Color);
     }
 
     public static string Describe(ColorSettings c)
@@ -285,20 +285,6 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
         if (c.Vibrance != ColorSettings.NeutralVibrance)
             parts.Add($"Vibrance {c.Vibrance}%");
         return parts.Count == 0 ? "Original colours" : string.Join(" · ", parts);
-    }
-
-    /// <summary>A black-to-white strip pushed through the profile's ramp: shows warmth, brightness and contrast at a glance.</summary>
-    public static Brush PreviewBrush(ColorSettings settings)
-    {
-        GammaRamp ramp = RampBuilder.Build(settings);
-        var brush = new LinearGradientBrush { StartPoint = new(0, 0.5), EndPoint = new(1, 0.5) };
-        foreach (int i in new[] { 0, 48, 96, 160, 208, 255 })
-        {
-            var color = Color.FromRgb((byte)(ramp.Red[i] >> 8), (byte)(ramp.Green[i] >> 8), (byte)(ramp.Blue[i] >> 8));
-            brush.GradientStops.Add(new GradientStop(color, i / 255.0));
-        }
-        brush.Freeze();
-        return brush;
     }
 }
 
@@ -378,7 +364,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
 
     public string VibranceHelp => VibranceSupported
         ? "Colour saturation, set through your graphics driver."
-        : "Vibrance needs an NVIDIA or Intel GPU driving this display. AMD support is coming.";
+        : "Vibrance needs an NVIDIA, Intel or AMD GPU driving this display, with its graphics driver installed.";
 
     public void Load(Profile? profile)
     {

@@ -15,6 +15,8 @@ DispHub is licensed under GPL-3.0-or-later. It uses the following components.
 
 - **NVIDIA NVAPI** (`nvapi64.dll`) is installed with NVIDIA's graphics driver. DispHub calls it to read and set
   digital vibrance. No NVIDIA code is included in DispHub.
+- **AMD Display Library** (`atiadlxx.dll`) is installed with AMD Software. DispHub calls it to set saturation on
+  AMD-driven displays. Its interface definitions come from AMD's MIT-licensed ADL SDK; no AMD code is included.
 - **Intel Graphics Control Library** (`ControlLib.dll`) is installed with Intel's graphics driver. DispHub calls it
   to set saturation on Intel-driven displays. No Intel code is included in DispHub.
 

@@ -41,6 +41,54 @@
       </Grid>
     </Border>
 
+    <TextBlock Style="{StaticResource SectionHeader}" Text="A note from the developer" />
+    <Border Padding="20,16" Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <TextBlock TextWrapping="Wrap" Text="Hi, I'm Quinten. I built DispHub because I kept opening three different control panels just to make a game look right or to make my screen easier on the eyes at night. I wanted one small, quiet app that does it properly and looks like it belongs on Windows." />
+        <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Text="DispHub is made by one person, in spare time, with a lot of care. If it makes your screen a little nicer to look at, that means a lot. Ideas and bug reports are always welcome on GitHub; I read every one." />
+        <TextBlock Margin="0,10,0,0" FontStyle="Italic" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="Thank you for using DispHub. — Quinten (qlintenFX)" />
+      </StackPanel>
+    </Border>
+
+    <TextBlock Style="{StaticResource SectionHeader}" Text="Credits" />
+    <Border Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <Grid Margin="0,0,0,10">
+          <StackPanel Margin="0,0,140,0">
+            <TextBlock Text="FluentFlyout by unchihugo" />
+            <TextBlock Style="{StaticResource Hint}" Text="A beautifully crafted Windows utility that inspired much of how DispHub looks and feels." />
+          </StackPanel>
+          <ui:HyperlinkButton
+            HorizontalAlignment="Right"
+            Command="{Binding OpenUrlCommand}"
+            CommandParameter="https://github.com/unchihugo/FluentFlyout"
+            Content="FluentFlyout" />
+        </Grid>
+        <Grid Margin="0,0,0,10">
+          <StackPanel Margin="0,0,140,0">
+            <TextBlock Text="WPF UI by lepo.co" />
+            <TextBlock Style="{StaticResource Hint}" Text="The Fluent controls, Mica window and tray icon." />
+          </StackPanel>
+          <ui:HyperlinkButton
+            HorizontalAlignment="Right"
+            Command="{Binding OpenUrlCommand}"
+            CommandParameter="https://github.com/lepoco/wpfui"
+            Content="WPF UI" />
+        </Grid>
+        <Grid>
+          <StackPanel Margin="0,0,140,0">
+            <TextBlock Text="Everyone who tests, translates and shares presets" />
+            <TextBlock Style="{StaticResource Hint}" Text="DispHub gets better with every report and preset. Thank you." />
+          </StackPanel>
+          <ui:HyperlinkButton
+            HorizontalAlignment="Right"
+            Command="{Binding OpenUrlCommand}"
+            CommandParameter="https://github.com/qlintenFX/DispHub/graphs/contributors"
+            Content="Contributors" />
+        </Grid>
+      </StackPanel>
+    </Border>
+
     <TextBlock Style="{StaticResource SectionHeader}" Text="Help and feedback" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>

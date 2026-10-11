@@ -62,17 +62,19 @@
           <Border Style="{StaticResource SettingCard}">
             <Grid>
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="140" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
-              <Rectangle
-                Height="8"
+              <Border
+                Height="62"
                 Margin="0,0,18,0"
                 VerticalAlignment="Center"
-                Fill="{Binding Preview}"
-                RadiusX="4"
-                RadiusY="4" />
+                CornerRadius="5">
+                <Border.Background>
+                  <ImageBrush ImageSource="{Binding Preview}" Stretch="UniformToFill" />
+                </Border.Background>
+              </Border>
               <StackPanel Grid.Column="1">
                 <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
                 <TextBlock Style="{StaticResource Hint}" Text="{Binding Description}" />

@@ -18,7 +18,7 @@
 - **Profiles.** Save as many looks as you like ("Gaming", "Night", "Photo editing") and switch with one click,
   a global hotkey or the tray menu. A small on-screen message confirms the switch without stealing focus from games.
 - **Every monitor.** Colours apply to all connected displays, and DispHub can leave chosen displays alone.
-- **Vibrance.** Saturation on NVIDIA and Intel graphics, so it also works on the built-in screen of most laptops.
+- **Vibrance.** Saturation on NVIDIA, Intel and AMD (beta) graphics, so it also works on the built-in screen of most laptops.
 - **Presets.** Add a ready-made look from the community gallery, or share your own as a `disphub://` link.
 - **Automation (Pro).** Switch profiles while a specific game or app is in front, and fade to warmer colours
   at night on a schedule.
@@ -38,10 +38,23 @@ You can also build it yourself (below); builds from source include every feature
 | Feature | Works with |
 | --- | --- |
 | Gamma, contrast, brightness, colour temperature | Any GPU (Windows gamma ramps). Not available while HDR is on. |
-| Vibrance | NVIDIA and Intel (including laptop screens on Intel graphics). AMD support is planned. |
+| Vibrance | NVIDIA and Intel (including laptop screens on Intel graphics). AMD is in beta: please report how it works for you. |
 
 Windows only allows moderate colour changes by default. For very warm night colours, DispHub can lift that limit
 for you (Settings > Displays > Full colour range; needs administrator approval once).
+
+## Questions
+
+**Do people watching my stream or screen share see the changed colours?**
+No. DispHub changes colours in your graphics card's output, after Windows has drawn the screen, so OBS, Discord,
+Teams and screenshots capture the original colours. Your viewers see a normal picture while you see your profile.
+
+**My night profile isn't as warm as I set it.**
+Windows limits how far colours can change by default. Turn on Settings > Displays > Full colour range (asks for
+administrator approval once).
+
+**Nothing changes on my HDR screen.**
+Windows doesn't allow gamma changes while HDR is on. Vibrance still works.
 
 ## Build from source
 

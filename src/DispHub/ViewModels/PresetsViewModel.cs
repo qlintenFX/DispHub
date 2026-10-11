@@ -80,7 +80,7 @@ public sealed partial class PresetItemViewModel(GalleryEntry entry, SharedPreset
     public string Description => entry.Description;
     public string Tags => string.Join(" · ", entry.Tags);
     public string Summary => ProfileItemViewModel.Describe(preset.Color);
-    public Brush Preview { get; } = ProfileItemViewModel.PreviewBrush(preset.Color);
+    public ImageSource Preview { get; } = Controls.ColorPreview.Render(preset.Color);
 
     [ObservableProperty]
     public partial bool Copied { get; set; }

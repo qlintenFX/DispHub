@@ -9,8 +9,8 @@ public static class ScrollEasing
     /// <summary>Time constant for notched mouse wheels: about 90 % of a scroll lands within 0.2 s.</summary>
     public static readonly TimeSpan WheelTau = TimeSpan.FromMilliseconds(85);
 
-    /// <summary>Precision touchpads send many small deltas; follow them closely so scrolling feels attached to the fingers.</summary>
-    public static readonly TimeSpan TouchpadTau = TimeSpan.FromMilliseconds(30);
+    /// <summary>Precision touchpads send many small, unevenly timed deltas; light smoothing hides the unevenness while still feeling attached to the fingers.</summary>
+    public static readonly TimeSpan TouchpadTau = TimeSpan.FromMilliseconds(55);
 
     /// <summary>Remaining distance below which the animation snaps to the target and stops.</summary>
     public const double SnapDistance = 0.5;
