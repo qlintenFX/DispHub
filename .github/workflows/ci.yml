@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - run: dotnet restore DispHub.slnx
+      - run: dotnet format DispHub.slnx --verify-no-changes --no-restore
+      - run: dotnet build DispHub.slnx -c Release --no-restore
+      - run: dotnet test --project tests/DispHub.Tests/DispHub.Tests.csproj -c Release --no-build

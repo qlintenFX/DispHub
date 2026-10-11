@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>DispHub</RootNamespace>
+    <AssemblyName>DispHub</AssemblyName>
+    <ApplicationIcon>Assets\DispHub.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- A tray app: no background GC thread, and hand memory back to Windows promptly. -->
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <RetainVMGarbageCollection>false</RetainVMGarbageCollection>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="WPF-UI" />
+    <PackageReference Include="WPF-UI.Tray" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DispHub.Core\DispHub.Core.csproj" />
+    <ProjectReference Include="..\DispHub.Platform\DispHub.Platform.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\presets\gallery.json" LogicalName="DispHub.gallery.json" Link="Assets\gallery.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\DispHub.ico" />
+    <Resource Include="Assets\DispHub.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="DispHub.Tests" />
+  </ItemGroup>
+</Project>

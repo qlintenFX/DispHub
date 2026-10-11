@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DispHub.Core/DispHub.Core.csproj" />
+    <Project Path="src/DispHub.Platform/DispHub.Platform.csproj" />
+    <Project Path="src/DispHub/DispHub.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DispHub.Tests/DispHub.Tests.csproj" />
+  </Folder>
+</Solution>

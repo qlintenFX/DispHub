@@ -1,0 +1,38 @@
+# Contributing
+
+Thanks for helping. Bug reports and small, focused pull requests are the most useful contributions.
+
+## Reporting bugs
+
+Open an issue and paste the output of **About > Copy diagnostics**. It lists your displays, GPU support and
+DispHub's state, which is usually what we need to reproduce a colour problem.
+
+## Making changes
+
+1. Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+2. Build and test:
+
+   ```powershell
+   dotnet build DispHub.slnx -c Release
+   dotnet test --project tests/DispHub.Tests/DispHub.Tests.csproj
+   dotnet format DispHub.slnx
+   ```
+
+   The build treats warnings as errors and CI checks formatting.
+3. If you change the UI, run the app (`dotnet run --project src/DispHub`) and check it in light and dark mode.
+
+Where things live is described in [CLAUDE.md](CLAUDE.md), which doubles as the project guide for AI coding agents.
+
+## Commits and pull requests
+
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org):
+  `fix: keep hotkeys registered after renaming a profile`. Imperative mood, 72 characters at most.
+- Keep the pull request description short: one to three sentences on what changed and why, then a
+  `Testing:` line saying how you checked it. Add a screenshot for visible changes. No headings or long lists.
+- One topic per pull request. They are squash-merged.
+
+## Licensing of contributions
+
+DispHub is licensed under GPL-3.0-or-later and is also distributed through the Microsoft Store.
+By submitting a contribution you agree that it is licensed under GPL-3.0-or-later and that the maintainer may
+also distribute it as part of DispHub under other terms, such as the Microsoft Store's.

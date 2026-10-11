@@ -1,0 +1,11 @@
+<!-- Downloads the Windows SDK packaging tools (makeappx, makepri) used by package-msix.ps1. Not part of the app. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <NoWarn>$(NoWarn);NU1702</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.Windows.SDK.BuildTools" Version="[10.0.28000.2705]" />
+  </ItemGroup>
+</Project>

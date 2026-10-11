@@ -1,0 +1,21 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: What you did, what you expected and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Diagnostics
+      description: In DispHub, open About and click "Copy diagnostics", then paste here.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Screenshots or logs
+      description: Optional. Logs are in About > Log files.

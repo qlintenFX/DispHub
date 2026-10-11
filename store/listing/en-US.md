@@ -1,0 +1,109 @@
+# Microsoft Store listing (English)
+
+Paste these into Partner Center > DispHub > Store listings > English (United States).
+Field limits are noted in brackets.
+
+## Product name
+
+DispHub
+
+## Short description [up to 270 characters shown in search]
+
+Display profiles for Windows. Tune gamma, contrast, brightness, colour temperature and vibrance, then switch with
+a hotkey, automatically per game, or on a schedule. Works on NVIDIA and Intel, laptops included.
+
+## Description [10,000 characters]
+
+DispHub puts your display's look one hotkey away.
+
+Make a profile for each situation (brighter shadows and stronger colours for competitive games, warm and dim for
+late-night reading, neutral for photo work) and switch between them instantly. A small on-screen message confirms
+the change without stealing focus from your game.
+
+PROFILES THAT FIT HOW YOU USE YOUR PC
+• Brightness, contrast, gamma and colour temperature for every connected display
+• Vibrance (colour saturation) on NVIDIA and Intel graphics, including the built-in screen of most laptops
+• Global hotkeys for each profile, plus pause, next and previous
+• Quick switching from the notification area
+
+PRESETS
+• Start from ready-made looks for CS2, Valorant, battle royale games, films and night reading
+• Share your own profile as a link; anyone with DispHub can add it in one click
+
+AUTOMATION (DISPHUB PRO)
+• Per-game profiles: your game gets its look while it's in front, and your desktop goes back to normal when you
+  switch away
+• Schedules that fade smoothly to warmer colours in the evening
+• Different settings for each display
+• Unlimited profiles
+
+SAFE AND LIGHT
+• Your original colours are saved before anything changes and restored when you pause or quit, even after a crash
+• Runs quietly in the notification area and uses very little memory
+• No account, no ads, no telemetry
+
+DispHub is free. The one-time Pro upgrade unlocks automation, per-display settings and unlimited profiles, and
+supports development. DispHub is open source: https://github.com/qlintenFX/DispHub
+
+Notes: gamma-based adjustments aren't available while Windows HDR is on. Windows limits how far colours can change
+by default; DispHub can lift that limit with your permission for very warm night profiles.
+
+## What's new in this version [1,500 characters]
+
+First release.
+
+## Product features [up to 20, 200 characters each]
+
+1. Profiles for brightness, contrast, gamma, colour temperature and vibrance
+2. Global hotkeys to switch profiles, even in games
+3. Vibrance on NVIDIA and Intel graphics, including laptop screens
+4. Works on every connected display
+5. Preset gallery for popular games, plus shareable profile links
+6. Per-game profiles that switch automatically (Pro)
+7. Schedules with smooth fades to warmer evening colours (Pro)
+8. Different settings per display (Pro)
+9. Original colours restored on pause, exit or after a crash
+10. Light and dark theme, starts with Windows
+
+## Search terms [7 terms]
+
+vibrance, digital vibrance, gamma, night light, color temperature, monitor brightness, CS2
+
+## Screenshots
+
+Use `store/screenshots/*.png` in numbered order. Captions:
+
+1. Switch looks with one click or a hotkey
+2. Start from community presets for your favourite games
+3. Profiles that switch automatically per game and on a schedule (Pro)
+4. Quiet in the background, starts with Windows
+
+## Store logo
+
+`store/icon-1024.png` (1:1 box art, also used for the 300x300 logo).
+
+## Other fields
+
+- Privacy policy URL: https://github.com/qlintenFX/DispHub/blob/main/PRIVACY.md
+- Website: https://github.com/qlintenFX/DispHub
+- Support contact: https://github.com/qlintenFX/DispHub/issues
+- Copyright: © 2026 qlintenFX
+- Category: Utilities & tools
+- Additional system requirements: Windows 10 version 2004 or later. Vibrance needs an NVIDIA or Intel GPU driving the
+  display.
+
+## Notes for certification (restricted capability: runFullTrust)
+
+DispHub is a desktop (WPF) app that adjusts display gamma ramps and GPU colour settings, registers global hotkeys and
+runs in the notification area. These need the full-trust desktop runtime. DispHub doesn't install drivers or services
+and makes no changes outside its own data folder, except, when the user explicitly asks for it, a Windows gamma-range
+registry value set through a UAC prompt.
+
+## Pro add-on
+
+- Product type: Durable, no expiry
+- Product ID (in-app offer token): `pro` (the app looks for this token)
+- Title: DispHub Pro
+- Description: Per-game profiles, schedules with smooth fades, different settings per display and unlimited profiles.
+  A one-time purchase that also supports development.
+- Suggested price: USD 4.99, with Microsoft's automatic regional pricing

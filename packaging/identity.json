@@ -1,0 +1,6 @@
+{
+  "comment": "Must match Partner Center > Product management > Product identity exactly. The dev values let you build and test locally.",
+  "name": "qlintenFX.DispHub.Dev",
+  "publisher": "CN=DispHub Dev",
+  "publisherDisplayName": "qlintenFX"
+}

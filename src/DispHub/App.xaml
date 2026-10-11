@@ -1,0 +1,39 @@
+<Application
+  x:Class="DispHub.App"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ctl="clr-namespace:DispHub.Controls"
+  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+  xmlns:views="clr-namespace:DispHub.Views"
+  xmlns:vm="clr-namespace:DispHub.ViewModels"
+  ShutdownMode="OnExplicitShutdown">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ui:ThemesDictionary Theme="Dark" />
+        <ui:ControlsDictionary />
+        <ResourceDictionary Source="Resources/Styles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <!-- Subclasses don't pick up implicit styles of their base type. -->
+      <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ctl:SmoothScrollViewer" />
+      <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="ctl:HotkeyBox" />
+
+      <DataTemplate DataType="{x:Type vm:ProfilesViewModel}">
+        <views:ProfilesView />
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type vm:PresetsViewModel}">
+        <views:PresetsView />
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type vm:AutomationViewModel}">
+        <views:AutomationView />
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+        <views:SettingsView />
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type vm:AboutViewModel}">
+        <views:AboutView />
+      </DataTemplate>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

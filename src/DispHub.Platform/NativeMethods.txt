@@ -1,0 +1,58 @@
+// Displays
+QueryDisplayConfig
+GetDisplayConfigBufferSizes
+DisplayConfigGetDeviceInfo
+DISPLAYCONFIG_SOURCE_DEVICE_NAME
+DISPLAYCONFIG_TARGET_DEVICE_NAME
+DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO
+WIN32_ERROR
+
+// Gamma
+CreateDC
+DeleteDC
+SetDeviceGammaRamp
+GetDeviceGammaRamp
+
+// Hotkeys and window messages
+RegisterHotKey
+UnregisterHotKey
+RegisterWindowMessage
+WTSRegisterSessionNotification
+WTSUnRegisterSessionNotification
+WM_HOTKEY
+WM_DISPLAYCHANGE
+WM_POWERBROADCAST
+WM_WTSSESSION_CHANGE
+WM_SETTINGCHANGE
+PBT_APMRESUMEAUTOMATIC
+WTS_SESSION_UNLOCK
+NOTIFY_FOR_THIS_SESSION
+
+// Foreground app
+SetWinEventHook
+UnhookWinEvent
+GetWindowThreadProcessId
+OpenProcess
+QueryFullProcessImageName
+EVENT_SYSTEM_FOREGROUND
+EVENT_SYSTEM_MINIMIZEEND
+WINEVENT_OUTOFCONTEXT
+WINEVENT_SKIPOWNPROCESS
+
+// Windows
+GetCursorPos
+MonitorFromPoint
+GetMonitorInfo
+MONITORINFOEXW
+SetWindowPos
+GetWindowLong
+SetWindowLong
+ShowWindow
+SetForegroundWindow
+EmptyWorkingSet
+GetCurrentProcess
+WINDOW_EX_STYLE
+
+// Packaging
+GetCurrentPackageFullName
+HWND_TOPMOST
