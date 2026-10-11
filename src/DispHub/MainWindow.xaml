@@ -28,7 +28,7 @@
 
     <ui:TitleBar Title="DispHub" Grid.Row="0">
       <ui:TitleBar.Icon>
-        <ui:ImageIcon Source="pack://application:,,,/Assets/DispHub.png" />
+        <ui:ImageIcon RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/DispHub-64.png" />
       </ui:TitleBar.Icon>
     </ui:TitleBar>
 

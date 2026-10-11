@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using DispHub.Core.Model;
 using DispHub.Localization;
+using DispHub.Platform.Shell;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Tray.Controls;
 using MenuItem = System.Windows.Controls.MenuItem;
@@ -26,7 +27,7 @@ public sealed class TrayService : IDisposable
         _exit = exit;
         _icon = new NotifyIcon
         {
-            Icon = new BitmapImage(new Uri("pack://application:,,,/Assets/DispHub.ico")),
+            Icon = IconFrame(WindowHelpers.SmallIconSize()),
             FocusOnLeftClick = false,
             MenuOnRightClick = true,
             TooltipText = "DispHub",
@@ -54,6 +55,18 @@ public sealed class TrayService : IDisposable
     {
         _icon.Unregister();
         _icon.Dispose();
+    }
+
+    /// <summary>
+    /// The icon drawn for exactly this size. Handing Windows a bigger image makes it shrink the icon itself,
+    /// which blurs and roughens it.
+    /// </summary>
+    private static BitmapFrame IconFrame(int size)
+    {
+        var decoder = BitmapDecoder.Create(
+            new Uri("pack://application:,,,/Assets/DispHub.ico"), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+        return decoder.Frames.Where(f => f.PixelWidth >= size).MinBy(f => f.PixelWidth)
+            ?? decoder.Frames.MaxBy(f => f.PixelWidth)!;
     }
 
     private void OnLeftDoubleClick([NotNull] NotifyIcon sender, RoutedEventArgs e) => _openWindow();

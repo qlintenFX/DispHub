@@ -16,6 +16,7 @@
         Width="64"
         Height="64"
         Margin="0,0,18,0"
+        RenderOptions.BitmapScalingMode="HighQuality"
         Source="pack://application:,,,/Assets/DispHub.png" />
       <StackPanel VerticalAlignment="Center">
         <TextBlock Style="{StaticResource PageTitle}" Text="DispHub" />

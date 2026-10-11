@@ -51,6 +51,8 @@ ShowWindow
 SetForegroundWindow
 EmptyWorkingSet
 GetCurrentProcess
+GetSystemMetricsForDpi
+GetDpiForSystem
 WINDOW_EX_STYLE
 
 // Packaging

@@ -29,6 +29,7 @@
   <ItemGroup>
     <Resource Include="Assets\DispHub.ico" />
     <Resource Include="Assets\DispHub.png" />
+    <Resource Include="Assets\DispHub-64.png" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="DispHub.Tests" />

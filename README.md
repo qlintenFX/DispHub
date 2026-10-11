@@ -1,8 +1,9 @@
-<p align="center">
-  <img src="src/DispHub/Assets/DispHub.png" width="96" alt="DispHub icon">
-</p>
-
-<h1 align="center">DispHub</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/wordmark-dark.png">
+    <img src="docs/images/wordmark-light.png" height="72" alt="DispHub">
+  </picture>
+</h1>
 
 <p align="center">
   Display profiles for Windows: gamma, contrast, brightness, colour temperature and vibrance,<br>
