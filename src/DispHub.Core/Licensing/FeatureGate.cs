@@ -13,5 +13,15 @@ public sealed record FeatureGate(bool IsPro)
     public bool Schedules => IsPro;
     public bool PerMonitorProfiles => IsPro;
 
+    /// <summary>Saving looks under a name.</summary>
+    public bool SavedLooks => IsPro;
+
+    /// <summary>
+    /// Whether a look can be shown on screen. Everyone can preview every look in the app; free shows the comfort and
+    /// accessibility looks (and changes made to them) on screen, Pro shows all.
+    /// </summary>
+    public bool CanShowLook(Effects.LookPreset? origin) =>
+        IsPro || origin?.Category is Effects.LookCategory.Comfort or Effects.LookCategory.Access;
+
     public bool CanAddProfile(int currentCount) => currentCount < MaxProfiles;
 }

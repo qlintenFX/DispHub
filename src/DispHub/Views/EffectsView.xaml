@@ -11,41 +11,136 @@
   d:DataContext="{d:DesignInstance Type=vm:EffectsViewModel}"
   mc:Ignorable="d">
   <UserControl.Resources>
-    <Style x:Key="Row" TargetType="Grid">
-      <Setter Property="Margin" Value="0,5" />
+    <!-- A look in the gallery: its picture and name. -->
+    <Style x:Key="LookTileItem" TargetType="ListBoxItem">
+      <Setter Property="Margin" Value="0,0,8,8" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+      <Setter Property="ToolTip" Value="{Binding Hint}" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <Border
+              x:Name="Card"
+              Width="168"
+              Padding="5"
+              Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+              BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+              BorderThickness="1"
+              CornerRadius="8">
+              <ContentPresenter />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Card" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+              </Trigger>
+              <Trigger Property="IsSelected" Value="True">
+                <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                <Setter TargetName="Card" Property="BorderThickness" Value="2" />
+                <Setter TargetName="Card" Property="Padding" Value="4" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
     </Style>
-    <Style x:Key="Label" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
-      <Setter Property="VerticalAlignment" Value="Center" />
-    </Style>
-    <Style x:Key="Value" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
-      <Setter Property="HorizontalAlignment" Value="Right" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="Grid.Column" Value="2" />
-    </Style>
-    <Style BasedOn="{StaticResource {x:Type Slider}}" TargetType="Slider">
-      <Setter Property="Grid.Column" Value="1" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="IsSnapToTickEnabled" Value="True" />
-      <Setter Property="TickFrequency" Value="1" />
-    </Style>
+
+    <LinearGradientBrush x:Key="HueBrush" StartPoint="0,0" EndPoint="1,0">
+      <GradientStop Offset="0" Color="#E04848" />
+      <GradientStop Offset="0.17" Color="#E0E048" />
+      <GradientStop Offset="0.33" Color="#48E048" />
+      <GradientStop Offset="0.5" Color="#48E0E0" />
+      <GradientStop Offset="0.67" Color="#4848E0" />
+      <GradientStop Offset="0.83" Color="#E048E0" />
+      <GradientStop Offset="1" Color="#E04848" />
+    </LinearGradientBrush>
+
+    <!-- One setting of the look: name, slider or list, value, and a button to undo it. -->
+    <DataTemplate x:Key="SettingRow" DataType="{x:Type vm:LookSettingViewModel}">
+      <Grid Margin="0,3" IsEnabled="{Binding IsApplicable}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="180" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="76" />
+          <ColumnDefinition Width="32" />
+        </Grid.ColumnDefinitions>
+        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" TextTrimming="CharacterEllipsis">
+          <TextBlock.Style>
+            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsApplicable}" Value="False">
+                  <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </TextBlock.Style>
+        </TextBlock>
+        <Slider
+          Grid.Column="1"
+          VerticalAlignment="Center"
+          AutomationProperties.Name="{Binding Name}"
+          LargeChange="0.1"
+          Maximum="1"
+          Minimum="0"
+          SmallChange="{Binding Step}"
+          Value="{Binding Position}"
+          Visibility="{Binding IsChoice, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+        <!-- Colour sliders show the hues under the track. -->
+        <Border
+          Grid.Column="1"
+          Height="4"
+          Margin="10,0,10,0"
+          VerticalAlignment="Bottom"
+          Background="{StaticResource HueBrush}"
+          CornerRadius="2"
+          IsHitTestVisible="False">
+          <Border.Style>
+            <Style TargetType="Border">
+              <Setter Property="Visibility" Value="Collapsed" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding Parameter.Unit}" Value="Degrees">
+                  <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsApplicable}" Value="False">
+                  <Setter Property="Opacity" Value="0.35" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Border.Style>
+        </Border>
+        <ComboBox
+          Grid.Column="1"
+          MinWidth="200"
+          HorizontalAlignment="Left"
+          AutomationProperties.Name="{Binding Name}"
+          ItemsSource="{Binding Options}"
+          SelectedItem="{Binding SelectedOption}"
+          Visibility="{Binding IsChoice, Converter={StaticResource BoolToVisibility}}" />
+        <TextBlock
+          Grid.Column="2"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Center"
+          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+          Text="{Binding DisplayValue}"
+          Visibility="{Binding IsChoice, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+        <ui:Button
+          Grid.Column="3"
+          Width="28"
+          Height="28"
+          Padding="0"
+          HorizontalAlignment="Right"
+          Appearance="Transparent"
+          Command="{Binding ResetCommand}"
+          Icon="{ui:SymbolIcon ArrowUndo16}"
+          ToolTip="{l:Tr Effects_ResetSetting}"
+          Visibility="{Binding IsChanged, Converter={StaticResource BoolToVisibility}}" />
+      </Grid>
+    </DataTemplate>
   </UserControl.Resources>
 
   <StackPanel>
     <Grid>
-      <StackPanel Orientation="Horizontal">
-        <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Effects_Title}" />
-        <Border
-          Margin="12,6,0,0"
-          Padding="7,2"
-          VerticalAlignment="Center"
-          Background="{DynamicResource AccentFillColorDefaultBrush}"
-          CornerRadius="4">
-          <TextBlock
-            FontSize="11"
-            Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-            Text="{l:Tr Effects_PreviewBadge}" />
-        </Border>
-      </StackPanel>
+      <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Effects_Title}" />
       <ui:ToggleSwitch
         HorizontalAlignment="Right"
         VerticalAlignment="Center"
@@ -53,169 +148,277 @@
         IsChecked="{Binding Enabled}" />
     </Grid>
     <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Effects_Subtitle}" />
-    <ui:InfoBar
-      Title="{l:Tr Effects_ProblemTitle}"
-      Margin="0,0,0,12"
-      IsClosable="False"
-      IsOpen="True"
-      Visibility="{Binding Problem, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}"
-      Message="{Binding Problem}"
-      Severity="Warning" />
 
-    <Border Style="{StaticResource SettingCard}">
+    <ui:InfoBar
+      Title="{Binding StatusTitle}"
+      Margin="0,0,0,8"
+      IsClosable="False"
+      IsOpen="{Binding ShowStatus}"
+      Message="{Binding StatusText}"
+      Severity="{Binding StatusSeverity}" />
+    <ui:Button
+      Margin="0,0,0,12"
+      Appearance="Primary"
+      Command="{Binding UpgradeCommand}"
+      Content="{l:Tr Effects_Upgrade}"
+      Icon="{ui:SymbolIcon Star24}"
+      Visibility="{Binding ShowUpgrade, Converter={StaticResource BoolToVisibility}}" />
+
+    <!-- Preview: the look on a photo, before and after, with the current look beside it. -->
+    <Border Padding="16" Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel Margin="0,0,260,0">
-          <TextBlock Text="{l:Tr Effects_Preset}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_PresetHint}" />
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="3*" MaxWidth="580" />
+          <ColumnDefinition Width="2*" MinWidth="230" />
+        </Grid.ColumnDefinitions>
+        <Grid VerticalAlignment="Top">
+          <ctl:CompareView
+            After="{Binding Preview}"
+            AfterLabel="{l:Tr Effects_After}"
+            AutomationProperties.Name="{l:Tr Effects_PreviewName}"
+            Before="{Binding Original}"
+            BeforeLabel="{l:Tr Effects_Before}"
+            Position="{Binding ComparePosition}" />
+          <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Style="{StaticResource Hint}"
+            Text="{l:Tr Effects_PreviewFailed}"
+            Visibility="{Binding PreviewFailed, Converter={StaticResource BoolToVisibility}}" />
+        </Grid>
+        <DockPanel Grid.Column="1" Margin="20,0,0,0">
+          <StackPanel
+            HorizontalAlignment="Left"
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <ui:Button
+              Width="32"
+              Height="32"
+              Padding="0"
+              Appearance="Transparent"
+              Command="{Binding PreviousPictureCommand}"
+              Icon="{ui:SymbolIcon ChevronLeft20}"
+              ToolTip="{l:Tr Effects_PreviousPicture}" />
+            <TextBlock
+              MinWidth="100"
+              VerticalAlignment="Center"
+              Style="{StaticResource Hint}"
+              Text="{Binding Picture.Name}"
+              TextAlignment="Center" />
+            <ui:Button
+              Width="32"
+              Height="32"
+              Padding="0"
+              Appearance="Transparent"
+              Command="{Binding NextPictureCommand}"
+              Icon="{ui:SymbolIcon ChevronRight20}"
+              ToolTip="{l:Tr Effects_NextPicture}" />
+          </StackPanel>
+          <StackPanel>
+            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_CurrentLook}" />
+            <WrapPanel Margin="0,2,0,0">
+              <TextBlock
+                Margin="0,0,8,0"
+                FontSize="22"
+                FontWeight="SemiBold"
+                Text="{Binding CurrentName}"
+                TextWrapping="Wrap" />
+              <Border
+                Margin="0,4,0,0"
+                Padding="8,1"
+                VerticalAlignment="Center"
+                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                CornerRadius="9"
+                Visibility="{Binding IsModified, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock FontSize="11" Text="{l:Tr Effects_Modified}" />
+              </Border>
+            </WrapPanel>
+            <TextBlock
+              Margin="0,6,0,14"
+              Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+              Text="{Binding CurrentHint}"
+              TextWrapping="Wrap" />
+            <WrapPanel>
+              <ui:Button
+                Margin="0,0,6,6"
+                Command="{Binding ResetCommand}"
+                Content="{l:Tr Effects_Reset}"
+                Icon="{ui:SymbolIcon ArrowUndo20}"
+                Visibility="{Binding CanReset, Converter={StaticResource BoolToVisibility}}" />
+              <ui:Button
+                Margin="0,0,6,6"
+                Command="{Binding CopyLinkCommand}"
+                Icon="{ui:SymbolIcon Link20}"
+                Visibility="{Binding HasLook, Converter={StaticResource BoolToVisibility}}">
+                <ui:Button.Style>
+                  <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
+                    <Setter Property="Content" Value="{l:Tr Effects_CopyLink}" />
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding LinkCopied}" Value="True">
+                        <Setter Property="Content" Value="{l:Tr Effects_LinkCopied}" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </ui:Button.Style>
+              </ui:Button>
+            </WrapPanel>
+          </StackPanel>
+        </DockPanel>
+      </Grid>
+    </Border>
+
+    <!-- The gallery -->
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Looks}" />
+    <ListBox
+      Margin="0,0,0,10"
+      Background="Transparent"
+      BorderThickness="0"
+      ItemsSource="{Binding Categories}"
+      SelectedItem="{Binding SelectedCategory}">
+      <ListBox.Template>
+        <ControlTemplate TargetType="ListBox">
+          <ItemsPresenter />
+        </ControlTemplate>
+      </ListBox.Template>
+      <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel />
+        </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+      <ListBox.ItemContainerStyle>
+        <Style BasedOn="{StaticResource Chip}" TargetType="ListBoxItem">
+          <Setter Property="Margin" Value="0,0,6,6" />
+        </Style>
+      </ListBox.ItemContainerStyle>
+    </ListBox>
+    <ListBox
+      Background="Transparent"
+      BorderThickness="0"
+      ItemContainerStyle="{StaticResource LookTileItem}"
+      ItemsSource="{Binding Tiles}"
+      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+      SelectedItem="{Binding SelectedTile}">
+      <ListBox.Template>
+        <ControlTemplate TargetType="ListBox">
+          <ItemsPresenter />
+        </ControlTemplate>
+      </ListBox.Template>
+      <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel />
+        </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+      <ListBox.ItemTemplate>
+        <DataTemplate DataType="{x:Type vm:LookTile}">
+          <StackPanel>
+            <Grid Height="98">
+              <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="5" />
+              <Border CornerRadius="5">
+                <Border.Background>
+                  <ImageBrush ImageSource="{Binding Thumbnail}" Stretch="UniformToFill" />
+                </Border.Background>
+              </Border>
+              <Border
+                Margin="5"
+                Padding="6,1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Background="#B0000000"
+                CornerRadius="8"
+                Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock FontSize="10" Foreground="White" Text="Pro" />
+              </Border>
+            </Grid>
+            <Grid Margin="4,6,2,2">
+              <TextBlock
+                Margin="0,0,24,0"
+                VerticalAlignment="Center"
+                Text="{Binding Name}"
+                TextTrimming="CharacterEllipsis" />
+              <ui:Button
+                Width="24"
+                Height="24"
+                Padding="0"
+                HorizontalAlignment="Right"
+                Appearance="Transparent"
+                Command="{Binding DeleteCommand}"
+                Icon="{ui:SymbolIcon Delete16}"
+                ToolTip="{l:Tr Effects_DeleteLook}"
+                Visibility="{Binding IsSaved, Converter={StaticResource BoolToVisibility}}" />
+            </Grid>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+
+    <!-- The editor -->
+    <Grid Margin="0,8,0,0">
+      <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Adjust}" />
+      <ui:Button
+        Margin="0,14,0,0"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom"
+        Appearance="Transparent"
+        Command="{Binding ClearCommand}"
+        Content="{l:Tr Effects_Clear}"
+        Icon="{ui:SymbolIcon Eraser20}" />
+    </Grid>
+    <TextBlock
+      Margin="0,0,0,8"
+      Style="{StaticResource Hint}"
+      Text="{l:Tr Effects_AdjustHint}"
+      TextWrapping="Wrap" />
+    <ItemsControl ItemsSource="{Binding Groups}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type vm:LookGroupViewModel}">
+          <ui:CardExpander Margin="0,0,0,4">
+            <ui:CardExpander.Icon>
+              <ui:SymbolIcon Symbol="{Binding Icon}" />
+            </ui:CardExpander.Icon>
+            <ui:CardExpander.Header>
+              <Grid>
+                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                <TextBlock
+                  Margin="0,0,12,0"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                  Text="{Binding ChangedText}" />
+              </Grid>
+            </ui:CardExpander.Header>
+            <ItemsControl ItemTemplate="{StaticResource SettingRow}" ItemsSource="{Binding Settings}" />
+          </ui:CardExpander>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <!-- Save -->
+    <Border Margin="0,8,0,0" Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,340,0">
+          <TextBlock Text="{l:Tr Effects_SaveTitle}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_SaveHint}" />
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-          <ComboBox
-            MinWidth="180"
+          <ui:TextBox
+            Width="200"
             Margin="0,0,8,0"
-            ItemsSource="{Binding Presets}"
-            SelectedItem="{Binding Preset}" />
-          <ui:Button Command="{Binding ResetCommand}" Content="{l:Tr Effects_Reset}" Icon="{ui:SymbolIcon ArrowReset24}" />
+            MaxLength="40"
+            PlaceholderText="{l:Tr Effects_SaveName}"
+            Text="{Binding NewLookName, UpdateSourceTrigger=PropertyChanged}" />
+          <ui:Button
+            Command="{Binding SaveLookCommand}"
+            Content="{l:Tr Effects_Save}"
+            Icon="{ui:SymbolIcon Save20}" />
         </StackPanel>
       </Grid>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Look}" />
-    <TextBlock Margin="0,-6,0,8" Style="{StaticResource Hint}" Text="{l:Tr Effects_LookHint}" />
-    <Border Style="{StaticResource SettingCard}">
-      <StackPanel>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Saturation}" />
-          <Slider Maximum="200" Minimum="0" Value="{Binding Saturation}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Saturation, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Contrast}" />
-          <Slider Maximum="150" Minimum="50" Value="{Binding Contrast}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Contrast, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Fade}" />
-          <Slider Maximum="30" Minimum="0" Value="{Binding Fade}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Fade, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Sepia}" />
-          <Slider Maximum="100" Minimum="0" Value="{Binding Sepia}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Sepia, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_TintHue}" />
-          <Slider Maximum="359" Minimum="0" Value="{Binding TintHue}">
-            <Slider.Background>
-              <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                <GradientStop Offset="0" Color="#FF4040" />
-                <GradientStop Offset="0.17" Color="#FFFF40" />
-                <GradientStop Offset="0.33" Color="#40FF40" />
-                <GradientStop Offset="0.5" Color="#40FFFF" />
-                <GradientStop Offset="0.67" Color="#4040FF" />
-                <GradientStop Offset="0.83" Color="#FF40FF" />
-                <GradientStop Offset="1" Color="#FF4040" />
-              </LinearGradientBrush>
-            </Slider.Background>
-          </Slider>
-          <TextBlock Style="{StaticResource Value}" Text="{Binding TintHue, StringFormat={}{0:0}°}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_TintStrength}" />
-          <Slider Maximum="100" Minimum="0" Value="{Binding TintStrength}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding TintStrength, StringFormat={}{0:0}%}" />
-        </Grid>
-      </StackPanel>
-    </Border>
-
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Texture}" />
-    <TextBlock Margin="0,-6,0,8" Style="{StaticResource Hint}" Text="{l:Tr Effects_TextureHint}" />
-    <Border Style="{StaticResource SettingCard}">
-      <StackPanel>
-        <TextBlock Margin="0,2,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Grain}" />
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Amount}" />
-          <Slider Maximum="100" Minimum="0" Value="{Binding Grain}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Grain, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_GrainSize}" />
-          <Slider Maximum="4" Minimum="1" TickFrequency="0.1" Value="{Binding GrainSize}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding GrainSize, StringFormat={}{0:0.0} px}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_GrainSpeed}" />
-          <Slider Maximum="30" Minimum="0" Value="{Binding GrainFps}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding GrainFps, StringFormat={}{0:0} fps}" />
-        </Grid>
-
-        <TextBlock Margin="0,14,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Vignette}" />
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Amount}" />
-          <Slider Maximum="100" Minimum="0" Value="{Binding Vignette}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Vignette, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_VignetteSize}" />
-          <Slider Maximum="150" Minimum="30" Value="{Binding VignetteSize}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding VignetteSize, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_VignetteSoftness}" />
-          <Slider Maximum="100" Minimum="5" Value="{Binding VignetteSoftness}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding VignetteSoftness, StringFormat={}{0:0}%}" />
-        </Grid>
-
-        <TextBlock Margin="0,14,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Scanlines}" />
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Amount}" />
-          <Slider Maximum="100" Minimum="0" Value="{Binding Scanlines}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Scanlines, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_ScanlineSpacing}" />
-          <Slider Maximum="8" Minimum="2" Value="{Binding ScanlineSpacing}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding ScanlineSpacing, StringFormat={}{0:0} px}" />
-        </Grid>
-
-        <TextBlock Margin="0,14,0,4" FontWeight="SemiBold" Text="{l:Tr Effects_Film}" />
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /><ColumnDefinition Width="64" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Flicker}" />
-          <Slider Maximum="100" Minimum="0" Value="{Binding Flicker}" />
-          <TextBlock Style="{StaticResource Value}" Text="{Binding Flicker, StringFormat={}{0:0}%}" />
-        </Grid>
-        <Grid Style="{StaticResource Row}">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="170" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
-          <TextBlock Style="{StaticResource Label}" Text="{l:Tr Effects_Letterbox}" />
-          <ComboBox
-            Grid.Column="1"
-            MinWidth="160"
-            HorizontalAlignment="Left"
-            ItemsSource="{Binding Letterboxes}"
-            SelectedItem="{Binding Letterbox}" />
-        </Grid>
-      </StackPanel>
-    </Border>
-
+    <!-- Options -->
     <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Options}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel Margin="0,0,80,0">
+        <StackPanel Margin="0,0,120,0">
           <TextBlock Text="{l:Tr Effects_HideFullScreen}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_HideFullScreenHint}" />
         </StackPanel>
@@ -224,12 +427,40 @@
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <StackPanel Margin="0,0,80,0">
+        <StackPanel Margin="0,0,120,0">
           <TextBlock Text="{l:Tr Effects_HideCapture}" />
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_HideCaptureHint}" />
         </StackPanel>
-        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HideOverlayFromCapture}" />
+        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HideFromCapture}" />
       </Grid>
     </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,120,0">
+          <TextBlock Text="{l:Tr Effects_MainDisplayOnly}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_MainDisplayOnlyHint}" />
+        </StackPanel>
+        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MainDisplayOnly}" />
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,200,0">
+          <TextBlock Text="{l:Tr Effects_FrameRate}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_FrameRateHint}" />
+        </StackPanel>
+        <ComboBox
+          MinWidth="170"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Center"
+          ItemsSource="{Binding FrameRates}"
+          SelectedItem="{Binding FrameRate}" />
+      </Grid>
+    </Border>
+    <TextBlock
+      Margin="2,8,0,0"
+      Style="{StaticResource Hint}"
+      Text="{l:Tr Effects_Notes}"
+      TextWrapping="Wrap" />
   </StackPanel>
 </UserControl>

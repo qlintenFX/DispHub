@@ -2,5 +2,17 @@
   "$schema": "https://aka.ms/CsWin32.schema.json",
   "public": false,
   "emitSingleFile": true,
-  "allowMarshaling": false
+  "allowMarshaling": false,
+  "comInterop": {
+    "preserveSigMethods": [
+      "IDXGIOutputDuplication.AcquireNextFrame",
+      "IDXGIOutput1.DuplicateOutput",
+      "ID3D11DeviceContext.GetData",
+      "ID3D11DeviceContext.GetData",
+      "IDXGIOutputDuplication.ReleaseFrame",
+      "IDXGIAdapter1.EnumOutputs",
+      "IDXGIFactory1.EnumAdapters1",
+      "IDXGISwapChain1.Present"
+    ]
+  }
 }

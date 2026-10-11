@@ -1,4 +1,5 @@
 using DispHub.Core.Color;
+using DispHub.Core.Effects;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
 using DispHub.Core.Schedule;
@@ -23,6 +24,8 @@ public static class ConfigNormalizer
         config.Schedule.Slots ??= [];
         config.Hotkeys ??= new();
         config.Ui ??= new();
+        config.Effects ??= new();
+        NormalizeEffects(config.Effects, fixes);
 
         config.Profiles.RemoveAll(p => p is null);
         if (config.Profiles.Count == 0)
@@ -57,6 +60,12 @@ public static class ConfigNormalizer
                 (profile.MonitorOverrides ?? []).Where(o => o.Value is not null)
                     .Select(o => KeyValuePair.Create(o.Key, o.Value.Clamp())),
                 StringComparer.OrdinalIgnoreCase);
+
+            if (profile.Effect is not null && profile.Effect != LookLibrary.None && LookLibrary.Find(config.Effects, profile.Effect) is null)
+            {
+                fixes.Add($"Removed a missing screen effect from '{profile.Name}'.");
+                profile.Effect = null;
+            }
 
             if (profile.Hotkey is not null && !HotkeyGesture.TryParse(profile.Hotkey, out _))
             {
@@ -94,12 +103,46 @@ public static class ConfigNormalizer
         config.Hotkeys.TogglePause = ValidHotkeyOrNull(config.Hotkeys.TogglePause);
         config.Hotkeys.NextProfile = ValidHotkeyOrNull(config.Hotkeys.NextProfile);
         config.Hotkeys.PreviousProfile = ValidHotkeyOrNull(config.Hotkeys.PreviousProfile);
+        config.Hotkeys.ToggleEffects = ValidHotkeyOrNull(config.Hotkeys.ToggleEffects);
         config.Ui.OsdDurationMs = Math.Clamp(config.Ui.OsdDurationMs, 500, 10_000);
         config.Ui.TextScale = double.IsFinite(config.Ui.TextScale) ? Math.Clamp(config.Ui.TextScale, 0.9, 1.25) : 1.0;
         if (config.Ui.AccentColor is { } accent && !System.Text.RegularExpressions.Regex.IsMatch(accent, "^#[0-9A-Fa-f]{6}$"))
             config.Ui.AccentColor = null;
 
         return fixes;
+    }
+
+    private static void NormalizeEffects(EffectsConfig effects, List<string> fixes)
+    {
+        effects.Look = (effects.Look ?? Look.Neutral).Clamp();
+        effects.MaxFps = Math.Clamp(effects.MaxFps, 0, 240);
+        effects.SavedLooks ??= [];
+        effects.SavedLooks.RemoveAll(s => s is null);
+        var seen = new HashSet<Guid>();
+        foreach (SavedLook saved in effects.SavedLooks)
+        {
+            if (saved.Id == Guid.Empty || !seen.Add(saved.Id))
+            {
+                saved.Id = Guid.NewGuid();
+                seen.Add(saved.Id);
+                fixes.Add($"Gave saved look '{saved.Name}' a new ID.");
+            }
+            saved.Name = CleanName(saved.Name, "Look");
+            saved.Look = (saved.Look ?? Look.Neutral).Clamp();
+            if (Looks.Find(saved.BasedOn) is null)
+                saved.BasedOn = null;
+        }
+        if (effects.Preset is not null && LookLibrary.Find(effects, effects.Preset) is null)
+            effects.Preset = null;
+    }
+
+    /// <summary>Trims a name, drops control characters and limits its length.</summary>
+    public static string CleanName(string? name, string fallback)
+    {
+        string cleaned = new string((name ?? "").Where(ch => !char.IsControl(ch)).ToArray()).Trim();
+        if (cleaned.Length == 0)
+            return fallback;
+        return cleaned.Length > MaxNameLength ? cleaned[..MaxNameLength] : cleaned;
     }
 
     private static string? ValidHotkeyOrNull(string? hotkey) =>

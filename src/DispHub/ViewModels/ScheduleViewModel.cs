@@ -145,7 +145,8 @@ public sealed partial class ScheduleViewModel : PageViewModel
                 return;
             }
             Place nearest = Places.All.MinBy(p => Distance(p.Latitude, p.Longitude, latitude, longitude))!;
-            SetLocation(new GeoLocation { Latitude = latitude, Longitude = longitude, Name = Loc.Format("Schedule_Near", nearest.Name) });
+            // About a kilometre: plenty for sunrise and sunset, without keeping an exact address in the settings.
+            SetLocation(new GeoLocation { Latitude = Math.Round(latitude, 2), Longitude = Math.Round(longitude, 2), Name = Loc.Format("Schedule_Near", nearest.Name) });
         }
         finally
         {

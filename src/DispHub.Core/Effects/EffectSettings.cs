@@ -3,103 +3,190 @@ using System.Text.Json.Serialization;
 namespace DispHub.Core.Effects;
 
 /// <summary>
-/// A colour grade for the whole screen, applied by Windows as a 5x5 colour matrix after everything is drawn.
-/// Unlike profiles (gamma ramps), it can mix colour channels, so it can desaturate, tone and tint.
+/// A screen effect: every setting of DispHub's effect shader. Amounts run from 0 (off) upwards, so a default Look
+/// changes nothing. Looks that only add texture (grain, vignette, scanlines...) are drawn over the screen with no
+/// delay; anything that reads the picture (colour, blur, lens, VHS) processes a captured copy of the screen.
 /// </summary>
-public sealed record LookSettings(
-    double Saturation = 1,
-    double Contrast = 1,
-    double Fade = 0,
-    double Sepia = 0,
-    double TintHue = 35,
-    double TintStrength = 0)
+public sealed record Look
 {
-    [JsonIgnore]
-    public bool IsNeutral =>
-        Math.Abs(Saturation - 1) < 1e-6 && Math.Abs(Contrast - 1) < 1e-6 && Fade < 1e-6 && Sepia < 1e-6 && TintStrength < 1e-6;
+    /// <summary>A look that changes nothing.</summary>
+    public static Look Neutral { get; } = new();
 
-    public LookSettings Clamp() => new(
-        Math.Clamp(Saturation, 0, 2),
-        Math.Clamp(Contrast, 0.5, 1.5),
-        Math.Clamp(Fade, 0, 0.3),
-        Math.Clamp(Sepia, 0, 1),
-        ((TintHue % 360) + 360) % 360,
-        Math.Clamp(TintStrength, 0, 1));
+    // Colour
+    public double Exposure { get; init; }
+    public double Contrast { get; init; } = 1;
+    public double Saturation { get; init; } = 1;
+    public double Vibrance { get; init; }
+    public double Temperature { get; init; }
+    public double Tint { get; init; }
+    public double Fade { get; init; }
+    public double Sepia { get; init; }
+    public double ShadowHue { get; init; } = 200;
+    public double ShadowTint { get; init; }
+    public double HighlightHue { get; init; } = 35;
+    public double HighlightTint { get; init; }
+
+    // Light and detail
+    public double Sharpen { get; init; }
+    public double Bloom { get; init; }
+    public double BloomThreshold { get; init; } = 0.7;
+    public double Halation { get; init; }
+
+    // Lens
+    public double Aberration { get; init; }
+    public double Distortion { get; init; }
+    public double Vignette { get; init; }
+    public double VignetteSize { get; init; } = 0.8;
+    public double VignetteSoftness { get; init; } = 0.5;
+
+    // Film
+    public double Grain { get; init; }
+    public double GrainSize { get; init; } = 1.5;
+    public double GrainColor { get; init; }
+    /// <summary>How often grain, flicker, dust and tape noise change, per second; 0 holds them still.</summary>
+    public int GrainFps { get; init; } = 24;
+    public double Flicker { get; init; }
+    public double Weave { get; init; }
+    public double Dust { get; init; }
+    public double Letterbox { get; init; }
+
+    // Retro
+    public double Scanlines { get; init; }
+    public int ScanlineSpacing { get; init; } = 3;
+    public double Curvature { get; init; }
+    public double Mask { get; init; }
+    public double ChromaBleed { get; init; }
+    public double Tracking { get; init; }
+    public double Jitter { get; init; }
+    public int Pixelate { get; init; }
+    public int Posterize { get; init; }
+    public RetroPalette Palette { get; init; }
+
+    /// <summary>Ordered dithering of the posterized or palette colours, from 0 (none) to 1.</summary>
+    public double Dither { get; init; }
+
+    // Comfort
+
+    /// <summary>Darkens the screen beyond what its own brightness setting allows (0 to 0.95).</summary>
+    public double Dim { get; init; }
+
+    // Accessibility
+    public ColorVision ColorVision { get; init; }
+    public double ColorVisionStrength { get; init; } = 1;
+
+    /// <summary>True when the look reads the screen's pixels, so it needs a captured copy (one frame of delay).</summary>
+    [JsonIgnore]
+    public bool NeedsCapture =>
+        Exposure != 0 || Contrast != 1 || Saturation != 1 || Vibrance != 0 || Temperature != 0 || Tint != 0 ||
+        Fade > 0 || Sepia > 0 || ShadowTint > 0 || HighlightTint > 0 || Sharpen > 0 || Bloom > 0 || Halation > 0 ||
+        Aberration > 0 || Distortion > 0 || Curvature > 0 || ChromaBleed > 0 || Jitter > 0 || Weave > 0 ||
+        Pixelate > 1 || Posterize > 1 || Palette != RetroPalette.None || ColorVision != ColorVision.Typical;
+
+    /// <summary>
+    /// True when it moves (grain, flicker, VHS noise), so it is redrawn even on a still screen, <see cref="GrainFps"/>
+    /// times a second.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsAnimated => GrainFps > 0 && (Grain > 0 || Flicker > 0 || Dust > 0 || Tracking > 0 || Jitter > 0 || Weave > 0);
+
+    [JsonIgnore]
+    public bool IsEmpty => !NeedsCapture && Grain <= 0 && Vignette <= 0 && Flicker <= 0 && Dust <= 0 && Letterbox <= 0 &&
+        Scanlines <= 0 && Mask <= 0 && Tracking <= 0 && Dim <= 0;
+
+    public Look Clamp() => this with
+    {
+        Exposure = Math.Clamp(Exposure, -2, 2),
+        Contrast = Math.Clamp(Contrast, 0.5, 1.6),
+        Saturation = Math.Clamp(Saturation, 0, 2),
+        Vibrance = Math.Clamp(Vibrance, -1, 1),
+        Temperature = Math.Clamp(Temperature, -1, 1),
+        Tint = Math.Clamp(Tint, -1, 1),
+        Fade = Math.Clamp(Fade, 0, 0.3),
+        Sepia = Math.Clamp(Sepia, 0, 1),
+        ShadowHue = Hue(ShadowHue),
+        ShadowTint = Math.Clamp(ShadowTint, 0, 1),
+        HighlightHue = Hue(HighlightHue),
+        HighlightTint = Math.Clamp(HighlightTint, 0, 1),
+        Sharpen = Math.Clamp(Sharpen, 0, 1),
+        Bloom = Math.Clamp(Bloom, 0, 1),
+        BloomThreshold = Math.Clamp(BloomThreshold, 0, 0.95),
+        Halation = Math.Clamp(Halation, 0, 1),
+        Aberration = Math.Clamp(Aberration, 0, 1),
+        Distortion = Math.Clamp(Distortion, 0, 1),
+        Vignette = Math.Clamp(Vignette, 0, 1),
+        VignetteSize = Math.Clamp(VignetteSize, 0.3, 1.5),
+        VignetteSoftness = Math.Clamp(VignetteSoftness, 0.05, 1),
+        Grain = Math.Clamp(Grain, 0, 1),
+        GrainSize = Math.Clamp(GrainSize, 1, 4),
+        GrainColor = Math.Clamp(GrainColor, 0, 1),
+        GrainFps = Math.Clamp(GrainFps, 0, 60),
+        Flicker = Math.Clamp(Flicker, 0, 1),
+        Weave = Math.Clamp(Weave, 0, 1),
+        Dust = Math.Clamp(Dust, 0, 1),
+        Letterbox = Letterbox > 0 ? Math.Clamp(Letterbox, 1.2, 3) : 0,
+        Scanlines = Math.Clamp(Scanlines, 0, 1),
+        ScanlineSpacing = Math.Clamp(ScanlineSpacing, 2, 8),
+        Curvature = Math.Clamp(Curvature, 0, 1),
+        Mask = Math.Clamp(Mask, 0, 1),
+        ChromaBleed = Math.Clamp(ChromaBleed, 0, 1),
+        Tracking = Math.Clamp(Tracking, 0, 1),
+        Jitter = Math.Clamp(Jitter, 0, 1),
+        Pixelate = Pixelate > 1 ? Math.Clamp(Pixelate, 2, 16) : 0,
+        Posterize = Posterize > 1 ? Math.Clamp(Posterize, 2, 32) : 0,
+        Palette = Enum.IsDefined(Palette) ? Palette : RetroPalette.None,
+        Dither = Math.Clamp(Dither, 0, 1),
+        Dim = Math.Clamp(Dim, 0, 0.95),
+        ColorVision = Enum.IsDefined(ColorVision) ? ColorVision : ColorVision.Typical,
+        ColorVisionStrength = Math.Clamp(ColorVisionStrength, 0, 1),
+    };
+
+    private static double Hue(double hue) => ((hue % 360) + 360) % 360;
 }
 
-/// <summary>
-/// Texture drawn over the screen: film grain, vignette, scanlines, flicker and letterbox bars.
-/// Sizes are in physical pixels, amounts from 0 (off) to 1.
-/// </summary>
-public sealed record OverlaySettings(
-    double Grain = 0,
-    double GrainSize = 1.5,
-    int GrainFps = 24,
-    double Vignette = 0,
-    double VignetteSize = 0.8,
-    double VignetteSoftness = 0.5,
-    double Scanlines = 0,
-    int ScanlineSpacing = 3,
-    double Flicker = 0,
-    double LetterboxAspect = 0)
+/// <summary>Colour vision correction: shifts colours a viewer can't tell apart towards ones they can.</summary>
+public enum ColorVision
 {
-    [JsonIgnore]
-    public bool IsEmpty => Grain < 1e-6 && Vignette < 1e-6 && Scanlines < 1e-6 && Flicker < 1e-6 && LetterboxAspect <= 0;
-
-    /// <summary>Grain and flicker change every frame; the rest is drawn once.</summary>
-    [JsonIgnore]
-    public bool IsAnimated => (Grain > 1e-6 && GrainFps > 0) || Flicker > 1e-6;
-
-    public OverlaySettings Clamp() => new(
-        Math.Clamp(Grain, 0, 1),
-        Math.Clamp(GrainSize, 1, 4),
-        Math.Clamp(GrainFps, 0, 30),
-        Math.Clamp(Vignette, 0, 1),
-        Math.Clamp(VignetteSize, 0.3, 1.5),
-        Math.Clamp(VignetteSoftness, 0.05, 1),
-        Math.Clamp(Scanlines, 0, 1),
-        Math.Clamp(ScanlineSpacing, 2, 8),
-        Math.Clamp(Flicker, 0, 1),
-        LetterboxAspect > 0 ? Math.Clamp(LetterboxAspect, 1.2, 3) : 0);
+    Typical,
+    RedWeak,
+    GreenWeak,
+    BlueWeak,
 }
 
 public sealed class EffectsConfig
 {
     public bool Enabled { get; set; }
 
-    /// <summary>The preset the settings started from, if any.</summary>
+    /// <summary>The built-in look or saved look (its id) the current settings started from, if any.</summary>
     public string? Preset { get; set; }
 
-    public LookSettings Look { get; set; } = new();
-    public OverlaySettings Overlay { get; set; } = new();
+    public Look Look { get; set; } = new();
 
-    /// <summary>Hide the overlay while a full-screen app or game is in front, so it can't add latency there.</summary>
+    /// <summary>Looks the user saved, shown with the built-in ones.</summary>
+    public List<SavedLook> SavedLooks { get; set; } = [];
+
+    /// <summary>Most frames per second for looks that process the screen; 0 follows the display.</summary>
+    public int MaxFps { get; set; } = 60;
+
+    /// <summary>Step aside while a full-screen app or game is in front, so effects can't add latency there.</summary>
     public bool HideOverFullScreen { get; set; } = true;
 
-    /// <summary>Keep grain and the rest out of screenshots and recordings. The colour grade always shows in them.</summary>
-    public bool HideOverlayFromCapture { get; set; }
+    /// <summary>Keep looks that only add layers out of screenshots and recordings (processed looks always are).</summary>
+    public bool HideFromCapture { get; set; } = true;
+
+    /// <summary>Only the main display; otherwise every display.</summary>
+    public bool MainDisplayOnly { get; set; }
 }
 
-public sealed record EffectPreset(string Id, LookSettings Look, OverlaySettings Overlay);
-
-/// <summary>Starting points; every value stays adjustable.</summary>
-public static class EffectPresets
+/// <summary>A look the user saved under a name.</summary>
+public sealed class SavedLook
 {
-    public static IReadOnlyList<EffectPreset> All { get; } =
-    [
-        new("film", new LookSettings(Saturation: 0.85, Contrast: 1.05, Fade: 0.06, TintHue: 38, TintStrength: 0.06),
-            new OverlaySettings(Grain: 0.22, GrainSize: 1.6, Vignette: 0.3, Flicker: 0.08)),
-        new("blackAndWhite", new LookSettings(Saturation: 0, Contrast: 1.12, Fade: 0.03),
-            new OverlaySettings(Grain: 0.3, GrainSize: 1.8, Vignette: 0.35, Flicker: 0.1)),
-        new("sepia", new LookSettings(Saturation: 0, Fade: 0.05, Sepia: 1),
-            new OverlaySettings(Grain: 0.2, GrainSize: 1.6, Vignette: 0.45, VignetteSoftness: 0.6)),
-        new("camcorder", new LookSettings(Saturation: 0.8, Contrast: 0.95, Fade: 0.07, TintHue: 300, TintStrength: 0.05),
-            new OverlaySettings(Grain: 0.18, GrainSize: 1.2, GrainFps: 30, Scanlines: 0.16, ScanlineSpacing: 3)),
-        new("bodycam", new LookSettings(Saturation: 0.6, Contrast: 1.1, Fade: 0.02, TintHue: 195, TintStrength: 0.1),
-            new OverlaySettings(Grain: 0.25, GrainSize: 1.3, GrainFps: 30, Vignette: 0.55, VignetteSize: 0.7)),
-        new("nightVision", new LookSettings(Saturation: 0, Contrast: 1.2, Fade: 0.04, TintHue: 120, TintStrength: 1),
-            new OverlaySettings(Grain: 0.35, GrainSize: 1.4, GrainFps: 30, Vignette: 0.6, VignetteSize: 0.65, Scanlines: 0.1)),
-        new("cinema", new LookSettings(Saturation: 0.92, Contrast: 1.06, TintHue: 30, TintStrength: 0.04),
-            new OverlaySettings(Grain: 0.1, Vignette: 0.2, LetterboxAspect: 2.39)),
-    ];
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; } = "";
+    public Look Look { get; set; } = new();
+
+    /// <summary>The built-in look it was made from, which decides whether it needs Pro.</summary>
+    public string? BasedOn { get; set; }
+
+    /// <summary>The id used in <see cref="EffectsConfig.Preset"/> and in profiles.</summary>
+    public string Key => "saved:" + Id.ToString("N");
 }

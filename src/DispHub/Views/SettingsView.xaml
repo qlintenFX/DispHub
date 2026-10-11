@@ -326,6 +326,15 @@
         <ctl:HotkeyBox HorizontalAlignment="Right" Gesture="{Binding PreviousHotkey}" />
       </Grid>
     </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,200,0">
+          <TextBlock Text="{l:Tr Settings_EffectsHotkey}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_EffectsHotkeyHint}" />
+        </StackPanel>
+        <ctl:HotkeyBox HorizontalAlignment="Right" Gesture="{Binding EffectsHotkey}" />
+      </Grid>
+    </Border>
     <TextBlock
       Margin="2,4,0,0"
       Style="{StaticResource ErrorText}"

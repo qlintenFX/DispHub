@@ -17,4 +17,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="DispHub.Tests" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Effects\Effects.hlsl" LogicalName="DispHub.Effects.hlsl" />
+  </ItemGroup>
 </Project>

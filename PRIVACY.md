@@ -7,12 +7,14 @@ restored), simple usage counters (first start date and number of profile switche
 Store rating) and log files. These stay on your PC in `%LocalAppData%\DispHub`, or in the app's private folder
 when installed from the Microsoft Store. Uninstalling the Store version removes them.
 
-**What it reads.** To switch profiles per app, DispHub checks which program is in the foreground. That
-information is used immediately and never stored or sent anywhere.
+**What it reads.** To switch profiles per app, DispHub checks which program is in the foreground. Screen effects
+that change the picture read what's on your screen, on the graphics card, to draw the look over it. Both are used
+immediately and never stored or sent anywhere. If you click Use my location on the Schedule page, Windows' location
+service gives DispHub your approximate position to work out sunrise and sunset; it's saved in your settings as
+rounded coordinates and never sent anywhere by DispHub.
 
-**Network.** DispHub doesn't send your data anywhere. When you open the Presets page it downloads the public
-preset list from GitHub (`raw.githubusercontent.com`); like any web request, GitHub sees your IP address, and
-nothing else is sent. Purchases and ratings in the Microsoft Store version are handled by Microsoft under the
+**Network.** DispHub doesn't connect to the internet and doesn't send your data anywhere. Purchases and ratings in
+the Microsoft Store version, and Windows' location service, are handled by Microsoft under the
 [Microsoft Privacy Statement](https://privacy.microsoft.com/privacystatement).
 
 **Contact.** Questions about this policy: open an issue at <https://github.com/qlintenFX/DispHub/issues>.

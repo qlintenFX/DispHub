@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DispHub.Core.Color;
-using DispHub.Core.Effects;
 using DispHub.Core.Model;
 using DispHub.Core.Rules;
 using DispHub.Localization;
@@ -28,6 +27,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
         _app.StateChanged += (_, _) => Refresh();
         _app.ConfigChanged += (_, _) => Refresh();
         _app.ProfileEdited += (_, _) => Refresh();
+        _effects.Changed += (_, _) => Refresh();
     }
 
     /// <summary>Opens the main window; set by the tray.</summary>
@@ -80,7 +80,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
             Warmth = active?.Color.TemperatureK ?? ColorSettings.NeutralTemperatureK;
 
             EffectsOn = config.Effects.Enabled;
-            EffectsText = config.Effects.Preset is { } preset ? Loc.Get($"EffectPreset_{preset}") : Loc.Get("Quick_EffectsCustom");
+            EffectsText = config.Effects.Look.IsEmpty ? Loc.Get("Effects_NoLook") : _effects.NameOf(config.Effects.Preset);
         }
         finally
         {
@@ -102,16 +102,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
     {
         if (_loading || value == _app.Config.Effects.Enabled)
             return;
-        EffectsConfig effects = _app.Config.Effects;
-        effects.Enabled = value;
-        if (value && effects.Look.IsNeutral && effects.Overlay.IsEmpty && EffectPresets.All.Count > 0)
-        {
-            // Nothing set up yet: start from the first look so the switch does something visible.
-            EffectPreset first = EffectPresets.All[0];
-            (effects.Preset, effects.Look, effects.Overlay) = (first.Id, first.Look, first.Overlay);
-        }
-        _effects.Apply();
-        _app.EffectsChanged();
+        _effects.Toggle();
         Refresh();
     }
 

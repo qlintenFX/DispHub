@@ -302,10 +302,10 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>Presets</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
-    <value>Per-app profiles, schedules with fades, per-display settings and unlimited profiles. One-time purchase.</value>
+    <value>Every screen effect, per-app profiles, schedules with fades, per-display settings and unlimited profiles. One-time purchase.</value>
   </data>
   <data name="Pro_ShortPitch" xml:space="preserve">
-    <value>Per-app profiles, schedules and per-display settings. One-time purchase.</value>
+    <value>Screen effects, per-app profiles and schedules. One-time purchase.</value>
   </data>
   <data name="Profiles_AllDisplays" xml:space="preserve">
     <value>All displays</value>
@@ -567,6 +567,7 @@ Logs: {1}</value>
     <value>{0} is part of DispHub Pro.
 
 Pro is a one-time purchase that unlocks:
+• Every screen effect look, and saving your own
 • Per-app profiles that switch automatically
 • Schedules with smooth fades
 • Different settings per display
@@ -655,134 +656,8 @@ It also supports development of DispHub.</value>
   <data name="Effects_Title" xml:space="preserve">
     <value>Effects</value>
   </data>
-  <data name="Effects_PreviewBadge" xml:space="preserve">
-    <value>Preview</value>
-  </data>
-  <data name="Effects_Subtitle" xml:space="preserve">
-    <value>Film, camera and retro looks for the whole screen: a colour grade plus grain, vignette and scanlines.</value>
-  </data>
-  <data name="Effects_ProblemTitle" xml:space="preserve">
-    <value>Effects couldn't start</value>
-  </data>
-  <data name="Effects_ProblemColour" xml:space="preserve">
-    <value>Windows didn't accept the colour grade. Magnifier colour filters may be in use.</value>
-  </data>
-  <data name="Effects_ProblemOverlay" xml:space="preserve">
-    <value>Your graphics driver couldn't start the grain and vignette layer.</value>
-  </data>
-  <data name="Effects_Preset" xml:space="preserve">
-    <value>Start from a look</value>
-  </data>
-  <data name="Effects_PresetHint" xml:space="preserve">
-    <value>Every value below stays adjustable.</value>
-  </data>
-  <data name="Effects_Reset" xml:space="preserve">
-    <value>Reset</value>
-  </data>
-  <data name="Effects_Look" xml:space="preserve">
-    <value>Colour grade</value>
-  </data>
-  <data name="Effects_LookHint" xml:space="preserve">
-    <value>Applied by Windows to the whole screen at no cost. It shows in screenshots and recordings.</value>
-  </data>
-  <data name="Effects_Saturation" xml:space="preserve">
-    <value>Saturation</value>
-  </data>
-  <data name="Effects_Contrast" xml:space="preserve">
-    <value>Contrast</value>
-  </data>
-  <data name="Effects_Fade" xml:space="preserve">
-    <value>Fade</value>
-  </data>
-  <data name="Effects_Sepia" xml:space="preserve">
-    <value>Sepia</value>
-  </data>
-  <data name="Effects_TintHue" xml:space="preserve">
-    <value>Tint colour</value>
-  </data>
-  <data name="Effects_TintStrength" xml:space="preserve">
-    <value>Tint strength</value>
-  </data>
-  <data name="Effects_Texture" xml:space="preserve">
-    <value>Texture</value>
-  </data>
-  <data name="Effects_TextureHint" xml:space="preserve">
-    <value>Drawn over the screen by your graphics card. Clicks go straight through.</value>
-  </data>
-  <data name="Effects_Grain" xml:space="preserve">
-    <value>Film grain</value>
-  </data>
-  <data name="Effects_Amount" xml:space="preserve">
-    <value>Amount</value>
-  </data>
-  <data name="Effects_GrainSize" xml:space="preserve">
-    <value>Size</value>
-  </data>
-  <data name="Effects_GrainSpeed" xml:space="preserve">
-    <value>Speed</value>
-  </data>
-  <data name="Effects_Vignette" xml:space="preserve">
-    <value>Vignette</value>
-  </data>
-  <data name="Effects_VignetteSize" xml:space="preserve">
-    <value>Size</value>
-  </data>
-  <data name="Effects_VignetteSoftness" xml:space="preserve">
-    <value>Softness</value>
-  </data>
-  <data name="Effects_Scanlines" xml:space="preserve">
-    <value>Scanlines</value>
-  </data>
-  <data name="Effects_ScanlineSpacing" xml:space="preserve">
-    <value>Spacing</value>
-  </data>
-  <data name="Effects_Film" xml:space="preserve">
-    <value>Film</value>
-  </data>
-  <data name="Effects_Flicker" xml:space="preserve">
-    <value>Flicker</value>
-  </data>
-  <data name="Effects_Letterbox" xml:space="preserve">
-    <value>Letterbox</value>
-  </data>
-  <data name="Effects_LetterboxOff" xml:space="preserve">
-    <value>Off</value>
-  </data>
   <data name="Effects_Options" xml:space="preserve">
     <value>Options</value>
-  </data>
-  <data name="Effects_HideFullScreen" xml:space="preserve">
-    <value>Step aside for full-screen games</value>
-  </data>
-  <data name="Effects_HideFullScreenHint" xml:space="preserve">
-    <value>Hides the texture layer while a full-screen app is in front, so it can't add input lag.</value>
-  </data>
-  <data name="Effects_HideCapture" xml:space="preserve">
-    <value>Keep the texture out of recordings</value>
-  </data>
-  <data name="Effects_HideCaptureHint" xml:space="preserve">
-    <value>Grain, vignette and scanlines stay on your screen only. The colour grade always records.</value>
-  </data>
-  <data name="EffectPreset_film" xml:space="preserve">
-    <value>Film</value>
-  </data>
-  <data name="EffectPreset_blackAndWhite" xml:space="preserve">
-    <value>Black and white film</value>
-  </data>
-  <data name="EffectPreset_sepia" xml:space="preserve">
-    <value>Sepia print</value>
-  </data>
-  <data name="EffectPreset_camcorder" xml:space="preserve">
-    <value>Camcorder</value>
-  </data>
-  <data name="EffectPreset_bodycam" xml:space="preserve">
-    <value>Bodycam</value>
-  </data>
-  <data name="EffectPreset_nightVision" xml:space="preserve">
-    <value>Night vision</value>
-  </data>
-  <data name="EffectPreset_cinema" xml:space="preserve">
-    <value>Cinema</value>
   </data>
   <data name="Nav_Schedule" xml:space="preserve">
     <value>Schedule</value>
@@ -1156,10 +1031,577 @@ It also supports development of DispHub.</value>
   <data name="Quick_Adjusting" xml:space="preserve">
     <value>Adjusting {0}</value>
   </data>
-  <data name="Quick_EffectsCustom" xml:space="preserve">
-    <value>Your own settings</value>
-  </data>
   <data name="Quick_Open" xml:space="preserve">
     <value>Open DispHub</value>
+  </data>
+  <data name="Effects_Subtitle" xml:space="preserve">
+    <value>Make your screen look like film, a VHS tape or an old computer, or easier on the eyes. Looks show on screen straight away.</value>
+  </data>
+  <data name="Effects_Reset" xml:space="preserve">
+    <value>Undo changes</value>
+  </data>
+  <data name="Effects_ResetSetting" xml:space="preserve">
+    <value>Back to neutral</value>
+  </data>
+  <data name="Effects_Clear" xml:space="preserve">
+    <value>Start from scratch</value>
+  </data>
+  <data name="Effects_Before" xml:space="preserve">
+    <value>Before</value>
+  </data>
+  <data name="Effects_After" xml:space="preserve">
+    <value>After</value>
+  </data>
+  <data name="Effects_PreviewName" xml:space="preserve">
+    <value>Preview of the look, before and after</value>
+  </data>
+  <data name="Effects_PreviousPicture" xml:space="preserve">
+    <value>Previous picture</value>
+  </data>
+  <data name="Effects_NextPicture" xml:space="preserve">
+    <value>Next picture</value>
+  </data>
+  <data name="Effects_PreviewFailed" xml:space="preserve">
+    <value>Previews need a graphics driver with Direct3D 11.</value>
+  </data>
+  <data name="Effects_Looks" xml:space="preserve">
+    <value>Looks</value>
+  </data>
+  <data name="Effects_Adjust" xml:space="preserve">
+    <value>Adjust</value>
+  </data>
+  <data name="Effects_AdjustHint" xml:space="preserve">
+    <value>Every setting of the current look. Greyed-out settings do nothing until the one they depend on is turned up.</value>
+  </data>
+  <data name="Effects_Modified" xml:space="preserve">
+    <value>changed</value>
+  </data>
+  <data name="Effects_Changed" xml:space="preserve">
+    <value>{0} changed</value>
+  </data>
+  <data name="Effects_Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Effects_NoLook" xml:space="preserve">
+    <value>No look</value>
+  </data>
+  <data name="Effects_Still" xml:space="preserve">
+    <value>Still</value>
+  </data>
+  <data name="Effects_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Effects_CopyLink" xml:space="preserve">
+    <value>Copy link</value>
+  </data>
+  <data name="Effects_LinkCopied" xml:space="preserve">
+    <value>Link copied</value>
+  </data>
+  <data name="Effects_SaveTitle" xml:space="preserve">
+    <value>Save as a new look</value>
+  </data>
+  <data name="Effects_SaveHint" xml:space="preserve">
+    <value>Saved looks appear with the others and profiles can pick them.</value>
+  </data>
+  <data name="Effects_SaveName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Effects_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Effects_MyLook" xml:space="preserve">
+    <value>My look {0}</value>
+  </data>
+  <data name="Effects_SavedHint" xml:space="preserve">
+    <value>One of your saved looks</value>
+  </data>
+  <data name="Effects_DeleteLook" xml:space="preserve">
+    <value>Delete this look</value>
+  </data>
+  <data name="Effects_Upgrade" xml:space="preserve">
+    <value>Get DispHub Pro</value>
+  </data>
+  <data name="Effects_ProTitle" xml:space="preserve">
+    <value>Part of DispHub Pro</value>
+  </data>
+  <data name="Effects_ProText" xml:space="preserve">
+    <value>You can preview {0} here. DispHub Pro shows it on your screen. Comfort and accessibility looks are free.</value>
+  </data>
+  <data name="Effects_LayersOnlyTitle" xml:space="preserve">
+    <value>Only part of this look can show</value>
+  </data>
+  <data name="Effects_LayersOnlyText" xml:space="preserve">
+    <value>Windows doesn't let DispHub capture one of your displays (for example one turned to portrait), so only grain, vignette and other layers show there.</value>
+  </data>
+  <data name="Effects_WaitingTitle" xml:space="preserve">
+    <value>Waiting for the screen</value>
+  </data>
+  <data name="Effects_WaitingText" xml:space="preserve">
+    <value>The look comes back as soon as Windows allows the screen to be captured again, for example after the lock screen.</value>
+  </data>
+  <data name="Effects_FailedTitle" xml:space="preserve">
+    <value>Effects stopped</value>
+  </data>
+  <data name="Effects_FailedText" xml:space="preserve">
+    <value>The graphics driver kept failing, so effects stopped on a display. Turn effects off and on to try again.</value>
+  </data>
+  <data name="Effects_FromProfileTitle" xml:space="preserve">
+    <value>Picked by a profile</value>
+  </data>
+  <data name="Effects_FromProfileText" xml:space="preserve">
+    <value>The profile {0} chooses the screen effect while it's on. Changes here show once it's off.</value>
+  </data>
+  <data name="Effects_HideFullScreen" xml:space="preserve">
+    <value>Step aside for full-screen games and videos</value>
+  </data>
+  <data name="Effects_HideFullScreenHint" xml:space="preserve">
+    <value>Turns effects off while something fills a screen, so they can't add delay.</value>
+  </data>
+  <data name="Effects_HideCapture" xml:space="preserve">
+    <value>Keep out of screenshots and recordings</value>
+  </data>
+  <data name="Effects_HideCaptureHint" xml:space="preserve">
+    <value>Looks that change the picture are always left out. This also leaves out grain, vignette and other layers.</value>
+  </data>
+  <data name="Effects_MainDisplayOnly" xml:space="preserve">
+    <value>Main display only</value>
+  </data>
+  <data name="Effects_MainDisplayOnlyHint" xml:space="preserve">
+    <value>Leave your other displays as they are.</value>
+  </data>
+  <data name="Effects_FrameRate" xml:space="preserve">
+    <value>Frame rate</value>
+  </data>
+  <data name="Effects_FrameRateHint" xml:space="preserve">
+    <value>For looks that change the picture. Lower uses less power.</value>
+  </data>
+  <data name="Effects_Fps30" xml:space="preserve">
+    <value>30 fps</value>
+  </data>
+  <data name="Effects_Fps60" xml:space="preserve">
+    <value>60 fps</value>
+  </data>
+  <data name="Effects_FpsDisplay" xml:space="preserve">
+    <value>Match the display</value>
+  </data>
+  <data name="Effects_Notes" xml:space="preserve">
+    <value>Looks that change the picture follow the screen one frame behind, and can't show protected video or windows that hide themselves from capture. A hotkey to turn effects on and off can be set in Settings.</value>
+  </data>
+  <data name="LookCategory_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="LookCategory_Film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="LookCategory_Camera" xml:space="preserve">
+    <value>Camera</value>
+  </data>
+  <data name="LookCategory_Retro" xml:space="preserve">
+    <value>Retro</value>
+  </data>
+  <data name="LookCategory_Colour" xml:space="preserve">
+    <value>Colour</value>
+  </data>
+  <data name="LookCategory_Comfort" xml:space="preserve">
+    <value>Comfort</value>
+  </data>
+  <data name="LookCategory_Access" xml:space="preserve">
+    <value>Accessibility</value>
+  </data>
+  <data name="LookCategory_Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="LookGroup_Colour" xml:space="preserve">
+    <value>Colour</value>
+  </data>
+  <data name="LookGroup_Light" xml:space="preserve">
+    <value>Light and detail</value>
+  </data>
+  <data name="LookGroup_Lens" xml:space="preserve">
+    <value>Lens</value>
+  </data>
+  <data name="LookGroup_Film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="LookGroup_Retro" xml:space="preserve">
+    <value>Retro</value>
+  </data>
+  <data name="LookGroup_Comfort" xml:space="preserve">
+    <value>Comfort</value>
+  </data>
+  <data name="LookGroup_Access" xml:space="preserve">
+    <value>Accessibility</value>
+  </data>
+  <data name="LookParam_exposure" xml:space="preserve">
+    <value>Exposure</value>
+  </data>
+  <data name="LookParam_contrast" xml:space="preserve">
+    <value>Contrast</value>
+  </data>
+  <data name="LookParam_saturation" xml:space="preserve">
+    <value>Saturation</value>
+  </data>
+  <data name="LookParam_vibrance" xml:space="preserve">
+    <value>Vibrance</value>
+  </data>
+  <data name="LookParam_temperature" xml:space="preserve">
+    <value>Warmth</value>
+  </data>
+  <data name="LookParam_tint" xml:space="preserve">
+    <value>Green or magenta</value>
+  </data>
+  <data name="LookParam_fade" xml:space="preserve">
+    <value>Faded blacks</value>
+  </data>
+  <data name="LookParam_sepia" xml:space="preserve">
+    <value>Sepia</value>
+  </data>
+  <data name="LookParam_shadowTint" xml:space="preserve">
+    <value>Shadow tint</value>
+  </data>
+  <data name="LookParam_shadowHue" xml:space="preserve">
+    <value>Shadow colour</value>
+  </data>
+  <data name="LookParam_highlightTint" xml:space="preserve">
+    <value>Highlight tint</value>
+  </data>
+  <data name="LookParam_highlightHue" xml:space="preserve">
+    <value>Highlight colour</value>
+  </data>
+  <data name="LookParam_sharpen" xml:space="preserve">
+    <value>Sharpen</value>
+  </data>
+  <data name="LookParam_bloom" xml:space="preserve">
+    <value>Glow</value>
+  </data>
+  <data name="LookParam_halation" xml:space="preserve">
+    <value>Red glow (halation)</value>
+  </data>
+  <data name="LookParam_bloomThreshold" xml:space="preserve">
+    <value>Glow starts at</value>
+  </data>
+  <data name="LookParam_vignette" xml:space="preserve">
+    <value>Vignette</value>
+  </data>
+  <data name="LookParam_vignetteSize" xml:space="preserve">
+    <value>Vignette size</value>
+  </data>
+  <data name="LookParam_vignetteSoftness" xml:space="preserve">
+    <value>Vignette softness</value>
+  </data>
+  <data name="LookParam_aberration" xml:space="preserve">
+    <value>Colour fringing</value>
+  </data>
+  <data name="LookParam_distortion" xml:space="preserve">
+    <value>Wide lens</value>
+  </data>
+  <data name="LookParam_grain" xml:space="preserve">
+    <value>Grain</value>
+  </data>
+  <data name="LookParam_grainSize" xml:space="preserve">
+    <value>Grain size</value>
+  </data>
+  <data name="LookParam_grainColor" xml:space="preserve">
+    <value>Colour noise</value>
+  </data>
+  <data name="LookParam_flicker" xml:space="preserve">
+    <value>Flicker</value>
+  </data>
+  <data name="LookParam_weave" xml:space="preserve">
+    <value>Gate weave</value>
+  </data>
+  <data name="LookParam_dust" xml:space="preserve">
+    <value>Dust and scratches</value>
+  </data>
+  <data name="LookParam_grainFps" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="LookParam_letterbox" xml:space="preserve">
+    <value>Letterbox</value>
+  </data>
+  <data name="LookParam_scanlines" xml:space="preserve">
+    <value>Scanlines</value>
+  </data>
+  <data name="LookParam_scanlineSpacing" xml:space="preserve">
+    <value>Line spacing</value>
+  </data>
+  <data name="LookParam_curvature" xml:space="preserve">
+    <value>Screen curve</value>
+  </data>
+  <data name="LookParam_mask" xml:space="preserve">
+    <value>Phosphor mask</value>
+  </data>
+  <data name="LookParam_chromaBleed" xml:space="preserve">
+    <value>Colour bleed</value>
+  </data>
+  <data name="LookParam_tracking" xml:space="preserve">
+    <value>Tracking noise</value>
+  </data>
+  <data name="LookParam_jitter" xml:space="preserve">
+    <value>Line jitter</value>
+  </data>
+  <data name="LookParam_pixelate" xml:space="preserve">
+    <value>Pixel size</value>
+  </data>
+  <data name="LookParam_posterize" xml:space="preserve">
+    <value>Colour levels</value>
+  </data>
+  <data name="LookParam_palette" xml:space="preserve">
+    <value>Palette</value>
+  </data>
+  <data name="LookParam_dither" xml:space="preserve">
+    <value>Dithering</value>
+  </data>
+  <data name="LookParam_dim" xml:space="preserve">
+    <value>Dim</value>
+  </data>
+  <data name="LookParam_colorVision" xml:space="preserve">
+    <value>Colour vision</value>
+  </data>
+  <data name="LookParam_colorVisionStrength" xml:space="preserve">
+    <value>Strength</value>
+  </data>
+  <data name="Palette_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Palette_GameBoy" xml:space="preserve">
+    <value>Game Boy</value>
+  </data>
+  <data name="Palette_Pico8" xml:space="preserve">
+    <value>PICO-8</value>
+  </data>
+  <data name="Palette_Commodore64" xml:space="preserve">
+    <value>Commodore 64</value>
+  </data>
+  <data name="Palette_Cga" xml:space="preserve">
+    <value>CGA</value>
+  </data>
+  <data name="Palette_OneBit" xml:space="preserve">
+    <value>Black and white (1-bit)</value>
+  </data>
+  <data name="Palette_Amber" xml:space="preserve">
+    <value>Amber screen</value>
+  </data>
+  <data name="Palette_GreenScreen" xml:space="preserve">
+    <value>Green screen</value>
+  </data>
+  <data name="ColorVision_Typical" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="ColorVision_RedWeak" xml:space="preserve">
+    <value>Red-weak (protan)</value>
+  </data>
+  <data name="ColorVision_GreenWeak" xml:space="preserve">
+    <value>Green-weak (deutan)</value>
+  </data>
+  <data name="ColorVision_BlueWeak" xml:space="preserve">
+    <value>Blue-weak (tritan)</value>
+  </data>
+  <data name="Look_film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Look_filmHint" xml:space="preserve">
+    <value>Print film: soft contrast, warm highlights and fine grain.</value>
+  </data>
+  <data name="Look_super8" xml:space="preserve">
+    <value>Super 8</value>
+  </data>
+  <data name="Look_super8Hint" xml:space="preserve">
+    <value>Home movies: heavy grain, flicker, dust and a warm fade.</value>
+  </data>
+  <data name="Look_blackAndWhite" xml:space="preserve">
+    <value>Black and white</value>
+  </data>
+  <data name="Look_blackAndWhiteHint" xml:space="preserve">
+    <value>Classic monochrome film with grain.</value>
+  </data>
+  <data name="Look_sepia" xml:space="preserve">
+    <value>Sepia</value>
+  </data>
+  <data name="Look_sepiaHint" xml:space="preserve">
+    <value>An old photograph, faded and warm.</value>
+  </data>
+  <data name="Look_bleachBypass" xml:space="preserve">
+    <value>Bleach bypass</value>
+  </data>
+  <data name="Look_bleachBypassHint" xml:space="preserve">
+    <value>Harsh, silvery and drained of colour.</value>
+  </data>
+  <data name="Look_tealOrange" xml:space="preserve">
+    <value>Teal and orange</value>
+  </data>
+  <data name="Look_tealOrangeHint" xml:space="preserve">
+    <value>Blockbuster colour with widescreen bars.</value>
+  </data>
+  <data name="Look_vhs" xml:space="preserve">
+    <value>VHS</value>
+  </data>
+  <data name="Look_vhsHint" xml:space="preserve">
+    <value>Tape: smeared colour, tracking noise and jitter.</value>
+  </data>
+  <data name="Look_bodycam" xml:space="preserve">
+    <value>Body cam</value>
+  </data>
+  <data name="Look_bodycamHint" xml:space="preserve">
+    <value>A wide lens, sharp and gritty.</value>
+  </data>
+  <data name="Look_security" xml:space="preserve">
+    <value>Security camera</value>
+  </data>
+  <data name="Look_securityHint" xml:space="preserve">
+    <value>Grey, noisy CCTV at a low frame rate.</value>
+  </data>
+  <data name="Look_nightVision" xml:space="preserve">
+    <value>Night vision</value>
+  </data>
+  <data name="Look_nightVisionHint" xml:space="preserve">
+    <value>Green phosphor, bright and grainy.</value>
+  </data>
+  <data name="Look_cinema" xml:space="preserve">
+    <value>Cinema</value>
+  </data>
+  <data name="Look_cinemaHint" xml:space="preserve">
+    <value>Widescreen bars with gentle grain and vignette.</value>
+  </data>
+  <data name="Look_arcadeCrt" xml:space="preserve">
+    <value>Arcade CRT</value>
+  </data>
+  <data name="Look_arcadeCrtHint" xml:space="preserve">
+    <value>A curved tube with scanlines, glow and a phosphor mask.</value>
+  </data>
+  <data name="Look_gameBoy" xml:space="preserve">
+    <value>Game Boy</value>
+  </data>
+  <data name="Look_gameBoyHint" xml:space="preserve">
+    <value>Four shades of green, dithered.</value>
+  </data>
+  <data name="Look_pico8" xml:space="preserve">
+    <value>PICO-8</value>
+  </data>
+  <data name="Look_pico8Hint" xml:space="preserve">
+    <value>The fantasy console's 16 colours and chunky pixels.</value>
+  </data>
+  <data name="Look_commodore64" xml:space="preserve">
+    <value>Commodore 64</value>
+  </data>
+  <data name="Look_commodore64Hint" xml:space="preserve">
+    <value>Sixteen colours from 1982.</value>
+  </data>
+  <data name="Look_oneBit" xml:space="preserve">
+    <value>1-bit</value>
+  </data>
+  <data name="Look_oneBitHint" xml:space="preserve">
+    <value>Black and white dots, like the first Macs.</value>
+  </data>
+  <data name="Look_amberTerminal" xml:space="preserve">
+    <value>Amber terminal</value>
+  </data>
+  <data name="Look_amberTerminalHint" xml:space="preserve">
+    <value>A glowing amber monitor.</value>
+  </data>
+  <data name="Look_greenTerminal" xml:space="preserve">
+    <value>Green terminal</value>
+  </data>
+  <data name="Look_greenTerminalHint" xml:space="preserve">
+    <value>A glowing green monitor.</value>
+  </data>
+  <data name="Look_dreamy" xml:space="preserve">
+    <value>Dreamy</value>
+  </data>
+  <data name="Look_dreamyHint" xml:space="preserve">
+    <value>A soft glow and warm, faded colour.</value>
+  </data>
+  <data name="Look_vivid" xml:space="preserve">
+    <value>Vivid</value>
+  </data>
+  <data name="Look_vividHint" xml:space="preserve">
+    <value>Richer colour and crisper detail.</value>
+  </data>
+  <data name="Look_poster" xml:space="preserve">
+    <value>Poster</value>
+  </data>
+  <data name="Look_posterHint" xml:space="preserve">
+    <value>Flat, bold colour like a screen print.</value>
+  </data>
+  <data name="Look_dim" xml:space="preserve">
+    <value>Dim</value>
+  </data>
+  <data name="Look_dimHint" xml:space="preserve">
+    <value>Darker than your screen's lowest brightness, for late nights.</value>
+  </data>
+  <data name="Look_greyscale" xml:space="preserve">
+    <value>Greyscale</value>
+  </data>
+  <data name="Look_greyscaleHint" xml:space="preserve">
+    <value>No colour, so the screen is less tempting.</value>
+  </data>
+  <data name="Look_redNight" xml:space="preserve">
+    <value>Red night</value>
+  </data>
+  <data name="Look_redNightHint" xml:space="preserve">
+    <value>Only dim red light, to keep your night vision.</value>
+  </data>
+  <data name="Look_sharpen" xml:space="preserve">
+    <value>Sharpen</value>
+  </data>
+  <data name="Look_sharpenHint" xml:space="preserve">
+    <value>Crisper text and detail.</value>
+  </data>
+  <data name="Look_redGreenAssist" xml:space="preserve">
+    <value>Red-green help</value>
+  </data>
+  <data name="Look_redGreenAssistHint" xml:space="preserve">
+    <value>Separates reds and greens for green-weak colour vision, the most common kind.</value>
+  </data>
+  <data name="Look_redAssist" xml:space="preserve">
+    <value>Red help</value>
+  </data>
+  <data name="Look_redAssistHint" xml:space="preserve">
+    <value>Separates reds and greens for red-weak colour vision.</value>
+  </data>
+  <data name="Look_AddTitle" xml:space="preserve">
+    <value>Add this look?</value>
+  </data>
+  <data name="Look_AddText" xml:space="preserve">
+    <value>Add the look "{0}" from this link to your effects?</value>
+  </data>
+  <data name="Osd_EffectsOn" xml:space="preserve">
+    <value>Effects on</value>
+  </data>
+  <data name="Osd_EffectsOff" xml:space="preserve">
+    <value>Effects off</value>
+  </data>
+  <data name="Osd_EffectsOffDetail" xml:space="preserve">
+    <value>Your screen as normal</value>
+  </data>
+  <data name="Upgrade_SavedLooks" xml:space="preserve">
+    <value>Save your own looks and let profiles pick them with DispHub Pro.</value>
+  </data>
+  <data name="Settings_EffectsHotkey" xml:space="preserve">
+    <value>Turn effects on or off</value>
+  </data>
+  <data name="Settings_EffectsHotkeyHint" xml:space="preserve">
+    <value>Shows the look from the Effects page, or hides it.</value>
+  </data>
+  <data name="Profiles_Effect" xml:space="preserve">
+    <value>Screen effect</value>
+  </data>
+  <data name="Profiles_EffectHint" xml:space="preserve">
+    <value>A look to show while this profile is on, for example greyscale at bedtime.</value>
+  </data>
+  <data name="Profiles_EffectKeep" xml:space="preserve">
+    <value>As on the Effects page</value>
+  </data>
+  <data name="Profiles_EffectNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Effects_CurrentLook" xml:space="preserve">
+    <value>Current look</value>
+  </data>
+  <data name="Effects_NoLookHint" xml:space="preserve">
+    <value>Pick a look below, or build your own under Adjust.</value>
+  </data>
+  <data name="Effects_CustomHint" xml:space="preserve">
+    <value>Your own mix of settings.</value>
   </data>
 </root>

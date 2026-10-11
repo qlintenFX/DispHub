@@ -33,6 +33,7 @@ public sealed class AppController : IDisposable
     public const string PauseAction = "pause";
     public const string NextAction = "next";
     public const string PreviousAction = "previous";
+    public const string EffectsAction = "effects";
     private const string ProfileActionPrefix = "profile:";
     private static readonly TimeSpan SaveDelay = TimeSpan.FromMilliseconds(500);
 
@@ -116,6 +117,9 @@ public sealed class AppController : IDisposable
     public event EventHandler<Guid>? ProfileEdited;
 
     public event EventHandler? ExternalResetDetected;
+
+    /// <summary>The effects hotkey was pressed.</summary>
+    public event EventHandler? EffectsToggleRequested;
 
     public void Start(IHotkeyRegistrar hotkeys)
     {
@@ -205,6 +209,16 @@ public sealed class AppController : IDisposable
         Evaluate(ChangeSource.Editor);
     }
 
+    /// <summary>Sets the look shown while a profile is on (see <see cref="Profile.Effect"/>).</summary>
+    public void SetProfileEffect(Guid profileId, string? effect)
+    {
+        if (FindProfile(profileId) is not { } profile || profile.Effect == effect)
+            return;
+        profile.Effect = effect;
+        ScheduleSave();
+        ConfigChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     public void RenameProfile(Guid profileId, string name)
     {
         if (FindProfile(profileId) is not { } profile)
@@ -284,6 +298,9 @@ public sealed class AppController : IDisposable
                 break;
             case PreviousAction:
                 Config.Hotkeys.PreviousProfile = text;
+                break;
+            case EffectsAction:
+                Config.Hotkeys.ToggleEffects = text;
                 break;
             default:
                 return null;
@@ -415,6 +432,9 @@ public sealed class AppController : IDisposable
             case PreviousAction:
                 CycleProfile(-1, ChangeSource.Hotkey);
                 break;
+            case EffectsAction:
+                EffectsToggleRequested?.Invoke(this, EventArgs.Empty);
+                break;
             default:
                 if (action.StartsWith(ProfileActionPrefix, StringComparison.Ordinal) &&
                     Guid.TryParse(action.AsSpan(ProfileActionPrefix.Length), out Guid id))
@@ -439,6 +459,7 @@ public sealed class AppController : IDisposable
         AddAction(desired, PauseAction, Config.Hotkeys.TogglePause);
         AddAction(desired, NextAction, Config.Hotkeys.NextProfile);
         AddAction(desired, PreviousAction, Config.Hotkeys.PreviousProfile);
+        AddAction(desired, EffectsAction, Config.Hotkeys.ToggleEffects);
 
         HotkeyFailures = _hotkeys.Sync(desired);
         foreach ((string action, string reason) in HotkeyFailures)

@@ -419,6 +419,31 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     [ObservableProperty]
     public partial string? HotkeyError { get; set; }
 
+    /// <summary>Looks this profile can show: none, as on the Effects page, or any built-in or saved look.</summary>
+    public System.Collections.ObjectModel.ObservableCollection<EffectChoice> Effects { get; } = [];
+
+    [ObservableProperty]
+    public partial EffectChoice? Effect { get; set; }
+
+    partial void OnEffectChanged(EffectChoice? value)
+    {
+        if (!_loading && HasProfile && value is not null)
+            app.SetProfileEffect(_profileId, value.Id);
+    }
+
+    private void RefreshEffects(Profile profile)
+    {
+        Core.Effects.EffectsConfig effects = app.Config.Effects;
+        Effects.Clear();
+        Effects.Add(new EffectChoice(null, Loc.Get("Profiles_EffectKeep")));
+        Effects.Add(new EffectChoice(Core.Effects.LookLibrary.None, Loc.Get("Profiles_EffectNone")));
+        foreach (Core.Effects.LookPreset preset in Core.Effects.Looks.All)
+            Effects.Add(new EffectChoice(preset.Id, Loc.Get($"Look_{preset.Id}")));
+        foreach (Core.Effects.SavedLook saved in effects.SavedLooks)
+            Effects.Add(new EffectChoice(saved.Key, saved.Name));
+        Effect = Effects.FirstOrDefault(e => e.Id == profile.Effect) ?? Effects[0];
+    }
+
     public bool VibranceSupported => app.Monitors.Any(m => m.SupportsVibrance);
 
     public string VibranceHelp => VibranceSupported
@@ -450,6 +475,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             Vibrance = color.Vibrance;
             Hotkey = profile.Hotkey;
             HotkeyError = Localize(app.HotkeyFailure(profile.Id));
+            RefreshEffects(profile);
             OnPropertyChanged(nameof(VibranceSupported));
             OnPropertyChanged(nameof(VibranceHelp));
         }
@@ -548,3 +574,9 @@ public sealed record WarningViewModel(
 }
 
 public sealed record TemplateChoice(string Key, string Name, string Description);
+
+/// <summary>A screen effect a profile can pick; <see cref="Id"/> is null for "as on the Effects page".</summary>
+public sealed record EffectChoice(string? Id, string Name)
+{
+    public override string ToString() => Name;
+}

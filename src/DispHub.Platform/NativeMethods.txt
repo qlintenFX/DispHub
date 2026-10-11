@@ -48,6 +48,7 @@ SetWindowPos
 GetWindowLong
 SetWindowLong
 ShowWindow
+ShowWindowAsync
 SetForegroundWindow
 EmptyWorkingSet
 GetCurrentProcess
@@ -131,3 +132,24 @@ DWMWINDOWATTRIBUTE
 SHDefExtractIcon
 EnumDisplaySettings
 ENUM_DISPLAY_SETTINGS_MODE
+
+// Screen effects: desktop duplication and the shader pipeline
+CreateDXGIFactory1
+IDXGIFactory1
+IDXGIAdapter1
+IDXGIOutput
+IDXGIOutput1
+IDXGIOutputDuplication
+IDXGIResource
+DXGI_ERROR_WAIT_TIMEOUT
+DXGI_ERROR_ACCESS_LOST
+DXGI_ERROR_NOT_FOUND
+ID3D11ShaderResourceView
+ID3D11SamplerState
+IDXGIDevice1
+DXGI_ERROR_UNSUPPORTED
+GetDpiForMonitor
+ID3D11Query
+ID3D11Query
+WM_NCHITTEST
+WM_MOUSEACTIVATE

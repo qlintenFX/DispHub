@@ -26,7 +26,7 @@ public sealed class AppConfig
     public HotkeyConfig Hotkeys { get; set; } = new();
     public UiConfig Ui { get; set; } = new();
 
-    /// <summary>Screen effects (colour grade and overlay). Prototype.</summary>
+    /// <summary>Screen effects: looks drawn over the screen by the GPU.</summary>
     public Effects.EffectsConfig Effects { get; set; } = new();
 }
 
@@ -38,6 +38,12 @@ public sealed class Profile
 
     /// <summary>Hotkey in <see cref="Hotkeys.HotkeyGesture"/> string form, e.g. "Ctrl+Alt+1".</summary>
     public string? Hotkey { get; set; }
+
+    /// <summary>
+    /// The screen effect while this profile is on: a look id, <see cref="Effects.LookLibrary.None"/> for none, or null
+    /// to leave effects as set on the Effects page.
+    /// </summary>
+    public string? Effect { get; set; }
 
     /// <summary>Optional per-monitor settings that replace <see cref="Color"/> on that monitor (Pro).</summary>
     [JsonObjectCreationHandling(JsonObjectCreationHandling.Populate)]
@@ -139,6 +145,7 @@ public sealed class HotkeyConfig
     public string? TogglePause { get; set; }
     public string? NextProfile { get; set; }
     public string? PreviousProfile { get; set; }
+    public string? ToggleEffects { get; set; }
 }
 
 public enum WindowBackdrop

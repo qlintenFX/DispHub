@@ -177,6 +177,7 @@ public partial class App : Application
         services.AddSingleton<AppsViewModel>();
         services.AddSingleton<DisplaysViewModel>();
         services.AddSingleton<EffectsService>();
+        services.AddSingleton<LookPreviewService>();
         services.AddSingleton<EffectsViewModel>();
         services.AddSingleton<QuickPanelViewModel>();
         services.AddSingleton<SettingsViewModel>();
@@ -196,7 +197,16 @@ public partial class App : Application
             : ServiceDescriptor.Singleton<ILicenseService, UnlockedLicenseService>();
     }
 
-    private void ShowMainWindow() => _services?.GetRequiredService<MainWindow>().ShowAndActivate();
+    private void ShowMainWindow()
+    {
+        if (_services is null)
+            return;
+        MainWindow window = _services.GetRequiredService<MainWindow>();
+        bool wasHidden = !window.IsVisible;
+        window.ShowAndActivate();
+        if (wasHidden)
+            _services.GetRequiredService<MainViewModel>().SelectedPage.OnShown();
+    }
 
     private QuickPanel CreateQuickPanel()
     {
@@ -217,7 +227,12 @@ public partial class App : Application
             return;
         ShowMainWindow();
         if (FindPresetLink(args) is { } link)
-            _ = OfferPresetAsync(link);
+        {
+            if (SharedLook.TryParse(link, out SharedLook? look))
+                _ = OfferLookAsync(look);
+            else
+                _ = OfferPresetAsync(link);
+        }
     }
 
     private static string? FindPresetLink(string[] args) =>
@@ -255,9 +270,35 @@ public partial class App : Application
         }
     }
 
+    private async Task OfferLookAsync(SharedLook look)
+    {
+        if (_services is null)
+            return;
+        var box = new Wpf.Ui.Controls.MessageBox
+        {
+            Title = Loc.Get("Look_AddTitle"),
+            Content = Loc.Format("Look_AddText", look.Name),
+            PrimaryButtonText = Loc.Get("Common_Add"),
+            CloseButtonText = Loc.Get("Common_Cancel"),
+            Owner = _services.GetRequiredService<MainWindow>(),
+        };
+        if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary)
+        {
+            _services.GetRequiredService<EffectsViewModel>().Import(look);
+            _services.GetRequiredService<MainViewModel>().Navigate<EffectsViewModel>();
+        }
+    }
+
     /// <summary>The main window was closed to the notification area.</summary>
     public void OnMainWindowHidden()
     {
+        if (_exiting)
+            return;
+        if (_services is not null)
+        {
+            _services.GetRequiredService<MainViewModel>().SelectedPage.OnHidden();
+            _services.GetRequiredService<EffectsViewModel>().ReleasePreviews();
+        }
         if (_tray is not null && _services is not null)
             _tray.ShowStillRunningHint(_services.GetRequiredService<OsdService>());
         MemoryTrim.Schedule();
