@@ -14,7 +14,7 @@ namespace DispHub.Services;
 public sealed class GalleryService(ILogger<GalleryService> logger)
 {
     public const string GalleryUrl = "https://raw.githubusercontent.com/qlintenFX/DispHub/main/presets/gallery.json";
-    public const string ContributeUrl = "https://github.com/qlintenFX/DispHub/tree/main/presets";
+    public const string ContributeUrl = GallerySubmission.FormUrl;
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(8) };
 
     public async Task<IReadOnlyList<(GalleryEntry Entry, SharedPreset Preset)>> LoadAsync(CancellationToken cancellationToken = default)

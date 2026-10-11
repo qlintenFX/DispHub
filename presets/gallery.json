@@ -2,55 +2,32 @@
   "version": 1,
   "presets": [
     {
-      "name": "Competitive FPS",
-      "description": "Lifts shadows and boosts colour so players stand out in dark corners. A good start for CS2, Valorant and Apex.",
+      "name": "Vivid",
+      "description": "Richer colour for photos, videos and games.",
       "tags": [
-        "FPS",
-        "CS2",
-        "Valorant",
-        "Apex"
+        "Colour"
       ],
-      "link": "disphub://preset?name=Competitive%20FPS&b=8&c=6&g=1.25&v=75"
+      "link": "disphub://preset?name=Vivid&c=4&v=70"
     },
     {
-      "name": "CS2 Vibrant",
-      "description": "Strong vibrance with slightly brighter midtones, close to what many pros run.",
+      "name": "Shadow detail",
+      "description": "Lifts dark areas so detail in shadows is easier to see.",
       "tags": [
-        "CS2"
+        "Dark scenes"
       ],
-      "link": "disphub://preset?name=CS2%20Vibrant&c=4&g=1.15&v=85"
+      "link": "disphub://preset?name=Shadow%20detail&b=6&g=1.2"
     },
     {
-      "name": "Valorant Clear",
-      "description": "Crisper contrast and a little extra saturation for ability effects and enemy outlines.",
+      "name": "Film",
+      "description": "Deeper blacks and a little more contrast for films and series.",
       "tags": [
-        "Valorant"
+        "Films"
       ],
-      "link": "disphub://preset?name=Valorant%20Clear&b=4&c=10&g=1.1&v=70"
-    },
-    {
-      "name": "Battle Royale Long Range",
-      "description": "Brighter distant shadows without washing out the sky.",
-      "tags": [
-        "Fortnite",
-        "Apex",
-        "PUBG",
-        "Warzone"
-      ],
-      "link": "disphub://preset?name=Battle%20Royale%20Long%20Range&b=6&g=1.3&v=65"
-    },
-    {
-      "name": "Cinematic",
-      "description": "Deeper blacks and a touch more contrast for films and story games.",
-      "tags": [
-        "Movies",
-        "Single player"
-      ],
-      "link": "disphub://preset?name=Cinematic&b=-5&c=8&g=0.95&v=55"
+      "link": "disphub://preset?name=Film&b=-5&c=8&g=0.95&v=55"
     },
     {
       "name": "Evening",
-      "description": "Warmer, gentler light for the evening. Easy on the eyes after sunset.",
+      "description": "Warmer, gentler light after sunset.",
       "tags": [
         "Night",
         "Eye comfort"
@@ -58,38 +35,12 @@
       "link": "disphub://preset?name=Evening&b=-8&t=4200"
     },
     {
-      "name": "Night Reading",
-      "description": "Warm and dim for reading late at night.",
-      "tags": [
-        "Night",
-        "Eye comfort"
-      ],
-      "link": "disphub://preset?name=Night%20Reading&b=-10&t=3700"
-    },
-    {
-      "name": "Dark Room",
-      "description": "Lowers overall brightness below what your monitor's own setting allows.",
+      "name": "Dim room",
+      "description": "Darker than your monitor's lowest brightness setting, for a dark room.",
       "tags": [
         "Night"
       ],
-      "link": "disphub://preset?name=Dark%20Room&b=-30&t=5000"
-    },
-    {
-      "name": "Daylight Office",
-      "description": "Slightly warm and neutral for long workdays.",
-      "tags": [
-        "Work",
-        "Eye comfort"
-      ],
-      "link": "disphub://preset?name=Daylight%20Office&t=5600"
-    },
-    {
-      "name": "Retro Arcade",
-      "description": "Saturated, punchy colour with a little warmth, like an old CRT.",
-      "tags": [
-        "Retro"
-      ],
-      "link": "disphub://preset?name=Retro%20Arcade&c=6&t=6000&v=80"
+      "link": "disphub://preset?name=Dim%20room&b=-30&t=5000"
     }
   ]
 }

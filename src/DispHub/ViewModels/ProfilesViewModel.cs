@@ -419,6 +419,15 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     }
 
     [RelayCommand]
+    private void SubmitToGallery()
+    {
+        if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
+            return;
+        Uri form = Core.Sharing.GallerySubmission.For(new Core.Sharing.SharedPreset(profile.Name, profile.Color));
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(form.AbsoluteUri) { UseShellExecute = true });
+    }
+
+    [RelayCommand]
     private void Reset()
     {
         if (!HasProfile)

@@ -634,4 +634,13 @@ It also supports development of DispHub.</value>
   <data name="Preview_spring" xml:space="preserve">
     <value>Hot spring</value>
   </data>
+  <data name="Profiles_SubmitToGallery" xml:space="preserve">
+    <value>Submit it to the gallery</value>
+  </data>
+  <data name="Presets_From" xml:space="preserve">
+    <value>Shared by {0}</value>
+  </data>
+  <data name="Presets_FromDispHub" xml:space="preserve">
+    <value>From DispHub</value>
+  </data>
 </root>

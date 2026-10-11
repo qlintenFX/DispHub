@@ -1,0 +1,47 @@
+name: Preset from issue
+
+# A maintainer adds the preset-approved label to a "Share a preset" issue; this checks the preset and opens a
+# pull request that adds it to the gallery. The issue text is only ever read by add_preset.py, never by the shell.
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  add:
+    if: github.event.label.name == 'preset-approved'
+    runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE: ${{ github.event.issue.number }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - id: add
+        run: python .github/scripts/add_preset.py
+      # Pull requests opened by this workflow don't start CI, so check the preset here.
+      - run: dotnet test --project tests/DispHub.Tests/DispHub.Tests.csproj -c Release -- --filter-class DispHub.Tests.Core.GalleryTests
+      - name: Open the pull request
+        shell: bash
+        env:
+          NAME: ${{ steps.add.outputs.name }}
+        run: |
+          branch="preset/issue-$ISSUE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add presets/gallery.json
+          git commit -m "feat: add the $NAME preset"
+          git push origin "$branch"
+          gh pr create --head "$branch" --title "feat: add the $NAME preset" --body "Adds the preset shared in #$ISSUE. Closes #$ISSUE."
+      - name: Explain what went wrong
+        if: failure()
+        shell: bash
+        run: gh issue comment "$ISSUE" --body "This preset couldn't be added automatically. The details are in the [workflow run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."

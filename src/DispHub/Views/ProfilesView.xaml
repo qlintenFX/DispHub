@@ -190,11 +190,20 @@
               Icon="{ui:SymbolIcon ArrowReset24}" />
           </StackPanel>
         </Grid>
-        <TextBlock
+        <StackPanel
           Margin="0,-4,0,8"
-          Style="{StaticResource Hint}"
-          Text="{Binding ShareMessage}"
-          Visibility="{Binding ShareMessage, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
+          Orientation="Horizontal"
+          Visibility="{Binding ShareMessage, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}">
+          <TextBlock
+            VerticalAlignment="Center"
+            Style="{StaticResource Hint}"
+            Text="{Binding ShareMessage}" />
+          <ui:HyperlinkButton
+            Margin="8,0,0,0"
+            Padding="4,2"
+            Command="{Binding SubmitToGalleryCommand}"
+            Content="{l:Tr Profiles_SubmitToGallery}" />
+        </StackPanel>
 
         <Grid Margin="0,0,0,8" Visibility="{Binding ShowDisplayPicker, Converter={StaticResource BoolToVisibility}}">
           <Grid.ColumnDefinitions>

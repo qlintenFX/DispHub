@@ -37,6 +37,24 @@ public sealed class GalleryEntry
     public string Description { get; set; } = "";
     public List<string> Tags { get; set; } = [];
     public string Link { get; set; } = "";
+
+    /// <summary>GitHub name of whoever shared it; empty for DispHub's own starter presets.</summary>
+    public string? Author { get; set; }
+}
+
+/// <summary>Where people send presets for the gallery: a GitHub issue form, so sharing needs no git knowledge.</summary>
+public static class GallerySubmission
+{
+    public const string FormUrl = "https://github.com/qlintenFX/DispHub/issues/new?template=preset.yml";
+
+    /// <summary>The form with the preset's link and name already filled in.</summary>
+    public static Uri For(SharedPreset preset)
+    {
+        ArgumentNullException.ThrowIfNull(preset);
+        return new Uri(
+            $"{FormUrl}&title={Uri.EscapeDataString("Preset: " + preset.Name)}" +
+            $"&name={Uri.EscapeDataString(preset.Name)}&link={Uri.EscapeDataString(preset.ToLink())}");
+    }
 }
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, ReadCommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true)]

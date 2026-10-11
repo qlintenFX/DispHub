@@ -95,7 +95,12 @@ public sealed partial class PresetItemViewModel(GalleryEntry entry, SharedPreset
 {
     public string Name => entry.Name;
     public string Description => entry.Description;
-    public string Tags => string.Join(" · ", entry.Tags);
+    public string Tags => string.Join(" · ", entry.Tags.Append(Source));
+
+    /// <summary>Who shared it, so the gallery credits the community.</summary>
+    public string Source => string.IsNullOrWhiteSpace(entry.Author)
+        ? Loc.Get("Presets_FromDispHub")
+        : Loc.Format("Presets_From", "@" + entry.Author);
     public string Summary => ProfileItemViewModel.Describe(preset.Color);
 
     [ObservableProperty]
