@@ -35,4 +35,21 @@
   <ItemGroup>
     <InternalsVisibleTo Include="DispHub.Tests" />
   </ItemGroup>
+
+  <!-- The languages DispHub offers are the translations present, so a new Strings.<culture>.resx (for example from
+       Crowdin) shows up in Settings without code changes. Read at runtime by Loc.Languages. -->
+  <Target Name="AddLanguageList" BeforeTargets="GetAssemblyAttributes">
+    <ItemGroup>
+      <_Translation Include="Localization\Strings.*.resx" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_Languages>@(_Translation->'%(Filename)'->Replace('Strings.', ''))</_Languages>
+    </PropertyGroup>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>DispHub.Languages</_Parameter1>
+        <_Parameter2>$(_Languages)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
 </Project>

@@ -71,10 +71,14 @@ public sealed partial class LocalizationTests
     }
 
     [Fact]
-    public void EveryShippedLanguageHasAFile()
+    public void TheLanguageListIsEnglishPlusEveryTranslationFile()
     {
-        foreach (string language in DispHub.Localization.Loc.Languages.Where(l => l != "en"))
-            Assert.True(File.Exists(Path.Combine(LocalizationDir, $"Strings.{language}.resx")), $"missing Strings.{language}.resx");
+        var files = Directory.EnumerateFiles(LocalizationDir, "Strings.*.resx")
+            .Select(f => Path.GetFileNameWithoutExtension(f)["Strings.".Length..])
+            .Order(StringComparer.OrdinalIgnoreCase);
+
+        Assert.Equal(["en", .. files], DispHub.Localization.Loc.Languages);
+        Assert.All(DispHub.Localization.Loc.Languages, l => System.Globalization.CultureInfo.GetCultureInfo(l));
     }
 
     private static HashSet<string> Keys(string path) => [.. Values(path).Keys];

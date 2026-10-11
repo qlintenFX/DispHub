@@ -1,0 +1,17 @@
+# Crowdin syncs DispHub's text with translators: https://crowdin.com/project/disphub
+# Crowdin's GitHub integration reads this file, uploads new English text and opens pull requests with
+# translations. A new language needs no code change: the build lists every Strings.<culture>.resx.
+preserve_hierarchy: true
+files:
+  - source: /src/DispHub/Localization/Strings.resx
+    translation: /src/DispHub/Localization/Strings.%two_letters_code%.resx
+    # Leave untranslated text out, so it falls back to English instead of being copied in.
+    skip_untranslated_strings: true
+    languages_mapping:
+      two_letters_code:
+        pt-BR: pt-BR
+        pt-PT: pt-PT
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        es-419: es-419
+        sr-CS: sr-Latn

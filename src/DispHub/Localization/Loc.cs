@@ -11,9 +11,18 @@ namespace DispHub.Localization;
 public static class Loc
 {
     /// <summary>
-    /// Languages DispHub ships, as culture names. English is the neutral resource. To add one, see docs/translating.md.
+    /// Languages DispHub ships, as culture names: English (the neutral resource) and every Strings.&lt;culture&gt;.resx,
+    /// listed by the build. To add one, see docs/translating.md.
     /// </summary>
-    public static readonly IReadOnlyList<string> Languages = ["en", "de", "fr", "es", "pt-BR", "it", "nl"];
+    public static readonly IReadOnlyList<string> Languages =
+    [
+        "en",
+        .. (typeof(Loc).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyMetadataAttribute), false)
+            .Cast<System.Reflection.AssemblyMetadataAttribute>()
+            .FirstOrDefault(a => a.Key == "DispHub.Languages")?.Value ?? "")
+            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Order(StringComparer.OrdinalIgnoreCase),
+    ];
 
     private static readonly ResourceManager Resources = new("DispHub.Localization.Strings", typeof(Loc).Assembly);
 

@@ -57,6 +57,12 @@ administrator approval once).
 **Nothing changes on my HDR screen.**
 Windows doesn't allow gamma changes while HDR is on. Vibrance still works.
 
+## Help make it better
+
+- **Translate** DispHub into your language on [Crowdin](https://crowdin.com/project/disphub). No coding needed.
+- **Share a preset**: in DispHub, click **Share** on a profile, then **Submit it to the gallery**.
+- **Report a bug** with About > Copy diagnostics, or read [CONTRIBUTING.md](CONTRIBUTING.md) to send code.
+
 ## Build from source
 
 Requirements: Windows 10 2004 or later and the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
