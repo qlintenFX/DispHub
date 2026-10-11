@@ -17,7 +17,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="WPF-UI" />
-    <PackageReference Include="WPF-UI.Tray" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DispHub.Core\DispHub.Core.csproj" />
@@ -28,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\DispHub.ico" />
+    <Resource Include="Assets\DispHub-paused.ico" />
     <Resource Include="Assets\DispHub.png" />
     <Resource Include="Assets\DispHub-64.png" />
     <Resource Include="Assets\Previews\*.jpg" />

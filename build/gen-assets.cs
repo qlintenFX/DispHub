@@ -50,6 +50,8 @@ var thread = new Thread(() =>
     // App icon (multi-size .ico: window, taskbar and notification area) and PNGs for the window and About page.
     int[] icoSizes = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256];
     WriteIco(Path.Combine(appAssets, "DispHub.ico"), icoSizes.Select(s => Icon(s)).ToArray());
+    // Shown in the notification area while DispHub is paused: the same monitor, greyed out.
+    WriteIco(Path.Combine(appAssets, "DispHub-paused.ico"), icoSizes.Where(s => s <= 64).Select(s => Icon(s).Desaturated(0.55)).ToArray());
     Icon(256).Save(Path.Combine(appAssets, "DispHub.png"));
     Icon(64).Save(Path.Combine(appAssets, "DispHub-64.png"));
 
@@ -182,6 +184,20 @@ sealed class Image(int width, int height)
                     x0 = Math.Min(x0, x); y0 = Math.Min(y0, y); x1 = Math.Max(x1, x); y1 = Math.Max(y1, y);
                 }
         return new Int32Rect(x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+    }
+
+    /// <summary>Grey version, faded towards transparent by <paramref name="opacity"/>.</summary>
+    public Image Desaturated(double opacity)
+    {
+        var result = new Image(Width, Height);
+        for (int i = 0; i < Pixels.Length; i += 4)
+        {
+            float luma = (0.0722f * Pixels[i]) + (0.7152f * Pixels[i + 1]) + (0.2126f * Pixels[i + 2]);
+            float k = (float)opacity;
+            result.Pixels[i] = result.Pixels[i + 1] = result.Pixels[i + 2] = luma * k;
+            result.Pixels[i + 3] = Pixels[i + 3] * k;
+        }
+        return result;
     }
 
     public Image Crop(Int32Rect r)

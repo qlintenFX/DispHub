@@ -4,6 +4,8 @@
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <RootNamespace>DispHub.Platform</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Some structs (NOTIFYICONDATA) differ on 32-bit Windows. DispHub ships x64 and arm64, which share this layout. -->
+    <CsWin32PlatformTarget>x64</CsWin32PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />

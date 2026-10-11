@@ -89,7 +89,7 @@
     <value>WPF UI by lepo.co</value>
   </data>
   <data name="About_WpfUiHint" xml:space="preserve">
-    <value>The Fluent controls, Mica window and tray icon.</value>
+    <value>The Fluent controls and Mica window.</value>
   </data>
   <data name="Automation_AddApp" xml:space="preserve">
     <value>Add app…</value>
@@ -260,7 +260,7 @@
     <value>DispHub is still running</value>
   </data>
   <data name="Osd_StillRunningHint" xml:space="preserve">
-    <value>Find it in the notification area</value>
+    <value>Its icon is under ^ in the notification area</value>
   </data>
   <data name="Preset_AddText" xml:space="preserve">
     <value>{0}
@@ -642,5 +642,11 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Presets_FromDispHub" xml:space="preserve">
     <value>From DispHub</value>
+  </data>
+  <data name="Tray_StillRunningTitle" xml:space="preserve">
+    <value>DispHub is still running</value>
+  </data>
+  <data name="Tray_StillRunningText" xml:space="preserve">
+    <value>It keeps your profiles and hotkeys working from the notification area. Select this to keep its icon on the taskbar.</value>
   </data>
 </root>

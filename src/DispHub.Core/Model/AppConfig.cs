@@ -115,4 +115,7 @@ public sealed class UiConfig
 
     /// <summary>The photo the profile previews show, by name; null uses the default.</summary>
     public string? PreviewPicture { get; set; }
+
+    /// <summary>The one-time "still running" notification was shown.</summary>
+    public bool TrayHintShown { get; set; }
 }

@@ -6,7 +6,7 @@ DispHub is licensed under GPL-3.0-or-later. It uses the following components.
 
 | Component | Licence | Source |
 | --- | --- | --- |
-| WPF-UI and WPF-UI.Tray | MIT | https://github.com/lepoco/wpfui |
+| WPF-UI | MIT | https://github.com/lepoco/wpfui |
 | CommunityToolkit.Mvvm | MIT | https://github.com/CommunityToolkit/dotnet |
 | Microsoft.Extensions.DependencyInjection, Microsoft.Extensions.Logging | MIT | https://github.com/dotnet/runtime |
 | .NET runtime (self-contained Store build) | MIT | https://github.com/dotnet/runtime |

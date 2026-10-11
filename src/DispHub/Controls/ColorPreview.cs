@@ -11,10 +11,10 @@ namespace DispHub.Controls;
 /// <remarks>The photos are public domain; see THIRD_PARTY_NOTICES.md.</remarks>
 public static class ColorPreview
 {
-    public const string DefaultPicture = "flowers";
+    public const string DefaultPicture = "reef";
 
     /// <summary>The pictures to choose from, as their file names in Assets/Previews.</summary>
-    public static readonly IReadOnlyList<string> Pictures = ["flowers", "reef", "autumn", "spring"];
+    public static readonly IReadOnlyList<string> Pictures = ["reef", "flowers", "autumn", "spring"];
 
     private const int MaxCached = 32;
     private static readonly Dictionary<(string, ColorSettings), BitmapSource> Cache = [];

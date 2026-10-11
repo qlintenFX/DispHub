@@ -111,15 +111,14 @@ public partial class App : Application
         nint handle = new WindowInteropHelper(host).EnsureHandle();
         var hotkeys = new HotkeyRegistrar(handle);
         _router = new ShellMessageRouter(handle, hotkeys);
-        HwndSource.FromHwnd(handle).AddHook((nint _, int msg, nint wParam, nint _, ref bool handled) =>
+        HwndSource.FromHwnd(handle).AddHook((nint _, int msg, nint wParam, nint lParam, ref bool handled) =>
         {
-            handled = _router.HandleMessage((uint)msg, (nuint)wParam);
+            handled = _router.HandleMessage((uint)msg, (nuint)wParam, lParam);
             return 0;
         });
         _router.DisplayChanged += (_, _) => _controller.OnDisplayChanged();
         _router.Resumed += (_, _) => Dispatcher.BeginInvoke(_controller.OnResumed, DispatcherPriority.Background);
         _router.SessionUnlocked += (_, _) => _controller.OnResumed();
-        _router.TaskbarCreated += (_, _) => _tray?.Reregister();
         HotkeyBox.RecordingChanged += (_, recording) =>
         {
             if (recording)
@@ -129,7 +128,7 @@ public partial class App : Application
         };
 
         _controller.Start(hotkeys);
-        _tray = new TrayService(_controller, ShowMainWindow, RequestExit);
+        _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
         _services.GetRequiredService<OsdService>().Attach();
         _services.GetRequiredService<ReviewPrompt>().Attach();
@@ -242,6 +241,14 @@ public partial class App : Application
         {
             _services.GetRequiredService<MainViewModel>().Navigate<ProfilesViewModel>();
         }
+    }
+
+    /// <summary>The main window was closed to the notification area.</summary>
+    public void OnMainWindowHidden()
+    {
+        if (_tray is not null && _services is not null)
+            _tray.ShowStillRunningHint(_services.GetRequiredService<OsdService>());
+        MemoryTrim.Schedule();
     }
 
     /// <summary>Quits and starts DispHub again, e.g. after changing the language.</summary>
