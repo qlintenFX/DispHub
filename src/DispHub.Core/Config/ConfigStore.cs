@@ -84,6 +84,27 @@ public sealed class ConfigStore(string directory, TimeProvider? timeProvider = n
     public static string Serialize(AppConfig config) =>
         JsonSerializer.Serialize(config, ConfigJsonContext.Default.AppConfig);
 
+    /// <summary>Reads just the UI language from config.json without loading the rest; null if unset or unreadable.</summary>
+    public static string? PeekLanguage(string directory)
+    {
+        try
+        {
+            string path = Path.Combine(directory, "config.json");
+            if (!File.Exists(path))
+                return null;
+            using JsonDocument doc = JsonDocument.Parse(File.ReadAllText(path));
+            return doc.RootElement.TryGetProperty("ui", out JsonElement ui) &&
+                   ui.TryGetProperty("language", out JsonElement language) &&
+                   language.ValueKind == JsonValueKind.String
+                ? language.GetString()
+                : null;
+        }
+        catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
     public static AppConfig Deserialize(string json) =>
         JsonSerializer.Deserialize(json, ConfigJsonContext.Default.AppConfig)
         ?? throw new JsonException("Config is empty.");

@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DispHub.Core.Hotkeys;
+using DispHub.Localization;
 
 namespace DispHub.Controls;
 
@@ -16,7 +17,7 @@ public sealed class HotkeyBox : Button
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (d, _) => ((HotkeyBox)d).UpdateText()));
 
     public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
-        nameof(Placeholder), typeof(string), typeof(HotkeyBox), new PropertyMetadata("Not set", (d, _) => ((HotkeyBox)d).UpdateText()));
+        nameof(Placeholder), typeof(string), typeof(HotkeyBox), new PropertyMetadata(Loc.Get("Hotkey_NotSet"), (d, _) => ((HotkeyBox)d).UpdateText()));
 
     private string? _hint;
     private bool _recording;
@@ -92,7 +93,7 @@ public sealed class HotkeyBox : Button
         var gesture = new HotkeyGesture(ToModifiers(Keyboard.Modifiers), virtualKey);
         if (!gesture.IsValid)
         {
-            _hint = "Add Ctrl, Alt or Win";
+            _hint = Loc.Get("Hotkey_NeedsModifier");
             UpdateText();
             return;
         }
@@ -122,7 +123,7 @@ public sealed class HotkeyBox : Button
     }
 
     private void UpdateText() =>
-        Content = _recording ? _hint ?? "Press a key combination…" : Gesture ?? Placeholder;
+        Content = _recording ? _hint ?? Loc.Get("Hotkey_Recording") : Gesture ?? Placeholder;
 
     private static HotkeyModifiers ToModifiers(ModifierKeys keys)
     {

@@ -5,6 +5,7 @@
   xmlns:ctl="clr-namespace:DispHub.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
@@ -16,15 +17,15 @@
   </UserControl.Resources>
 
   <StackPanel>
-    <TextBlock Style="{StaticResource PageTitle}" Text="Settings" />
-    <TextBlock Style="{StaticResource PageSubtitle}" Text="How DispHub starts, looks and responds." />
+    <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Settings_Title}" />
+    <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Settings_Subtitle}" />
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="General" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_General}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel>
-          <TextBlock Text="Start with Windows" />
-          <TextBlock Style="{StaticResource Hint}" Text="Starts quietly in the notification area and applies your profile." />
+          <TextBlock Text="{l:Tr Settings_StartWithWindows}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_StartWithWindowsHint}" />
           <TextBlock
             Style="{StaticResource ErrorText}"
             Text="{Binding LaunchAtLoginNote}"
@@ -36,8 +37,8 @@
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel>
-          <TextBlock Text="Keep running when the window is closed" />
-          <TextBlock Style="{StaticResource Hint}" Text="Hotkeys and automation keep working from the notification area." />
+          <TextBlock Text="{l:Tr Settings_KeepRunning}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_KeepRunningHint}" />
         </StackPanel>
         <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding CloseToTray}" />
       </Grid>
@@ -45,8 +46,8 @@
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel>
-          <TextBlock Text="App theme" />
-          <TextBlock Style="{StaticResource Hint}" Text="System follows your Windows light or dark mode." />
+          <TextBlock Text="{l:Tr Settings_Theme}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_ThemeHint}" />
         </StackPanel>
         <ComboBox
           MinWidth="160"
@@ -58,9 +59,41 @@
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
+        <StackPanel Margin="0,0,260,0">
+          <TextBlock Text="{l:Tr Settings_PreviewPicture}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_PreviewPictureHint}" />
+        </StackPanel>
+        <ComboBox
+          MinWidth="240"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Center"
+          ItemsSource="{Binding PreviewPictures}"
+          SelectedItem="{Binding PreviewPicture}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type vm:PreviewPictureChoice}">
+              <StackPanel Orientation="Horizontal">
+                <Border
+                  Width="72"
+                  Height="14"
+                  Margin="0,0,10,0"
+                  VerticalAlignment="Center"
+                  CornerRadius="3">
+                  <Border.Background>
+                    <ImageBrush ImageSource="{Binding Image}" Stretch="UniformToFill" />
+                  </Border.Background>
+                </Border>
+                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+              </StackPanel>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </Grid>
+    </Border>
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
         <StackPanel>
-          <TextBlock Text="Clicking the tray icon" />
-          <TextBlock Style="{StaticResource Hint}" Text="Right-click always shows the profile menu." />
+          <TextBlock Text="{l:Tr Settings_TrayClick}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_TrayClickHint}" />
         </StackPanel>
         <ComboBox
           MinWidth="200"
@@ -71,19 +104,48 @@
       </Grid>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="On-screen display" />
+    <Border Style="{StaticResource SettingCard}">
+      <Grid>
+        <StackPanel Margin="0,0,240,0">
+          <TextBlock Text="{l:Tr Settings_Language}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_LanguageHint}" />
+          <StackPanel
+            Margin="0,6,0,0"
+            Orientation="Horizontal"
+            Visibility="{Binding LanguageNeedsRestart, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock
+              Margin="0,0,10,0"
+              VerticalAlignment="Center"
+              Style="{StaticResource Hint}"
+              Text="{l:Tr Settings_LanguageRestart}" />
+            <ui:Button
+              Appearance="Primary"
+              Command="{Binding RestartCommand}"
+              Content="{l:Tr Settings_RestartNow}" />
+          </StackPanel>
+        </StackPanel>
+        <ComboBox
+          MinWidth="200"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Top"
+          ItemsSource="{Binding LanguageChoices}"
+          SelectedItem="{Binding Language}" />
+      </Grid>
+    </Border>
+
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_Osd}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel>
-          <TextBlock Text="Show the profile name when it changes" />
-          <TextBlock Style="{StaticResource Hint}" Text="Appears above the taskbar after a hotkey or tray switch. Never takes focus from games." />
+          <TextBlock Text="{l:Tr Settings_OsdToggle}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_OsdHint}" />
         </StackPanel>
         <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ShowOsd}" />
       </Grid>
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <TextBlock VerticalAlignment="Center" Text="How long it stays" />
+        <TextBlock VerticalAlignment="Center" Text="{l:Tr Settings_OsdDuration}" />
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
           <Slider
             Width="200"
@@ -102,25 +164,25 @@
       </Grid>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="Hotkeys" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_Hotkeys}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel>
-          <TextBlock Text="Pause or resume" />
-          <TextBlock Style="{StaticResource Hint}" Text="Switches between your profile and the original colours." />
+          <TextBlock Text="{l:Tr Settings_Pause}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_PauseHint}" />
         </StackPanel>
         <ctl:HotkeyBox HorizontalAlignment="Right" Gesture="{Binding PauseHotkey}" />
       </Grid>
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <TextBlock VerticalAlignment="Center" Text="Next profile" />
+        <TextBlock VerticalAlignment="Center" Text="{l:Tr Settings_Next}" />
         <ctl:HotkeyBox HorizontalAlignment="Right" Gesture="{Binding NextHotkey}" />
       </Grid>
     </Border>
     <Border Style="{StaticResource SettingCard}">
       <Grid>
-        <TextBlock VerticalAlignment="Center" Text="Previous profile" />
+        <TextBlock VerticalAlignment="Center" Text="{l:Tr Settings_Previous}" />
         <ctl:HotkeyBox HorizontalAlignment="Right" Gesture="{Binding PreviousHotkey}" />
       </Grid>
     </Border>
@@ -130,7 +192,7 @@
       Text="{Binding HotkeyError}"
       Visibility="{Binding HotkeyError, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="Displays" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Settings_Displays}" />
     <ItemsControl ItemsSource="{Binding Monitors}">
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:MonitorItemViewModel}">
@@ -142,7 +204,7 @@
               </StackPanel>
               <CheckBox
                 HorizontalAlignment="Right"
-                Content="Leave this display alone"
+                Content="{l:Tr Settings_LeaveAlone}"
                 IsChecked="{Binding Excluded}" />
             </Grid>
           </Border>
@@ -152,19 +214,19 @@
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel Margin="0,0,180,0">
-          <TextBlock Text="Full colour range" />
-          <TextBlock Style="{StaticResource Hint}" Text="Windows limits how far colours can change, which mostly affects very warm night profiles. Lifting the limit needs administrator approval once." />
+          <TextBlock Text="{l:Tr Settings_FullRange}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Settings_FullRangeHint}" />
         </StackPanel>
         <ui:Button
           HorizontalAlignment="Right"
           Command="{Binding EnableExtendedGammaRangeCommand}"
-          Content="Allow full range"
+          Content="{l:Tr Settings_AllowFullRange}"
           Visibility="{Binding ExtendedGammaRange, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
         <TextBlock
           HorizontalAlignment="Right"
           VerticalAlignment="Center"
           Style="{StaticResource Hint}"
-          Text="Enabled"
+          Text="{l:Tr Common_Enabled}"
           Visibility="{Binding ExtendedGammaRange, Converter={StaticResource BoolToVisibility}}" />
       </Grid>
     </Border>

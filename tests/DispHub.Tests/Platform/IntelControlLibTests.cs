@@ -47,3 +47,14 @@ public sealed unsafe class IntelControlLibTests
         Assert.Equal(m[0..3], m[6..9]);
     }
 }
+
+public sealed unsafe class AmdAdlTests
+{
+    // Sizes from the ADL SDK's adl_structures.h. Both structs are ints and fixed char arrays, so no padding.
+    [Fact]
+    public void StructSizes_MatchTheNativeHeader()
+    {
+        Assert.Equal(1572, sizeof(DispHub.Platform.Vibrance.AmdAdl.AdapterInfo));
+        Assert.Equal(552, sizeof(DispHub.Platform.Vibrance.AmdAdl.DisplayInfo));
+    }
+}

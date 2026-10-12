@@ -5,7 +5,9 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using DispHub.Controls;
 using DispHub.Core.Config;
+using DispHub.Core.Model;
 using DispHub.Core.Sharing;
+using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Shell;
 using DispHub.Platform.Store;
@@ -28,10 +30,20 @@ public partial class App : Application
     private ShellMessageRouter? _router;
     private ILogger<App>? _logger;
     private bool _exiting;
+    private bool _restart;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // Set the language first and synchronously: WPF builds pages in dispatcher work that inherits the culture
+        // that was current when it was queued, so setting it later inside async startup leaves pages in English.
+        Loc.Apply(ConfigStore.PeekLanguage(AppPaths.DataDirectory));
+        FrameworkElement.LanguageProperty.OverrideMetadata(
+            typeof(FrameworkElement),
+            new FrameworkPropertyMetadata(System.Windows.Markup.XmlLanguage.GetLanguage(Loc.Culture.IetfLanguageTag)));
+        DefaultConfig.Names = (Loc.Get("Default_Standard"), Loc.Get("Default_Gaming"), Loc.Get("Default_Night"));
+
         try
         {
             await StartAsync(e.Args);
@@ -40,7 +52,7 @@ public partial class App : Application
         {
             _logger?.LogCritical(ex, "Startup failed");
             System.Windows.MessageBox.Show(
-                $"DispHub couldn't start.\n\n{ex.Message}\n\nLogs: {AppPaths.LogDirectory}",
+                Loc.Format("Startup_Failed", ex.Message, AppPaths.LogDirectory),
                 "DispHub",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -83,6 +95,7 @@ public partial class App : Application
 
         _controller = _services.GetRequiredService<AppController>();
         _services.GetRequiredService<ThemeService>().Apply(_controller.Config.Ui.Theme);
+        ColorPreview.Use(_controller.Config.Ui.PreviewPicture);
 
         // The hidden host window owns the tray icon and receives hotkeys and system broadcasts.
         var host = new Window
@@ -98,15 +111,14 @@ public partial class App : Application
         nint handle = new WindowInteropHelper(host).EnsureHandle();
         var hotkeys = new HotkeyRegistrar(handle);
         _router = new ShellMessageRouter(handle, hotkeys);
-        HwndSource.FromHwnd(handle).AddHook((nint _, int msg, nint wParam, nint _, ref bool handled) =>
+        HwndSource.FromHwnd(handle).AddHook((nint _, int msg, nint wParam, nint lParam, ref bool handled) =>
         {
-            handled = _router.HandleMessage((uint)msg, (nuint)wParam);
+            handled = _router.HandleMessage((uint)msg, (nuint)wParam, lParam);
             return 0;
         });
         _router.DisplayChanged += (_, _) => _controller.OnDisplayChanged();
         _router.Resumed += (_, _) => Dispatcher.BeginInvoke(_controller.OnResumed, DispatcherPriority.Background);
         _router.SessionUnlocked += (_, _) => _controller.OnResumed();
-        _router.TaskbarCreated += (_, _) => _tray?.Reregister();
         HotkeyBox.RecordingChanged += (_, recording) =>
         {
             if (recording)
@@ -116,7 +128,7 @@ public partial class App : Application
         };
 
         _controller.Start(hotkeys);
-        _tray = new TrayService(_controller, ShowMainWindow, RequestExit);
+        _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
         _services.GetRequiredService<OsdService>().Attach();
         _services.GetRequiredService<ReviewPrompt>().Attach();
@@ -209,8 +221,8 @@ public partial class App : Application
             await new Wpf.Ui.Controls.MessageBox
             {
                 Title = "DispHub",
-                Content = "This link isn't a valid DispHub preset.",
-                CloseButtonText = "OK",
+                Content = Loc.Get("Preset_InvalidLink"),
+                CloseButtonText = Loc.Get("Common_OK"),
                 Owner = window,
             }.ShowDialogAsync();
             return;
@@ -218,11 +230,10 @@ public partial class App : Application
 
         var box = new Wpf.Ui.Controls.MessageBox
         {
-            Title = "Add this preset?",
-            Content = $"{preset.Name}\n{ProfileItemViewModel.Describe(preset.Color)}\n\n" +
-                      "It will be added as a new profile and switched on so you can see it.",
-            PrimaryButtonText = "Add",
-            CloseButtonText = "Cancel",
+            Title = Loc.Get("Preset_AddTitle"),
+            Content = Loc.Format("Preset_AddText", preset.Name, ProfileItemViewModel.Describe(preset.Color)),
+            PrimaryButtonText = Loc.Get("Common_Add"),
+            CloseButtonText = Loc.Get("Common_Cancel"),
             Owner = window,
         };
         if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary &&
@@ -230,6 +241,21 @@ public partial class App : Application
         {
             _services.GetRequiredService<MainViewModel>().Navigate<ProfilesViewModel>();
         }
+    }
+
+    /// <summary>The main window was closed to the notification area.</summary>
+    public void OnMainWindowHidden()
+    {
+        if (_tray is not null && _services is not null)
+            _tray.ShowStillRunningHint(_services.GetRequiredService<OsdService>());
+        MemoryTrim.Schedule();
+    }
+
+    /// <summary>Quits and starts DispHub again, e.g. after changing the language.</summary>
+    public void RequestRestart()
+    {
+        _restart = true;
+        RequestExit();
     }
 
     /// <summary>Restores the original colours, saves and quits.</summary>
@@ -253,7 +279,27 @@ public partial class App : Application
         }
         finally
         {
+            if (_restart)
+                StartNewInstance();
             Shutdown();
+        }
+    }
+
+    private void StartNewInstance()
+    {
+        try
+        {
+            // The Store version must be started through its app ID so it runs with its package identity.
+            string? family = PackageInfo.IsPackaged ? global::Windows.ApplicationModel.Package.Current.Id.FamilyName : null;
+            ProcessStartInfo start = family is not null
+                ? new ProcessStartInfo("explorer.exe", $"shell:AppsFolder\\{family}!DispHub")
+                : new ProcessStartInfo(Environment.ProcessPath!);
+            start.UseShellExecute = true;
+            Process.Start(start);
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
+        {
+            _logger?.LogError(ex, "Couldn't restart");
         }
     }
 

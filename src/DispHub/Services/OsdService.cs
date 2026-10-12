@@ -1,5 +1,6 @@
 using DispHub.Core.Config;
 using DispHub.Core.Model;
+using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Store;
 using DispHub.Views;
@@ -34,7 +35,7 @@ public sealed class OsdService(AppController app)
         TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
         if (app.Config.IsPaused)
         {
-            _window.Flash("Paused", "Original colours", SymbolRegular.Pause24, duration);
+            _window.Flash(Loc.Get("Osd_Paused"), Loc.Get("Summary_Original"), SymbolRegular.Pause24, duration);
             return;
         }
 

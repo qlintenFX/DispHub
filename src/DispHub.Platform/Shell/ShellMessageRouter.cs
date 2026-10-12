@@ -23,15 +23,21 @@ public sealed class ShellMessageRouter : IDisposable
 
     public HotkeyRegistrar Hotkeys { get; }
 
+    /// <summary>The notification icon whose messages arrive at this window, once it exists.</summary>
+    public TrayIcon? Tray { get; set; }
+
     public event EventHandler? DisplayChanged;
     public event EventHandler? Resumed;
     public event EventHandler? SessionUnlocked;
     public event EventHandler? TaskbarCreated;
+    public event EventHandler? DpiChanged;
 
     /// <summary>Call from the window procedure. Returns true when the message was fully handled.</summary>
-    public bool HandleMessage(uint message, nuint wParam)
+    public bool HandleMessage(uint message, nuint wParam, nint lParam)
     {
         if (Hotkeys.HandleMessage(message, wParam))
+            return true;
+        if (Tray?.HandleMessage(message, wParam, lParam) == true)
             return true;
 
         if (message == PInvoke.WM_DISPLAYCHANGE)
@@ -42,6 +48,8 @@ public sealed class ShellMessageRouter : IDisposable
             SessionUnlocked?.Invoke(this, EventArgs.Empty);
         else if (message == _taskbarCreated && _taskbarCreated != 0)
             TaskbarCreated?.Invoke(this, EventArgs.Empty);
+        else if (message == PInvoke.WM_DPICHANGED)
+            DpiChanged?.Invoke(this, EventArgs.Empty);
 
         return false;
     }

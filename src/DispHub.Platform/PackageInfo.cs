@@ -15,6 +15,28 @@ public static class PackageInfo
     /// <summary>True only for the build installed from the Microsoft Store (the one that sells Pro).</summary>
     public static bool IsStoreSigned => StoreSigned.Value;
 
+    /// <summary>
+    /// For the Store version: the language Windows picked for this app, which honours the per-app language setting.
+    /// Null when unpackaged.
+    /// </summary>
+    public static string? PreferredLanguage
+    {
+        get
+        {
+            if (!IsPackaged)
+                return null;
+            try
+            {
+                IReadOnlyList<string> languages = global::Windows.Globalization.ApplicationLanguages.Languages;
+                return languages.Count > 0 ? languages[0] : null;
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or System.Runtime.InteropServices.COMException)
+            {
+                return null;
+            }
+        }
+    }
+
     private static bool DetectPackaged()
     {
         uint length = 0;

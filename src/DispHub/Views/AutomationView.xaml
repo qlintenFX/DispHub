@@ -5,34 +5,35 @@
   xmlns:ctl="clr-namespace:DispHub.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   x:Name="Root"
   d:DataContext="{d:DesignInstance Type=vm:AutomationViewModel}"
   mc:Ignorable="d">
   <StackPanel>
-    <TextBlock Style="{StaticResource PageTitle}" Text="Automation" />
-    <TextBlock Style="{StaticResource PageSubtitle}" Text="Switch profiles automatically when you open an app or at set times." />
+    <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Automation_Title}" />
+    <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Automation_Subtitle}" />
 
     <Border Style="{StaticResource SettingCard}" Visibility="{Binding IsPro, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
       <Grid>
         <StackPanel Margin="0,0,140,0">
-          <TextBlock FontWeight="SemiBold" Text="Automation is part of DispHub Pro" />
-          <TextBlock Style="{StaticResource Hint}" Text="For example: boost vibrance whenever your game is in front, and fade to a warm night profile at 22:00." />
+          <TextBlock FontWeight="SemiBold" Text="{l:Tr Automation_ProTitle}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Automation_ProExample}" />
         </StackPanel>
         <ui:Button
           HorizontalAlignment="Right"
           Appearance="Primary"
           Command="{Binding UpgradeCommand}"
-          Content="Get Pro" />
+          Content="{l:Tr Common_GetPro}" />
       </Grid>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="Per-app profiles" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Automation_AppsHeader}" />
     <TextBlock
       Margin="2,0,0,8"
       Style="{StaticResource Hint}"
-      Text="While the app is in front its profile applies; when you switch away your normal profile comes back." />
+      Text="{l:Tr Automation_AppsHint}" />
     <ItemsControl ItemsSource="{Binding AppRules}">
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:AppRuleViewModel}">
@@ -61,7 +62,7 @@
                 Margin="8,0,0,0"
                 Command="{Binding RemoveCommand}"
                 Icon="{ui:SymbolIcon Delete24}"
-                ToolTip="Remove" />
+                ToolTip="{l:Tr Common_Remove}" />
             </Grid>
           </Border>
         </DataTemplate>
@@ -71,21 +72,21 @@
       <ui:Button
         Margin="0,0,8,0"
         Command="{Binding AddAppRuleCommand}"
-        Content="Add app…"
+        Content="{l:Tr Automation_AddApp}"
         Icon="{ui:SymbolIcon Add24}" />
-      <ui:DropDownButton Content="Add a running app" Icon="{ui:SymbolIcon AppsList24}">
+      <ui:DropDownButton Content="{l:Tr Automation_AddRunningApp}" Icon="{ui:SymbolIcon AppsList24}">
         <ui:DropDownButton.Flyout>
           <ContextMenu x:Name="RunningAppsMenu" Opened="RunningAppsMenu_Opened" />
         </ui:DropDownButton.Flyout>
       </ui:DropDownButton>
     </StackPanel>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="Schedule" />
+    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Automation_ScheduleHeader}" />
     <Border Style="{StaticResource SettingCard}">
       <Grid>
         <StackPanel>
-          <TextBlock Text="Switch profiles at set times" />
-          <TextBlock Style="{StaticResource Hint}" Text="Each slot starts at its time and lasts until the next one. Fades blend smoothly from the previous profile." />
+          <TextBlock Text="{l:Tr Automation_ScheduleToggle}" />
+          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Automation_ScheduleHint}" />
         </StackPanel>
         <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ScheduleEnabled}" />
       </Grid>
@@ -105,7 +106,7 @@
               <TextBlock
                 Margin="0,0,10,0"
                 VerticalAlignment="Center"
-                Text="From" />
+                Text="{l:Tr Automation_From}" />
               <ui:TextBox
                 Grid.Column="1"
                 PlaceholderText="21:30"
@@ -124,7 +125,7 @@
                 <TextBlock
                   Margin="0,0,8,0"
                   VerticalAlignment="Center"
-                  Text="Fade" />
+                  Text="{l:Tr Automation_Fade}" />
                 <ui:NumberBox
                   Width="96"
                   ClearButtonEnabled="False"
@@ -137,14 +138,14 @@
                 <TextBlock
                   Margin="6,0,0,0"
                   VerticalAlignment="Center"
-                  Text="min" />
+                  Text="{l:Tr Automation_Minutes}" />
               </StackPanel>
               <ui:Button
                 Grid.Column="4"
                 Margin="8,0,0,0"
                 Command="{Binding RemoveCommand}"
                 Icon="{ui:SymbolIcon Delete24}"
-                ToolTip="Remove" />
+                ToolTip="{l:Tr Common_Remove}" />
             </Grid>
           </Border>
         </DataTemplate>
@@ -153,7 +154,7 @@
     <ui:Button
       Margin="0,4,0,0"
       Command="{Binding AddSlotCommand}"
-      Content="Add time slot"
+      Content="{l:Tr Automation_AddSlot}"
       Icon="{ui:SymbolIcon Add24}" />
   </StackPanel>
 </UserControl>

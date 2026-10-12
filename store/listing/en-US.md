@@ -22,7 +22,8 @@ the change without stealing focus from your game.
 
 PROFILES THAT FIT HOW YOU USE YOUR PC
 • Brightness, contrast, gamma and colour temperature for every connected display
-• Vibrance (colour saturation) on NVIDIA and Intel graphics, including the built-in screen of most laptops
+• Vibrance (colour saturation) on NVIDIA, Intel and AMD graphics, including the built-in screen of most laptops
+• Stream-friendly: OBS, Discord and screenshots capture your normal colours, so viewers see a regular picture
 • Global hotkeys for each profile, plus pause, next and previous
 • Quick switching from the notification area
 

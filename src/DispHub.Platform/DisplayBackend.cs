@@ -35,6 +35,8 @@ public sealed class WindowsDisplayBackend : IDisplayBackend
             providers.Add(nvidia);
         if (IntelVibranceProvider.TryCreate() is { } intel)
             providers.Add(intel);
+        if (AmdVibranceProvider.TryCreate() is { } amd)
+            providers.Add(amd);
         Vibrance = providers.Count == 0 ? null : new CompositeVibranceProvider(providers);
     }
 

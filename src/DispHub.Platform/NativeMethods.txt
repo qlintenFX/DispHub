@@ -51,8 +51,26 @@ ShowWindow
 SetForegroundWindow
 EmptyWorkingSet
 GetCurrentProcess
+GetSystemMetricsForDpi
+GetDpiForSystem
 WINDOW_EX_STYLE
 
 // Packaging
 GetCurrentPackageFullName
 HWND_TOPMOST
+
+// Notification area icon
+Shell_NotifyIcon
+Shell_NotifyIconGetRect
+NOTIFYICONDATAW
+NOTIFYICONIDENTIFIER
+NOTIFY_ICON_MESSAGE
+NOTIFY_ICON_DATA_FLAGS
+NOTIFYICON_VERSION_4
+CreateIconFromResourceEx
+DestroyIcon
+GetDpiForWindow
+WM_CONTEXTMENU
+WM_LBUTTONDBLCLK
+WM_DPICHANGED
+WM_APP

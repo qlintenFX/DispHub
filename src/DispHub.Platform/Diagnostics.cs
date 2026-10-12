@@ -96,6 +96,19 @@ public static class Diagnostics
         }
 
         text.Append(ProbeIntel());
+        using AmdVibranceProvider? amd = AmdVibranceProvider.TryCreate();
+        text.AppendLine(amd is null ? "AMD Display Library: not available" : "AMD Display Library: loaded");
+        if (amd is not null)
+        {
+            IReadOnlyList<MonitorInfo> monitors = DisplayEnumerator.GetMonitors();
+            amd.Refresh(monitors);
+            foreach (MonitorInfo monitor in monitors)
+            {
+                VibranceRange? range = amd.GetRange(monitor.DeviceName);
+                text.AppendLine(CultureInfo.InvariantCulture,
+                    $"  {monitor.DeviceName}: {(range is { } r ? $"saturation {r.Min}..{r.Max} default {r.Default} current {amd.GetLevel(monitor.DeviceName)}" : "not driven by AMD")}");
+            }
+        }
         return text.ToString();
     }
 

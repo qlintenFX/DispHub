@@ -108,5 +108,14 @@ public sealed class UiConfig
     public bool CloseToTray { get; set; } = true;
     public TrayClickAction TrayLeftClick { get; set; } = TrayClickAction.OpenWindow;
     public bool ShowOsd { get; set; } = true;
+
+    /// <summary>UI language as a culture name such as "de"; null follows Windows.</summary>
+    public string? Language { get; set; }
     public int OsdDurationMs { get; set; } = 1500;
+
+    /// <summary>The photo the profile previews show, by name; null uses the default.</summary>
+    public string? PreviewPicture { get; set; }
+
+    /// <summary>The one-time "still running" notification was shown.</summary>
+    public bool TrayHintShown { get; set; }
 }

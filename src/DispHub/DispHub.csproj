@@ -17,7 +17,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="WPF-UI" />
-    <PackageReference Include="WPF-UI.Tray" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DispHub.Core\DispHub.Core.csproj" />
@@ -28,9 +27,29 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\DispHub.ico" />
+    <Resource Include="Assets\DispHub-paused.ico" />
     <Resource Include="Assets\DispHub.png" />
+    <Resource Include="Assets\DispHub-64.png" />
+    <Resource Include="Assets\Previews\*.jpg" />
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="DispHub.Tests" />
   </ItemGroup>
+
+  <!-- The languages DispHub offers are the translations present, so a new Strings.<culture>.resx (for example from
+       Crowdin) shows up in Settings without code changes. Read at runtime by Loc.Languages. -->
+  <Target Name="AddLanguageList" BeforeTargets="GetAssemblyAttributes">
+    <ItemGroup>
+      <_Translation Include="Localization\Strings.*.resx" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_Languages>@(_Translation->'%(Filename)'->Replace('Strings.', ''))</_Languages>
+    </PropertyGroup>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>DispHub.Languages</_Parameter1>
+        <_Parameter2>$(_Languages)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
 </Project>

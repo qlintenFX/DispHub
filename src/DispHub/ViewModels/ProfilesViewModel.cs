@@ -7,6 +7,7 @@ using DispHub.Core.Color;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
 using DispHub.Core.Rules;
+using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Gamma;
 using DispHub.Services;
@@ -21,7 +22,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
     private bool _mirroringSelection;
 
     public ProfilesViewModel(AppController app, IUpgradeService upgrade)
-        : base("Profiles", Wpf.Ui.Controls.SymbolRegular.Color24)
+        : base(Loc.Get("Nav_Profiles"), Wpf.Ui.Controls.SymbolRegular.Color24)
     {
         _app = app;
         _upgrade = upgrade;
@@ -60,8 +61,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
     [ObservableProperty]
     public partial bool CanAddProfile { get; set; }
 
-    public static string ProfileLimitText =>
-        $"The free version includes {Core.Licensing.FeatureGate.FreeProfileLimit} profiles. Get Pro for unlimited profiles.";
+    public static string ProfileLimitText => Loc.Format("Profiles_FreeLimit", Core.Licensing.FeatureGate.FreeProfileLimit);
 
     partial void OnSelectedProfileChanged(ProfileItemViewModel? value)
     {
@@ -84,7 +84,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
         if (_app.AddProfile() is { } profile)
             Select(profile.Id);
         else
-            _upgrade.ShowUpgrade("Unlimited profiles");
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
     }
 
     [RelayCommand]
@@ -95,7 +95,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
         if (_app.DuplicateProfile(SelectedProfile.Id) is { } profile)
             Select(profile.Id);
         else
-            _upgrade.ShowUpgrade("Unlimited profiles");
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
     }
 
     [RelayCommand]
@@ -178,19 +178,20 @@ public sealed partial class ProfilesViewModel : PageViewModel
     private string DescribeStatus(RuleOutput? current)
     {
         if (_app.Config.IsPaused)
-            return "Paused: your displays show their original colours.";
+            return Loc.Get("Profiles_StatusPaused");
         if (current?.ProfileId is not { } id || _app.FindProfile(id) is not { } profile)
             return "";
         int monitors = _app.Monitors.Count(m => m.State is not MonitorColorState.Original || m.SupportsVibrance);
-        string reason = current.Reason switch
+        string format = current.Reason switch
         {
-            TargetReason.AppRule => " (app rule)",
-            TargetReason.Schedule => " (schedule)",
-            TargetReason.Manual => " (picked by hand)",
-            _ => "",
+            TargetReason.AppRule => "Profiles_StatusAppRule",
+            TargetReason.Schedule => "Profiles_StatusSchedule",
+            TargetReason.Manual => "Profiles_StatusManual",
+            _ => "Profiles_Status",
         };
-        string where = monitors == 1 ? "1 display" : $"{Math.Max(monitors, _app.Monitors.Count)} displays";
-        return $"{profile.Name}{reason} on {where}";
+        int count = Math.Max(monitors, _app.Monitors.Count);
+        string where = count == 1 ? Loc.Get("Profiles_OneDisplay") : Loc.Format("Profiles_Displays", count);
+        return Loc.Format(format, profile.Name, where);
     }
 
     private void RefreshWarnings()
@@ -201,19 +202,18 @@ public sealed partial class ProfilesViewModel : PageViewModel
         if (_app.LoadResult.Status is Core.Config.ConfigLoadStatus.RecoveredFromBackup or Core.Config.ConfigLoadStatus.ResetToDefaults)
         {
             Warnings.Add(new WarningViewModel(
-                "Settings were repaired",
-                "Your settings file was damaged. DispHub restored the last good copy; the damaged file was kept next to it.",
+                Loc.Get("Warning_RepairedTitle"),
+                Loc.Get("Warning_RepairedText"),
                 Wpf.Ui.Controls.InfoBarSeverity.Warning));
         }
 
         if (monitors.Any(m => m.State == MonitorColorState.Limited))
         {
             Warnings.Add(new WarningViewModel(
-                "Windows is limiting this profile",
-                "Windows only allows small colour changes by default, so DispHub applied the closest allowed version. " +
-                "Allowing the full range needs administrator approval once.",
+                Loc.Get("Warning_LimitedTitle"),
+                Loc.Get("Warning_LimitedText"),
                 Wpf.Ui.Controls.InfoBarSeverity.Informational,
-                "Allow full range",
+                Loc.Get("Settings_AllowFullRange"),
                 new RelayCommand(() =>
                 {
                     if (GammaRange.TryEnableExtended())
@@ -224,16 +224,16 @@ public sealed partial class ProfilesViewModel : PageViewModel
         if (monitors.Any(m => m.State == MonitorColorState.Hdr))
         {
             Warnings.Add(new WarningViewModel(
-                "HDR is on",
-                "Windows doesn't support gamma changes on HDR displays, so only vibrance is applied there.",
+                Loc.Get("Warning_HdrTitle"),
+                Loc.Get("Warning_HdrText"),
                 Wpf.Ui.Controls.InfoBarSeverity.Informational));
         }
 
         if (_externalReset)
         {
             Warnings.Add(new WarningViewModel(
-                "Another app is changing your colours",
-                "Something keeps resetting the display colours (for example Night light, f.lux or a game). DispHub stopped fighting it for 5 minutes.",
+                Loc.Get("Warning_ResetTitle"),
+                Loc.Get("Warning_ResetText"),
                 Wpf.Ui.Controls.InfoBarSeverity.Warning));
         }
     }
@@ -259,7 +259,7 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
     public partial string Summary { get; set; } = Describe(profile.Color);
 
     [ObservableProperty]
-    public partial Brush Preview { get; set; } = PreviewBrush(profile.Color);
+    public partial ImageSource Preview { get; set; } = Controls.ColorPreview.Render(profile.Color);
 
     public void Update(Profile source, bool isActive, string? hotkeyFailure)
     {
@@ -268,7 +268,7 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
         HasHotkeyProblem = hotkeyFailure is not null;
         IsActive = isActive;
         Summary = Describe(source.Color);
-        Preview = PreviewBrush(source.Color);
+        Preview = Controls.ColorPreview.Render(source.Color);
     }
 
     public static string Describe(ColorSettings c)
@@ -277,28 +277,14 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
         if (c.TemperatureK != ColorSettings.NeutralTemperatureK)
             parts.Add($"{c.TemperatureK} K");
         if (c.Brightness != 0)
-            parts.Add($"Brightness {c.Brightness:+0;-0}");
+            parts.Add(Loc.Format("Summary_Brightness", c.Brightness.ToString("+0;-0", CultureInfo.CurrentCulture)));
         if (c.Contrast != 0)
-            parts.Add($"Contrast {c.Contrast:+0;-0}");
+            parts.Add(Loc.Format("Summary_Contrast", c.Contrast.ToString("+0;-0", CultureInfo.CurrentCulture)));
         if (Math.Abs(c.Gamma - 1) > 0.001)
-            parts.Add(string.Create(CultureInfo.CurrentCulture, $"Gamma {c.Gamma:0.00}"));
+            parts.Add(Loc.Format("Summary_Gamma", c.Gamma.ToString("0.00", CultureInfo.CurrentCulture)));
         if (c.Vibrance != ColorSettings.NeutralVibrance)
-            parts.Add($"Vibrance {c.Vibrance}%");
-        return parts.Count == 0 ? "Original colours" : string.Join(" · ", parts);
-    }
-
-    /// <summary>A black-to-white strip pushed through the profile's ramp: shows warmth, brightness and contrast at a glance.</summary>
-    public static Brush PreviewBrush(ColorSettings settings)
-    {
-        GammaRamp ramp = RampBuilder.Build(settings);
-        var brush = new LinearGradientBrush { StartPoint = new(0, 0.5), EndPoint = new(1, 0.5) };
-        foreach (int i in new[] { 0, 48, 96, 160, 208, 255 })
-        {
-            var color = Color.FromRgb((byte)(ramp.Red[i] >> 8), (byte)(ramp.Green[i] >> 8), (byte)(ramp.Blue[i] >> 8));
-            brush.GradientStops.Add(new GradientStop(color, i / 255.0));
-        }
-        brush.Freeze();
-        return brush;
+            parts.Add(Loc.Format("Summary_Vibrance", c.Vibrance));
+        return parts.Count == 0 ? Loc.Get("Summary_Original") : string.Join(" · ", parts);
     }
 }
 
@@ -309,7 +295,7 @@ public sealed record DisplayChoice(string? Key, string Name)
 
 public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeService upgrade) : ObservableObject
 {
-    private static readonly DisplayChoice AllDisplays = new(null, "All displays");
+    private static readonly DisplayChoice AllDisplays = new(null, Loc.Get("Profiles_AllDisplays"));
     private Guid _profileId;
     private bool _loading;
 
@@ -330,7 +316,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             return;
         if (value.Key is not null && !app.Features.PerMonitorProfiles)
         {
-            upgrade.ShowUpgrade("Different settings per display");
+            upgrade.ShowUpgrade(Loc.Get("Upgrade_PerDisplay"));
             SelectedDisplay = AllDisplays;
             return;
         }
@@ -377,8 +363,8 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     public bool VibranceSupported => app.Monitors.Any(m => m.SupportsVibrance);
 
     public string VibranceHelp => VibranceSupported
-        ? "Colour saturation, set through your graphics driver."
-        : "Vibrance needs an NVIDIA or Intel GPU driving this display. AMD support is coming.";
+        ? Loc.Get("Profiles_VibranceHelp")
+        : Loc.Get("Profiles_VibranceUnsupported");
 
     public void Load(Profile? profile)
     {
@@ -404,7 +390,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             Temperature = color.TemperatureK;
             Vibrance = color.Vibrance;
             Hotkey = profile.Hotkey;
-            HotkeyError = app.HotkeyFailure(profile.Id);
+            HotkeyError = Localize(app.HotkeyFailure(profile.Id));
             OnPropertyChanged(nameof(VibranceSupported));
             OnPropertyChanged(nameof(VibranceHelp));
         }
@@ -429,7 +415,16 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
         if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
             return;
         System.Windows.Clipboard.SetText(new Core.Sharing.SharedPreset(profile.Name, profile.Color).ToLink());
-        ShareMessage = "Link copied. Anyone with DispHub can open it to add this profile.";
+        ShareMessage = Loc.Get("Profiles_LinkCopied");
+    }
+
+    [RelayCommand]
+    private void SubmitToGallery()
+    {
+        if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
+            return;
+        Uri form = Core.Sharing.GallerySubmission.For(new Core.Sharing.SharedPreset(profile.Name, profile.Color));
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(form.AbsoluteUri) { UseShellExecute = true });
     }
 
     [RelayCommand]
@@ -456,8 +451,10 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
         if (_loading || !HasProfile)
             return;
         HotkeyGesture? gesture = HotkeyGesture.TryParse(value, out HotkeyGesture parsed) ? parsed : null;
-        HotkeyError = app.SetProfileHotkey(_profileId, gesture);
+        HotkeyError = Localize(app.SetProfileHotkey(_profileId, gesture));
     }
+
+    private static string? Localize(string? reason) => reason is null ? null : Loc.Get(reason);
 
     private void Push()
     {

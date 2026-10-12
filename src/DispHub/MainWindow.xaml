@@ -5,6 +5,7 @@
   xmlns:ctl="clr-namespace:DispHub.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   Title="DispHub"
@@ -27,7 +28,7 @@
 
     <ui:TitleBar Title="DispHub" Grid.Row="0">
       <ui:TitleBar.Icon>
-        <ui:ImageIcon Source="pack://application:,,,/Assets/DispHub.png" />
+        <ui:ImageIcon RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/DispHub-64.png" />
       </ui:TitleBar.Icon>
     </ui:TitleBar>
 
@@ -52,12 +53,12 @@
             <TextBlock
               Margin="0,4,0,10"
               Style="{StaticResource Hint}"
-              Text="Per-app profiles, schedules and per-display settings. One-time purchase." />
+              Text="{l:Tr Pro_ShortPitch}" />
             <ui:Button
               HorizontalAlignment="Stretch"
               Appearance="Primary"
               Command="{Binding UpgradeCommand}"
-              Content="Get Pro" />
+              Content="{l:Tr Common_GetPro}" />
           </StackPanel>
         </Border>
 

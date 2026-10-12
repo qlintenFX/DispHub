@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interop;
+using DispHub.Localization;
 using DispHub.Platform.Shell;
 using DispHub.Services;
 using DispHub.ViewModels;
@@ -11,13 +12,11 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 {
     private readonly AppController _app;
     private readonly ThemeService _theme;
-    private readonly OsdService _osd;
 
-    public MainWindow(MainViewModel viewModel, AppController app, ThemeService theme, OsdService osd, ReviewPrompt review)
+    public MainWindow(MainViewModel viewModel, AppController app, ThemeService theme, ReviewPrompt review)
     {
         _app = app;
         _theme = theme;
-        _osd = osd;
         DataContext = viewModel;
         InitializeComponent();
         Loaded += (_, _) => _theme.Attach(this, _app.Config.Ui.Theme);
@@ -53,7 +52,6 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 
         e.Cancel = true;
         Hide();
-        _osd.ShowHint("DispHub is still running", "Find it in the notification area");
-        MemoryTrim.Schedule();
+        ((App)Application.Current).OnMainWindowHidden();
     }
 }

@@ -1,0 +1,44 @@
+name: Share a preset
+description: Add one of your profiles to the gallery in DispHub.
+title: "Preset: "
+labels: [preset]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        In DispHub, click **Share** on a profile, then **Submit it to the gallery** to fill in the link for you.
+        Once a maintainer approves it, your preset appears on everyone's Presets page with your GitHub name.
+  - type: input
+    id: link
+    attributes:
+      label: Preset link
+      description: Starts with disphub://preset
+      placeholder: disphub://preset?name=...
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Short and plain, 40 characters at most.
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: Description
+      description: One sentence on what it does.
+      placeholder: Warmer and softer for reading at night.
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: A few words, separated by commas. Games, kinds of content or times of day.
+      placeholder: Night, Reading
+  - type: input
+    id: setup
+    attributes:
+      label: Your monitor
+      description: Optional. Helps others with the same screen.

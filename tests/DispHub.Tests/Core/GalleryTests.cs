@@ -40,6 +40,29 @@ public sealed class GalleryTests
     }
 
     [Fact]
+    public void Parse_ReadsTheAuthor()
+    {
+        const string Json = """{ "presets": [ { "name": "Warm", "description": "x", "link": "disphub://preset?name=Warm&t=4800", "author": "someone" } ] }""";
+
+        Assert.Equal("someone", GalleryFile.Parse(Json)![0].Entry.Author);
+    }
+
+    [Fact]
+    public void Submission_FillsInTheFormWithTheLinkAndName()
+    {
+        var preset = new SharedPreset("Warm & cosy", new ColorSettings(TemperatureK: 4800));
+
+        Uri form = GallerySubmission.For(preset);
+        var query = System.Web.HttpUtility.ParseQueryString(form.Query);
+
+        Assert.StartsWith(GallerySubmission.FormUrl, form.AbsoluteUri, StringComparison.Ordinal);
+        Assert.Equal("preset.yml", query["template"]);
+        Assert.Equal("Warm & cosy", query["name"]);
+        Assert.True(SharedPreset.TryParse(query["link"], out SharedPreset? parsed));
+        Assert.Equal(preset.Color, parsed.Color);
+    }
+
+    [Fact]
     public void Parse_SkipsBadEntriesAndRejectsBadJson()
     {
         const string Json = """{ "presets": [ { "name": "Good", "description": "x", "link": "disphub://preset?name=Good&v=70" }, { "name": "Bad", "link": "https://evil" } ] }""";

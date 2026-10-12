@@ -44,6 +44,10 @@ public static class WindowHelpers
 
     public static void BringToFront(nint handle) => PInvoke.SetForegroundWindow((HWND)handle);
 
+    /// <summary>The size in pixels Windows draws small icons at (notification area, title bars) on this system's DPI.</summary>
+    public static int SmallIconSize() =>
+        PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXSMICON, PInvoke.GetDpiForSystem());
+
     /// <summary>Lets Windows page out memory this process isn't using right now.</summary>
     public static void TrimWorkingSet() => PInvoke.EmptyWorkingSet(PInvoke.GetCurrentProcess());
 }

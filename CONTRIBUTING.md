@@ -7,6 +7,13 @@ Thanks for helping. Bug reports and small, focused pull requests are the most us
 Open an issue and paste the output of **About > Copy diagnostics**. It lists your displays, GPU support and
 DispHub's state, which is usually what we need to reproduce a colour problem.
 
+## Translations and presets
+
+- Translate DispHub on [Crowdin](https://crowdin.com/project/disphub); no coding needed. See
+  [docs/translating.md](docs/translating.md) for the style notes.
+- Share a profile with the community from DispHub itself: **Share**, then **Submit it to the gallery**.
+  See [presets/README.md](presets/README.md).
+
 ## Making changes
 
 1. Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).

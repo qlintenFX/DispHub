@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="About_About" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="About_Community" xml:space="preserve">
+    <value>Iedereen die test, vertaalt en presets deelt</value>
+  </data>
+  <data name="About_CommunityHint" xml:space="preserve">
+    <value>DispHub wordt beter met elke melding en elke preset. Bedankt.</value>
+  </data>
+  <data name="About_Contributors" xml:space="preserve">
+    <value>Bijdragers</value>
+  </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>Gekopieerd. Plak het in je GitHub-issue.</value>
+  </data>
+  <data name="About_CopyDiagnostics" xml:space="preserve">
+    <value>Diagnostische gegevens kopiëren</value>
+  </data>
+  <data name="About_Credits" xml:space="preserve">
+    <value>Met dank aan</value>
+  </data>
+  <data name="About_EditionAll" xml:space="preserve">
+    <value>DispHub (alle functies)</value>
+  </data>
+  <data name="About_EditionFree" xml:space="preserve">
+    <value>DispHub Free</value>
+  </data>
+  <data name="About_EditionPro" xml:space="preserve">
+    <value>DispHub Pro</value>
+  </data>
+  <data name="About_FluentFlyout" xml:space="preserve">
+    <value>FluentFlyout door unchihugo</value>
+  </data>
+  <data name="About_FluentFlyoutHint" xml:space="preserve">
+    <value>Een prachtig gemaakt Windows-hulpprogramma dat veel van de look en feel van DispHub heeft geïnspireerd.</value>
+  </data>
+  <data name="About_Help" xml:space="preserve">
+    <value>Help en feedback</value>
+  </data>
+  <data name="About_Licence" xml:space="preserve">
+    <value>DispHub is open source onder de GNU General Public License v3.0. Alles blijft op je pc en er wordt geen telemetrie verzonden.</value>
+  </data>
+  <data name="About_Logs" xml:space="preserve">
+    <value>Logbestanden</value>
+  </data>
+  <data name="About_Note1" xml:space="preserve">
+    <value>Hoi, ik ben Quinten. Ik heb DispHub gemaakt omdat ik steeds drie verschillende configuratiescherm-apps moest openen om een game er goed uit te laten zien of om mijn scherm 's avonds rustiger voor mijn ogen te maken. Ik wilde één kleine, rustige app die het goed doet en eruitziet alsof hij bij Windows hoort.</value>
+  </data>
+  <data name="About_Note2" xml:space="preserve">
+    <value>DispHub wordt door één persoon gemaakt, in vrije tijd en met veel zorg. Als je scherm er daardoor net iets fijner uitziet, betekent dat veel voor me. Ideeën en foutmeldingen zijn altijd welkom op GitHub; ik lees ze allemaal.</value>
+  </data>
+  <data name="About_NoteHeader" xml:space="preserve">
+    <value>Een berichtje van de ontwikkelaar</value>
+  </data>
+  <data name="About_NoteSignature" xml:space="preserve">
+    <value>Bedankt dat je DispHub gebruikt. — Quinten (qlintenFX)</value>
+  </data>
+  <data name="About_Notices" xml:space="preserve">
+    <value>Kennisgevingen van derden</value>
+  </data>
+  <data name="About_OpenFolder" xml:space="preserve">
+    <value>Map openen</value>
+  </data>
+  <data name="About_OpenGitHub" xml:space="preserve">
+    <value>GitHub openen</value>
+  </data>
+  <data name="About_Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="About_Report" xml:space="preserve">
+    <value>Een probleem melden of een functie voorstellen</value>
+  </data>
+  <data name="About_ReportHint" xml:space="preserve">
+    <value>Voeg de diagnostische gegevens toe, zodat we je beeldschermen en videokaart kunnen zien.</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>Broncode</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Versie</value>
+  </data>
+  <data name="About_WpfUi" xml:space="preserve">
+    <value>WPF UI door lepo.co</value>
+  </data>
+  <data name="About_WpfUiHint" xml:space="preserve">
+    <value>De Fluent-bedieningselementen, het Mica-venster en het systeemvakpictogram.</value>
+  </data>
+  <data name="Automation_AddApp" xml:space="preserve">
+    <value>App toevoegen…</value>
+  </data>
+  <data name="Automation_AddRunningApp" xml:space="preserve">
+    <value>Een actieve app toevoegen</value>
+  </data>
+  <data name="Automation_AddSlot" xml:space="preserve">
+    <value>Tijdvak toevoegen</value>
+  </data>
+  <data name="Automation_AppsHeader" xml:space="preserve">
+    <value>Profielen per app</value>
+  </data>
+  <data name="Automation_AppsHint" xml:space="preserve">
+    <value>Zolang de app op de voorgrond staat, geldt het profiel ervan; als je wegschakelt, komt je normale profiel terug.</value>
+  </data>
+  <data name="Automation_ChooseProgram" xml:space="preserve">
+    <value>Een programma kiezen</value>
+  </data>
+  <data name="Automation_Fade" xml:space="preserve">
+    <value>Overgang</value>
+  </data>
+  <data name="Automation_From" xml:space="preserve">
+    <value>Vanaf</value>
+  </data>
+  <data name="Automation_Minutes" xml:space="preserve">
+    <value>min</value>
+  </data>
+  <data name="Automation_NoRunningApps" xml:space="preserve">
+    <value>Er zijn geen apps met een venster actief</value>
+  </data>
+  <data name="Automation_ProExample" xml:space="preserve">
+    <value>Bijvoorbeeld: meer levendigheid zodra je game op de voorgrond staat, en om 22:00 een zachte overgang naar een warm nachtprofiel.</value>
+  </data>
+  <data name="Automation_ProTitle" xml:space="preserve">
+    <value>Automatisering hoort bij DispHub Pro</value>
+  </data>
+  <data name="Automation_ProgramsFilter" xml:space="preserve">
+    <value>Programma's (*.exe)|*.exe</value>
+  </data>
+  <data name="Automation_ScheduleHeader" xml:space="preserve">
+    <value>Planning</value>
+  </data>
+  <data name="Automation_ScheduleHint" xml:space="preserve">
+    <value>Elk tijdvak begint op het ingestelde tijdstip en duurt tot het volgende. Overgangen mengen zacht vanaf het vorige profiel.</value>
+  </data>
+  <data name="Automation_ScheduleToggle" xml:space="preserve">
+    <value>Op vaste tijden van profiel wisselen</value>
+  </data>
+  <data name="Automation_Subtitle" xml:space="preserve">
+    <value>Wissel automatisch van profiel als je een app opent of op vaste tijden.</value>
+  </data>
+  <data name="Automation_Title" xml:space="preserve">
+    <value>Automatisering</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>Toevoegen</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="Common_Enabled" xml:space="preserve">
+    <value>Ingeschakeld</value>
+  </data>
+  <data name="Common_GetPro" xml:space="preserve">
+    <value>Pro nemen</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Common_On" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="Control_Active" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="Control_Paused" xml:space="preserve">
+    <value>Gepauzeerd</value>
+  </data>
+  <data name="Default_Gaming" xml:space="preserve">
+    <value>Gaming</value>
+  </data>
+  <data name="Default_Night" xml:space="preserve">
+    <value>Nacht</value>
+  </data>
+  <data name="Default_Standard" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="Enum_ThemePreference_Dark" xml:space="preserve">
+    <value>Donker</value>
+  </data>
+  <data name="Enum_ThemePreference_Light" xml:space="preserve">
+    <value>Licht</value>
+  </data>
+  <data name="Enum_ThemePreference_System" xml:space="preserve">
+    <value>Systeem</value>
+  </data>
+  <data name="Enum_TrayClickAction_OpenWindow" xml:space="preserve">
+    <value>Venster openen</value>
+  </data>
+  <data name="Enum_TrayClickAction_ShowProfileMenu" xml:space="preserve">
+    <value>Profielmenu weergeven</value>
+  </data>
+  <data name="Hotkey_Duplicate" xml:space="preserve">
+    <value>Al in gebruik door een andere DispHub-sneltoets</value>
+  </data>
+  <data name="Hotkey_InUseElsewhere" xml:space="preserve">
+    <value>In gebruik door een andere app</value>
+  </data>
+  <data name="Hotkey_NeedsModifier" xml:space="preserve">
+    <value>Voeg Ctrl, Alt of Win toe</value>
+  </data>
+  <data name="Hotkey_NotSet" xml:space="preserve">
+    <value>Niet ingesteld</value>
+  </data>
+  <data name="Hotkey_Recording" xml:space="preserve">
+    <value>Druk op een toetscombinatie…</value>
+  </data>
+  <data name="Hotkey_Refused" xml:space="preserve">
+    <value>Windows heeft deze sneltoets geweigerd</value>
+  </data>
+  <data name="Monitor_Applied" xml:space="preserve">
+    <value>Kleuren toegepast</value>
+  </data>
+  <data name="Monitor_Hdr" xml:space="preserve">
+    <value>HDR aan (gamma niet beschikbaar)</value>
+  </data>
+  <data name="Monitor_Limited" xml:space="preserve">
+    <value>Beperkt door Windows</value>
+  </data>
+  <data name="Monitor_Main" xml:space="preserve">
+    <value>{0} (hoofdscherm)</value>
+  </data>
+  <data name="Monitor_NoVibrance" xml:space="preserve">
+    <value>Geen levendigheid</value>
+  </data>
+  <data name="Monitor_Original" xml:space="preserve">
+    <value>Oorspronkelijke kleuren</value>
+  </data>
+  <data name="Monitor_Unsupported" xml:space="preserve">
+    <value>Gamma niet ondersteund</value>
+  </data>
+  <data name="Monitor_Vibrance" xml:space="preserve">
+    <value>Levendigheid ondersteund</value>
+  </data>
+  <data name="Nav_About" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Nav_Automation" xml:space="preserve">
+    <value>Automatisering</value>
+  </data>
+  <data name="Nav_Presets" xml:space="preserve">
+    <value>Presets</value>
+  </data>
+  <data name="Nav_Profiles" xml:space="preserve">
+    <value>Profielen</value>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="Osd_Paused" xml:space="preserve">
+    <value>Gepauzeerd</value>
+  </data>
+  <data name="Osd_StillRunning" xml:space="preserve">
+    <value>DispHub blijft actief</value>
+  </data>
+  <data name="Osd_StillRunningHint" xml:space="preserve">
+    <value>Je vindt het in het systeemvak</value>
+  </data>
+  <data name="Preset_AddText" xml:space="preserve">
+    <value>{0}
+{1}
+
+Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt zien.</value>
+  </data>
+  <data name="Preset_AddTitle" xml:space="preserve">
+    <value>Deze preset toevoegen?</value>
+  </data>
+  <data name="Preset_InvalidLink" xml:space="preserve">
+    <value>Deze link is geen geldige DispHub-preset.</value>
+  </data>
+  <data name="Presets_Added" xml:space="preserve">
+    <value>"{0}" toegevoegd en ingeschakeld. Verfijn hem op de pagina Profielen.</value>
+  </data>
+  <data name="Presets_CopyLink" xml:space="preserve">
+    <value>Deellink kopiëren</value>
+  </data>
+  <data name="Presets_Gallery" xml:space="preserve">
+    <value>Galerie</value>
+  </data>
+  <data name="Presets_ImportHint" xml:space="preserve">
+    <value>Plak een link die iemand heeft gedeeld (begint met disphub://preset). Om je eigen profiel te delen, open je het en klik je op Delen.</value>
+  </data>
+  <data name="Presets_ImportTitle" xml:space="preserve">
+    <value>Een preset toevoegen via een link</value>
+  </data>
+  <data name="Presets_InvalidLink" xml:space="preserve">
+    <value>Dat lijkt geen DispHub-presetlink. Hij moet beginnen met disphub://preset</value>
+  </data>
+  <data name="Presets_Submit" xml:space="preserve">
+    <value>Je preset insturen</value>
+  </data>
+  <data name="Presets_Subtitle" xml:space="preserve">
+    <value>Kant-en-klare looks uit de community. Voeg er een toe om hem meteen te proberen; hij wordt een profiel dat je kunt aanpassen.</value>
+  </data>
+  <data name="Presets_Title" xml:space="preserve">
+    <value>Presets</value>
+  </data>
+  <data name="Pro_LongPitch" xml:space="preserve">
+    <value>Profielen per app, planningen met overgangen, instellingen per beeldscherm en onbeperkt profielen. Eenmalige aankoop.</value>
+  </data>
+  <data name="Pro_ShortPitch" xml:space="preserve">
+    <value>Profielen per app, planningen en instellingen per beeldscherm. Eenmalige aankoop.</value>
+  </data>
+  <data name="Profiles_AllDisplays" xml:space="preserve">
+    <value>Alle beeldschermen</value>
+  </data>
+  <data name="Profiles_ApplyTo" xml:space="preserve">
+    <value>Toepassen op</value>
+  </data>
+  <data name="Profiles_Brightness" xml:space="preserve">
+    <value>Helderheid</value>
+  </data>
+  <data name="Profiles_Contrast" xml:space="preserve">
+    <value>Contrast</value>
+  </data>
+  <data name="Profiles_CopyName" xml:space="preserve">
+    <value>{0} (kopie)</value>
+  </data>
+  <data name="Profiles_Delete" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="Profiles_Displays" xml:space="preserve">
+    <value>{0} beeldschermen</value>
+  </data>
+  <data name="Profiles_Duplicate" xml:space="preserve">
+    <value>Dupliceren</value>
+  </data>
+  <data name="Profiles_FreeLimit" xml:space="preserve">
+    <value>De gratis versie bevat {0} profielen. Met Pro krijg je er onbeperkt.</value>
+  </data>
+  <data name="Profiles_Gamma" xml:space="preserve">
+    <value>Gamma</value>
+  </data>
+  <data name="Profiles_Hotkey" xml:space="preserve">
+    <value>Sneltoets</value>
+  </data>
+  <data name="Profiles_HotkeyHint" xml:space="preserve">
+    <value>Klik en druk dan op toetsen. Backspace wist. Werkt overal, ook in games.</value>
+  </data>
+  <data name="Profiles_HotkeyInUse" xml:space="preserve">
+    <value>Deze sneltoets wordt gebruikt door een andere app</value>
+  </data>
+  <data name="Profiles_LinkCopied" xml:space="preserve">
+    <value>Link gekopieerd. Iedereen met DispHub kan hem openen om dit profiel toe te voegen.</value>
+  </data>
+  <data name="Profiles_MoveLeft" xml:space="preserve">
+    <value>Naar links</value>
+  </data>
+  <data name="Profiles_MoveRight" xml:space="preserve">
+    <value>Naar rechts</value>
+  </data>
+  <data name="Profiles_NamePlaceholder" xml:space="preserve">
+    <value>Profielnaam</value>
+  </data>
+  <data name="Profiles_New" xml:space="preserve">
+    <value>Nieuw profiel</value>
+  </data>
+  <data name="Profiles_NewName" xml:space="preserve">
+    <value>Nieuw profiel</value>
+  </data>
+  <data name="Profiles_OneDisplay" xml:space="preserve">
+    <value>1 beeldscherm</value>
+  </data>
+  <data name="Profiles_PauseTooltip" xml:space="preserve">
+    <value>Schakel uit om de oorspronkelijke kleuren van je beeldschermen te tonen</value>
+  </data>
+  <data name="Profiles_Reset" xml:space="preserve">
+    <value>Terugzetten naar origineel</value>
+  </data>
+  <data name="Profiles_Share" xml:space="preserve">
+    <value>Delen</value>
+  </data>
+  <data name="Profiles_Status" xml:space="preserve">
+    <value>{0} op {1}</value>
+  </data>
+  <data name="Profiles_StatusAppRule" xml:space="preserve">
+    <value>{0} (app-regel) op {1}</value>
+  </data>
+  <data name="Profiles_StatusManual" xml:space="preserve">
+    <value>{0} (handmatig gekozen) op {1}</value>
+  </data>
+  <data name="Profiles_StatusPaused" xml:space="preserve">
+    <value>Gepauzeerd: je beeldschermen tonen hun oorspronkelijke kleuren.</value>
+  </data>
+  <data name="Profiles_StatusSchedule" xml:space="preserve">
+    <value>{0} (planning) op {1}</value>
+  </data>
+  <data name="Profiles_Temperature" xml:space="preserve">
+    <value>Kleurtemperatuur</value>
+  </data>
+  <data name="Profiles_Title" xml:space="preserve">
+    <value>Profielen</value>
+  </data>
+  <data name="Profiles_UseMainSettings" xml:space="preserve">
+    <value>De hoofdinstellingen op dit beeldscherm gebruiken</value>
+  </data>
+  <data name="Profiles_Vibrance" xml:space="preserve">
+    <value>Levendigheid</value>
+  </data>
+  <data name="Profiles_VibranceHelp" xml:space="preserve">
+    <value>Kleurverzadiging, ingesteld via je grafisch stuurprogramma.</value>
+  </data>
+  <data name="Profiles_VibranceUnsupported" xml:space="preserve">
+    <value>Voor levendigheid moet een NVIDIA-, Intel- of AMD-videokaart met geïnstalleerd stuurprogramma dit beeldscherm aansturen.</value>
+  </data>
+  <data name="Settings_AllowFullRange" xml:space="preserve">
+    <value>Volledig bereik toestaan</value>
+  </data>
+  <data name="Settings_Displays" xml:space="preserve">
+    <value>Beeldschermen</value>
+  </data>
+  <data name="Settings_FullRange" xml:space="preserve">
+    <value>Volledig kleurbereik</value>
+  </data>
+  <data name="Settings_FullRangeHint" xml:space="preserve">
+    <value>Windows beperkt hoeveel kleuren mogen veranderen, wat vooral zeer warme nachtprofielen raakt. De beperking opheffen vraagt één keer goedkeuring van een beheerder.</value>
+  </data>
+  <data name="Settings_General" xml:space="preserve">
+    <value>Algemeen</value>
+  </data>
+  <data name="Settings_HotkeyFailure" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Settings_Hotkeys" xml:space="preserve">
+    <value>Sneltoetsen</value>
+  </data>
+  <data name="Settings_KeepRunning" xml:space="preserve">
+    <value>Actief blijven als het venster wordt gesloten</value>
+  </data>
+  <data name="Settings_KeepRunningHint" xml:space="preserve">
+    <value>Sneltoetsen en automatisering blijven werken vanuit het systeemvak.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Taal</value>
+  </data>
+  <data name="Settings_LanguageHint" xml:space="preserve">
+    <value>Vertalingen worden met zorg gemaakt en door de community verbeterd.</value>
+  </data>
+  <data name="Settings_LanguageRestart" xml:space="preserve">
+    <value>Start DispHub opnieuw om van taal te wisselen.</value>
+  </data>
+  <data name="Settings_LanguageWindows" xml:space="preserve">
+    <value>Zelfde als Windows</value>
+  </data>
+  <data name="Settings_LeaveAlone" xml:space="preserve">
+    <value>Dit beeldscherm met rust laten</value>
+  </data>
+  <data name="Settings_Next" xml:space="preserve">
+    <value>Volgend profiel</value>
+  </data>
+  <data name="Settings_Osd" xml:space="preserve">
+    <value>Schermmelding</value>
+  </data>
+  <data name="Settings_OsdDuration" xml:space="preserve">
+    <value>Hoelang hij blijft staan</value>
+  </data>
+  <data name="Settings_OsdHint" xml:space="preserve">
+    <value>Verschijnt boven de taakbalk na een wissel met een sneltoets of via het systeemvak. Neemt nooit de focus van games over.</value>
+  </data>
+  <data name="Settings_OsdToggle" xml:space="preserve">
+    <value>De profielnaam tonen bij een wissel</value>
+  </data>
+  <data name="Settings_Pause" xml:space="preserve">
+    <value>Pauzeren of hervatten</value>
+  </data>
+  <data name="Settings_PauseHint" xml:space="preserve">
+    <value>Schakelt tussen je profiel en de oorspronkelijke kleuren.</value>
+  </data>
+  <data name="Settings_Previous" xml:space="preserve">
+    <value>Vorig profiel</value>
+  </data>
+  <data name="Settings_RestartNow" xml:space="preserve">
+    <value>Nu opnieuw starten</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Starten met Windows</value>
+  </data>
+  <data name="Settings_StartWithWindowsHint" xml:space="preserve">
+    <value>Start rustig in het systeemvak en past je profiel toe.</value>
+  </data>
+  <data name="Settings_StartupDenied" xml:space="preserve">
+    <value>Windows stond niet toe dat de opstartinstelling werd gewijzigd.</value>
+  </data>
+  <data name="Settings_StartupDisabledByPolicy" xml:space="preserve">
+    <value>Het beleid van je organisatie blokkeert opstart-apps.</value>
+  </data>
+  <data name="Settings_StartupDisabledByUser" xml:space="preserve">
+    <value>Uitgeschakeld in Taakbeheer. Schakel het weer in via Instellingen &gt; Apps &gt; Opstarten.</value>
+  </data>
+  <data name="Settings_StartupUnreadable" xml:space="preserve">
+    <value>De opstartinstelling kon niet worden gelezen.</value>
+  </data>
+  <data name="Settings_Subtitle" xml:space="preserve">
+    <value>Hoe DispHub start, eruitziet en reageert.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>App-thema</value>
+  </data>
+  <data name="Settings_ThemeHint" xml:space="preserve">
+    <value>Systeem volgt de lichte of donkere modus van Windows.</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="Settings_TrayClick" xml:space="preserve">
+    <value>Klikken op het systeemvakpictogram</value>
+  </data>
+  <data name="Settings_TrayClickHint" xml:space="preserve">
+    <value>Rechtsklikken toont altijd het profielmenu.</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>DispHub kon niet starten.
+
+{0}
+
+Logboeken: {1}</value>
+  </data>
+  <data name="Summary_Brightness" xml:space="preserve">
+    <value>Helderheid {0}</value>
+  </data>
+  <data name="Summary_Contrast" xml:space="preserve">
+    <value>Contrast {0}</value>
+  </data>
+  <data name="Summary_Gamma" xml:space="preserve">
+    <value>Gamma {0}</value>
+  </data>
+  <data name="Summary_Original" xml:space="preserve">
+    <value>Oorspronkelijke kleuren</value>
+  </data>
+  <data name="Summary_Vibrance" xml:space="preserve">
+    <value>Levendigheid {0}%</value>
+  </data>
+  <data name="Tray_Active" xml:space="preserve">
+    <value>DispHub · {0}</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Afsluiten</value>
+  </data>
+  <data name="Tray_MoreProfiles" xml:space="preserve">
+    <value>Meer profielen…</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>DispHub openen</value>
+  </data>
+  <data name="Tray_Pause" xml:space="preserve">
+    <value>Pauzeren (oorspronkelijke kleuren)</value>
+  </data>
+  <data name="Tray_Paused" xml:space="preserve">
+    <value>DispHub · Gepauzeerd</value>
+  </data>
+  <data name="Tray_Ready" xml:space="preserve">
+    <value>Klaar</value>
+  </data>
+  <data name="Tray_Resume" xml:space="preserve">
+    <value>Hervatten</value>
+  </data>
+  <data name="Upgrade_AppRules" xml:space="preserve">
+    <value>Profielen per app</value>
+  </data>
+  <data name="Upgrade_Body" xml:space="preserve">
+    <value>{0} hoort bij DispHub Pro.
+
+Pro is een eenmalige aankoop die dit ontgrendelt:
+• Profielen per app die automatisch wisselen
+• Planningen met zachte overgangen
+• Andere instellingen per beeldscherm
+• Meer dan {1} profielen
+
+Je steunt er ook de ontwikkeling van DispHub mee.</value>
+  </data>
+  <data name="Upgrade_FailedText" xml:space="preserve">
+    <value>De Microsoft Store kon de aankoop niet voltooien. Controleer je verbinding en probeer het opnieuw.</value>
+  </data>
+  <data name="Upgrade_FailedTitle" xml:space="preserve">
+    <value>Aankoop is niet gelukt</value>
+  </data>
+  <data name="Upgrade_MoreProfiles" xml:space="preserve">
+    <value>Onbeperkt profielen</value>
+  </data>
+  <data name="Upgrade_NotNow" xml:space="preserve">
+    <value>Niet nu</value>
+  </data>
+  <data name="Upgrade_PerDisplay" xml:space="preserve">
+    <value>Andere instellingen per beeldscherm</value>
+  </data>
+  <data name="Upgrade_Schedules" xml:space="preserve">
+    <value>Planningen</value>
+  </data>
+  <data name="Warning_HdrText" xml:space="preserve">
+    <value>Windows ondersteunt geen gammawijzigingen op HDR-beeldschermen, dus daar wordt alleen levendigheid toegepast.</value>
+  </data>
+  <data name="Warning_HdrTitle" xml:space="preserve">
+    <value>HDR staat aan</value>
+  </data>
+  <data name="Warning_LimitedText" xml:space="preserve">
+    <value>Windows staat standaard alleen kleine kleurwijzigingen toe, dus DispHub heeft de dichtstbijzijnde toegestane versie toegepast. Het volledige bereik toestaan vraagt één keer goedkeuring van een beheerder.</value>
+  </data>
+  <data name="Warning_LimitedTitle" xml:space="preserve">
+    <value>Windows beperkt dit profiel</value>
+  </data>
+  <data name="Warning_RepairedText" xml:space="preserve">
+    <value>Je instellingenbestand was beschadigd. DispHub heeft de laatste goede kopie teruggezet; het beschadigde bestand is ernaast bewaard.</value>
+  </data>
+  <data name="Warning_RepairedTitle" xml:space="preserve">
+    <value>Instellingen zijn hersteld</value>
+  </data>
+  <data name="Warning_ResetText" xml:space="preserve">
+    <value>Iets zet de schermkleuren steeds terug (bijvoorbeeld Nachtlampje, f.lux of een game). DispHub houdt zich 5 minuten in.</value>
+  </data>
+  <data name="Warning_ResetTitle" xml:space="preserve">
+    <value>Een andere app wijzigt je kleuren</value>
+  </data>
+</root>
