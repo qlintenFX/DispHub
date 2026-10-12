@@ -17,12 +17,13 @@
       <Setter Property="Cursor" Value="Hand" />
       <Setter Property="FocusVisualStyle" Value="{x:Null}" />
       <Setter Property="ToolTip" Value="{Binding Hint}" />
+      <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="ListBoxItem">
             <Border
               x:Name="Card"
-              Width="168"
+              Width="160"
               Padding="5"
               Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
               BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
@@ -55,13 +56,21 @@
       <GradientStop Offset="1" Color="#E04848" />
     </LinearGradientBrush>
 
-    <!-- One setting of the look: name, slider or list, value, and a button to undo it. -->
+    <Style x:Key="SettingSlider" BasedOn="{StaticResource {x:Type Slider}}" TargetType="Slider">
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="IsMoveToPointEnabled" Value="True" />
+      <Setter Property="Minimum" Value="0" />
+      <Setter Property="Maximum" Value="1" />
+      <Setter Property="LargeChange" Value="0.1" />
+    </Style>
+
+    <!-- One setting: name, slider (or list), value and an undo button. -->
     <DataTemplate x:Key="SettingRow" DataType="{x:Type vm:LookSettingViewModel}">
-      <Grid Margin="0,3" IsEnabled="{Binding IsApplicable}">
+      <Grid Margin="0,2" IsEnabled="{Binding IsApplicable}">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="180" />
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="76" />
+          <ColumnDefinition Width="150" />
+          <ColumnDefinition Width="*" MinWidth="120" />
+          <ColumnDefinition Width="64" />
           <ColumnDefinition Width="32" />
         </Grid.ColumnDefinitions>
         <TextBlock VerticalAlignment="Center" Text="{Binding Name}" TextTrimming="CharacterEllipsis">
@@ -75,42 +84,26 @@
             </Style>
           </TextBlock.Style>
         </TextBlock>
-        <Slider
-          Grid.Column="1"
-          VerticalAlignment="Center"
-          AutomationProperties.Name="{Binding Name}"
-          LargeChange="0.1"
-          Maximum="1"
-          Minimum="0"
-          SmallChange="{Binding Step}"
-          Value="{Binding Position}"
-          Visibility="{Binding IsChoice, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
-        <!-- Colour sliders show the hues under the track. -->
-        <Border
-          Grid.Column="1"
-          Height="4"
-          Margin="10,0,10,0"
-          VerticalAlignment="Bottom"
-          Background="{StaticResource HueBrush}"
-          CornerRadius="2"
-          IsHitTestVisible="False">
-          <Border.Style>
-            <Style TargetType="Border">
-              <Setter Property="Visibility" Value="Collapsed" />
-              <Style.Triggers>
-                <DataTrigger Binding="{Binding Parameter.Unit}" Value="Degrees">
-                  <Setter Property="Visibility" Value="Visible" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding IsApplicable}" Value="False">
-                  <Setter Property="Opacity" Value="0.35" />
-                </DataTrigger>
-              </Style.Triggers>
-            </Style>
-          </Border.Style>
-        </Border>
+        <Grid Grid.Column="1" Visibility="{Binding IsChoice, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
+          <Slider
+            AutomationProperties.Name="{Binding Name}"
+            SmallChange="{Binding Step}"
+            Style="{StaticResource SettingSlider}"
+            Value="{Binding Position}" />
+          <!-- Colour sliders show the hues under the track. -->
+          <Border
+            Height="3"
+            Margin="10,0,10,2"
+            VerticalAlignment="Bottom"
+            Background="{StaticResource HueBrush}"
+            CornerRadius="1.5"
+            IsHitTestVisible="False"
+            Visibility="{Binding IsHue, Converter={StaticResource BoolToVisibility}}" />
+        </Grid>
         <ComboBox
           Grid.Column="1"
-          MinWidth="200"
+          Grid.ColumnSpan="2"
+          MinWidth="180"
           HorizontalAlignment="Left"
           AutomationProperties.Name="{Binding Name}"
           ItemsSource="{Binding Options}"
@@ -133,7 +126,8 @@
           Command="{Binding ResetCommand}"
           Icon="{ui:SymbolIcon ArrowUndo16}"
           ToolTip="{l:Tr Effects_ResetSetting}"
-          Visibility="{Binding IsChanged, Converter={StaticResource BoolToVisibility}}" />
+          AutomationProperties.Name="{l:Tr Effects_ResetSetting}"
+          Visibility="{Binding ShowReset, Converter={StaticResource BoolToVisibility}}" />
       </Grid>
     </DataTemplate>
   </UserControl.Resources>
@@ -162,15 +156,23 @@
       Command="{Binding UpgradeCommand}"
       Content="{l:Tr Effects_Upgrade}"
       Icon="{ui:SymbolIcon Star24}"
-      Visibility="{Binding ShowUpgrade, Converter={StaticResource BoolToVisibility}}" />
+      Visibility="{Binding IsPro, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
 
-    <!-- Preview: the look on a photo, before and after, with the current look beside it. -->
-    <Border Padding="16" Style="{StaticResource SettingCard}">
-      <Grid>
+    <!-- Preview: the look on a photo, before and after, with the current look beside it (or below, when narrow). -->
+    <Border
+      x:Name="PreviewCard"
+      Padding="16"
+      SizeChanged="OnPreviewCardSizeChanged"
+      Style="{StaticResource SettingCard}">
+      <Grid x:Name="PreviewGrid">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="3*" MaxWidth="580" />
-          <ColumnDefinition Width="2*" MinWidth="230" />
+          <ColumnDefinition x:Name="PictureColumn" Width="3*" MaxWidth="580" />
+          <ColumnDefinition x:Name="InfoColumn" Width="2*" MinWidth="220" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <Grid VerticalAlignment="Top">
           <ctl:CompareView
             After="{Binding Preview}"
@@ -186,8 +188,9 @@
             Text="{l:Tr Effects_PreviewFailed}"
             Visibility="{Binding PreviewFailed, Converter={StaticResource BoolToVisibility}}" />
         </Grid>
-        <DockPanel Grid.Column="1" Margin="20,0,0,0">
+        <DockPanel x:Name="InfoPanel" Grid.Column="1" Margin="20,0,0,0">
           <StackPanel
+            Margin="-8,8,0,0"
             HorizontalAlignment="Left"
             DockPanel.Dock="Bottom"
             Orientation="Horizontal">
@@ -198,7 +201,8 @@
               Appearance="Transparent"
               Command="{Binding PreviousPictureCommand}"
               Icon="{ui:SymbolIcon ChevronLeft20}"
-              ToolTip="{l:Tr Effects_PreviousPicture}" />
+              ToolTip="{l:Tr Effects_PreviousPicture}"
+              AutomationProperties.Name="{l:Tr Effects_PreviousPicture}" />
             <TextBlock
               MinWidth="100"
               VerticalAlignment="Center"
@@ -212,7 +216,8 @@
               Appearance="Transparent"
               Command="{Binding NextPictureCommand}"
               Icon="{ui:SymbolIcon ChevronRight20}"
-              ToolTip="{l:Tr Effects_NextPicture}" />
+              ToolTip="{l:Tr Effects_NextPicture}"
+              AutomationProperties.Name="{l:Tr Effects_NextPicture}" />
           </StackPanel>
           <StackPanel>
             <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_CurrentLook}" />
@@ -244,7 +249,7 @@
                 Command="{Binding ResetCommand}"
                 Content="{l:Tr Effects_Reset}"
                 Icon="{ui:SymbolIcon ArrowUndo20}"
-                Visibility="{Binding CanReset, Converter={StaticResource BoolToVisibility}}" />
+                Visibility="{Binding IsModified, Converter={StaticResource BoolToVisibility}}" />
               <ui:Button
                 Margin="0,0,6,6"
                 Command="{Binding CopyLinkCommand}"
@@ -268,9 +273,9 @@
     </Border>
 
     <!-- The gallery -->
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Looks}" />
+    <ctl:SectionHeader Text="{l:Tr Effects_Looks}" />
     <ListBox
-      Margin="0,0,0,10"
+      Margin="0,0,0,8"
       Background="Transparent"
       BorderThickness="0"
       ItemsSource="{Binding Categories}"
@@ -311,22 +316,12 @@
       <ListBox.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:LookTile}">
           <StackPanel>
-            <Grid Height="98">
+            <Grid Height="94">
               <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="5" />
               <Border CornerRadius="5">
                 <Border.Background>
                   <ImageBrush ImageSource="{Binding Thumbnail}" Stretch="UniformToFill" />
                 </Border.Background>
-              </Border>
-              <Border
-                Margin="5"
-                Padding="6,1"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Background="#B0000000"
-                CornerRadius="8"
-                Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisibility}}">
-                <TextBlock FontSize="10" Foreground="White" Text="Pro" />
               </Border>
             </Grid>
             <Grid Margin="4,6,2,2">
@@ -344,6 +339,7 @@
                 Command="{Binding DeleteCommand}"
                 Icon="{ui:SymbolIcon Delete16}"
                 ToolTip="{l:Tr Effects_DeleteLook}"
+                AutomationProperties.Name="{l:Tr Effects_DeleteLook}"
                 Visibility="{Binding IsSaved, Converter={StaticResource BoolToVisibility}}" />
             </Grid>
           </StackPanel>
@@ -352,111 +348,183 @@
     </ListBox>
 
     <!-- The editor -->
-    <Grid Margin="0,8,0,0">
-      <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Adjust}" />
+    <ctl:SectionHeader Text="{l:Tr Effects_Adjust}">
       <ui:Button
-        Margin="0,14,0,0"
-        HorizontalAlignment="Right"
-        VerticalAlignment="Bottom"
         Appearance="Transparent"
         Command="{Binding ClearCommand}"
         Content="{l:Tr Effects_Clear}"
         Icon="{ui:SymbolIcon Eraser20}" />
-    </Grid>
-    <TextBlock
-      Margin="0,0,0,8"
-      Style="{StaticResource Hint}"
-      Text="{l:Tr Effects_AdjustHint}"
-      TextWrapping="Wrap" />
-    <ItemsControl ItemsSource="{Binding Groups}">
+    </ctl:SectionHeader>
+    <Border Style="{StaticResource SettingCard}">
+      <!-- Lined up with the effects below, whose rows start after an icon. -->
+      <StackPanel Margin="28,0,64,0">
+        <Grid Margin="0,2" Visibility="{Binding HasLook, Converter={StaticResource BoolToVisibility}}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" MinWidth="120" />
+            <ColumnDefinition Width="64" />
+            <ColumnDefinition Width="32" />
+          </Grid.ColumnDefinitions>
+          <TextBlock
+            VerticalAlignment="Center"
+            FontWeight="SemiBold"
+            Text="{l:Tr Effects_Strength}" />
+          <Slider
+            Grid.Column="1"
+            AutomationProperties.Name="{l:Tr Effects_Strength}"
+            Maximum="1.5"
+            SmallChange="0.05"
+            Style="{StaticResource SettingSlider}"
+            Value="{Binding Strength}" />
+          <TextBlock
+            Grid.Column="2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            Text="{Binding StrengthText}" />
+        </Grid>
+        <ItemsControl ItemTemplate="{StaticResource SettingRow}" ItemsSource="{Binding Basics}" />
+      </StackPanel>
+    </Border>
+
+    <ctl:SectionHeader Text="{l:Tr Effects_InLook}">
+      <ui:Button
+        x:Name="AddPartButton"
+        Click="OnAddPartClick"
+        Content="{l:Tr Effects_AddPart}"
+        Icon="{ui:SymbolIcon Add20}" />
+    </ctl:SectionHeader>
+    <Border Style="{StaticResource SettingCard}" Visibility="{Binding Parts.Count, Converter={x:Static ctl:ZeroToVisibleConverter.Instance}}">
+      <TextBlock
+        Margin="0,6"
+        HorizontalAlignment="Center"
+        Style="{StaticResource Hint}"
+        Text="{l:Tr Effects_NoParts}" />
+    </Border>
+    <ItemsControl ItemsSource="{Binding Parts}">
       <ItemsControl.ItemTemplate>
-        <DataTemplate DataType="{x:Type vm:LookGroupViewModel}">
-          <ui:CardExpander Margin="0,0,0,4">
-            <ui:CardExpander.Icon>
-              <ui:SymbolIcon Symbol="{Binding Icon}" />
-            </ui:CardExpander.Icon>
-            <ui:CardExpander.Header>
+        <DataTemplate DataType="{x:Type vm:LookPartViewModel}">
+          <Border Style="{StaticResource SettingCard}">
+            <StackPanel>
               <Grid>
-                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
-                <TextBlock
-                  Margin="0,0,12,0"
-                  HorizontalAlignment="Right"
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ui:SymbolIcon
+                  Margin="0,0,10,0"
                   VerticalAlignment="Center"
-                  Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
-                  Text="{Binding ChangedText}" />
+                  FontSize="18"
+                  Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                  Symbol="{Binding Icon}" />
+                <ContentPresenter
+                  Grid.Column="1"
+                  Content="{Binding Main}"
+                  ContentTemplate="{StaticResource SettingRow}" />
+                <ui:Button
+                  Grid.Column="2"
+                  Width="28"
+                  Height="28"
+                  Padding="0"
+                  Appearance="Transparent"
+                  Command="{Binding ToggleDetailsCommand}"
+                  ToolTip="{l:Tr Effects_MoreSettings}"
+                  AutomationProperties.Name="{l:Tr Effects_MoreSettings}">
+                  <ui:Button.Style>
+                    <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
+                      <Style.Triggers>
+                        <!-- Hidden, not collapsed: every row keeps the same columns. -->
+                        <DataTrigger Binding="{Binding HasDetails}" Value="False">
+                          <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </ui:Button.Style>
+                  <ui:SymbolIcon FontSize="16">
+                    <ui:SymbolIcon.Style>
+                      <Style TargetType="ui:SymbolIcon">
+                        <Setter Property="Symbol" Value="ChevronDown16" />
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                            <Setter Property="Symbol" Value="ChevronUp16" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </ui:SymbolIcon.Style>
+                  </ui:SymbolIcon>
+                </ui:Button>
+                <ui:Button
+                  Grid.Column="3"
+                  Width="28"
+                  Height="28"
+                  Margin="2,0,0,0"
+                  Padding="0"
+                  Appearance="Transparent"
+                  Command="{Binding RemoveCommand}"
+                  Icon="{ui:SymbolIcon Dismiss16}"
+                  ToolTip="{l:Tr Effects_RemovePart}"
+                  AutomationProperties.Name="{l:Tr Effects_RemovePart}" />
               </Grid>
-            </ui:CardExpander.Header>
-            <ItemsControl ItemTemplate="{StaticResource SettingRow}" ItemsSource="{Binding Settings}" />
-          </ui:CardExpander>
+              <ItemsControl
+                Margin="28,6,64,0"
+                ItemTemplate="{StaticResource SettingRow}"
+                ItemsSource="{Binding Details}"
+                Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibility}}" />
+            </StackPanel>
+          </Border>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>
 
     <!-- Save -->
-    <Border Margin="0,8,0,0" Style="{StaticResource SettingCard}">
-      <Grid>
-        <StackPanel Margin="0,0,340,0">
-          <TextBlock Text="{l:Tr Effects_SaveTitle}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_SaveHint}" />
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-          <ui:TextBox
-            Width="200"
-            Margin="0,0,8,0"
-            MaxLength="40"
-            PlaceholderText="{l:Tr Effects_SaveName}"
-            Text="{Binding NewLookName, UpdateSourceTrigger=PropertyChanged}" />
-          <ui:Button
-            Command="{Binding SaveLookCommand}"
-            Content="{l:Tr Effects_Save}"
-            Icon="{ui:SymbolIcon Save20}" />
-        </StackPanel>
-      </Grid>
-    </Border>
+    <ctl:SettingsCard
+      Margin="0,8,0,4"
+      Description="{l:Tr Effects_SaveHint}"
+      Header="{l:Tr Effects_SaveTitle}"
+      Icon="Save24"
+      WrapWidth="620">
+      <StackPanel Orientation="Horizontal">
+        <ui:TextBox
+          Width="180"
+          Margin="0,0,8,0"
+          MaxLength="40"
+          PlaceholderText="{l:Tr Effects_SaveName}"
+          Text="{Binding NewLookName, UpdateSourceTrigger=PropertyChanged}" />
+        <ui:Button Command="{Binding SaveLookCommand}" Content="{l:Tr Effects_Save}" />
+      </StackPanel>
+    </ctl:SettingsCard>
 
     <!-- Options -->
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Effects_Options}" />
-    <Border Style="{StaticResource SettingCard}">
-      <Grid>
-        <StackPanel Margin="0,0,120,0">
-          <TextBlock Text="{l:Tr Effects_HideFullScreen}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_HideFullScreenHint}" />
-        </StackPanel>
-        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HideOverFullScreen}" />
-      </Grid>
-    </Border>
-    <Border Style="{StaticResource SettingCard}">
-      <Grid>
-        <StackPanel Margin="0,0,120,0">
-          <TextBlock Text="{l:Tr Effects_HideCapture}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_HideCaptureHint}" />
-        </StackPanel>
-        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HideFromCapture}" />
-      </Grid>
-    </Border>
-    <Border Style="{StaticResource SettingCard}">
-      <Grid>
-        <StackPanel Margin="0,0,120,0">
-          <TextBlock Text="{l:Tr Effects_MainDisplayOnly}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_MainDisplayOnlyHint}" />
-        </StackPanel>
-        <ui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MainDisplayOnly}" />
-      </Grid>
-    </Border>
-    <Border Style="{StaticResource SettingCard}">
-      <Grid>
-        <StackPanel Margin="0,0,200,0">
-          <TextBlock Text="{l:Tr Effects_FrameRate}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Effects_FrameRateHint}" />
-        </StackPanel>
-        <ComboBox
-          MinWidth="170"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Center"
-          ItemsSource="{Binding FrameRates}"
-          SelectedItem="{Binding FrameRate}" />
-      </Grid>
-    </Border>
+    <ctl:SectionHeader Text="{l:Tr Effects_Options}" />
+    <ctl:SettingsCard
+      Description="{l:Tr Effects_HideFullScreenHint}"
+      Header="{l:Tr Effects_HideFullScreen}"
+      Icon="FullScreenMaximize24">
+      <ui:ToggleSwitch IsChecked="{Binding HideOverFullScreen}" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard
+      Description="{l:Tr Effects_HideCaptureHint}"
+      Header="{l:Tr Effects_HideCapture}"
+      Icon="Screenshot24">
+      <ui:ToggleSwitch IsChecked="{Binding HideFromCapture}" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard
+      Description="{l:Tr Effects_MainDisplayOnlyHint}"
+      Header="{l:Tr Effects_MainDisplayOnly}"
+      Icon="Desktop24">
+      <ui:ToggleSwitch IsChecked="{Binding MainDisplayOnly}" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard
+      Description="{l:Tr Effects_FrameRateHint}"
+      Header="{l:Tr Effects_FrameRate}"
+      Icon="TopSpeed24">
+      <ComboBox
+        MinWidth="170"
+        ItemsSource="{Binding FrameRates}"
+        SelectedItem="{Binding FrameRate}" />
+    </ctl:SettingsCard>
     <TextBlock
       Margin="2,8,0,0"
       Style="{StaticResource Hint}"

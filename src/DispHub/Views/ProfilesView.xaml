@@ -167,12 +167,14 @@
         Margin="0,0,4,8"
         Command="{Binding MoveLeftCommand}"
         Icon="{ui:SymbolIcon ArrowLeft24}"
-        ToolTip="{l:Tr Profiles_MoveLeft}" />
+        ToolTip="{l:Tr Profiles_MoveLeft}"
+        AutomationProperties.Name="{l:Tr Profiles_MoveLeft}" />
       <ui:Button
         Margin="0,0,8,8"
         Command="{Binding MoveRightCommand}"
         Icon="{ui:SymbolIcon ArrowRight24}"
-        ToolTip="{l:Tr Profiles_MoveRight}" />
+        ToolTip="{l:Tr Profiles_MoveRight}"
+        AutomationProperties.Name="{l:Tr Profiles_MoveRight}" />
     </WrapPanel>
     <TextBlock
       Margin="0,0,0,4"
@@ -432,6 +434,7 @@
           Style="{StaticResource Hint}"
           Text="{l:Tr Profiles_HotkeyHint}" />
 
+        <StackPanel Visibility="{Binding ShowEffects, Converter={StaticResource BoolToVisibility}}">
         <Grid Margin="0,14,0,0">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="170" />
@@ -452,6 +455,7 @@
           Margin="180,6,0,0"
           Style="{StaticResource Hint}"
           Text="{l:Tr Profiles_EffectHint}" />
+        </StackPanel>
       </StackPanel>
     </Border>
   </StackPanel>

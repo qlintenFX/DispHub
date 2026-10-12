@@ -78,14 +78,16 @@ public sealed class EffectsService : IDisposable
         Profile? profile = _app.Current?.ProfileId is { } id ? _app.FindProfile(id) : null;
         if (_hiddenProfile is not null && _hiddenProfile != profile?.Id)
             _hiddenProfile = null;
-        (Look? look, string? lookId) = LookLibrary.Effective(effects, profile, _app.Config.IsPaused);
-        FromProfile = profile?.Effect is not null && !_app.Config.IsPaused;
+        (Look? look, string? lookId) = _app.Config.Ui.ShowEffects
+            ? LookLibrary.Effective(effects, profile, _app.Config.IsPaused)
+            : (null, null);
+        FromProfile = profile?.Effect is not null && !_app.Config.IsPaused && _app.Config.Ui.ShowEffects;
         if (FromProfile && _hiddenProfile == profile?.Id)
             (look, lookId) = (null, null);
         Current = look;
         CurrentId = lookId;
 
-        bool allowed = look is not null && _app.Features.CanShowLook(LookLibrary.Origin(effects, lookId));
+        bool allowed = look is not null && _app.Features.ScreenEffects;
         if (look is null || !allowed || look.IsEmpty)
         {
             _fullScreenCheck.Stop();
@@ -128,8 +130,8 @@ public sealed class EffectsService : IDisposable
         effects.Enabled = !effects.Enabled;
         if (effects.Enabled && effects.Look.IsEmpty)
         {
-            // Nothing set up yet: start from a look that does something visible and is included.
-            LookPreset first = Looks.Find(_app.Features.IsPro ? "film" : "dim")!;
+            // Nothing set up yet: start from a gentle look that does something visible.
+            LookPreset first = Looks.Find("film")!;
             (effects.Preset, effects.Look) = (first.Id, first.Look);
         }
         _app.EffectsChanged();

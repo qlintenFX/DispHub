@@ -51,6 +51,7 @@ public sealed class TrayService : IDisposable
         _retry.Tick += (_, _) => Show();
         _app.StateChanged += (_, _) => Refresh();
         _app.ConfigChanged += (_, _) => Refresh();
+        _app.QuickPanelRequested += (_, _) => (_panel ??= _createPanel()).Toggle();
     }
 
     /// <summary>Adds the icon. Right after sign-in the taskbar may not be ready yet, so it keeps trying for a minute.</summary>

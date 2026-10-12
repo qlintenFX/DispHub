@@ -38,6 +38,6 @@ public static class LookLibrary
             return (null, null);
         if (chosen is not null && Find(effects, chosen) is { } look)
             return (look, chosen);
-        return effects.Enabled ? (effects.Look, effects.Preset) : (null, null);
+        return effects.Enabled ? (effects.ShownLook, effects.Preset) : (null, null);
     }
 }

@@ -91,68 +91,11 @@
   <data name="About_WpfUiHint" xml:space="preserve">
     <value>The Fluent controls and Mica window.</value>
   </data>
-  <data name="Automation_AddApp" xml:space="preserve">
-    <value>Add app…</value>
-  </data>
-  <data name="Automation_AddRunningApp" xml:space="preserve">
-    <value>Add a running app</value>
-  </data>
-  <data name="Automation_AddSlot" xml:space="preserve">
-    <value>Add time slot</value>
-  </data>
-  <data name="Automation_AppsHeader" xml:space="preserve">
-    <value>Per-app profiles</value>
-  </data>
-  <data name="Automation_AppsHint" xml:space="preserve">
-    <value>While the app is in front its profile applies; when you switch away your normal profile comes back.</value>
-  </data>
-  <data name="Automation_ChooseProgram" xml:space="preserve">
-    <value>Choose a program</value>
-  </data>
-  <data name="Automation_Fade" xml:space="preserve">
-    <value>Fade</value>
-  </data>
-  <data name="Automation_From" xml:space="preserve">
-    <value>From</value>
-  </data>
-  <data name="Automation_Minutes" xml:space="preserve">
-    <value>min</value>
-  </data>
-  <data name="Automation_NoRunningApps" xml:space="preserve">
-    <value>No apps with a window are running</value>
-  </data>
-  <data name="Automation_ProExample" xml:space="preserve">
-    <value>For example: boost vibrance whenever your game is in front, and fade to a warm night profile at 22:00.</value>
-  </data>
-  <data name="Automation_ProTitle" xml:space="preserve">
-    <value>Automation is part of DispHub Pro</value>
-  </data>
-  <data name="Automation_ProgramsFilter" xml:space="preserve">
-    <value>Programs (*.exe)|*.exe</value>
-  </data>
-  <data name="Automation_ScheduleHeader" xml:space="preserve">
-    <value>Schedule</value>
-  </data>
-  <data name="Automation_ScheduleHint" xml:space="preserve">
-    <value>Each slot starts at its time and lasts until the next one. Fades blend smoothly from the previous profile.</value>
-  </data>
-  <data name="Automation_ScheduleToggle" xml:space="preserve">
-    <value>Switch profiles at set times</value>
-  </data>
-  <data name="Automation_Subtitle" xml:space="preserve">
-    <value>Switch profiles automatically when you open an app or at set times.</value>
-  </data>
-  <data name="Automation_Title" xml:space="preserve">
-    <value>Automation</value>
-  </data>
   <data name="Common_Add" xml:space="preserve">
     <value>Add</value>
   </data>
   <data name="Common_Cancel" xml:space="preserve">
     <value>Cancel</value>
-  </data>
-  <data name="Common_Enabled" xml:space="preserve">
-    <value>Enabled</value>
   </data>
   <data name="Common_GetPro" xml:space="preserve">
     <value>Get Pro</value>
@@ -162,9 +105,6 @@
   </data>
   <data name="Common_On" xml:space="preserve">
     <value>On</value>
-  </data>
-  <data name="Common_Remove" xml:space="preserve">
-    <value>Remove</value>
   </data>
   <data name="Control_Active" xml:space="preserve">
     <value>On</value>
@@ -214,38 +154,8 @@
   <data name="Hotkey_Refused" xml:space="preserve">
     <value>Windows refused this hotkey</value>
   </data>
-  <data name="Monitor_Applied" xml:space="preserve">
-    <value>Colours applied</value>
-  </data>
-  <data name="Monitor_Hdr" xml:space="preserve">
-    <value>HDR on (gamma unavailable)</value>
-  </data>
-  <data name="Monitor_Limited" xml:space="preserve">
-    <value>Limited by Windows</value>
-  </data>
-  <data name="Monitor_Main" xml:space="preserve">
-    <value>{0} (main)</value>
-  </data>
-  <data name="Monitor_NoVibrance" xml:space="preserve">
-    <value>No vibrance</value>
-  </data>
-  <data name="Monitor_Original" xml:space="preserve">
-    <value>Original colours</value>
-  </data>
-  <data name="Monitor_Unsupported" xml:space="preserve">
-    <value>Gamma not supported</value>
-  </data>
-  <data name="Monitor_Vibrance" xml:space="preserve">
-    <value>Vibrance supported</value>
-  </data>
   <data name="Nav_About" xml:space="preserve">
     <value>About</value>
-  </data>
-  <data name="Nav_Automation" xml:space="preserve">
-    <value>Automation</value>
-  </data>
-  <data name="Nav_Presets" xml:space="preserve">
-    <value>Presets</value>
   </data>
   <data name="Nav_Profiles" xml:space="preserve">
     <value>Profiles</value>
@@ -274,15 +184,6 @@ It will be added as a new profile and switched on so you can see it.</value>
   <data name="Preset_InvalidLink" xml:space="preserve">
     <value>This link isn't a valid DispHub preset.</value>
   </data>
-  <data name="Presets_Added" xml:space="preserve">
-    <value>Added "{0}" and switched to it. Fine-tune it on the Profiles page.</value>
-  </data>
-  <data name="Presets_CopyLink" xml:space="preserve">
-    <value>Copy share link</value>
-  </data>
-  <data name="Presets_Gallery" xml:space="preserve">
-    <value>Gallery</value>
-  </data>
   <data name="Presets_ImportHint" xml:space="preserve">
     <value>Paste a link someone shared (it starts with disphub://preset). To share your own, open a profile and click Share.</value>
   </data>
@@ -291,15 +192,6 @@ It will be added as a new profile and switched on so you can see it.</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
     <value>That doesn't look like a DispHub preset link. It should start with disphub://preset</value>
-  </data>
-  <data name="Presets_Submit" xml:space="preserve">
-    <value>Submit your preset</value>
-  </data>
-  <data name="Presets_Subtitle" xml:space="preserve">
-    <value>Ready-made looks from the community. Add one to try it instantly; it becomes a profile you can tweak.</value>
-  </data>
-  <data name="Presets_Title" xml:space="preserve">
-    <value>Presets</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Every screen effect, per-app profiles, schedules with fades, per-display settings and unlimited profiles. One-time purchase.</value>
@@ -410,16 +302,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>Vibrance needs an NVIDIA, Intel or AMD GPU driving this display, with its graphics driver installed.</value>
   </data>
   <data name="Settings_AllowFullRange" xml:space="preserve">
-    <value>Allow full range</value>
-  </data>
-  <data name="Settings_Displays" xml:space="preserve">
-    <value>Displays</value>
-  </data>
-  <data name="Settings_FullRange" xml:space="preserve">
-    <value>Full colour range</value>
-  </data>
-  <data name="Settings_FullRangeHint" xml:space="preserve">
-    <value>Windows limits how far colours can change, which mostly affects very warm night profiles. Lifting the limit needs administrator approval once.</value>
+    <value>Allow stronger changes</value>
   </data>
   <data name="Settings_General" xml:space="preserve">
     <value>General</value>
@@ -447,9 +330,6 @@ It will be added as a new profile and switched on so you can see it.</value>
   </data>
   <data name="Settings_LanguageWindows" xml:space="preserve">
     <value>Same as Windows</value>
-  </data>
-  <data name="Settings_LeaveAlone" xml:space="preserve">
-    <value>Leave this display alone</value>
   </data>
   <data name="Settings_Next" xml:space="preserve">
     <value>Next profile</value>
@@ -635,15 +515,6 @@ It also supports development of DispHub.</value>
   <data name="Preview_spring" xml:space="preserve">
     <value>Hot spring</value>
   </data>
-  <data name="Profiles_SubmitToGallery" xml:space="preserve">
-    <value>Submit it to the gallery</value>
-  </data>
-  <data name="Presets_From" xml:space="preserve">
-    <value>Shared by {0}</value>
-  </data>
-  <data name="Presets_FromDispHub" xml:space="preserve">
-    <value>From DispHub</value>
-  </data>
   <data name="Tray_StillRunningTitle" xml:space="preserve">
     <value>DispHub is still running</value>
   </data>
@@ -677,54 +548,6 @@ It also supports development of DispHub.</value>
   <data name="Schedule_ProHint" xml:space="preserve">
     <value>Schedules run with DispHub Pro. You can build one here and see exactly what it will do first.</value>
   </data>
-  <data name="Schedule_DayHint" xml:space="preserve">
-    <value>Drag a handle to move a slot. Picking a profile yourself keeps it until the next slot starts.</value>
-  </data>
-  <data name="Schedule_Slots" xml:space="preserve">
-    <value>Slots</value>
-  </data>
-  <data name="Schedule_Templates" xml:space="preserve">
-    <value>Start from</value>
-  </data>
-  <data name="Schedule_TemplateSunset" xml:space="preserve">
-    <value>Night after sunset</value>
-  </data>
-  <data name="Schedule_TemplateWorkWeek" xml:space="preserve">
-    <value>Work week and weekend</value>
-  </data>
-  <data name="Schedule_TemplateLateNight" xml:space="preserve">
-    <value>Sunset, then dim late at night</value>
-  </data>
-  <data name="Schedule_AddSlot" xml:space="preserve">
-    <value>Add slot</value>
-  </data>
-  <data name="Schedule_EmptyTitle" xml:space="preserve">
-    <value>No slots yet</value>
-  </data>
-  <data name="Schedule_EmptyHint" xml:space="preserve">
-    <value>Start from a ready-made schedule or add a slot.</value>
-  </data>
-  <data name="Schedule_Profile" xml:space="preserve">
-    <value>Profile</value>
-  </data>
-  <data name="Schedule_StartsWhen" xml:space="preserve">
-    <value>Starts</value>
-  </data>
-  <data name="Schedule_TimeHint" xml:space="preserve">
-    <value>Start time, for example 21:30</value>
-  </data>
-  <data name="Schedule_FadeHint" xml:space="preserve">
-    <value>How long it takes to fade in</value>
-  </data>
-  <data name="Schedule_Remove" xml:space="preserve">
-    <value>Remove slot</value>
-  </data>
-  <data name="Schedule_TimeInvalid" xml:space="preserve">
-    <value>Use a time like 21:30</value>
-  </data>
-  <data name="Schedule_Location" xml:space="preserve">
-    <value>Location</value>
-  </data>
   <data name="Schedule_LocationHint" xml:space="preserve">
     <value>Only used on this PC to work out sunrise and sunset.</value>
   </data>
@@ -734,20 +557,8 @@ It also supports development of DispHub.</value>
   <data name="Schedule_SearchCity" xml:space="preserve">
     <value>Search for a city</value>
   </data>
-  <data name="Schedule_AtTime" xml:space="preserve">
-    <value>At a time</value>
-  </data>
-  <data name="Schedule_Sunrise" xml:space="preserve">
-    <value>At sunrise</value>
-  </data>
-  <data name="Schedule_Sunset" xml:space="preserve">
-    <value>At sunset</value>
-  </data>
   <data name="Schedule_Instant" xml:space="preserve">
     <value>Instant</value>
-  </data>
-  <data name="Schedule_Minutes" xml:space="preserve">
-    <value>{0} min fade</value>
   </data>
   <data name="Schedule_LocationDenied" xml:space="preserve">
     <value>Windows didn't allow DispHub to see your location. Search for a city instead, or turn on location access in Windows Settings.</value>
@@ -757,9 +568,6 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Schedule_Near" xml:space="preserve">
     <value>Near {0}</value>
-  </data>
-  <data name="Schedule_StatusEmpty" xml:space="preserve">
-    <value>Switch profiles by time of day, or follow sunrise and sunset.</value>
   </data>
   <data name="Schedule_StatusOff" xml:space="preserve">
     <value>The schedule is off. Turn it on to switch profiles automatically.</value>
@@ -772,30 +580,6 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Schedule_StatusRunning" xml:space="preserve">
     <value>{0} now. {1} from {2}.</value>
-  </data>
-  <data name="Schedule_NoLocation" xml:space="preserve">
-    <value>Set a location to use sunrise and sunset. Until then they're {0} and {1}.</value>
-  </data>
-  <data name="Schedule_LocationSun" xml:space="preserve">
-    <value>{0}: sunrise {1}, sunset {2}</value>
-  </data>
-  <data name="Schedule_LocationPolar" xml:space="preserve">
-    <value>{0}: the sun doesn't rise or set on this day</value>
-  </data>
-  <data name="Schedule_AtSunrise" xml:space="preserve">
-    <value>At sunrise</value>
-  </data>
-  <data name="Schedule_AtSunset" xml:space="preserve">
-    <value>At sunset</value>
-  </data>
-  <data name="Schedule_Before" xml:space="preserve">
-    <value>{0} min before</value>
-  </data>
-  <data name="Schedule_After" xml:space="preserve">
-    <value>{0} min after</value>
-  </data>
-  <data name="Schedule_StartsAt" xml:space="preserve">
-    <value>Starts at {0} on this day</value>
   </data>
   <data name="Apps_Title" xml:space="preserve">
     <value>Apps</value>
@@ -861,40 +645,10 @@ It also supports development of DispHub.</value>
     <value>Displays</value>
   </data>
   <data name="Displays_Subtitle" xml:space="preserve">
-    <value>What DispHub can change on each connected display.</value>
-  </data>
-  <data name="Displays_BuiltIn" xml:space="preserve">
-    <value>Built-in display</value>
-  </data>
-  <data name="Displays_External" xml:space="preserve">
-    <value>External display</value>
-  </data>
-  <data name="Displays_ColoursYes" xml:space="preserve">
-    <value>Colours: yes</value>
-  </data>
-  <data name="Displays_ColoursLimited" xml:space="preserve">
-    <value>Colours: limited range</value>
-  </data>
-  <data name="Displays_ColoursHdr" xml:space="preserve">
-    <value>Colours: not while HDR is on</value>
-  </data>
-  <data name="Displays_ColoursNo" xml:space="preserve">
-    <value>Colours: not supported</value>
-  </data>
-  <data name="Displays_VibranceYes" xml:space="preserve">
-    <value>Vibrance: yes</value>
-  </data>
-  <data name="Displays_VibranceNo" xml:space="preserve">
-    <value>Vibrance: no</value>
+    <value>Your connected displays and what DispHub shows on each. Turn one off to leave it as it is.</value>
   </data>
   <data name="Displays_Main" xml:space="preserve">
     <value>Main</value>
-  </data>
-  <data name="Displays_LeaveAlone" xml:space="preserve">
-    <value>Leave alone</value>
-  </data>
-  <data name="Displays_Colours" xml:space="preserve">
-    <value>Colour range</value>
   </data>
   <data name="Settings_AccentWindows" xml:space="preserve">
     <value>Same as Windows</value>
@@ -912,13 +666,13 @@ It also supports development of DispHub.</value>
     <value>Accent colour</value>
   </data>
   <data name="Settings_AccentHint" xml:space="preserve">
-    <value>Used for buttons, selection and the active profile.</value>
+    <value>Used for switches, buttons and selections.</value>
   </data>
   <data name="Settings_Backdrop" xml:space="preserve">
     <value>Window background</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica and acrylic let your wallpaper's colour show through.</value>
+    <value>Mica tints the window with your wallpaper's colours, gently. Like Windows, it turns solid while the window isn't in use.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Text size</value>
@@ -1070,14 +824,8 @@ It also supports development of DispHub.</value>
   <data name="Effects_Adjust" xml:space="preserve">
     <value>Adjust</value>
   </data>
-  <data name="Effects_AdjustHint" xml:space="preserve">
-    <value>Every setting of the current look. Greyed-out settings do nothing until the one they depend on is turned up.</value>
-  </data>
   <data name="Effects_Modified" xml:space="preserve">
     <value>changed</value>
-  </data>
-  <data name="Effects_Changed" xml:space="preserve">
-    <value>{0} changed</value>
   </data>
   <data name="Effects_Custom" xml:space="preserve">
     <value>Custom</value>
@@ -1122,10 +870,10 @@ It also supports development of DispHub.</value>
     <value>Get DispHub Pro</value>
   </data>
   <data name="Effects_ProTitle" xml:space="preserve">
-    <value>Part of DispHub Pro</value>
+    <value>Screen effects are part of DispHub Pro</value>
   </data>
   <data name="Effects_ProText" xml:space="preserve">
-    <value>You can preview {0} here. DispHub Pro shows it on your screen. Comfort and accessibility looks are free.</value>
+    <value>Try every look here in the preview. DispHub Pro shows them on your screen.</value>
   </data>
   <data name="Effects_LayersOnlyTitle" xml:space="preserve">
     <value>Only part of this look can show</value>
@@ -1603,5 +1351,368 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Effects_CustomHint" xml:space="preserve">
     <value>Your own mix of settings.</value>
+  </data>
+  <data name="Settings_AccentCustom" xml:space="preserve">
+    <value>Choose a colour</value>
+  </data>
+  <data name="Settings_AccentHex" xml:space="preserve">
+    <value>Or a colour code</value>
+  </data>
+  <data name="Settings_AccentHexInvalid" xml:space="preserve">
+    <value>Use a code like #0078D4.</value>
+  </data>
+  <data name="Settings_QuickPanelHotkey" xml:space="preserve">
+    <value>Open the quick panel</value>
+  </data>
+  <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
+    <value>Profiles, brightness and warmth, without opening the window.</value>
+  </data>
+  <data name="Settings_Extras" xml:space="preserve">
+    <value>Extras</value>
+  </data>
+  <data name="Settings_ShowEffects" xml:space="preserve">
+    <value>Screen effects</value>
+  </data>
+  <data name="Settings_ShowEffectsHint" xml:space="preserve">
+    <value>Film, VHS, retro and comfort looks for the whole screen. Adds an Effects page.</value>
+  </data>
+  <data name="LookPart_vibrance" xml:space="preserve">
+    <value>Vibrance</value>
+  </data>
+  <data name="LookPart_vibranceHint" xml:space="preserve">
+    <value>Boosts dull colours more than strong ones.</value>
+  </data>
+  <data name="LookPart_tint" xml:space="preserve">
+    <value>Green or magenta</value>
+  </data>
+  <data name="LookPart_tintHint" xml:space="preserve">
+    <value>Shifts the picture towards green or magenta.</value>
+  </data>
+  <data name="LookPart_fade" xml:space="preserve">
+    <value>Faded blacks</value>
+  </data>
+  <data name="LookPart_fadeHint" xml:space="preserve">
+    <value>Lifts the blacks, like old prints.</value>
+  </data>
+  <data name="LookPart_sepia" xml:space="preserve">
+    <value>Sepia</value>
+  </data>
+  <data name="LookPart_sepiaHint" xml:space="preserve">
+    <value>Brown, old-photograph tones.</value>
+  </data>
+  <data name="LookPart_shadowTint" xml:space="preserve">
+    <value>Tinted shadows</value>
+  </data>
+  <data name="LookPart_shadowTintHint" xml:space="preserve">
+    <value>Colours the dark parts, for example teal.</value>
+  </data>
+  <data name="LookPart_highlightTint" xml:space="preserve">
+    <value>Tinted highlights</value>
+  </data>
+  <data name="LookPart_highlightTintHint" xml:space="preserve">
+    <value>Colours the bright parts, for example orange.</value>
+  </data>
+  <data name="LookPart_sharpen" xml:space="preserve">
+    <value>Sharpen</value>
+  </data>
+  <data name="LookPart_sharpenHint" xml:space="preserve">
+    <value>Crisper edges and text.</value>
+  </data>
+  <data name="LookPart_bloom" xml:space="preserve">
+    <value>Glow</value>
+  </data>
+  <data name="LookPart_bloomHint" xml:space="preserve">
+    <value>Bright areas glow softly.</value>
+  </data>
+  <data name="LookPart_halation" xml:space="preserve">
+    <value>Red glow</value>
+  </data>
+  <data name="LookPart_halationHint" xml:space="preserve">
+    <value>The red halo around highlights on film.</value>
+  </data>
+  <data name="LookPart_vignette" xml:space="preserve">
+    <value>Vignette</value>
+  </data>
+  <data name="LookPart_vignetteHint" xml:space="preserve">
+    <value>Darker corners.</value>
+  </data>
+  <data name="LookPart_aberration" xml:space="preserve">
+    <value>Colour fringing</value>
+  </data>
+  <data name="LookPart_aberrationHint" xml:space="preserve">
+    <value>Coloured edges towards the corners, like a cheap lens.</value>
+  </data>
+  <data name="LookPart_distortion" xml:space="preserve">
+    <value>Wide lens</value>
+  </data>
+  <data name="LookPart_distortionHint" xml:space="preserve">
+    <value>Bulges the picture like a wide-angle lens.</value>
+  </data>
+  <data name="LookPart_grain" xml:space="preserve">
+    <value>Grain</value>
+  </data>
+  <data name="LookPart_grainHint" xml:space="preserve">
+    <value>Film grain or sensor noise.</value>
+  </data>
+  <data name="LookPart_flicker" xml:space="preserve">
+    <value>Flicker</value>
+  </data>
+  <data name="LookPart_flickerHint" xml:space="preserve">
+    <value>Brightness that wavers, like a projector.</value>
+  </data>
+  <data name="LookPart_weave" xml:space="preserve">
+    <value>Gate weave</value>
+  </data>
+  <data name="LookPart_weaveHint" xml:space="preserve">
+    <value>The picture drifts slightly, like film in a projector.</value>
+  </data>
+  <data name="LookPart_dust" xml:space="preserve">
+    <value>Dust and scratches</value>
+  </data>
+  <data name="LookPart_dustHint" xml:space="preserve">
+    <value>Specks and lines of old film.</value>
+  </data>
+  <data name="LookPart_letterbox" xml:space="preserve">
+    <value>Widescreen bars</value>
+  </data>
+  <data name="LookPart_letterboxHint" xml:space="preserve">
+    <value>Black bars above and below.</value>
+  </data>
+  <data name="LookPart_scanlines" xml:space="preserve">
+    <value>Scanlines</value>
+  </data>
+  <data name="LookPart_scanlinesHint" xml:space="preserve">
+    <value>The lines of an old screen.</value>
+  </data>
+  <data name="LookPart_curvature" xml:space="preserve">
+    <value>Screen curve</value>
+  </data>
+  <data name="LookPart_curvatureHint" xml:space="preserve">
+    <value>The bulge of a CRT.</value>
+  </data>
+  <data name="LookPart_mask" xml:space="preserve">
+    <value>Phosphor mask</value>
+  </data>
+  <data name="LookPart_maskHint" xml:space="preserve">
+    <value>The red, green and blue stripes of a CRT.</value>
+  </data>
+  <data name="LookPart_chromaBleed" xml:space="preserve">
+    <value>Colour bleed</value>
+  </data>
+  <data name="LookPart_chromaBleedHint" xml:space="preserve">
+    <value>Smeared colour, like video tape.</value>
+  </data>
+  <data name="LookPart_tracking" xml:space="preserve">
+    <value>Tracking noise</value>
+  </data>
+  <data name="LookPart_trackingHint" xml:space="preserve">
+    <value>Tape noise rolling down the screen.</value>
+  </data>
+  <data name="LookPart_jitter" xml:space="preserve">
+    <value>Line jitter</value>
+  </data>
+  <data name="LookPart_jitterHint" xml:space="preserve">
+    <value>Lines that wobble sideways, like a worn tape.</value>
+  </data>
+  <data name="LookPart_pixelate" xml:space="preserve">
+    <value>Big pixels</value>
+  </data>
+  <data name="LookPart_pixelateHint" xml:space="preserve">
+    <value>Chunky pixels, like old games.</value>
+  </data>
+  <data name="LookPart_posterize" xml:space="preserve">
+    <value>Fewer colours</value>
+  </data>
+  <data name="LookPart_posterizeHint" xml:space="preserve">
+    <value>Flat bands of colour.</value>
+  </data>
+  <data name="LookPart_palette" xml:space="preserve">
+    <value>Retro palette</value>
+  </data>
+  <data name="LookPart_paletteHint" xml:space="preserve">
+    <value>Only the colours of an old console or screen.</value>
+  </data>
+  <data name="LookPart_dim" xml:space="preserve">
+    <value>Dim</value>
+  </data>
+  <data name="LookPart_dimHint" xml:space="preserve">
+    <value>Darker than the screen goes on its own.</value>
+  </data>
+  <data name="LookPart_colorVision" xml:space="preserve">
+    <value>Colour vision help</value>
+  </data>
+  <data name="LookPart_colorVisionHint" xml:space="preserve">
+    <value>Makes colours easier to tell apart with colour blindness.</value>
+  </data>
+  <data name="Effects_Strength" xml:space="preserve">
+    <value>Strength</value>
+  </data>
+  <data name="Effects_InLook" xml:space="preserve">
+    <value>Effects in this look</value>
+  </data>
+  <data name="Effects_AddPart" xml:space="preserve">
+    <value>Add an effect</value>
+  </data>
+  <data name="Effects_NoParts" xml:space="preserve">
+    <value>No effects yet. Pick a look above or add an effect.</value>
+  </data>
+  <data name="Effects_RemovePart" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Effects_MoreSettings" xml:space="preserve">
+    <value>More settings</value>
+  </data>
+  <data name="Upgrade_Effects" xml:space="preserve">
+    <value>Screen effects</value>
+  </data>
+  <data name="Quick_Brightness" xml:space="preserve">
+    <value>Brightness</value>
+  </data>
+  <data name="Quick_Warmth" xml:space="preserve">
+    <value>Warmth</value>
+  </data>
+  <data name="Quick_Effect" xml:space="preserve">
+    <value>Screen effect</value>
+  </data>
+  <data name="Quick_EffectOff" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Quick_EffectChanged" xml:space="preserve">
+    <value>{0} (changed)</value>
+  </data>
+  <data name="Displays_Showing" xml:space="preserve">
+    <value>Showing {0}</value>
+  </data>
+  <data name="Displays_ShowingOriginal" xml:space="preserve">
+    <value>Original colours (paused)</value>
+  </data>
+  <data name="Displays_LeftAlone" xml:space="preserve">
+    <value>DispHub leaves this display alone</value>
+  </data>
+  <data name="Displays_HdrNote" xml:space="preserve">
+    <value>HDR is on, so Windows doesn't allow colour changes here. Vibrance still works.</value>
+  </data>
+  <data name="Displays_LimitedNote" xml:space="preserve">
+    <value>Windows only allows small colour changes by default, so this display shows a milder version of strong profiles.</value>
+  </data>
+  <data name="Displays_NoVibrance" xml:space="preserve">
+    <value>Vibrance isn't available on this display.</value>
+  </data>
+  <data name="Displays_UseOnThis" xml:space="preserve">
+    <value>Change this display</value>
+  </data>
+  <data name="Schedule_Today" xml:space="preserve">
+    <value>{0} (today)</value>
+  </data>
+  <data name="Schedule_EveryDay" xml:space="preserve">
+    <value>Every day</value>
+  </data>
+  <data name="Schedule_Weekdays" xml:space="preserve">
+    <value>Weekdays</value>
+  </data>
+  <data name="Schedule_Weekends" xml:space="preserve">
+    <value>Weekends</value>
+  </data>
+  <data name="Schedule_SomeDays" xml:space="preserve">
+    <value>Some days</value>
+  </data>
+  <data name="Schedule_Minutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="Schedule_Hours" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="Schedule_HoursMinutes" xml:space="preserve">
+    <value>{0} h {1} min</value>
+  </data>
+  <data name="Schedule_StartsToday" xml:space="preserve">
+    <value>Today that's {0}.</value>
+  </data>
+  <data name="Schedule_StartsThatDay" xml:space="preserve">
+    <value>That day it's {0}.</value>
+  </data>
+  <data name="Schedule_Exactly" xml:space="preserve">
+    <value>Exactly</value>
+  </data>
+  <data name="Schedule_Before" xml:space="preserve">
+    <value>{0} before</value>
+  </data>
+  <data name="Schedule_After" xml:space="preserve">
+    <value>{0} after</value>
+  </data>
+  <data name="Schedule_StartTitle" xml:space="preserve">
+    <value>Start with</value>
+  </data>
+  <data name="Schedule_StartSun" xml:space="preserve">
+    <value>Warmer evenings</value>
+  </data>
+  <data name="Schedule_StartSunHint" xml:space="preserve">
+    <value>Your night profile from sunset, back to normal at sunrise. Follows the seasons.</value>
+  </data>
+  <data name="Schedule_StartHours" xml:space="preserve">
+    <value>Set hours</value>
+  </data>
+  <data name="Schedule_StartHoursHint" xml:space="preserve">
+    <value>Your night profile from 9 PM to 7 AM. You can change the times.</value>
+  </data>
+  <data name="Schedule_StartBlank" xml:space="preserve">
+    <value>Start from scratch</value>
+  </data>
+  <data name="Schedule_StartBlankHint" xml:space="preserve">
+    <value>Add changes one at a time.</value>
+  </data>
+  <data name="Schedule_ShowingDay" xml:space="preserve">
+    <value>Showing</value>
+  </data>
+  <data name="Schedule_ChangePlace" xml:space="preserve">
+    <value>Change place</value>
+  </data>
+  <data name="Schedule_Changes" xml:space="preserve">
+    <value>Changes</value>
+  </data>
+  <data name="Schedule_AddSlot" xml:space="preserve">
+    <value>Add a change</value>
+  </data>
+  <data name="Schedule_Starts" xml:space="preserve">
+    <value>Starts</value>
+  </data>
+  <data name="Schedule_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Schedule_Offset" xml:space="preserve">
+    <value>Before or after</value>
+  </data>
+  <data name="Schedule_Fade" xml:space="preserve">
+    <value>Fade in</value>
+  </data>
+  <data name="Schedule_On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Schedule_AtTime" xml:space="preserve">
+    <value>At a set time</value>
+  </data>
+  <data name="Schedule_Sunrise" xml:space="preserve">
+    <value>At sunrise</value>
+  </data>
+  <data name="Schedule_Sunset" xml:space="preserve">
+    <value>At sunset</value>
+  </data>
+  <data name="Schedule_Remove" xml:space="preserve">
+    <value>Remove this change</value>
+  </data>
+  <data name="Schedule_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Schedule_StatusEmpty" xml:space="preserve">
+    <value>Switch profiles by the time of day, or with sunrise and sunset.</value>
+  </data>
+  <data name="Schedule_NoLocation" xml:space="preserve">
+    <value>Sunrise and sunset are {0} and {1} until you choose a place.</value>
+  </data>
+  <data name="Schedule_LocationSun" xml:space="preserve">
+    <value>Sunrise {1}, sunset {2} · {0}</value>
+  </data>
+  <data name="Schedule_LocationPolar" xml:space="preserve">
+    <value>No sunrise or sunset on this day · {0}</value>
   </data>
 </root>

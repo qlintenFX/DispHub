@@ -11,7 +11,7 @@ using DispHub.Services;
 
 namespace DispHub.ViewModels;
 
-/// <summary>Every connected display: what DispHub can do on it, and whether to leave it alone.</summary>
+/// <summary>Every connected display: what's on it, any problem worth knowing, and whether DispHub changes it.</summary>
 public sealed partial class DisplaysViewModel : PageViewModel
 {
     private readonly AppController _app;
@@ -21,31 +21,19 @@ public sealed partial class DisplaysViewModel : PageViewModel
     {
         _app = app;
         _app.MonitorsChanged += (_, _) => Load();
+        _app.StateChanged += (_, _) => Load();
         Load();
     }
 
     public ObservableCollection<DisplayItem> Displays { get; } = [];
 
-    [ObservableProperty] public partial bool ExtendedGammaRange { get; set; }
-    [ObservableProperty] public partial bool AnyLimited { get; set; }
-
     public override void OnShown() => Load();
-
-    [RelayCommand]
-    private void EnableExtendedGammaRange()
-    {
-        if (GammaRange.TryEnableExtended())
-            _app.OnDisplayChanged();
-        ExtendedGammaRange = GammaRange.IsExtended;
-    }
 
     private void Load()
     {
         Displays.Clear();
         foreach (MonitorStatus status in _app.Monitors)
             Displays.Add(new DisplayItem(_app, status));
-        ExtendedGammaRange = GammaRange.IsExtended;
-        AnyLimited = _app.Monitors.Any(m => m.State == MonitorColorState.Limited);
     }
 }
 
@@ -53,6 +41,7 @@ public sealed partial class DisplayItem : ObservableObject
 {
     private readonly AppController _app;
     private readonly string _key;
+    private readonly string _mode;
 
     public DisplayItem(AppController app, MonitorStatus status)
     {
@@ -62,45 +51,60 @@ public sealed partial class DisplayItem : ObservableObject
         Name = monitor.Name;
         IsPrimary = monitor.IsPrimary;
         DisplayMode? mode = DisplayModes.Current(monitor.DeviceName);
-        string kind = Loc.Get(monitor.IsInternal ? "Displays_BuiltIn" : "Displays_External");
-        string resolution = mode is { } m ? string.Create(CultureInfo.CurrentCulture, $"{m.Width} × {m.Height} · {m.RefreshHz} Hz") : "";
-        // A built-in panel without an EDID name is already called "Built-in display".
-        Summary = string.Join(" · ", new[] { string.Equals(kind, Name, StringComparison.OrdinalIgnoreCase) ? "" : kind, resolution }.Where(s => s.Length > 0));
-        Colours = Loc.Get(status.State switch
-        {
-            MonitorColorState.Applied or MonitorColorState.Original => "Displays_ColoursYes",
-            MonitorColorState.Limited => "Displays_ColoursLimited",
-            MonitorColorState.Hdr => "Displays_ColoursHdr",
-            _ => "Displays_ColoursNo",
-        });
-        ColoursOk = status.State is MonitorColorState.Applied or MonitorColorState.Original;
-        Vibrance = Loc.Get(status.SupportsVibrance ? "Displays_VibranceYes" : "Displays_VibranceNo");
-        IsHdr = monitor.IsHdr;
-        Details = string.Join(" · ", new[] { monitor.DeviceName.TrimStart('\\', '.'), monitor.EdidId }.Where(s => s.Length > 0));
-        Excluded = app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config) && config.Excluded;
+        _mode = mode is { } m ? string.Create(CultureInfo.CurrentCulture, $"{m.Width} × {m.Height} · {m.RefreshHz} Hz") : "";
+        IsHdr = status.State == MonitorColorState.Hdr;
+        IsLimited = status.State == MonitorColorState.Limited;
+        NoVibrance = !status.SupportsVibrance;
+        Included = !(app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config) && config.Excluded);
+        UpdateSummary();
     }
 
     public string Name { get; }
     public bool IsPrimary { get; }
-    public string Summary { get; }
-    public string Colours { get; }
-    public bool ColoursOk { get; }
-    public string Vibrance { get; }
+
+    /// <summary>Windows HDR is on: gamma changes are paused there.</summary>
     public bool IsHdr { get; }
-    public string Details { get; }
 
-    [ObservableProperty] public partial bool Excluded { get; set; }
+    /// <summary>Windows only allowed a milder version of the profile.</summary>
+    public bool IsLimited { get; }
 
-    partial void OnExcludedChanged(bool value)
+    public bool NoVibrance { get; }
+
+    [ObservableProperty] public partial bool Included { get; set; }
+    [ObservableProperty] public partial string Summary { get; set; } = "";
+
+    partial void OnIncludedChanged(bool value)
     {
         if (!_app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config))
         {
             config = new MonitorConfig { Name = Name };
             _app.Config.Monitors[_key] = config;
         }
-        if (config.Excluded == value)
+        if (config.Excluded == !value)
             return;
-        config.Excluded = value;
+        config.Excluded = !value;
         _app.SettingsChanged();
+        UpdateSummary();
+    }
+
+    [RelayCommand]
+    private void AllowFullRange()
+    {
+        if (GammaRange.TryEnableExtended())
+            _app.OnDisplayChanged();
+    }
+
+    private void UpdateSummary()
+    {
+        string showing;
+        if (!Included)
+            showing = Loc.Get("Displays_LeftAlone");
+        else if (_app.Config.IsPaused)
+            showing = Loc.Get("Displays_ShowingOriginal");
+        else if (_app.Current?.Monitors.GetValueOrDefault(_key)?.ProfileId is { } id && _app.FindProfile(id) is { } profile)
+            showing = Loc.Format("Displays_Showing", profile.Name);
+        else
+            showing = "";
+        Summary = string.Join(" · ", new[] { _mode, showing }.Where(t => t.Length > 0));
     }
 }

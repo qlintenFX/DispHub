@@ -146,12 +146,15 @@ public sealed class HotkeyConfig
     public string? NextProfile { get; set; }
     public string? PreviousProfile { get; set; }
     public string? ToggleEffects { get; set; }
+    public string? QuickPanel { get; set; }
 }
 
 public enum WindowBackdrop
 {
     Mica,
     MicaAlt,
+
+    /// <summary>No longer offered for the window (acrylic is for flyouts); read as <see cref="Mica"/>.</summary>
     Acrylic,
     Solid,
 }
@@ -215,4 +218,7 @@ public sealed class UiConfig
     public bool ReduceMotion { get; set; }
 
     public OsdPosition OsdPosition { get; set; } = OsdPosition.BottomCenter;
+
+    /// <summary>Show screen effects (an extra, off until the user turns it on in Settings).</summary>
+    public bool ShowEffects { get; set; }
 }

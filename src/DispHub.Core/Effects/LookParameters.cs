@@ -82,12 +82,26 @@ public sealed class LookParameter
 
     public double Default => Get(Look.Neutral);
 
+    /// <summary>
+    /// An amount, which a look's strength scales (grain, saturation); not a shape or a choice (grain size, hue,
+    /// palette), which stays as it is.
+    /// </summary>
+    public bool IsAmount => !LookParameters.Shapes.Contains(Key);
+
     public bool Applies(Look look) => AppliesWhen?.Invoke(look) ?? true;
 }
 
 public static class LookParameters
 {
+    public const double MaxStrength = 1.5;
+
     private static readonly double[] LetterboxOptions = [0, 1.85, 2, 2.39, 2.76];
+
+    internal static readonly HashSet<string> Shapes =
+    [
+        "shadowHue", "highlightHue", "bloomThreshold", "vignetteSize", "vignetteSoftness", "grainSize", "grainFps",
+        "letterbox", "scanlineSpacing", "pixelate", "posterize", "palette", "colorVision",
+    ];
 
     public static IReadOnlyList<LookParameter> All { get; } =
     [
@@ -151,6 +165,24 @@ public static class LookParameters
             options: [.. Enum.GetValues<ColorVision>().Select(c => (double)(int)c)]),
         P("colorVisionStrength", LookGroup.Access, LookUnit.Percent, 0, 1, 0.01, l => l.ColorVisionStrength, (l, v) => l with { ColorVisionStrength = v }, l => l.ColorVision != ColorVision.Typical),
     ];
+
+    /// <summary>
+    /// The look at a strength: 0 is neutral, 1 is as set, up to <see cref="MaxStrength"/> exaggerates it. Only
+    /// amounts scale; shapes and choices stay (half a Game Boy is still a Game Boy palette, just with less grain).
+    /// </summary>
+    public static Look WithStrength(Look look, double strength)
+    {
+        ArgumentNullException.ThrowIfNull(look);
+        strength = Math.Clamp(strength, 0, MaxStrength);
+        if (Math.Abs(strength - 1) < 1e-9)
+            return look;
+        if (strength <= 0)
+            return Look.Neutral;
+        Look scaled = look;
+        foreach (LookParameter parameter in All.Where(p => p.IsAmount))
+            scaled = parameter.Set(scaled, parameter.Default + ((parameter.Get(look) - parameter.Default) * strength));
+        return scaled;
+    }
 
     public static LookParameter? Find(string? key) => All.FirstOrDefault(p => string.Equals(p.Key, key, StringComparison.OrdinalIgnoreCase));
 

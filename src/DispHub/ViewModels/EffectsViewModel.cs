@@ -10,15 +10,15 @@ using DispHub.Core.Config;
 using DispHub.Core.Effects;
 using DispHub.Core.Sharing;
 using DispHub.Localization;
-using DispHub.Platform.Store;
 using DispHub.Services;
 using Wpf.Ui.Controls;
 
 namespace DispHub.ViewModels;
 
 /// <summary>
-/// Screen effects: a gallery of looks rendered on a photo, a before and after preview, and every setting of the
-/// current look grouped by what it does. Changes show on screen straight away.
+/// Screen effects: a gallery of looks rendered on a photo, a before and after preview, and an editor that shows
+/// only what the current look uses (strength, four basics, then each effect in it) with a menu to add more.
+/// Everyone can try looks in the preview; showing them on screen is Pro.
 /// </summary>
 public sealed partial class EffectsViewModel : PageViewModel
 {
@@ -31,6 +31,7 @@ public sealed partial class EffectsViewModel : PageViewModel
     private readonly LookPreviewService _previews;
     private readonly IUpgradeService _upgrade;
     private readonly List<LookTile> _allTiles = [];
+    private readonly Dictionary<string, LookPartViewModel> _partCache = [];
     private readonly DispatcherTimer _animation = new(DispatcherPriority.Background);
     private readonly DispatcherTimer _copiedTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private readonly DateTime _started = DateTime.UtcNow;
@@ -47,7 +48,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         _effects = effects;
         _previews = previews;
         _upgrade = upgrade;
-        Groups = [.. Enum.GetValues<LookGroup>().Select(g => new LookGroupViewModel(this, g))];
+        Basics = [.. LookParts.Basics.Select(p => new LookSettingViewModel(this, p))];
         FrameRates =
         [
             new(30, Loc.Get("Effects_Fps30")),
@@ -72,7 +73,13 @@ public sealed partial class EffectsViewModel : PageViewModel
         Load();
     }
 
-    public IReadOnlyList<LookGroupViewModel> Groups { get; }
+    public IReadOnlyList<LookSettingViewModel> Basics { get; }
+
+    /// <summary>The effects in the current look, in editor order.</summary>
+    public ObservableCollection<LookPartViewModel> Parts { get; } = [];
+
+    /// <summary>What "Add an effect" offers: every effect not in the look yet, grouped.</summary>
+    public ObservableCollection<AddPartGroup> AddableParts { get; } = [];
 
     public IReadOnlyList<FrameRateChoice> FrameRates { get; }
 
@@ -90,22 +97,22 @@ public sealed partial class EffectsViewModel : PageViewModel
     [ObservableProperty] public partial PictureChoice Picture { get; set; }
 
     [ObservableProperty] public partial bool Enabled { get; set; }
+    [ObservableProperty] public partial bool IsPro { get; set; }
     [ObservableProperty] public partial LookCategoryChip? SelectedCategory { get; set; }
     [ObservableProperty] public partial LookTile? SelectedTile { get; set; }
     [ObservableProperty] public partial string CurrentName { get; set; } = "";
     [ObservableProperty] public partial string CurrentHint { get; set; } = "";
     [ObservableProperty] public partial bool IsModified { get; set; }
     [ObservableProperty] public partial bool HasLook { get; set; }
-    [ObservableProperty] public partial bool CanReset { get; set; }
+    [ObservableProperty] public partial double Strength { get; set; } = 1;
+    [ObservableProperty] public partial string StrengthText { get; set; } = "100 %";
 
     [ObservableProperty] public partial bool ShowStatus { get; set; }
     [ObservableProperty] public partial string StatusTitle { get; set; } = "";
     [ObservableProperty] public partial string StatusText { get; set; } = "";
     [ObservableProperty] public partial InfoBarSeverity StatusSeverity { get; set; }
-    [ObservableProperty] public partial bool ShowUpgrade { get; set; }
     [ObservableProperty] public partial bool PreviewFailed { get; set; }
 
-    [ObservableProperty] public partial bool CanSaveLooks { get; set; }
     [ObservableProperty] public partial string NewLookName { get; set; } = "";
     [ObservableProperty] public partial bool LinkCopied { get; set; }
 
@@ -144,6 +151,7 @@ public sealed partial class EffectsViewModel : PageViewModel
     {
         ArgumentNullException.ThrowIfNull(shared);
         EffectsConfig effects = _app.Config.Effects;
+        _app.Config.Ui.ShowEffects = true;
         if (_app.Features.SavedLooks)
         {
             var saved = new SavedLook { Name = shared.Name, Look = shared.Look, BasedOn = shared.BasedOn };
@@ -154,9 +162,12 @@ public sealed partial class EffectsViewModel : PageViewModel
         {
             (effects.Preset, effects.Look) = (shared.BasedOn, shared.Look);
         }
-        effects.Enabled = true;
+        effects.Strength = 1;
+        effects.Enabled = _app.Features.ScreenEffects;
         BuildTiles();
+        _app.SettingsChanged();
         Commit();
+        Load();
         _ = RenderThumbsAsync();
     }
 
@@ -170,6 +181,27 @@ public sealed partial class EffectsViewModel : PageViewModel
             return;
         effects.Look = changed;
         Commit();
+        // The slider being dragged keeps its own position; pushing a rounded value back makes it stutter.
+        RefreshEditor(except: parameter);
+        RefreshCurrent();
+    }
+
+    internal void AddPart(LookPart part)
+    {
+        EffectsConfig effects = _app.Config.Effects;
+        effects.Look = part.Add(effects.Look);
+        Commit();
+        RefreshEditor();
+        RefreshCurrent();
+        if (_partCache.TryGetValue(part.Key, out LookPartViewModel? added))
+            added.IsExpanded = added.HasDetails;
+    }
+
+    internal void RemovePart(LookPart part)
+    {
+        EffectsConfig effects = _app.Config.Effects;
+        effects.Look = part.Remove(effects.Look);
+        Commit();
         RefreshEditor();
         RefreshCurrent();
     }
@@ -177,8 +209,10 @@ public sealed partial class EffectsViewModel : PageViewModel
     internal void SelectLook(LookTile tile)
     {
         EffectsConfig effects = _app.Config.Effects;
-        (effects.Preset, effects.Look) = (tile.Id, tile.Look);
-        effects.Enabled = true;
+        (effects.Preset, effects.Look, effects.Strength) = (tile.Id, tile.Look, 1);
+        // Free: try it in the preview; the screen stays as it is.
+        if (_app.Features.ScreenEffects)
+            effects.Enabled = true;
         Commit();
         Load();
     }
@@ -201,8 +235,24 @@ public sealed partial class EffectsViewModel : PageViewModel
     {
         if (_loading || value == _app.Config.Effects.Enabled)
             return;
+        if (value && !_app.Features.ScreenEffects)
+        {
+            SetSilently(() => Enabled = false);
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_Effects"));
+            return;
+        }
         _effects.Toggle();
         Load();
+    }
+
+    partial void OnStrengthChanged(double value)
+    {
+        StrengthText = string.Create(CultureInfo.CurrentCulture, $"{value * 100:0} %");
+        if (_loading)
+            return;
+        _app.Config.Effects.Strength = Math.Round(value, 2);
+        Commit();
+        RefreshCurrent();
     }
 
     partial void OnSelectedCategoryChanged(LookCategoryChip? value)
@@ -245,7 +295,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         EffectsConfig effects = _app.Config.Effects;
         if (LookLibrary.Find(effects, effects.Preset) is not { } original)
             return;
-        effects.Look = original;
+        (effects.Look, effects.Strength) = (original, 1);
         Commit();
         Load();
     }
@@ -255,7 +305,7 @@ public sealed partial class EffectsViewModel : PageViewModel
     private void Clear()
     {
         EffectsConfig effects = _app.Config.Effects;
-        (effects.Preset, effects.Look) = (null, Look.Neutral);
+        (effects.Preset, effects.Look, effects.Strength) = (null, Look.Neutral, 1);
         Commit();
         Load();
     }
@@ -273,14 +323,16 @@ public sealed partial class EffectsViewModel : PageViewModel
         var saved = new SavedLook
         {
             Name = ConfigNormalizer.CleanName(NewLookName, fallback),
-            Look = effects.Look,
+            // The strength becomes part of the saved look.
+            Look = effects.ShownLook,
             BasedOn = LookLibrary.Origin(effects, effects.Preset)?.Id,
         };
         effects.SavedLooks.Add(saved);
-        effects.Preset = saved.Key;
+        (effects.Preset, effects.Look, effects.Strength) = (saved.Key, saved.Look, 1);
         NewLookName = "";
         BuildTiles();
         Commit();
+        _app.SettingsChanged();
         SelectedCategory = Categories.FirstOrDefault(c => c.Key == SavedCategory);
         Load();
         _ = RenderThumbsAsync();
@@ -290,7 +342,7 @@ public sealed partial class EffectsViewModel : PageViewModel
     private void CopyLink()
     {
         EffectsConfig effects = _app.Config.Effects;
-        string link = new SharedLook(_effects.NameOf(effects.Preset), effects.Look, LookLibrary.Origin(effects, effects.Preset)?.Id).ToLink();
+        string link = new SharedLook(_effects.NameOf(effects.Preset), effects.ShownLook, LookLibrary.Origin(effects, effects.Preset)?.Id).ToLink();
         try
         {
             Clipboard.SetText(link);
@@ -309,6 +361,7 @@ public sealed partial class EffectsViewModel : PageViewModel
 
     private void Commit()
     {
+        bool wasLoading = _loading;
         _loading = true;
         try
         {
@@ -317,7 +370,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         }
         finally
         {
-            _loading = false;
+            _loading = wasLoading;
         }
         RenderPreview();
         UpdateAnimation();
@@ -341,21 +394,18 @@ public sealed partial class EffectsViewModel : PageViewModel
         try
         {
             EffectsConfig effects = _app.Config.Effects;
-            Enabled = effects.Enabled;
+            IsPro = _app.Features.ScreenEffects;
+            Enabled = effects.Enabled && IsPro;
+            Strength = effects.Strength;
             HideOverFullScreen = effects.HideOverFullScreen;
             HideFromCapture = effects.HideFromCapture;
             MainDisplayOnly = effects.MainDisplayOnly;
             FrameRate = FrameRates.FirstOrDefault(f => f.Fps == effects.MaxFps) ?? FrameRates[1];
-            CanSaveLooks = _app.Features.SavedLooks;
             if (_allTiles.Count(t => t.IsSaved) != effects.SavedLooks.Count)
                 BuildTiles();
-            bool pro = _app.Features.IsPro;
             foreach (LookTile tile in _allTiles)
-            {
                 tile.IsSelected = tile.Id == effects.Preset;
-                tile.IsLocked = !pro && !_app.Features.CanShowLook(LookLibrary.Origin(effects, tile.Id));
-            }
-            SelectedTile = _allTiles.FirstOrDefault(t => t.IsSelected);
+            SelectedTile = Tiles.FirstOrDefault(t => t.IsSelected);
             RefreshEditor();
             RefreshCurrent();
             RefreshStatus();
@@ -371,14 +421,45 @@ public sealed partial class EffectsViewModel : PageViewModel
         }
     }
 
-    private void RefreshEditor()
+    /// <summary>
+    /// Brings the editor in line with the look, changing the list of effects only where it differs, so open
+    /// details and a slider being dragged stay as they are.
+    /// </summary>
+    private void RefreshEditor(LookParameter? except = null)
     {
         bool wasLoading = _loading;
         _loading = true;
         try
         {
-            foreach (LookGroupViewModel group in Groups)
-                group.Refresh(CurrentLook);
+            Look look = CurrentLook;
+            foreach (LookSettingViewModel setting in Basics)
+                setting.Refresh(look, except);
+
+            List<LookPart> inLook = [.. LookParts.In(look)];
+            for (int i = Parts.Count - 1; i >= 0; i--)
+            {
+                if (!inLook.Contains(Parts[i].Part))
+                    Parts.RemoveAt(i);
+            }
+            for (int i = 0; i < inLook.Count; i++)
+            {
+                LookPart part = inLook[i];
+                if (!_partCache.TryGetValue(part.Key, out LookPartViewModel? item))
+                {
+                    item = new LookPartViewModel(this, part);
+                    _partCache[part.Key] = item;
+                }
+                int at = Parts.IndexOf(item);
+                if (at < 0)
+                    Parts.Insert(i, item);
+                else if (at != i)
+                    Parts.Move(at, i);
+                item.Refresh(look, except);
+            }
+
+            AddableParts.Clear();
+            foreach (IGrouping<LookGroup, LookPart> group in LookParts.All.Where(p => !p.IsIn(look)).GroupBy(p => p.Group))
+                AddableParts.Add(new AddPartGroup(Loc.Get($"LookGroup_{group.Key}"), [.. group.Select(p => new AddPartChoice(this, p))]));
         }
         finally
         {
@@ -396,29 +477,37 @@ public sealed partial class EffectsViewModel : PageViewModel
             : Looks.Find(effects.Preset) is { } preset ? Loc.Get($"Look_{preset.Id}Hint")
             : effects.SavedLooks.Any(l => l.Key == effects.Preset) ? Loc.Get("Effects_SavedHint")
             : Loc.Get("Effects_CustomHint");
-        IsModified = original is not null && original != effects.Look;
-        CanReset = IsModified;
+        IsModified = original is not null && (original != effects.Look || Math.Abs(effects.Strength - 1) > 0.005);
     }
 
     private void RefreshStatus()
     {
-        EffectsConfig effects = _app.Config.Effects;
-        (ShowStatus, StatusTitle, StatusText, StatusSeverity, ShowUpgrade) = _effects.State switch
+        (ShowStatus, StatusTitle, StatusText, StatusSeverity) = _effects.State switch
         {
-            EffectsState.NeedsPro => (true, Loc.Get("Effects_ProTitle"), Loc.Format("Effects_ProText", _effects.NameOf(_effects.CurrentId)), InfoBarSeverity.Informational, true),
-            EffectsState.LayersOnly => (true, Loc.Get("Effects_LayersOnlyTitle"), Loc.Get("Effects_LayersOnlyText"), InfoBarSeverity.Warning, false),
-            EffectsState.Waiting => (true, Loc.Get("Effects_WaitingTitle"), Loc.Get("Effects_WaitingText"), InfoBarSeverity.Informational, false),
-            EffectsState.Failed => (true, Loc.Get("Effects_FailedTitle"), Loc.Get("Effects_FailedText"), InfoBarSeverity.Error, false),
+            _ when !_app.Features.ScreenEffects => (true, Loc.Get("Effects_ProTitle"), Loc.Get("Effects_ProText"), InfoBarSeverity.Informational),
+            EffectsState.LayersOnly => (true, Loc.Get("Effects_LayersOnlyTitle"), Loc.Get("Effects_LayersOnlyText"), InfoBarSeverity.Warning),
+            EffectsState.Waiting => (true, Loc.Get("Effects_WaitingTitle"), Loc.Get("Effects_WaitingText"), InfoBarSeverity.Informational),
+            EffectsState.Failed => (true, Loc.Get("Effects_FailedTitle"), Loc.Get("Effects_FailedText"), InfoBarSeverity.Error),
             _ when _effects.FromProfile && _app.Current?.ProfileId is { } id && _app.FindProfile(id) is { } profile =>
-                (true, Loc.Get("Effects_FromProfileTitle"), Loc.Format("Effects_FromProfileText", profile.Name), InfoBarSeverity.Informational, false),
-            _ => (false, "", "", InfoBarSeverity.Informational, false),
+                (true, Loc.Get("Effects_FromProfileTitle"), Loc.Format("Effects_FromProfileText", profile.Name), InfoBarSeverity.Informational),
+            _ => (false, "", "", InfoBarSeverity.Informational),
         };
-        if (_loading)
-            return;
+        if (!_loading)
+            SetSilently(() => Enabled = _app.Config.Effects.Enabled && _app.Features.ScreenEffects);
+    }
+
+    private void SetSilently(Action change)
+    {
         bool wasLoading = _loading;
         _loading = true;
-        Enabled = effects.Enabled;
-        _loading = wasLoading;
+        try
+        {
+            change();
+        }
+        finally
+        {
+            _loading = wasLoading;
+        }
     }
 
     private void BuildTiles()
@@ -443,19 +532,13 @@ public sealed partial class EffectsViewModel : PageViewModel
     private void FilterTiles()
     {
         string key = SelectedCategory?.Key ?? AllCategory;
-        bool wasLoading = _loading;
-        _loading = true;
-        try
+        SetSilently(() =>
         {
             Tiles.Clear();
             foreach (LookTile tile in _allTiles.Where(t => key == AllCategory || t.Category == key))
                 Tiles.Add(tile);
             SelectedTile = Tiles.FirstOrDefault(t => t.IsSelected);
-        }
-        finally
-        {
-            _loading = wasLoading;
-        }
+        });
     }
 
     private async Task PreparePreviewsAsync(bool force = false)
@@ -503,7 +586,7 @@ public sealed partial class EffectsViewModel : PageViewModel
             {
                 _renderPending = false;
                 double seconds = (DateTime.UtcNow - _started).TotalSeconds;
-                await _previews.RenderLargeAsync(CurrentLook, seconds, Preview).ConfigureAwait(true);
+                await _previews.RenderLargeAsync(_app.Config.Effects.ShownLook, seconds, Preview).ConfigureAwait(true);
             }
             while (_renderPending && _shown);
         }
@@ -548,45 +631,73 @@ public sealed partial class EffectsViewModel : PageViewModel
         "letterbox" => value <= 0 ? Loc.Get("Effects_Off") : string.Create(CultureInfo.CurrentCulture, $"{value:0.00} : 1"),
         _ => value.ToString(CultureInfo.CurrentCulture),
     };
+
+    internal static SymbolRegular GroupIcon(LookGroup group) => group switch
+    {
+        LookGroup.Colour => SymbolRegular.Color24,
+        LookGroup.Light => SymbolRegular.WeatherSunny24,
+        LookGroup.Lens => SymbolRegular.Camera24,
+        LookGroup.Film => SymbolRegular.Filmstrip24,
+        LookGroup.Retro => SymbolRegular.Games24,
+        LookGroup.Comfort => SymbolRegular.WeatherMoon24,
+        _ => SymbolRegular.Accessibility24,
+    };
 }
 
-/// <summary>One section of the editor, e.g. Colour or Film.</summary>
-public sealed partial class LookGroupViewModel : ObservableObject
+/// <summary>One effect in the current look: its main slider, and its details when opened.</summary>
+public sealed partial class LookPartViewModel : ObservableObject
 {
-    public LookGroupViewModel(EffectsViewModel owner, LookGroup group)
+    private readonly EffectsViewModel _owner;
+
+    public LookPartViewModel(EffectsViewModel owner, LookPart part)
     {
-        Group = group;
-        Name = Loc.Get($"LookGroup_{group}");
-        Icon = group switch
-        {
-            LookGroup.Colour => SymbolRegular.Color24,
-            LookGroup.Light => SymbolRegular.WeatherSunny24,
-            LookGroup.Lens => SymbolRegular.Camera24,
-            LookGroup.Film => SymbolRegular.Filmstrip24,
-            LookGroup.Retro => SymbolRegular.Games24,
-            LookGroup.Comfort => SymbolRegular.WeatherMoon24,
-            _ => SymbolRegular.Accessibility24,
-        };
-        Settings = [.. LookParameters.All.Where(p => p.Group == group).Select(p => new LookSettingViewModel(owner, p))];
+        _owner = owner;
+        Part = part;
+        Name = Loc.Get($"LookPart_{part.Key}");
+        Icon = EffectsViewModel.GroupIcon(part.Group);
+        Main = new LookSettingViewModel(owner, part.Main, Name, canReset: false);
+        Details = [.. part.Details.Select(d => new LookSettingViewModel(owner, d))];
     }
 
-    public LookGroup Group { get; }
+    public LookPart Part { get; }
 
     public string Name { get; }
 
     public SymbolRegular Icon { get; }
 
-    public IReadOnlyList<LookSettingViewModel> Settings { get; }
+    public LookSettingViewModel Main { get; }
 
-    [ObservableProperty] public partial string ChangedText { get; set; } = "";
+    public IReadOnlyList<LookSettingViewModel> Details { get; }
 
-    internal void Refresh(Look look)
+    public bool HasDetails => Details.Count > 0;
+
+    [ObservableProperty] public partial bool IsExpanded { get; set; }
+
+    internal void Refresh(Look look, LookParameter? except)
     {
-        foreach (LookSettingViewModel setting in Settings)
-            setting.Refresh(look);
-        int changed = Settings.Count(s => s.IsChanged);
-        ChangedText = changed == 0 ? "" : Loc.Format("Effects_Changed", changed);
+        Main.Refresh(look, except);
+        foreach (LookSettingViewModel detail in Details)
+            detail.Refresh(look, except);
     }
+
+    [RelayCommand]
+    private void Remove() => _owner.RemovePart(Part);
+
+    [RelayCommand]
+    private void ToggleDetails() => IsExpanded = !IsExpanded;
+}
+
+public sealed record AddPartGroup(string Name, IReadOnlyList<AddPartChoice> Parts);
+
+/// <summary>An entry in the "Add an effect" menu.</summary>
+public sealed partial class AddPartChoice(EffectsViewModel owner, LookPart part)
+{
+    public string Name { get; } = Loc.Get($"LookPart_{part.Key}");
+
+    public string Hint { get; } = Loc.Get($"LookPart_{part.Key}Hint");
+
+    [RelayCommand]
+    private void Add() => owner.AddPart(part);
 }
 
 /// <summary>One setting: a slider, or a list for choices such as the palette.</summary>
@@ -595,11 +706,12 @@ public sealed partial class LookSettingViewModel : ObservableObject
     private readonly EffectsViewModel _owner;
     private bool _refreshing;
 
-    public LookSettingViewModel(EffectsViewModel owner, LookParameter parameter)
+    public LookSettingViewModel(EffectsViewModel owner, LookParameter parameter, string? name = null, bool canReset = true)
     {
         _owner = owner;
         Parameter = parameter;
-        Name = Loc.Get($"LookParam_{parameter.Key}");
+        CanReset = canReset;
+        Name = name ?? Loc.Get($"LookParam_{parameter.Key}");
         Options = parameter.Options?.Select(v => new LookOption(v, EffectsViewModel.OptionName(parameter, v))).ToList() ?? [];
     }
 
@@ -609,8 +721,15 @@ public sealed partial class LookSettingViewModel : ObservableObject
 
     public bool IsChoice => Parameter.Unit == LookUnit.Choice;
 
+    /// <summary>False for an effect's main amount: removing the effect is how it goes back to neutral.</summary>
+    public bool CanReset { get; }
+
+    public bool ShowReset => CanReset && IsChanged;
+
+    public bool IsHue => Parameter.Unit == LookUnit.Degrees;
+
     /// <summary>One step of the slider as a fraction of its length, for the arrow keys.</summary>
-    public double Step => Range > 0 ? Parameter.Step / Range : 0.01;
+    public double Step => Range > 0 ? Math.Max(Parameter.Step / Range, 0.01) : 0.01;
 
     public IReadOnlyList<LookOption> Options { get; }
 
@@ -624,28 +743,32 @@ public sealed partial class LookSettingViewModel : ObservableObject
     [ObservableProperty] public partial LookOption? SelectedOption { get; set; }
     [ObservableProperty] public partial string DisplayValue { get; set; } = "";
     [ObservableProperty] public partial bool IsApplicable { get; set; } = true;
-    [ObservableProperty] public partial bool IsChanged { get; set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowReset))]
+    public partial bool IsChanged { get; set; }
 
-    internal void Refresh(Look look)
+    private double Range => Parameter.Max - Parameter.Min;
+
+    internal void Refresh(Look look, LookParameter? except = null)
     {
+        double value = Parameter.Get(look);
+        IsApplicable = Parameter.Applies(look);
+        IsChanged = Math.Abs(value - Parameter.Default) > 1e-9;
+        if (Parameter == except)
+            return;
         _refreshing = true;
         try
         {
-            double value = Parameter.Get(look);
             Value = value;
             Position = Range > 0 ? (value - Parameter.Min) / Range : 0;
             SelectedOption = Options.FirstOrDefault(o => Math.Abs(o.Value - value) < 1e-6);
             DisplayValue = EffectsViewModel.Format(Parameter, value);
-            IsApplicable = Parameter.Applies(look);
-            IsChanged = Math.Abs(value - Parameter.Default) > 1e-9;
         }
         finally
         {
             _refreshing = false;
         }
     }
-
-    private double Range => Parameter.Max - Parameter.Min;
 
     partial void OnPositionChanged(double value)
     {
@@ -665,7 +788,16 @@ public sealed partial class LookSettingViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Reset() => _owner.SetParameter(Parameter, Parameter.Default);
+    private void Reset()
+    {
+        _owner.SetParameter(Parameter, Parameter.Default);
+        // SetParameter skips refreshing the setting it came from; this one should move.
+        _refreshing = true;
+        Value = Parameter.Default;
+        Position = Range > 0 ? (Parameter.Default - Parameter.Min) / Range : 0;
+        DisplayValue = EffectsViewModel.Format(Parameter, Parameter.Default);
+        _refreshing = false;
+    }
 }
 
 public sealed record LookOption(double Value, string Name)
@@ -701,9 +833,6 @@ public sealed partial class LookTile(EffectsViewModel owner, string id, string n
 
     [ObservableProperty] public partial ImageSource? Thumbnail { get; set; }
     [ObservableProperty] public partial bool IsSelected { get; set; }
-
-    /// <summary>Needs Pro to show on screen (it can still be previewed).</summary>
-    [ObservableProperty] public partial bool IsLocked { get; set; }
 
     [RelayCommand]
     private void Delete() => owner.DeleteSaved(this);

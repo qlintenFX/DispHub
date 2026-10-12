@@ -54,6 +54,11 @@ public sealed partial class LocalizationTests
         }
         foreach (DispHub.Core.Effects.LookParameter parameter in DispHub.Core.Effects.LookParameters.All)
             Assert.Contains($"LookParam_{parameter.Key}", english);
+        foreach (DispHub.Core.Effects.LookPart part in DispHub.Core.Effects.LookParts.All)
+        {
+            Assert.Contains($"LookPart_{part.Key}", english);
+            Assert.Contains($"LookPart_{part.Key}Hint", english);
+        }
         foreach (string value in Enum.GetNames<DispHub.Core.Effects.LookCategory>())
             Assert.Contains($"LookCategory_{value}", english);
         foreach (string value in Enum.GetNames<DispHub.Core.Effects.LookGroup>())

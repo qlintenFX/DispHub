@@ -161,6 +161,13 @@ public sealed class EffectsConfig
 
     public Look Look { get; set; } = new();
 
+    /// <summary>How strongly <see cref="Look"/> shows, from 0 to 1.5 (see <see cref="LookParameters.WithStrength"/>).</summary>
+    public double Strength { get; set; } = 1;
+
+    /// <summary>The look as it shows on screen: <see cref="Look"/> at <see cref="Strength"/>.</summary>
+    [JsonIgnore]
+    public Look ShownLook => LookParameters.WithStrength(Look, Strength);
+
     /// <summary>Looks the user saved, shown with the built-in ones.</summary>
     public List<SavedLook> SavedLooks { get; set; } = [];
 

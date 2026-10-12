@@ -29,21 +29,18 @@
       </StackPanel>
     </StackPanel>
 
-    <Border Style="{StaticResource SettingCard}" Visibility="{Binding CanUpgrade, Converter={StaticResource BoolToVisibility}}">
-      <Grid>
-        <StackPanel Margin="0,0,140,0">
-          <TextBlock FontWeight="SemiBold" Text="DispHub Pro" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Pro_LongPitch}" />
-        </StackPanel>
-        <ui:Button
-          HorizontalAlignment="Right"
-          Appearance="Primary"
-          Command="{Binding UpgradeCommand}"
-          Content="{l:Tr Common_GetPro}" />
-      </Grid>
-    </Border>
+    <ctl:SettingsCard
+      Description="{l:Tr Pro_LongPitch}"
+      Header="DispHub Pro"
+      Icon="Star24"
+      Visibility="{Binding CanUpgrade, Converter={StaticResource BoolToVisibility}}">
+      <ui:Button
+        Appearance="Primary"
+        Command="{Binding UpgradeCommand}"
+        Content="{l:Tr Common_GetPro}" />
+    </ctl:SettingsCard>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_NoteHeader}" />
+    <ctl:SectionHeader Text="{l:Tr About_NoteHeader}" />
     <Border Padding="20,16" Style="{StaticResource SettingCard}">
       <StackPanel>
         <TextBlock TextWrapping="Wrap" Text="{l:Tr About_Note1}" />
@@ -52,76 +49,55 @@
       </StackPanel>
     </Border>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_Credits}" />
-    <Border Style="{StaticResource SettingCard}">
-      <StackPanel>
-        <Grid Margin="0,0,0,10">
-          <StackPanel Margin="0,0,140,0">
-            <TextBlock Text="{l:Tr About_FluentFlyout}" />
-            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_FluentFlyoutHint}" />
-          </StackPanel>
-          <ui:HyperlinkButton
-            HorizontalAlignment="Right"
-            Command="{Binding OpenUrlCommand}"
-            CommandParameter="https://github.com/unchihugo/FluentFlyout"
-            Content="FluentFlyout" />
-        </Grid>
-        <Grid Margin="0,0,0,10">
-          <StackPanel Margin="0,0,140,0">
-            <TextBlock Text="{l:Tr About_WpfUi}" />
-            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_WpfUiHint}" />
-          </StackPanel>
-          <ui:HyperlinkButton
-            HorizontalAlignment="Right"
-            Command="{Binding OpenUrlCommand}"
-            CommandParameter="https://github.com/lepoco/wpfui"
-            Content="WPF UI" />
-        </Grid>
-        <Grid>
-          <StackPanel Margin="0,0,140,0">
-            <TextBlock Text="{l:Tr About_Community}" />
-            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_CommunityHint}" />
-          </StackPanel>
-          <ui:HyperlinkButton
-            HorizontalAlignment="Right"
-            Command="{Binding OpenUrlCommand}"
-            CommandParameter="https://github.com/qlintenFX/DispHub/graphs/contributors"
-            Content="{l:Tr About_Contributors}" />
-        </Grid>
-      </StackPanel>
-    </Border>
+    <ctl:SectionHeader Text="{l:Tr About_Credits}" />
+    <ctl:SettingsCard Description="{l:Tr About_FluentFlyoutHint}" Header="{l:Tr About_FluentFlyout}">
+      <ui:HyperlinkButton
+        Command="{Binding OpenUrlCommand}"
+        CommandParameter="https://github.com/unchihugo/FluentFlyout"
+        Content="FluentFlyout" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard Description="{l:Tr About_WpfUiHint}" Header="{l:Tr About_WpfUi}">
+      <ui:HyperlinkButton
+        Command="{Binding OpenUrlCommand}"
+        CommandParameter="https://github.com/lepoco/wpfui"
+        Content="WPF UI" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard Description="{l:Tr About_CommunityHint}" Header="{l:Tr About_Community}">
+      <ui:HyperlinkButton
+        Command="{Binding OpenUrlCommand}"
+        CommandParameter="https://github.com/qlintenFX/DispHub/graphs/contributors"
+        Content="{l:Tr About_Contributors}" />
+    </ctl:SettingsCard>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_Help}" />
-    <Border Style="{StaticResource SettingCard}">
-      <Grid>
-        <StackPanel Margin="0,0,220,0">
-          <TextBlock Text="{l:Tr About_Report}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_ReportHint}" />
-          <TextBlock Style="{StaticResource Hint}" Text="{Binding CopiedMessage}" />
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-          <ui:Button
-            Margin="0,0,8,0"
-            Command="{Binding CopyDiagnosticsCommand}"
-            Content="{l:Tr About_CopyDiagnostics}" />
-          <ui:Button
-            Command="{Binding OpenUrlCommand}"
-            CommandParameter="https://github.com/qlintenFX/DispHub/issues/new/choose"
-            Content="{l:Tr About_OpenGitHub}" />
-        </StackPanel>
-      </Grid>
-    </Border>
-    <Border Style="{StaticResource SettingCard}">
-      <Grid>
-        <TextBlock VerticalAlignment="Center" Text="{l:Tr About_Logs}" />
+    <ctl:SectionHeader Text="{l:Tr About_Help}" />
+    <ctl:SettingsCard
+      Description="{l:Tr About_ReportHint}"
+      Header="{l:Tr About_Report}"
+      Icon="Bug24"
+      WrapWidth="640">
+      <StackPanel Orientation="Horizontal">
         <ui:Button
-          HorizontalAlignment="Right"
-          Command="{Binding OpenLogsCommand}"
-          Content="{l:Tr About_OpenFolder}" />
-      </Grid>
-    </Border>
+          Margin="0,0,8,0"
+          Command="{Binding CopyDiagnosticsCommand}"
+          Content="{l:Tr About_CopyDiagnostics}" />
+        <ui:Button
+          Command="{Binding OpenUrlCommand}"
+          CommandParameter="https://github.com/qlintenFX/DispHub/issues/new/choose"
+          Content="{l:Tr About_OpenGitHub}" />
+      </StackPanel>
+      <ctl:SettingsCard.Footer>
+        <TextBlock
+          Margin="0,8,0,0"
+          Style="{StaticResource Hint}"
+          Text="{Binding CopiedMessage}"
+          Visibility="{Binding CopiedMessage, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
+      </ctl:SettingsCard.Footer>
+    </ctl:SettingsCard>
+    <ctl:SettingsCard Header="{l:Tr About_Logs}" Icon="Folder24">
+      <ui:Button Command="{Binding OpenLogsCommand}" Content="{l:Tr About_OpenFolder}" />
+    </ctl:SettingsCard>
 
-    <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr About_About}" />
+    <ctl:SectionHeader Text="{l:Tr About_About}" />
     <Border Style="{StaticResource SettingCard}">
       <StackPanel>
         <TextBlock Style="{StaticResource Hint}" Text="{l:Tr About_Licence}" />

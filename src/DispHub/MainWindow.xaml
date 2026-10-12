@@ -23,6 +23,16 @@
   <Window.Resources>
     <DataTemplate x:Key="NavEntry" DataType="{x:Type vm:PageViewModel}">
       <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Style.Triggers>
+              <!-- Icons only: centre them, so the compact bar is symmetrical. -->
+              <DataTrigger Binding="{Binding DataContext.IsNavExpanded, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
         <ui:SymbolIcon FontSize="18" Symbol="{Binding Icon}" />
         <TextBlock
           Margin="12,0,0,0"

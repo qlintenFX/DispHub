@@ -58,17 +58,13 @@
       </Grid>
     </Border>
 
-    <Grid Margin="0,8,0,0">
-      <TextBlock Style="{StaticResource SectionHeader}" Text="{l:Tr Apps_Rules}" />
+    <ctl:SectionHeader Text="{l:Tr Apps_Rules}">
       <ui:Button
-        Margin="0,14,0,0"
-        HorizontalAlignment="Right"
-        VerticalAlignment="Bottom"
         Appearance="Primary"
         Command="{Binding OpenPickerCommand}"
         Content="{l:Tr Apps_AddApp}"
         Icon="{ui:SymbolIcon Add24}" />
-    </Grid>
+    </ctl:SectionHeader>
 
     <!-- Picker: running programs -->
     <Border
@@ -221,7 +217,8 @@
                 Appearance="Transparent"
                 Command="{Binding RemoveCommand}"
                 Icon="{ui:SymbolIcon Delete24}"
-                ToolTip="{l:Tr Apps_Remove}" />
+                ToolTip="{l:Tr Apps_Remove}"
+                AutomationProperties.Name="{l:Tr Apps_Remove}" />
             </Grid>
           </Border>
         </DataTemplate>

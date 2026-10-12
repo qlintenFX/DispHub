@@ -84,6 +84,7 @@ public partial class App : Application
             return;
         }
 
+        ComboBoxClickFix.Register();
         _services = ConfigureServices(args);
         _logger = _services.GetRequiredService<ILogger<App>>();
         _logger.LogInformation("DispHub {Version} starting (packaged: {Packaged})", AboutViewModel.Version, PackageInfo.IsPackaged);
@@ -213,7 +214,9 @@ public partial class App : Application
         QuickPanelViewModel viewModel = _services!.GetRequiredService<QuickPanelViewModel>();
         viewModel.OpenWindow = ShowMainWindow;
         viewModel.Exit = RequestExit;
-        return new QuickPanel(viewModel);
+        var panel = new QuickPanel(viewModel);
+        _services!.GetRequiredService<ThemeService>().AttachFlyout(panel);
+        return panel;
     }
 
     private void HandleActivation(string[] args)

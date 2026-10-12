@@ -61,26 +61,40 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
     }
 }
 
-/// <summary>Applies the Appearance settings: theme, accent colour and window backdrop.</summary>
+/// <summary>
+/// Applies the Appearance settings (theme, accent colour, backdrop) to every DispHub window. WPF-UI only updates
+/// Application.MainWindow, which in DispHub is the hidden host window, so each visible window is registered here.
+/// </summary>
 public sealed class ThemeService
 {
-    private Wpf.Ui.Controls.FluentWindow? _window;
+    private readonly List<(FluentWindow Window, bool Flyout)> _windows = [];
+    private FluentWindow? _main;
     private bool _watching;
     private UiConfig _ui = new();
 
-    /// <summary>Accent colours to choose from: Windows' own palette.</summary>
+    public ThemeService()
+    {
+        // The Windows theme or accent changed while following it.
+        ApplicationThemeManager.Changed += (_, _) => UpdateWindows();
+    }
+
+    /// <summary>Windows' own accent colour palette, in the order Settings shows it.</summary>
     public static IReadOnlyList<string> AccentPalette { get; } =
     [
-        "#0078D4", "#0099BC", "#00B294", "#10893E", "#498205", "#FFB900", "#F7630C", "#DA3B01",
-        "#E81123", "#E3008C", "#B146C2", "#744DA9", "#5D5A58", "#68768A",
+        "#FFB900", "#FF8C00", "#F7630C", "#CA5010", "#DA3B01", "#EF6950", "#D13438", "#FF4343",
+        "#E74856", "#E81123", "#EA005E", "#C30052", "#E3008C", "#BF0077", "#C239B3", "#9A0089",
+        "#0078D4", "#0063B1", "#8E8CD8", "#6B69D6", "#8764B8", "#744DA9", "#B146C2", "#881798",
+        "#0099BC", "#2D7D9A", "#00B7C3", "#038387", "#00B294", "#018574", "#00CC6A", "#10893E",
+        "#7A7574", "#5D5A58", "#68768A", "#515C6B", "#567C73", "#486860", "#498205", "#107C10",
+        "#767676", "#4C4A48", "#69797E", "#4A5459", "#647C64", "#525E54", "#847545", "#7E735F",
     ];
 
     public void Apply(UiConfig ui)
     {
         ArgumentNullException.ThrowIfNull(ui);
         _ui = ui;
-        WindowBackdropType backdrop = Backdrop(ui.Backdrop);
-        bool systemAccent = ui.AccentColor is null;
+        WindowBackdropType backdrop = Backdrop(ui.Backdrop, flyout: false);
+        bool systemAccent = ParseAccent(ui.AccentColor) is null;
         switch (ui.Theme)
         {
             case ThemePreference.Light:
@@ -93,42 +107,81 @@ public sealed class ThemeService
                 ApplicationThemeManager.ApplySystemTheme(updateAccent: systemAccent);
                 break;
         }
-        if (ui.AccentColor is { } hex && System.Windows.Media.ColorConverter.ConvertFromString(hex) is System.Windows.Media.Color accent)
+        if (ParseAccent(ui.AccentColor) is { } accent)
             ApplicationAccentColorManager.Apply(accent, ApplicationThemeManager.GetAppTheme());
-
-        if (_window is not { IsLoaded: true })
-            return;
-        if (_window.WindowBackdropType != backdrop)
-            _window.WindowBackdropType = backdrop;
+        UpdateWindows();
 
         // Follow live Windows theme changes only when the user chose "System". The watcher needs a loaded window.
+        if (_main is not { IsLoaded: true })
+            return;
         if (_watching)
         {
-            SystemThemeWatcher.UnWatch(_window);
+            SystemThemeWatcher.UnWatch(_main);
             _watching = false;
         }
         if (ui.Theme == ThemePreference.System)
         {
-            SystemThemeWatcher.Watch(_window, backdrop, updateAccents: systemAccent);
+            SystemThemeWatcher.Watch(_main, backdrop, updateAccents: systemAccent);
             _watching = true;
         }
     }
 
-    /// <summary>Call once the window has loaded.</summary>
-    public void Attach(Wpf.Ui.Controls.FluentWindow window, UiConfig ui)
+    /// <summary>The main window; call once it has loaded.</summary>
+    public void Attach(FluentWindow window, UiConfig ui)
     {
-        _window = window;
-        window.WindowBackdropType = Backdrop(ui.Backdrop);
+        _main = window;
+        Register(window, flyout: false);
         Apply(ui);
+    }
+
+    /// <summary>A panel such as the quick panel: acrylic like Windows' own flyouts, unless backdrops are off.</summary>
+    public void AttachFlyout(FluentWindow window)
+    {
+        Register(window, flyout: true);
+        if (window.IsLoaded)
+            UpdateWindows();
+        else
+            window.Loaded += (_, _) => UpdateWindows();
     }
 
     public void Reapply() => Apply(_ui);
 
-    private static WindowBackdropType Backdrop(Core.Model.WindowBackdrop backdrop) => backdrop switch
+    /// <summary>A colour from settings, or null for none or an invalid one.</summary>
+    public static System.Windows.Media.Color? ParseAccent(string? hex)
     {
-        Core.Model.WindowBackdrop.MicaAlt => WindowBackdropType.Tabbed,
-        Core.Model.WindowBackdrop.Acrylic => WindowBackdropType.Acrylic,
+        if (hex is null || !System.Text.RegularExpressions.Regex.IsMatch(hex, "^#[0-9A-Fa-f]{6}$"))
+            return null;
+        return (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hex);
+    }
+
+    private void Register(FluentWindow window, bool flyout)
+    {
+        if (_windows.Any(w => w.Window == window))
+            return;
+        _windows.Add((window, flyout));
+        window.Closed += (_, _) => _windows.RemoveAll(w => w.Window == window);
+    }
+
+    private void UpdateWindows()
+    {
+        ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
+        foreach ((FluentWindow window, bool flyout) in _windows)
+        {
+            if (new WindowInteropHelper(window).Handle == 0)
+                continue;
+            WindowBackdropType backdrop = Backdrop(_ui.Backdrop, flyout);
+            if (window.WindowBackdropType != backdrop)
+                window.WindowBackdropType = backdrop;
+            // Sets the backdrop and, just as important, the dark title bar and dark backdrop tint.
+            WindowBackgroundManager.UpdateBackground(window, theme, backdrop);
+        }
+    }
+
+    private static WindowBackdropType Backdrop(Core.Model.WindowBackdrop backdrop, bool flyout) => backdrop switch
+    {
         Core.Model.WindowBackdrop.Solid => WindowBackdropType.None,
+        _ when flyout => WindowBackdropType.Acrylic,
+        Core.Model.WindowBackdrop.MicaAlt => WindowBackdropType.Tabbed,
         _ => WindowBackdropType.Mica,
     };
 }

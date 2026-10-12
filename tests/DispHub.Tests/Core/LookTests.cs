@@ -201,19 +201,76 @@ public sealed class LookTests
     }
 
     [Fact]
-    public void FreeTier_ShowsComfortAndAccessibilityLooksOnly()
+    public void ScreenEffects_ArePro()
     {
         var free = new FeatureGate(IsPro: false);
         var pro = new FeatureGate(IsPro: true);
 
-        Assert.True(free.CanShowLook(Looks.Find("dim")));
-        Assert.True(free.CanShowLook(Looks.Find("redGreenAssist")));
-        Assert.False(free.CanShowLook(Looks.Find("vhs")));
-        Assert.False(free.CanShowLook(null));
-        Assert.True(pro.CanShowLook(Looks.Find("vhs")));
-        Assert.True(pro.CanShowLook(null));
+        Assert.False(free.ScreenEffects);
         Assert.False(free.SavedLooks);
+        Assert.True(pro.ScreenEffects);
+        Assert.True(pro.SavedLooks);
     }
+
+    [Fact]
+    public void Strength_ScalesAmountsButKeepsShapesAndChoices()
+    {
+        Look gameBoy = Looks.Find("gameBoy")!.Look with { Grain = 0.4, GrainSize = 2.5 };
+
+        Look half = LookParameters.WithStrength(gameBoy, 0.5);
+
+        Assert.Equal(0.2, half.Grain, 6);
+        Assert.Equal(2.5, half.GrainSize);
+        Assert.Equal(RetroPalette.GameBoy, half.Palette);
+        Assert.Equal(1 + ((gameBoy.Contrast - 1) * 0.5), half.Contrast, 6);
+        Assert.Same(gameBoy, LookParameters.WithStrength(gameBoy, 1));
+        Assert.Equal(Look.Neutral, LookParameters.WithStrength(gameBoy, 0));
+    }
+
+    [Fact]
+    public void Strength_IsWhatTheEffectsPageShows()
+    {
+        var effects = new EffectsConfig { Enabled = true, Look = new Look { Grain = 0.6 }, Strength = 0.5 };
+
+        Assert.Equal(0.3, LookLibrary.Effective(effects, null, paused: false).Look!.Grain, 6);
+    }
+
+    [Fact]
+    public void Parts_CoverEverySettingOutsideTheBasics()
+    {
+        var covered = LookParts.Basics.Select(p => p.Key)
+            .Concat(LookParts.All.Select(p => p.Main.Key))
+            .Concat(LookParts.All.SelectMany(p => p.Details).Select(p => p.Key))
+            .ToHashSet();
+
+        Assert.All(LookParameters.All, p => Assert.Contains(p.Key, covered));
+        Assert.Equal(LookParts.All.Count, LookParts.All.Select(p => p.Key).Distinct().Count());
+    }
+
+    [Fact]
+    public void Parts_AddAndRemoveCleanly()
+    {
+        foreach (LookPart part in LookParts.All)
+        {
+            Look added = part.Add(Look.Neutral);
+            Assert.True(part.IsIn(added), part.Key);
+            Assert.Equal([part], LookParts.In(added));
+            Assert.Equal(Look.Neutral, part.Remove(added));
+        }
+    }
+
+    [Fact]
+    public void Parts_KeepSharedDetailsWhileAnotherPartUsesThem()
+    {
+        Look look = new Look { Grain = 0.3, Flicker = 0.2, GrainFps = 12 };
+
+        Look withoutGrain = LookParts.Find("grain")!.Remove(look);
+
+        Assert.Equal(0, withoutGrain.Grain);
+        Assert.Equal(12, withoutGrain.GrainFps);
+        Assert.Equal(Look.Neutral.GrainFps, LookParts.Find("flicker")!.Remove(withoutGrain).GrainFps);
+    }
+
 
     [Fact]
     public void Normalizer_RepairsEffects()
@@ -231,10 +288,15 @@ public sealed class LookTests
                 new SavedLook { Id = id, Name = new string('x', 80) },
             ],
         };
+        config.Effects.Strength = double.NaN;
+        config.Ui.Backdrop = WindowBackdrop.Acrylic;
         config.Profiles[0].Effect = "saved:missing";
         config.Profiles[1].Effect = LookLibrary.None;
 
         ConfigNormalizer.Normalize(config);
+
+        Assert.Equal(1, config.Effects.Strength);
+        Assert.Equal(WindowBackdrop.Mica, config.Ui.Backdrop);
 
         EffectsConfig effects = config.Effects;
         Assert.Equal(1, effects.Look.Grain);

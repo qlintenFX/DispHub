@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DispHub.Core.Color;
+using DispHub.Core.Effects;
 using DispHub.Core.Model;
 using DispHub.Core.Rules;
 using DispHub.Localization;
@@ -47,8 +48,11 @@ public sealed partial class QuickPanelViewModel : ObservableObject
     [ObservableProperty] public partial string AdjustingText { get; set; } = "";
     [ObservableProperty] public partial double Brightness { get; set; }
     [ObservableProperty] public partial double Warmth { get; set; }
-    [ObservableProperty] public partial bool EffectsOn { get; set; }
-    [ObservableProperty] public partial string EffectsText { get; set; } = "";
+    /// <summary>Looks to pick from: off, then the Effects page's own look, saved looks and the built-in ones.</summary>
+    public ObservableCollection<QuickLook> Looks { get; } = [];
+
+    [ObservableProperty] public partial bool ShowEffects { get; set; }
+    [ObservableProperty] public partial QuickLook? Look { get; set; }
 
     public void Refresh()
     {
@@ -79,8 +83,8 @@ public sealed partial class QuickPanelViewModel : ObservableObject
             Brightness = active?.Color.Brightness ?? 0;
             Warmth = active?.Color.TemperatureK ?? ColorSettings.NeutralTemperatureK;
 
-            EffectsOn = config.Effects.Enabled;
-            EffectsText = config.Effects.Look.IsEmpty ? Loc.Get("Effects_NoLook") : _effects.NameOf(config.Effects.Preset);
+            ShowEffects = config.Ui.ShowEffects && _app.Features.ScreenEffects;
+            RefreshLooks(config.Effects);
         }
         finally
         {
@@ -98,12 +102,41 @@ public sealed partial class QuickPanelViewModel : ObservableObject
 
     partial void OnWarmthChanged(double value) => Adjust(c => c with { TemperatureK = (int)(Math.Round(value / 100) * 100) });
 
-    partial void OnEffectsOnChanged(bool value)
+    partial void OnLookChanged(QuickLook? value)
     {
-        if (_loading || value == _app.Config.Effects.Enabled)
+        if (_loading || value is null)
             return;
-        _effects.Toggle();
-        Refresh();
+        EffectsConfig effects = _app.Config.Effects;
+        if (value.Id is null)
+        {
+            effects.Enabled = false;
+        }
+        else
+        {
+            if (!value.IsCurrent && LookLibrary.Find(effects, value.Id) is { } look)
+                (effects.Preset, effects.Look, effects.Strength) = (value.Id, look, 1);
+            effects.Enabled = true;
+        }
+        _effects.Apply();
+        _app.EffectsChanged();
+    }
+
+    private void RefreshLooks(EffectsConfig effects)
+    {
+        Looks.Clear();
+        Looks.Add(new QuickLook(null, Loc.Get("Quick_EffectOff")));
+        // A look changed on the Effects page shows first, as it is now.
+        bool changed = !effects.Look.IsEmpty &&
+            (LookLibrary.Find(effects, effects.Preset) != effects.Look || Math.Abs(effects.Strength - 1) > 0.005);
+        QuickLook? current = changed ? new QuickLook("", Loc.Format("Quick_EffectChanged", _effects.NameOf(effects.Preset)), IsCurrent: true) : null;
+        if (current is not null)
+            Looks.Add(current);
+        foreach (SavedLook saved in effects.SavedLooks)
+            Looks.Add(new QuickLook(saved.Key, saved.Name));
+        foreach (LookPreset preset in Core.Effects.Looks.All)
+            Looks.Add(new QuickLook(preset.Id, Loc.Get($"Look_{preset.Id}")));
+        Look = !effects.Enabled || effects.Look.IsEmpty ? Looks[0]
+            : current ?? Looks.FirstOrDefault(l => l.Id is not null && l.Id == effects.Preset) ?? Looks[0];
     }
 
     internal void Activate(Guid profileId) => _app.ActivateProfile(profileId, ChangeSource.Tray);
@@ -128,6 +161,13 @@ public sealed partial class QuickPanelViewModel : ObservableObject
             return;
         _app.UpdateProfileColor(id, change(profile.Color).Clamp());
     }
+}
+
+/// <param name="Id">The look's id; null for off.</param>
+/// <param name="IsCurrent">The Effects page's look as changed there, rather than a stored look.</param>
+public sealed record QuickLook(string? Id, string Name, bool IsCurrent = false)
+{
+    public override string ToString() => Name;
 }
 
 public sealed partial class QuickProfile(QuickPanelViewModel owner, Guid id, string name, System.Windows.Media.ImageSource preview, bool isActive) : ObservableObject

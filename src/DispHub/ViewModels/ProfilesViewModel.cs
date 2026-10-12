@@ -425,6 +425,10 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     [ObservableProperty]
     public partial EffectChoice? Effect { get; set; }
 
+    /// <summary>Screen effects are turned on in Settings.</summary>
+    [ObservableProperty]
+    public partial bool ShowEffects { get; set; }
+
     partial void OnEffectChanged(EffectChoice? value)
     {
         if (!_loading && HasProfile && value is not null)
@@ -475,6 +479,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             Vibrance = color.Vibrance;
             Hotkey = profile.Hotkey;
             HotkeyError = Localize(app.HotkeyFailure(profile.Id));
+            ShowEffects = app.Config.Ui.ShowEffects;
             RefreshEffects(profile);
             OnPropertyChanged(nameof(VibranceSupported));
             OnPropertyChanged(nameof(VibranceHelp));

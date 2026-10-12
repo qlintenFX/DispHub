@@ -34,6 +34,7 @@ public sealed class AppController : IDisposable
     public const string NextAction = "next";
     public const string PreviousAction = "previous";
     public const string EffectsAction = "effects";
+    public const string QuickPanelAction = "panel";
     private const string ProfileActionPrefix = "profile:";
     private static readonly TimeSpan SaveDelay = TimeSpan.FromMilliseconds(500);
 
@@ -120,6 +121,9 @@ public sealed class AppController : IDisposable
 
     /// <summary>The effects hotkey was pressed.</summary>
     public event EventHandler? EffectsToggleRequested;
+
+    /// <summary>The quick panel hotkey was pressed.</summary>
+    public event EventHandler? QuickPanelRequested;
 
     public void Start(IHotkeyRegistrar hotkeys)
     {
@@ -302,6 +306,9 @@ public sealed class AppController : IDisposable
             case EffectsAction:
                 Config.Hotkeys.ToggleEffects = text;
                 break;
+            case QuickPanelAction:
+                Config.Hotkeys.QuickPanel = text;
+                break;
             default:
                 return null;
         }
@@ -318,6 +325,9 @@ public sealed class AppController : IDisposable
         SyncHotkeys();
         ConfigChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    /// <summary>Registers hotkeys again after a setting that decides which exist (screen effects) changed.</summary>
+    public void RefreshHotkeys() => SyncHotkeys();
 
     /// <summary>For settings changed directly on <see cref="Config"/> by a view model.</summary>
     public void SettingsChanged()
@@ -435,6 +445,9 @@ public sealed class AppController : IDisposable
             case EffectsAction:
                 EffectsToggleRequested?.Invoke(this, EventArgs.Empty);
                 break;
+            case QuickPanelAction:
+                QuickPanelRequested?.Invoke(this, EventArgs.Empty);
+                break;
             default:
                 if (action.StartsWith(ProfileActionPrefix, StringComparison.Ordinal) &&
                     Guid.TryParse(action.AsSpan(ProfileActionPrefix.Length), out Guid id))
@@ -459,7 +472,9 @@ public sealed class AppController : IDisposable
         AddAction(desired, PauseAction, Config.Hotkeys.TogglePause);
         AddAction(desired, NextAction, Config.Hotkeys.NextProfile);
         AddAction(desired, PreviousAction, Config.Hotkeys.PreviousProfile);
-        AddAction(desired, EffectsAction, Config.Hotkeys.ToggleEffects);
+        if (Config.Ui.ShowEffects)
+            AddAction(desired, EffectsAction, Config.Hotkeys.ToggleEffects);
+        AddAction(desired, QuickPanelAction, Config.Hotkeys.QuickPanel);
 
         HotkeyFailures = _hotkeys.Sync(desired);
         foreach ((string action, string reason) in HotkeyFailures)

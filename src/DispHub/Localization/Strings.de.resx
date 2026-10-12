@@ -91,68 +91,11 @@
   <data name="About_WpfUiHint" xml:space="preserve">
     <value>Die Fluent-Steuerelemente, das Mica-Fenster und das Infobereichssymbol.</value>
   </data>
-  <data name="Automation_AddApp" xml:space="preserve">
-    <value>App hinzufügen…</value>
-  </data>
-  <data name="Automation_AddRunningApp" xml:space="preserve">
-    <value>Laufende App hinzufügen</value>
-  </data>
-  <data name="Automation_AddSlot" xml:space="preserve">
-    <value>Zeitfenster hinzufügen</value>
-  </data>
-  <data name="Automation_AppsHeader" xml:space="preserve">
-    <value>Profile pro App</value>
-  </data>
-  <data name="Automation_AppsHint" xml:space="preserve">
-    <value>Solange die App im Vordergrund ist, gilt ihr Profil. Wenn du wechselst, kehrt dein normales Profil zurück.</value>
-  </data>
-  <data name="Automation_ChooseProgram" xml:space="preserve">
-    <value>Programm auswählen</value>
-  </data>
-  <data name="Automation_Fade" xml:space="preserve">
-    <value>Übergang</value>
-  </data>
-  <data name="Automation_From" xml:space="preserve">
-    <value>Ab</value>
-  </data>
-  <data name="Automation_Minutes" xml:space="preserve">
-    <value>Min.</value>
-  </data>
-  <data name="Automation_NoRunningApps" xml:space="preserve">
-    <value>Keine Apps mit Fenster geöffnet</value>
-  </data>
-  <data name="Automation_ProExample" xml:space="preserve">
-    <value>Zum Beispiel: mehr Farbintensität, sobald dein Spiel im Vordergrund ist, und um 22:00 Uhr ein sanfter Übergang zu einem warmen Nachtprofil.</value>
-  </data>
-  <data name="Automation_ProTitle" xml:space="preserve">
-    <value>Automatisierung gehört zu DispHub Pro</value>
-  </data>
-  <data name="Automation_ProgramsFilter" xml:space="preserve">
-    <value>Programme (*.exe)|*.exe</value>
-  </data>
-  <data name="Automation_ScheduleHeader" xml:space="preserve">
-    <value>Zeitplan</value>
-  </data>
-  <data name="Automation_ScheduleHint" xml:space="preserve">
-    <value>Jedes Zeitfenster beginnt zu seiner Uhrzeit und gilt bis zum nächsten. Übergänge blenden sanft vom vorherigen Profil über.</value>
-  </data>
-  <data name="Automation_ScheduleToggle" xml:space="preserve">
-    <value>Profile zu festen Zeiten wechseln</value>
-  </data>
-  <data name="Automation_Subtitle" xml:space="preserve">
-    <value>Wechsle Profile automatisch, wenn du eine App öffnest oder zu festen Uhrzeiten.</value>
-  </data>
-  <data name="Automation_Title" xml:space="preserve">
-    <value>Automatisierung</value>
-  </data>
   <data name="Common_Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
   <data name="Common_Cancel" xml:space="preserve">
     <value>Abbrechen</value>
-  </data>
-  <data name="Common_Enabled" xml:space="preserve">
-    <value>Aktiviert</value>
   </data>
   <data name="Common_GetPro" xml:space="preserve">
     <value>Pro holen</value>
@@ -162,9 +105,6 @@
   </data>
   <data name="Common_On" xml:space="preserve">
     <value>Ein</value>
-  </data>
-  <data name="Common_Remove" xml:space="preserve">
-    <value>Entfernen</value>
   </data>
   <data name="Control_Active" xml:space="preserve">
     <value>Ein</value>
@@ -214,38 +154,8 @@
   <data name="Hotkey_Refused" xml:space="preserve">
     <value>Windows hat diese Tastenkombination abgelehnt</value>
   </data>
-  <data name="Monitor_Applied" xml:space="preserve">
-    <value>Farben angewendet</value>
-  </data>
-  <data name="Monitor_Hdr" xml:space="preserve">
-    <value>HDR an (Gamma nicht verfügbar)</value>
-  </data>
-  <data name="Monitor_Limited" xml:space="preserve">
-    <value>Von Windows begrenzt</value>
-  </data>
-  <data name="Monitor_Main" xml:space="preserve">
-    <value>{0} (Hauptbildschirm)</value>
-  </data>
-  <data name="Monitor_NoVibrance" xml:space="preserve">
-    <value>Keine Farbintensität</value>
-  </data>
-  <data name="Monitor_Original" xml:space="preserve">
-    <value>Originalfarben</value>
-  </data>
-  <data name="Monitor_Unsupported" xml:space="preserve">
-    <value>Gamma nicht unterstützt</value>
-  </data>
-  <data name="Monitor_Vibrance" xml:space="preserve">
-    <value>Farbintensität unterstützt</value>
-  </data>
   <data name="Nav_About" xml:space="preserve">
     <value>Info</value>
-  </data>
-  <data name="Nav_Automation" xml:space="preserve">
-    <value>Automatisierung</value>
-  </data>
-  <data name="Nav_Presets" xml:space="preserve">
-    <value>Voreinstellungen</value>
   </data>
   <data name="Nav_Profiles" xml:space="preserve">
     <value>Profile</value>
@@ -274,15 +184,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   <data name="Preset_InvalidLink" xml:space="preserve">
     <value>Dieser Link ist keine gültige DispHub-Voreinstellung.</value>
   </data>
-  <data name="Presets_Added" xml:space="preserve">
-    <value>„{0}“ hinzugefügt und aktiviert. Feinabstimmung auf der Seite „Profile“.</value>
-  </data>
-  <data name="Presets_CopyLink" xml:space="preserve">
-    <value>Freigabelink kopieren</value>
-  </data>
-  <data name="Presets_Gallery" xml:space="preserve">
-    <value>Galerie</value>
-  </data>
   <data name="Presets_ImportHint" xml:space="preserve">
     <value>Füge einen geteilten Link ein (er beginnt mit disphub://preset). Um deine eigenen zu teilen, öffne ein Profil und klicke auf „Teilen“.</value>
   </data>
@@ -291,15 +192,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
     <value>Das sieht nicht nach einem DispHub-Link aus. Er sollte mit disphub://preset beginnen.</value>
-  </data>
-  <data name="Presets_Submit" xml:space="preserve">
-    <value>Eigene Voreinstellung einreichen</value>
-  </data>
-  <data name="Presets_Subtitle" xml:space="preserve">
-    <value>Fertige Looks aus der Community. Füge einen hinzu, um ihn sofort auszuprobieren – er wird zu einem Profil, das du anpassen kannst.</value>
-  </data>
-  <data name="Presets_Title" xml:space="preserve">
-    <value>Voreinstellungen</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Profile pro App, Zeitpläne mit Übergängen, Einstellungen pro Bildschirm und unbegrenzt viele Profile. Einmalkauf.</value>
@@ -412,15 +304,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   <data name="Settings_AllowFullRange" xml:space="preserve">
     <value>Vollen Bereich zulassen</value>
   </data>
-  <data name="Settings_Displays" xml:space="preserve">
-    <value>Bildschirme</value>
-  </data>
-  <data name="Settings_FullRange" xml:space="preserve">
-    <value>Voller Farbbereich</value>
-  </data>
-  <data name="Settings_FullRangeHint" xml:space="preserve">
-    <value>Windows begrenzt, wie stark sich Farben ändern dürfen. Das betrifft vor allem sehr warme Nachtprofile. Zum Aufheben ist einmalig eine Administratorgenehmigung nötig.</value>
-  </data>
   <data name="Settings_General" xml:space="preserve">
     <value>Allgemein</value>
   </data>
@@ -447,9 +330,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   </data>
   <data name="Settings_LanguageWindows" xml:space="preserve">
     <value>Wie Windows</value>
-  </data>
-  <data name="Settings_LeaveAlone" xml:space="preserve">
-    <value>Diesen Bildschirm nicht ändern</value>
   </data>
   <data name="Settings_Next" xml:space="preserve">
     <value>Nächstes Profil</value>

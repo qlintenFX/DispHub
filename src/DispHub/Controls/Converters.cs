@@ -70,3 +70,15 @@ public sealed class OnOffConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }
+
+/// <summary>Visible for a count of zero (an empty state), collapsed otherwise.</summary>
+public sealed class ZeroToVisibleConverter : IValueConverter
+{
+    public static ZeroToVisibleConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is 0 ? Visibility.Visible : Visibility.Collapsed;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
