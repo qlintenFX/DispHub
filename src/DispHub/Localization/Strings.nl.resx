@@ -16,9 +16,6 @@
   <data name="About_Contributors" xml:space="preserve">
     <value>Bijdragers</value>
   </data>
-  <data name="About_Copied" xml:space="preserve">
-    <value>Gekopieerd. Plak het in je GitHub-issue.</value>
-  </data>
   <data name="About_CopyDiagnostics" xml:space="preserve">
     <value>Diagnostische gegevens kopiëren</value>
   </data>
@@ -228,9 +225,6 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   </data>
   <data name="Profiles_HotkeyInUse" xml:space="preserve">
     <value>Deze sneltoets wordt gebruikt door een andere app</value>
-  </data>
-  <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Link gekopieerd. Iedereen met DispHub kan hem openen om dit profiel toe te voegen.</value>
   </data>
   <data name="Profiles_MoveLeft" xml:space="preserve">
     <value>Naar links</value>

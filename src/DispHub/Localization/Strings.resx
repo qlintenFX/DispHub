@@ -17,7 +17,7 @@
     <value>Contributors</value>
   </data>
   <data name="About_Copied" xml:space="preserve">
-    <value>Copied. Paste it into your GitHub issue.</value>
+    <value>Copied</value>
   </data>
   <data name="About_CopyDiagnostics" xml:space="preserve">
     <value>Copy diagnostics</value>
@@ -233,7 +233,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>This hotkey is in use by another app</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Link copied. Anyone with DispHub can open it to add this profile.</value>
+    <value>Copies a link: anyone with DispHub can open it to add this profile.</value>
   </data>
   <data name="Profiles_MoveLeft" xml:space="preserve">
     <value>Move left</value>
@@ -1819,5 +1819,11 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Onboarding_Done" xml:space="preserve">
     <value>Start using DispHub</value>
+  </data>
+  <data name="Effects_OffText" xml:space="preserve">
+    <value>Screen effects come back when DispHub is turned on with the power button.</value>
+  </data>
+  <data name="Schedule_StatusDispHubOff" xml:space="preserve">
+    <value>DispHub is off, so the schedule waits. Turn it on with the power button.</value>
   </data>
 </root>

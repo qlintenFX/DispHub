@@ -466,7 +466,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             if (profile is null)
                 return;
             if (_profileId != profile.Id)
-                ShareMessage = null;
+                LinkCopied = false;
             _profileId = profile.Id;
             Name = profile.Name;
             RefreshDisplays();
@@ -499,8 +499,9 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             app.RenameProfile(_profileId, value);
     }
 
+    /// <summary>The share link was just copied: the button says so for a moment.</summary>
     [ObservableProperty]
-    public partial string? ShareMessage { get; set; }
+    public partial bool LinkCopied { get; set; }
 
     [RelayCommand]
     private void Share()
@@ -508,7 +509,14 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
         if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
             return;
         System.Windows.Clipboard.SetText(new Core.Sharing.SharedPreset(profile.Name, profile.Color).ToLink());
-        ShareMessage = Loc.Get("Profiles_LinkCopied");
+        _ = FlashLinkCopiedAsync();
+    }
+
+    private async Task FlashLinkCopiedAsync()
+    {
+        LinkCopied = true;
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        LinkCopied = false;
     }
 
     [RelayCommand]

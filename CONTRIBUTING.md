@@ -40,6 +40,7 @@ Where things live is described in [CLAUDE.md](CLAUDE.md), which doubles as the p
 
 ## Licensing of contributions
 
-DispHub is licensed under GPL-3.0-or-later and is also distributed through the Microsoft Store.
-By submitting a contribution you agree that it is licensed under GPL-3.0-or-later and that the maintainer may
-also distribute it as part of DispHub under other terms, such as the Microsoft Store's.
+DispHub is licensed under GPL-3.0-or-later and is also sold through the Microsoft Store. Before your first pull
+request is merged, a bot asks you to agree to the short [contributor licence agreement](docs/CLA.md) by leaving a
+comment. You keep the copyright in your work; the agreement lets DispHub ship it in the Store as well, and
+DispHub's source stays open either way.

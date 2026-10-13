@@ -37,8 +37,9 @@ public sealed partial class AboutViewModel : PageViewModel
     [ObservableProperty]
     public partial bool CanUpgrade { get; set; }
 
+    /// <summary>Diagnostics were just copied: the button says so for a moment.</summary>
     [ObservableProperty]
-    public partial string? CopiedMessage { get; set; }
+    public partial bool Copied { get; set; }
 
     [RelayCommand]
     private Task Upgrade() => _upgrade.PurchaseAsync();
@@ -57,7 +58,14 @@ public sealed partial class AboutViewModel : PageViewModel
     private void CopyDiagnostics()
     {
         Clipboard.SetText(Diagnostics.Describe(_app.Monitors, Version));
-        CopiedMessage = Loc.Get("About_Copied");
+        _ = FlashCopiedAsync();
+    }
+
+    private async Task FlashCopiedAsync()
+    {
+        Copied = true;
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        Copied = false;
     }
 
     private void RefreshLicense()

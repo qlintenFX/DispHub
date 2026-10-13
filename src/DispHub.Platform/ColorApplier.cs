@@ -125,6 +125,7 @@ public sealed class ColorApplier : IColorApplier
     private bool _dimmedByOther;
     private DateTimeOffset _fastUntil;
     private DateTimeOffset _lastRampCheck;
+    private DateTimeOffset _lastVibranceProbe;
     private DateTimeOffset _backoffUntil;
     private RampLimits _limits = RampLimits.Default;
 
@@ -477,11 +478,18 @@ public sealed class ColorApplier : IColorApplier
             if (entry.Ramp is not null && monitor is not { IsHdr: true })
             {
                 GammaRamp ramp = GammaRamp.FromBase64(entry.Ramp) ?? GammaRamp.Identity();
-                ok &= _backend.SetRamp(deviceName, ramp) != GammaResult.Failed;
+                if (_backend.SetRamp(deviceName, ramp) == GammaResult.Failed)
+                {
+                    _logger.LogWarning("Could not restore the original colours on {Display}", deviceName);
+                    ok = false;
+                }
             }
 
-            if (entry.VibranceLevel is { } level && _backend.Vibrance is { } vibrance)
-                ok &= vibrance.SetLevel(deviceName, level);
+            if (entry.VibranceLevel is { } level && _backend.Vibrance is { } vibrance && !vibrance.SetLevel(deviceName, level))
+            {
+                _logger.LogWarning("Could not restore the original {Vendor} vibrance on {Display}", vibrance.Vendor, deviceName);
+                ok = false;
+            }
         }
 
         _journal = new RestoreJournalData();
@@ -520,6 +528,8 @@ public sealed class ColorApplier : IColorApplier
             // Back at the PC. A dimmer writes its own plain ramp right now: watch closely for a moment.
             _wasIdle = false;
             _fastUntil = now + FastWindow;
+            if (ProbeVibranceAgain(now) && !_dimmedByOther)
+                ApplyAll(requested, force: false);
             if (_dimmedByOther)
             {
                 _dimmedByOther = false;
@@ -582,6 +592,23 @@ public sealed class ColorApplier : IColorApplier
 
         _logger.LogInformation("Display colours were reset externally; re-applying");
         ApplyAll(requested, force: true);
+    }
+
+    /// <summary>
+    /// Graphics drivers can refuse to report vibrance while the laptop has dimmed the screen (Intel's does), so a
+    /// display that started without it gets another look when someone is back, at most every ten minutes.
+    /// </summary>
+    private bool ProbeVibranceAgain(DateTimeOffset now)
+    {
+        if (_backend.Vibrance is not { } vibrance || now - _lastVibranceProbe < TimeSpan.FromMinutes(10))
+            return false;
+        if (_monitors.All(m => vibrance.GetRange(m.DeviceName) is not null))
+            return false;
+        _lastVibranceProbe = now;
+        vibrance.Refresh(_monitors);
+        _appliedVibrance.Clear();
+        PublishStatus();
+        return true;
     }
 
     private void SaveJournal()

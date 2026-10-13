@@ -16,9 +16,6 @@
   <data name="About_Contributors" xml:space="preserve">
     <value>Mitwirkende</value>
   </data>
-  <data name="About_Copied" xml:space="preserve">
-    <value>Kopiert. Füge es in dein GitHub-Issue ein.</value>
-  </data>
   <data name="About_CopyDiagnostics" xml:space="preserve">
     <value>Diagnosedaten kopieren</value>
   </data>
@@ -228,9 +225,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   </data>
   <data name="Profiles_HotkeyInUse" xml:space="preserve">
     <value>Diese Tastenkombination wird von einer anderen App verwendet</value>
-  </data>
-  <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Link kopiert. Jeder mit DispHub kann ihn öffnen, um dieses Profil hinzuzufügen.</value>
   </data>
   <data name="Profiles_MoveLeft" xml:space="preserve">
     <value>Nach links</value>

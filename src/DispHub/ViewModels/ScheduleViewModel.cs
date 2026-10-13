@@ -47,6 +47,7 @@ public sealed partial class ScheduleViewModel : PageViewModel
                 Load();
         };
         _app.StateChanged += (_, _) => RefreshStatus();
+        _app.PowerChanged += (_, _) => RefreshStatus();
         Load();
     }
 
@@ -397,6 +398,11 @@ public sealed partial class ScheduleViewModel : PageViewModel
     private void RefreshStatus()
     {
         ScheduleConfig schedule = _app.Config.Schedule;
+        if (_app.Config.IsOff)
+        {
+            StatusText = Loc.Get("Schedule_StatusDispHubOff");
+            return;
+        }
         if (!schedule.Enabled || !IsPro || schedule.Slots.Count == 0)
         {
             StatusText = Loc.Get(IsPro ? "Schedule_StatusOff" : "Schedule_StatusPro");

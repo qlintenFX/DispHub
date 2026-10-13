@@ -72,6 +72,7 @@ public sealed partial class EffectsViewModel : PageViewModel
             LinkCopied = false;
         };
         _effects.Changed += (_, _) => RefreshStatus();
+        _app.PowerChanged += (_, _) => RefreshStatus();
         _app.ConfigChanged += (_, _) =>
         {
             if (!_loading)
@@ -508,6 +509,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         (ShowStatus, StatusTitle, StatusText, StatusSeverity) = _effects.State switch
         {
             _ when !_app.Features.ScreenEffects => (true, Loc.Get("Effects_ProTitle"), Loc.Get("Effects_ProText"), InfoBarSeverity.Informational),
+            _ when _app.Config.IsOff => (true, Loc.Get("Power_Off"), Loc.Get("Effects_OffText"), InfoBarSeverity.Informational),
             EffectsState.LayersOnly => (true, Loc.Get("Effects_LayersOnlyTitle"), Loc.Get("Effects_LayersOnlyText"), InfoBarSeverity.Warning),
             EffectsState.Waiting => (true, Loc.Get("Effects_WaitingTitle"), Loc.Get("Effects_WaitingText"), InfoBarSeverity.Informational),
             EffectsState.Failed => (true, Loc.Get("Effects_FailedTitle"), Loc.Get("Effects_FailedText"), InfoBarSeverity.Error),

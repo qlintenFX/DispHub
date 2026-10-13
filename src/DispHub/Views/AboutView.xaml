@@ -78,20 +78,23 @@
       <StackPanel Orientation="Horizontal">
         <ui:Button
           Margin="0,0,8,0"
-          Command="{Binding CopyDiagnosticsCommand}"
-          Content="{l:Tr About_CopyDiagnostics}" />
+          Command="{Binding CopyDiagnosticsCommand}">
+          <ui:Button.Style>
+            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
+              <Setter Property="Content" Value="{l:Tr About_CopyDiagnostics}" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding Copied}" Value="True">
+                  <Setter Property="Content" Value="{l:Tr About_Copied}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ui:Button.Style>
+        </ui:Button>
         <ui:Button
           Command="{Binding OpenUrlCommand}"
           CommandParameter="https://github.com/qlintenFX/DispHub/issues/new/choose"
           Content="{l:Tr About_OpenGitHub}" />
       </StackPanel>
-      <ctl:SettingsCard.Footer>
-        <TextBlock
-          Margin="0,8,0,0"
-          Style="{StaticResource Hint}"
-          Text="{Binding CopiedMessage}"
-          Visibility="{Binding CopiedMessage, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
-      </ctl:SettingsCard.Footer>
     </ctl:SettingsCard>
     <ctl:SettingsCard Header="{l:Tr About_Logs}" Icon="Folder24">
       <ui:Button Command="{Binding OpenLogsCommand}" Content="{l:Tr About_OpenFolder}" />

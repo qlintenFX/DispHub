@@ -16,9 +16,6 @@
   <data name="About_Contributors" xml:space="preserve">
     <value>Contributeurs</value>
   </data>
-  <data name="About_Copied" xml:space="preserve">
-    <value>Copié. Collez-le dans votre ticket GitHub.</value>
-  </data>
   <data name="About_CopyDiagnostics" xml:space="preserve">
     <value>Copier les diagnostics</value>
   </data>
@@ -228,9 +225,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   </data>
   <data name="Profiles_HotkeyInUse" xml:space="preserve">
     <value>Ce raccourci est utilisé par une autre application</value>
-  </data>
-  <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Lien copié. Toute personne ayant DispHub peut l'ouvrir pour ajouter ce profil.</value>
   </data>
   <data name="Profiles_MoveLeft" xml:space="preserve">
     <value>Déplacer à gauche</value>

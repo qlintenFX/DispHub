@@ -16,9 +16,6 @@
   <data name="About_Contributors" xml:space="preserve">
     <value>Colaboradores</value>
   </data>
-  <data name="About_Copied" xml:space="preserve">
-    <value>Copiado. Pégalo en tu incidencia de GitHub.</value>
-  </data>
   <data name="About_CopyDiagnostics" xml:space="preserve">
     <value>Copiar diagnóstico</value>
   </data>
@@ -228,9 +225,6 @@ Se agregará como un perfil nuevo y se activará para que puedas verlo.</value>
   </data>
   <data name="Profiles_HotkeyInUse" xml:space="preserve">
     <value>Otra aplicación usa este método abreviado</value>
-  </data>
-  <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Vínculo copiado. Cualquiera con DispHub puede abrirlo para agregar este perfil.</value>
   </data>
   <data name="Profiles_MoveLeft" xml:space="preserve">
     <value>Mover a la izquierda</value>
