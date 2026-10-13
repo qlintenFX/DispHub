@@ -13,13 +13,17 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     private readonly AppController _app;
     private readonly ThemeService _theme;
 
+    /// <summary>Below this width the navigation shows icons only.</summary>
+    private const double NarrowWidth = 960;
+
     public MainWindow(MainViewModel viewModel, AppController app, ThemeService theme, ReviewPrompt review)
     {
         _app = app;
         _theme = theme;
         DataContext = viewModel;
         InitializeComponent();
-        Loaded += (_, _) => _theme.Attach(this, _app.Config.Ui.Theme);
+        SourceInitialized += (_, _) => _theme.Attach(this);
+        SizeChanged += (_, e) => viewModel.SetNarrow(e.NewSize.Width < NarrowWidth);
         Activated += async (_, _) => await review.OnWindowActivatedAsync(this);
         viewModel.PropertyChanged += (_, e) =>
         {

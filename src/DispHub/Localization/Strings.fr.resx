@@ -16,9 +16,6 @@
   <data name="About_Contributors" xml:space="preserve">
     <value>Contributeurs</value>
   </data>
-  <data name="About_Copied" xml:space="preserve">
-    <value>Copié. Collez-le dans votre ticket GitHub.</value>
-  </data>
   <data name="About_CopyDiagnostics" xml:space="preserve">
     <value>Copier les diagnostics</value>
   </data>
@@ -91,68 +88,11 @@
   <data name="About_WpfUiHint" xml:space="preserve">
     <value>Les contrôles Fluent, la fenêtre Mica et l'icône de la zone de notification.</value>
   </data>
-  <data name="Automation_AddApp" xml:space="preserve">
-    <value>Ajouter une application…</value>
-  </data>
-  <data name="Automation_AddRunningApp" xml:space="preserve">
-    <value>Ajouter une application ouverte</value>
-  </data>
-  <data name="Automation_AddSlot" xml:space="preserve">
-    <value>Ajouter une plage horaire</value>
-  </data>
-  <data name="Automation_AppsHeader" xml:space="preserve">
-    <value>Profils par application</value>
-  </data>
-  <data name="Automation_AppsHint" xml:space="preserve">
-    <value>Tant que l'application est au premier plan, son profil s'applique ; quand vous changez de fenêtre, votre profil habituel revient.</value>
-  </data>
-  <data name="Automation_ChooseProgram" xml:space="preserve">
-    <value>Choisir un programme</value>
-  </data>
-  <data name="Automation_Fade" xml:space="preserve">
-    <value>Transition</value>
-  </data>
-  <data name="Automation_From" xml:space="preserve">
-    <value>À partir de</value>
-  </data>
-  <data name="Automation_Minutes" xml:space="preserve">
-    <value>min</value>
-  </data>
-  <data name="Automation_NoRunningApps" xml:space="preserve">
-    <value>Aucune application avec une fenêtre n'est ouverte</value>
-  </data>
-  <data name="Automation_ProExample" xml:space="preserve">
-    <value>Par exemple : plus d'éclat dès que votre jeu est au premier plan, et une transition vers un profil de nuit chaleureux à 22:00.</value>
-  </data>
-  <data name="Automation_ProTitle" xml:space="preserve">
-    <value>L'automatisation fait partie de DispHub Pro</value>
-  </data>
-  <data name="Automation_ProgramsFilter" xml:space="preserve">
-    <value>Programmes (*.exe)|*.exe</value>
-  </data>
-  <data name="Automation_ScheduleHeader" xml:space="preserve">
-    <value>Planification</value>
-  </data>
-  <data name="Automation_ScheduleHint" xml:space="preserve">
-    <value>Chaque plage commence à son heure et dure jusqu'à la suivante. Les transitions passent en douceur depuis le profil précédent.</value>
-  </data>
-  <data name="Automation_ScheduleToggle" xml:space="preserve">
-    <value>Changer de profil à heures fixes</value>
-  </data>
-  <data name="Automation_Subtitle" xml:space="preserve">
-    <value>Changez de profil automatiquement à l'ouverture d'une application ou à heures fixes.</value>
-  </data>
-  <data name="Automation_Title" xml:space="preserve">
-    <value>Automatisation</value>
-  </data>
   <data name="Common_Add" xml:space="preserve">
     <value>Ajouter</value>
   </data>
   <data name="Common_Cancel" xml:space="preserve">
     <value>Annuler</value>
-  </data>
-  <data name="Common_Enabled" xml:space="preserve">
-    <value>Activé</value>
   </data>
   <data name="Common_GetPro" xml:space="preserve">
     <value>Passer à Pro</value>
@@ -162,15 +102,6 @@
   </data>
   <data name="Common_On" xml:space="preserve">
     <value>Activé</value>
-  </data>
-  <data name="Common_Remove" xml:space="preserve">
-    <value>Supprimer</value>
-  </data>
-  <data name="Control_Active" xml:space="preserve">
-    <value>Activé</value>
-  </data>
-  <data name="Control_Paused" xml:space="preserve">
-    <value>En pause</value>
   </data>
   <data name="Default_Gaming" xml:space="preserve">
     <value>Jeu</value>
@@ -214,47 +145,14 @@
   <data name="Hotkey_Refused" xml:space="preserve">
     <value>Windows a refusé ce raccourci</value>
   </data>
-  <data name="Monitor_Applied" xml:space="preserve">
-    <value>Couleurs appliquées</value>
-  </data>
-  <data name="Monitor_Hdr" xml:space="preserve">
-    <value>HDR activé (gamma indisponible)</value>
-  </data>
-  <data name="Monitor_Limited" xml:space="preserve">
-    <value>Limité par Windows</value>
-  </data>
-  <data name="Monitor_Main" xml:space="preserve">
-    <value>{0} (principal)</value>
-  </data>
-  <data name="Monitor_NoVibrance" xml:space="preserve">
-    <value>Pas d'éclat</value>
-  </data>
-  <data name="Monitor_Original" xml:space="preserve">
-    <value>Couleurs d'origine</value>
-  </data>
-  <data name="Monitor_Unsupported" xml:space="preserve">
-    <value>Gamma non pris en charge</value>
-  </data>
-  <data name="Monitor_Vibrance" xml:space="preserve">
-    <value>Éclat pris en charge</value>
-  </data>
   <data name="Nav_About" xml:space="preserve">
     <value>À propos</value>
-  </data>
-  <data name="Nav_Automation" xml:space="preserve">
-    <value>Automatisation</value>
-  </data>
-  <data name="Nav_Presets" xml:space="preserve">
-    <value>Préréglages</value>
   </data>
   <data name="Nav_Profiles" xml:space="preserve">
     <value>Profils</value>
   </data>
   <data name="Nav_Settings" xml:space="preserve">
     <value>Paramètres</value>
-  </data>
-  <data name="Osd_Paused" xml:space="preserve">
-    <value>En pause</value>
   </data>
   <data name="Osd_StillRunning" xml:space="preserve">
     <value>DispHub continue de fonctionner</value>
@@ -274,15 +172,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Preset_InvalidLink" xml:space="preserve">
     <value>Ce lien n'est pas un préréglage DispHub valide.</value>
   </data>
-  <data name="Presets_Added" xml:space="preserve">
-    <value>« {0} » ajouté et activé. Affinez-le dans la page Profils.</value>
-  </data>
-  <data name="Presets_CopyLink" xml:space="preserve">
-    <value>Copier le lien de partage</value>
-  </data>
-  <data name="Presets_Gallery" xml:space="preserve">
-    <value>Galerie</value>
-  </data>
   <data name="Presets_ImportHint" xml:space="preserve">
     <value>Collez un lien partagé (il commence par disphub://preset). Pour partager le vôtre, ouvrez un profil et cliquez sur Partager.</value>
   </data>
@@ -291,15 +180,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
     <value>Ce n'est pas un lien de préréglage DispHub. Il doit commencer par disphub://preset</value>
-  </data>
-  <data name="Presets_Submit" xml:space="preserve">
-    <value>Proposer votre préréglage</value>
-  </data>
-  <data name="Presets_Subtitle" xml:space="preserve">
-    <value>Des rendus prêts à l'emploi proposés par la communauté. Ajoutez-en un pour l'essayer tout de suite ; il devient un profil que vous pouvez ajuster.</value>
-  </data>
-  <data name="Presets_Title" xml:space="preserve">
-    <value>Préréglages</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Profils par application, planifications avec transitions, réglages par écran et profils illimités. Achat unique.</value>
@@ -346,9 +226,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Profiles_HotkeyInUse" xml:space="preserve">
     <value>Ce raccourci est utilisé par une autre application</value>
   </data>
-  <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Lien copié. Toute personne ayant DispHub peut l'ouvrir pour ajouter ce profil.</value>
-  </data>
   <data name="Profiles_MoveLeft" xml:space="preserve">
     <value>Déplacer à gauche</value>
   </data>
@@ -367,9 +244,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Profiles_OneDisplay" xml:space="preserve">
     <value>1 écran</value>
   </data>
-  <data name="Profiles_PauseTooltip" xml:space="preserve">
-    <value>Désactivez pour afficher les couleurs d'origine de vos écrans</value>
-  </data>
   <data name="Profiles_Reset" xml:space="preserve">
     <value>Rétablir l'original</value>
   </data>
@@ -385,9 +259,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Profiles_StatusManual" xml:space="preserve">
     <value>{0} (choisi manuellement) sur {1}</value>
   </data>
-  <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>En pause : vos écrans affichent leurs couleurs d'origine.</value>
-  </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
     <value>{0} (planification) sur {1}</value>
   </data>
@@ -396,9 +267,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   </data>
   <data name="Profiles_Title" xml:space="preserve">
     <value>Profils</value>
-  </data>
-  <data name="Profiles_UseMainSettings" xml:space="preserve">
-    <value>Utiliser les réglages principaux sur cet écran</value>
   </data>
   <data name="Profiles_Vibrance" xml:space="preserve">
     <value>Éclat</value>
@@ -412,15 +280,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Settings_AllowFullRange" xml:space="preserve">
     <value>Autoriser toute la plage</value>
   </data>
-  <data name="Settings_Displays" xml:space="preserve">
-    <value>Écrans</value>
-  </data>
-  <data name="Settings_FullRange" xml:space="preserve">
-    <value>Plage de couleurs complète</value>
-  </data>
-  <data name="Settings_FullRangeHint" xml:space="preserve">
-    <value>Windows limite l'ampleur des changements de couleur, ce qui touche surtout les profils de nuit très chauds. Lever cette limite demande une seule fois l'accord d'un administrateur.</value>
-  </data>
   <data name="Settings_General" xml:space="preserve">
     <value>Général</value>
   </data>
@@ -429,12 +288,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   </data>
   <data name="Settings_Hotkeys" xml:space="preserve">
     <value>Raccourcis</value>
-  </data>
-  <data name="Settings_KeepRunning" xml:space="preserve">
-    <value>Continuer à fonctionner après la fermeture de la fenêtre</value>
-  </data>
-  <data name="Settings_KeepRunningHint" xml:space="preserve">
-    <value>Les raccourcis et l'automatisation continuent depuis la zone de notification.</value>
   </data>
   <data name="Settings_Language" xml:space="preserve">
     <value>Langue</value>
@@ -448,29 +301,8 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Settings_LanguageWindows" xml:space="preserve">
     <value>Comme Windows</value>
   </data>
-  <data name="Settings_LeaveAlone" xml:space="preserve">
-    <value>Ne pas modifier cet écran</value>
-  </data>
   <data name="Settings_Next" xml:space="preserve">
     <value>Profil suivant</value>
-  </data>
-  <data name="Settings_Osd" xml:space="preserve">
-    <value>Affichage à l'écran</value>
-  </data>
-  <data name="Settings_OsdDuration" xml:space="preserve">
-    <value>Durée d'affichage</value>
-  </data>
-  <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Apparaît au-dessus de la barre des tâches après un changement par raccourci ou depuis la zone de notification. Ne prend jamais le focus aux jeux.</value>
-  </data>
-  <data name="Settings_OsdToggle" xml:space="preserve">
-    <value>Afficher le nom du profil lors d'un changement</value>
-  </data>
-  <data name="Settings_Pause" xml:space="preserve">
-    <value>Suspendre ou reprendre</value>
-  </data>
-  <data name="Settings_PauseHint" xml:space="preserve">
-    <value>Bascule entre votre profil et les couleurs d'origine.</value>
   </data>
   <data name="Settings_Previous" xml:space="preserve">
     <value>Profil précédent</value>
@@ -499,20 +331,8 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Settings_Subtitle" xml:space="preserve">
     <value>La façon dont DispHub démarre, s'affiche et réagit.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Thème de l'application</value>
-  </data>
-  <data name="Settings_ThemeHint" xml:space="preserve">
-    <value>Système suit le mode clair ou sombre de Windows.</value>
-  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Paramètres</value>
-  </data>
-  <data name="Settings_TrayClick" xml:space="preserve">
-    <value>Clic sur l'icône de la zone de notification</value>
-  </data>
-  <data name="Settings_TrayClickHint" xml:space="preserve">
-    <value>Un clic droit affiche toujours le menu des profils.</value>
   </data>
   <data name="Startup_Failed" xml:space="preserve">
     <value>Impossible de démarrer DispHub.
@@ -548,17 +368,8 @@ Journaux : {1}</value>
   <data name="Tray_Open" xml:space="preserve">
     <value>Ouvrir DispHub</value>
   </data>
-  <data name="Tray_Pause" xml:space="preserve">
-    <value>Suspendre (couleurs d'origine)</value>
-  </data>
-  <data name="Tray_Paused" xml:space="preserve">
-    <value>DispHub · En pause</value>
-  </data>
   <data name="Tray_Ready" xml:space="preserve">
     <value>Prêt</value>
-  </data>
-  <data name="Tray_Resume" xml:space="preserve">
-    <value>Reprendre</value>
   </data>
   <data name="Upgrade_AppRules" xml:space="preserve">
     <value>Les profils par application</value>

@@ -1,0 +1,92 @@
+<UserControl
+  x:Class="DispHub.Views.DisplaysView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ctl="clr-namespace:DispHub.Controls"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:l="clr-namespace:DispHub.Localization"
+  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+  xmlns:vm="clr-namespace:DispHub.ViewModels"
+  d:DataContext="{d:DesignInstance Type=vm:DisplaysViewModel}"
+  mc:Ignorable="d">
+  <StackPanel>
+    <TextBlock Style="{StaticResource PageTitle}" Text="{l:Tr Displays_Title}" />
+    <TextBlock Style="{StaticResource PageSubtitle}" Text="{l:Tr Displays_Subtitle}" />
+
+    <ItemsControl ItemsSource="{Binding Displays}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type vm:DisplayItem}">
+          <Border Padding="16,14" Style="{StaticResource SettingCard}">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <Border
+                Width="44"
+                Height="44"
+                Margin="0,0,14,0"
+                VerticalAlignment="Top"
+                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                CornerRadius="8">
+                <ui:SymbolIcon FontSize="24" Symbol="Desktop24" />
+              </Border>
+              <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <WrapPanel>
+                  <TextBlock
+                    Margin="0,0,8,0"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Text="{Binding Name}" />
+                  <Border
+                    Padding="6,1"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                    CornerRadius="4"
+                    Visibility="{Binding IsPrimary, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock FontSize="11" Text="{l:Tr Displays_Main}" />
+                  </Border>
+                </WrapPanel>
+                <TextBlock
+                  Margin="0,2,0,0"
+                  Style="{StaticResource Hint}"
+                  Text="{Binding Summary}" />
+
+                <!-- Only what needs attention. -->
+                <DockPanel Margin="0,8,0,0" Visibility="{Binding IsHdr, Converter={StaticResource BoolToVisibility}}">
+                  <ui:SymbolIcon Margin="0,1,6,0" VerticalAlignment="Top" FontSize="16" Symbol="Info16" />
+                  <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Displays_HdrNote}" />
+                </DockPanel>
+                <StackPanel Margin="0,8,0,0" Visibility="{Binding IsLimited, Converter={StaticResource BoolToVisibility}}">
+                  <DockPanel>
+                    <ui:SymbolIcon Margin="0,1,6,0" VerticalAlignment="Top" FontSize="16" Symbol="Info16" />
+                    <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Displays_LimitedNote}" />
+                  </DockPanel>
+                  <ui:Button
+                    Margin="22,6,0,0"
+                    Command="{Binding AllowFullRangeCommand}"
+                    Content="{l:Tr Settings_AllowFullRange}"
+                    Icon="{ui:SymbolIcon Shield24}" />
+                </StackPanel>
+                <DockPanel Margin="0,8,0,0" Visibility="{Binding NoVibrance, Converter={StaticResource BoolToVisibility}}">
+                  <ui:SymbolIcon Margin="0,1,6,0" VerticalAlignment="Top" FontSize="16" Symbol="Info16" />
+                  <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Displays_NoVibrance}" />
+                </DockPanel>
+              </StackPanel>
+              <ui:ToggleSwitch
+                Grid.Column="2"
+                Margin="12,0,0,0"
+                VerticalAlignment="Top"
+                AutomationProperties.Name="{l:Tr Displays_UseOnThis}"
+                Content="{Binding Included, Converter={x:Static ctl:OnOffConverter.Instance}}"
+                IsChecked="{Binding Included}"
+                ToolTip="{l:Tr Displays_UseOnThis}" />
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </StackPanel>
+</UserControl>

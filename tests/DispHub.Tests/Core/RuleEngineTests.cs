@@ -33,10 +33,13 @@ public sealed class RuleEngineTests
         Assert.Equal(RuleEngine.BaseContext, output.ContextKey);
     }
 
-    [Fact]
-    public void Resolve_Paused_RestoresAllMonitors()
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void Resolve_ProfilesOffOrDispHubOff_RestoresAllMonitors(bool profilesOff, bool dispHubOff)
     {
-        _config.IsPaused = true;
+        _config.IsPaused = profilesOff;
+        _config.IsOff = dispHubOff;
 
         RuleOutput output = Resolve();
 
@@ -161,6 +164,8 @@ public sealed class RuleEngineTests
     [InlineData("cs2.exe", @"C:\Games\cs2_launcher.exe", false)]
     [InlineData(@"C:\Games\cs2.exe", @"c:\games\cs2.exe", true)]
     [InlineData(@"C:\Games\cs2.exe", @"D:\Games\cs2.exe", false)]
+    [InlineData(@"C:\Games\cs2.exe", "cs2.exe", true)] // Windows only told us the name
+    [InlineData(@"C:\Games\cs2.exe", "notepad.exe", false)]
     public void Matches_ByFileNameOrFullPath(string rule, string path, bool expected) =>
         Assert.Equal(expected, RuleEngine.Matches(new AppRule { Executable = rule }, path));
 

@@ -15,6 +15,7 @@ namespace DispHub.Views;
 public partial class OsdWindow : Window
 {
     private const double BottomMargin = 56;
+    private const double EdgeMargin = 24;
     private readonly System.Windows.Threading.DispatcherTimer _hideTimer = new();
 
     public OsdWindow()
@@ -28,7 +29,7 @@ public partial class OsdWindow : Window
         };
     }
 
-    public void Flash(string title, string detail, SymbolRegular symbol, TimeSpan duration)
+    public void Flash(string title, string detail, SymbolRegular symbol, TimeSpan duration, Core.Model.OsdPosition position)
     {
         TitleText.Text = title;
         DetailText.Text = detail;
@@ -46,8 +47,16 @@ public partial class OsdWindow : Window
         double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
         int width = (int)Math.Ceiling(size.Width * scale);
         int height = (int)Math.Ceiling(size.Height * scale);
-        int x = work.Left + ((work.Width - width) / 2);
-        int y = work.Bottom - height - (int)(BottomMargin * scale);
+        int edge = (int)(EdgeMargin * scale);
+        int x = position switch
+        {
+            Core.Model.OsdPosition.TopLeft or Core.Model.OsdPosition.BottomLeft => work.Left + edge,
+            Core.Model.OsdPosition.TopRight or Core.Model.OsdPosition.BottomRight => work.Right - width - edge,
+            _ => work.Left + ((work.Width - width) / 2),
+        };
+        int y = position is Core.Model.OsdPosition.TopLeft or Core.Model.OsdPosition.TopCenter or Core.Model.OsdPosition.TopRight
+            ? work.Top + edge
+            : work.Bottom - height - (int)(BottomMargin * scale);
         WindowHelpers.ShowAt(handle, new Rectangle(x, y, width, height));
 
         Fade(1, TimeSpan.FromMilliseconds(120));

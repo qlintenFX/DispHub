@@ -1,6 +1,7 @@
 using System.Globalization;
 using DispHub.Core.Color;
 using DispHub.Core.Model;
+using DispHub.Core.Schedule;
 
 namespace DispHub.Core.Rules;
 
@@ -13,7 +14,8 @@ public sealed record RuleInput(
     DateTime LocalNow,
     string? ForegroundExecutable,
     ManualOverride? Manual,
-    bool IsPro);
+    bool IsPro,
+    TimeZoneInfo? TimeZone = null);
 
 public enum TargetReason
 {
@@ -49,7 +51,7 @@ public static class RuleEngine
         AppConfig config = input.Config;
         var monitors = new Dictionary<string, MonitorTarget>(StringComparer.OrdinalIgnoreCase);
 
-        if (config.IsPaused)
+        if (config.IsPaused || config.IsOff)
         {
             foreach (string monitor in input.Monitors)
                 monitors[monitor] = new MonitorTarget(null, null, TargetReason.Paused);
@@ -57,7 +59,7 @@ public static class RuleEngine
         }
 
         AppRule? appRule = input.IsPro ? FindAppRule(config, input.ForegroundExecutable) : null;
-        ScheduleState? schedule = appRule is null && input.IsPro ? FindScheduleSlot(config, input.LocalNow) : null;
+        ScheduleState? schedule = appRule is null && input.IsPro ? FindScheduleSlot(config, input.LocalNow, input.TimeZone ?? TimeZoneInfo.Local) : null;
 
         string context = appRule is not null ? $"app:{appRule.Id}"
             : schedule is not null ? schedule.ContextKey
@@ -106,9 +108,13 @@ public static class RuleEngine
             return false;
 
         string wanted = rule.Executable.Trim();
-        return wanted.Contains('\\', StringComparison.Ordinal) || wanted.Contains('/', StringComparison.Ordinal)
-            ? string.Equals(Path.GetFullPath(wanted), Path.GetFullPath(executablePath), StringComparison.OrdinalIgnoreCase)
-            : string.Equals(wanted, Path.GetFileName(executablePath), StringComparison.OrdinalIgnoreCase);
+        if (HasFolder(wanted) && HasFolder(executablePath))
+            return string.Equals(Path.GetFullPath(wanted), Path.GetFullPath(executablePath), StringComparison.OrdinalIgnoreCase);
+
+        // A rule by name, or a program whose folder Windows wouldn't tell us: compare the file names.
+        return string.Equals(Path.GetFileName(wanted), Path.GetFileName(executablePath), StringComparison.OrdinalIgnoreCase);
+
+        static bool HasFolder(string path) => path.Contains('\\', StringComparison.Ordinal) || path.Contains('/', StringComparison.Ordinal);
     }
 
     private static AppRule? FindAppRule(AppConfig config, string? executable) =>
@@ -121,48 +127,28 @@ public static class RuleEngine
         string ContextKey,
         DateTime NextEvaluation);
 
-    private static ScheduleState? FindScheduleSlot(AppConfig config, DateTime now)
+    private static ScheduleState? FindScheduleSlot(AppConfig config, DateTime now, TimeZoneInfo zone)
     {
-        if (!config.Schedule.Enabled)
-            return null;
-
-        List<ScheduleSlot> slots = config.Schedule.Slots
-            .Where(s => FindProfile(config, s.ProfileId) is not null)
-            .OrderBy(s => s.Start)
-            .ToList();
-        if (slots.Count == 0)
-            return null;
-
-        TimeOnly time = TimeOnly.FromDateTime(now);
-        int index = slots.FindLastIndex(s => s.Start <= time);
-        DateTime startDay = now.Date;
-        if (index < 0)
+        if (!config.Schedule.Enabled ||
+            ScheduleTimeline.Locate(config.Schedule, now, zone, id => FindProfile(config, id) is not null) is not { } position)
         {
-            // Before the first slot of the day: yesterday's last slot is still running.
-            index = slots.Count - 1;
-            startDay = startDay.AddDays(-1);
+            return null;
         }
 
-        ScheduleSlot slot = slots[index];
-        DateTime slotStart = startDay + slot.Start.ToTimeSpan();
-        ScheduleSlot nextSlot = slots[(index + 1) % slots.Count];
-        DateTime nextStart = (index + 1 < slots.Count ? startDay : startDay.AddDays(1)) + nextSlot.Start.ToTimeSpan();
-        if (nextStart <= now)
-            nextStart = nextStart.AddDays(1);
-
-        Profile profile = FindProfile(config, slot.ProfileId)!;
-        Profile? previous = slots.Count > 1 ? FindProfile(config, slots[(index - 1 + slots.Count) % slots.Count].ProfileId) : null;
+        ScheduleOccurrence current = position.Current;
+        Profile profile = FindProfile(config, current.Slot.ProfileId)!;
+        Profile? previous = position.Previous is { } before ? FindProfile(config, before.Slot.ProfileId) : null;
 
         double progress = 1;
-        DateTime next = nextStart;
-        if (slot.FadeMinutes > 0 && previous is not null && previous.Id != profile.Id)
+        DateTime next = position.Next.Start;
+        if (current.Slot.FadeMinutes > 0 && previous is not null && previous.Id != profile.Id)
         {
-            progress = (now - slotStart).TotalMinutes / slot.FadeMinutes;
-            if (progress < 1)
-                next = now.AddSeconds(2) < nextStart ? now.AddSeconds(2) : nextStart;
+            progress = (now - current.Start).TotalMinutes / current.Slot.FadeMinutes;
+            if (progress < 1 && now.AddSeconds(2) < next)
+                next = now.AddSeconds(2);
         }
 
-        string key = string.Create(CultureInfo.InvariantCulture, $"sched:{slot.Id}:{slotStart:yyyyMMdd}");
+        string key = string.Create(CultureInfo.InvariantCulture, $"sched:{current.Slot.Id}:{current.Start:yyyyMMddHHmm}");
         return new ScheduleState(profile, previous, Math.Clamp(progress, 0, 1), key, next);
     }
 }

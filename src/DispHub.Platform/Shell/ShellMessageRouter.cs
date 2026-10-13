@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 
@@ -32,6 +33,9 @@ public sealed class ShellMessageRouter : IDisposable
     public event EventHandler? TaskbarCreated;
     public event EventHandler? DpiChanged;
 
+    /// <summary>Windows switched between light and dark, or the accent colour changed.</summary>
+    public event EventHandler? ThemeChanged;
+
     /// <summary>Call from the window procedure. Returns true when the message was fully handled.</summary>
     public bool HandleMessage(uint message, nuint wParam, nint lParam)
     {
@@ -50,6 +54,9 @@ public sealed class ShellMessageRouter : IDisposable
             TaskbarCreated?.Invoke(this, EventArgs.Empty);
         else if (message == PInvoke.WM_DPICHANGED)
             DpiChanged?.Invoke(this, EventArgs.Empty);
+        else if (message == PInvoke.WM_DWMCOLORIZATIONCOLORCHANGED
+            || (message == PInvoke.WM_SETTINGCHANGE && lParam != 0 && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet"))
+            ThemeChanged?.Invoke(this, EventArgs.Empty);
 
         return false;
     }
