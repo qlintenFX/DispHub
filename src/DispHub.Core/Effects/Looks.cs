@@ -86,7 +86,7 @@ public static class Looks
         // Retro
         new("arcadeCrt", LookCategory.Retro, new Look
         {
-            Saturation = 1.15, Bloom = 0.35, BloomThreshold = 0.5, Aberration = 0.12, Curvature = 0.5, Mask = 0.45,
+            Saturation = 1.1, Bloom = 0.2, BloomThreshold = 0.6, Aberration = 0.12, Curvature = 0.5, Mask = 0.45,
             Scanlines = 0.35, ScanlineSpacing = 3, Vignette = 0.25,
         }),
         new("gameBoy", LookCategory.Retro, new Look

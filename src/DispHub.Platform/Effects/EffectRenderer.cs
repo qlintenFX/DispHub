@@ -32,6 +32,8 @@ internal sealed unsafe class EffectRenderer : IDisposable
     private ID3D11Query* _anyPassed;
     private ID3D11SamplerState* _sampler;
     private ID3D11Buffer* _constants;
+    private ID3D11Texture2D* _grainTexture;
+    private ID3D11ShaderResourceView* _grain;
     private readonly RenderTexture _bloomA = new();
     private readonly RenderTexture _bloomB = new();
 
@@ -143,6 +145,8 @@ internal sealed unsafe class EffectRenderer : IDisposable
     {
         _bloomA.Dispose();
         _bloomB.Dispose();
+        Com.Release(ref _grain);
+        Com.Release(ref _grainTexture);
         Com.Release(ref _anyPassed);
         Com.Release(ref _differs);
         Com.Release(ref _constants);
@@ -170,10 +174,11 @@ internal sealed unsafe class EffectRenderer : IDisposable
         context->OMSetRenderTargets(1, &target, null);
         var viewport = new D3D11_VIEWPORT { Width = width, Height = height, MaxDepth = 1 };
         context->RSSetViewports(1, &viewport);
-        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[2];
+        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[3];
         views[0] = source;
         views[1] = bloom;
-        context->PSSetShaderResources(0, 2, views);
+        views[2] = _grain;
+        context->PSSetShaderResources(0, 3, views);
         context->PSSetShader(shader, null, 0);
         context->Draw(3, 0);
     }
@@ -181,8 +186,8 @@ internal sealed unsafe class EffectRenderer : IDisposable
     /// <summary>Unbinds textures and targets, so a texture can switch between being read and written.</summary>
     private void Unbind()
     {
-        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[2];
-        _context->PSSetShaderResources(0, 2, views);
+        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[3];
+        _context->PSSetShaderResources(0, 3, views);
         _context->OMSetRenderTargets(0, null, null);
     }
 
@@ -227,6 +232,35 @@ internal sealed unsafe class EffectRenderer : IDisposable
         ID3D11Buffer* buffer;
         _device->CreateBuffer(&bufferDesc, null, &buffer);
         _constants = buffer;
+
+        CreateGrain();
+    }
+
+    /// <summary>The film grain template (see <see cref="FilmGrain"/>), made once and read by the main pass.</summary>
+    private void CreateGrain()
+    {
+        float[] texels = FilmGrain.Template();
+        var desc = new D3D11_TEXTURE2D_DESC
+        {
+            Width = FilmGrain.Width,
+            Height = FilmGrain.Height,
+            MipLevels = 1,
+            ArraySize = 1,
+            Format = DXGI_FORMAT.DXGI_FORMAT_R32G32B32A32_FLOAT,
+            SampleDesc = new DXGI_SAMPLE_DESC { Count = 1 },
+            Usage = D3D11_USAGE.D3D11_USAGE_IMMUTABLE,
+            BindFlags = D3D11_BIND_FLAG.D3D11_BIND_SHADER_RESOURCE,
+        };
+        fixed (float* data = texels)
+        {
+            var initial = new D3D11_SUBRESOURCE_DATA { pSysMem = data, SysMemPitch = FilmGrain.Width * 16 };
+            ID3D11Texture2D* texture;
+            _device->CreateTexture2D(&desc, &initial, &texture);
+            _grainTexture = texture;
+        }
+        ID3D11ShaderResourceView* view;
+        _device->CreateShaderResourceView((ID3D11Resource*)_grainTexture, null, &view);
+        _grain = view;
     }
 
     private ID3D11PixelShader* CreatePixelShader(byte[] code)

@@ -79,7 +79,7 @@ public sealed record Look
     public bool NeedsCapture =>
         Exposure != 0 || Contrast != 1 || Saturation != 1 || Vibrance != 0 || Temperature != 0 || Tint != 0 ||
         Fade > 0 || Sepia > 0 || ShadowTint > 0 || HighlightTint > 0 || Sharpen > 0 || Bloom > 0 || Halation > 0 ||
-        Aberration > 0 || Distortion > 0 || Curvature > 0 || ChromaBleed > 0 || Jitter > 0 || Weave > 0 ||
+        Aberration > 0 || Distortion > 0 || Curvature > 0 || ChromaBleed > 0 || Jitter > 0 || Tracking > 0 || Weave > 0 ||
         Pixelate > 1 || Posterize > 1 || Palette != RetroPalette.None || ColorVision != ColorVision.Typical;
 
     /// <summary>
