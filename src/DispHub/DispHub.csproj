@@ -16,7 +16,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
-    <PackageReference Include="WPF-UI" />
+    <PackageReference Include="unchihugo.WPF-UI" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DispHub.Core\DispHub.Core.csproj" />

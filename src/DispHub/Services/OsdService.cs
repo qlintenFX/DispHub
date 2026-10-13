@@ -44,9 +44,9 @@ public sealed class OsdService(AppController app)
 
         _window ??= new OsdWindow();
         TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
-        if (app.Config.IsPaused)
+        if (app.Config.IsOff || app.Config.IsPaused)
         {
-            _window.Flash(Loc.Get("Osd_Paused"), Loc.Get("Summary_Original"), SymbolRegular.Power24, duration, app.Config.Ui.OsdPosition);
+            _window.Flash(Loc.Get(app.Config.IsOff ? "Osd_Paused" : "Osd_ProfilesOff"), Loc.Get("Summary_Original"), SymbolRegular.Power24, duration, app.Config.Ui.OsdPosition);
             return;
         }
 

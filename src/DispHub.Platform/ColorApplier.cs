@@ -75,12 +75,23 @@ public sealed class ColorApplier : IColorApplier
     private static readonly TimeSpan[] QuickChecks = [TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(2)];
 
     /// <summary>
-    /// A ramp changed after this long without input is power-saving dimming (Lenovo and other OLED laptops darken
-    /// the screen after a short idle time). DispHub leaves it and puts the profile back at the next input.
+    /// Laptops with OLED screens (Lenovo's, for one) dim through the gamma ramp after a few minutes without input:
+    /// they write a plain ramp turned down (again every second while dimmed), and the moment the mouse moves they
+    /// write a plain full one. Both wipe the profile. Fighting the dim would flicker, so DispHub leaves it alone
+    /// while nobody is at the PC, and puts the profile back the instant input comes back.
     /// </summary>
     private static readonly TimeSpan IdleForDimming = TimeSpan.FromSeconds(15);
 
     private static readonly TimeSpan InputAgain = TimeSpan.FromSeconds(2);
+    /// <summary>While idle: how often to look for input (cheap) and how often to read the ramps.</summary>
+    private static readonly TimeSpan IdleInputInterval = TimeSpan.FromMilliseconds(30);
+
+    private static readonly TimeSpan IdleRampInterval = TimeSpan.FromMilliseconds(250);
+
+    /// <summary>How long, after input comes back, the ramp is checked every <see cref="FastInterval"/>.</summary>
+    private static readonly TimeSpan FastWindow = TimeSpan.FromSeconds(1.5);
+
+    private static readonly TimeSpan FastInterval = TimeSpan.FromMilliseconds(15);
     private const int MaxResetsPerMinute = 3;
 
     private readonly IDisplayBackend _backend;
@@ -109,7 +120,11 @@ public sealed class ColorApplier : IColorApplier
     private readonly Queue<DateTimeOffset> _externalResets = new();
     private readonly List<DateTimeOffset> _quickChecks = [];
     private readonly HashSet<string> _vibranceFailures = new(StringComparer.OrdinalIgnoreCase);
-    private bool _waitingForInput;
+    private readonly HashSet<string> _watched = new(StringComparer.OrdinalIgnoreCase);
+    private bool _wasIdle;
+    private bool _dimmedByOther;
+    private DateTimeOffset _fastUntil;
+    private DateTimeOffset _lastRampCheck;
     private DateTimeOffset _backoffUntil;
     private RampLimits _limits = RampLimits.Default;
 
@@ -259,7 +274,6 @@ public sealed class ColorApplier : IColorApplier
     {
         _backoffUntil = default;
         _externalResets.Clear();
-        _waitingForInput = false;
         ScheduleQuickChecks();
     }
 
@@ -272,12 +286,19 @@ public sealed class ColorApplier : IColorApplier
 
     private TimeSpan UntilNextCheck()
     {
-        if (_waitingForInput)
-            return TimeSpan.FromMilliseconds(250);
-        if (_quickChecks.Count == 0)
-            return WatchdogInterval;
-        TimeSpan wait = _quickChecks.Min() - _time.GetUtcNow();
-        return wait <= TimeSpan.Zero ? TimeSpan.Zero : wait < WatchdogInterval ? wait : WatchdogInterval;
+        DateTimeOffset now = _time.GetUtcNow();
+        if (now < _fastUntil)
+            return FastInterval;
+        TimeSpan next = WatchdogInterval;
+        // Only while a profile is on: nothing to protect otherwise, and the PC can sleep in peace.
+        if (_appliedRamps.Count > 0 && (_wasIdle || _idleTime() >= IdleForDimming))
+            next = IdleInputInterval;
+        if (_quickChecks.Count > 0)
+        {
+            TimeSpan wait = _quickChecks.Min() - now;
+            next = wait <= TimeSpan.Zero ? TimeSpan.Zero : wait < next ? wait : next;
+        }
+        return next;
     }
 
     private void RefreshMonitors()
@@ -288,6 +309,7 @@ public sealed class ColorApplier : IColorApplier
         _appliedRamps.Clear();
         _appliedVibrance.Clear();
         _vibranceFailures.Clear();
+        _watched.Clear();
         _logger.LogInformation("Monitors: {Monitors}", string.Join(", ", _monitors.Select(m => $"{m.Name} ({m.DeviceName})")));
     }
 
@@ -349,6 +371,10 @@ public sealed class ColorApplier : IColorApplier
 
         GammaResult result = _backend.SetRamp(monitor.DeviceName, target);
         _appliedRamps[monitor.Key] = target;
+        if (result == GammaResult.Applied)
+            _watched.Add(monitor.Key);
+        else
+            _watched.Remove(monitor.Key);
         _states[monitor.Key] = result switch
         {
             GammaResult.Applied when ReferenceEquals(target, requestedRamp) => MonitorColorState.Applied,
@@ -410,8 +436,10 @@ public sealed class ColorApplier : IColorApplier
         if (current is null)
             return false;
 
-        // A broken ramp (e.g. left flat or inverted by a crashed tool) is replaced by identity.
-        entry.Ramp = (RampLimits.Extended.Accepts(current) && current.Red[^1] > current.Red[0] ? current : GammaRamp.Identity()).ToBase64();
+        // A broken ramp (e.g. left flat or inverted by a crashed tool) is replaced by identity, and so is a laptop's
+        // idle dimming that happened to be on: restoring that later would leave the screen dark.
+        bool usable = RampLimits.Extended.Accepts(current) && current.Red[^1] > current.Red[0] && current.DimFactor() is null;
+        entry.Ramp = (usable ? current : GammaRamp.Identity()).ToBase64();
         SaveJournal();
         return true;
     }
@@ -481,38 +509,61 @@ public sealed class ColorApplier : IColorApplier
     /// <summary>Other programs, games and display events can reset the ramp. Put ours back, unless it keeps happening.</summary>
     private void Watchdog(MonitorTargets requested)
     {
-        if (_waitingForInput)
+        DateTimeOffset now = _time.GetUtcNow();
+        TimeSpan idle = _idleTime();
+        if (idle >= IdleForDimming)
         {
-            if (_idleTime() >= InputAgain)
+            _wasIdle = true;
+        }
+        else if (_wasIdle && idle < InputAgain)
+        {
+            // Back at the PC. A dimmer writes its own plain ramp right now: watch closely for a moment.
+            _wasIdle = false;
+            _fastUntil = now + FastWindow;
+            if (_dimmedByOther)
+            {
+                _dimmedByOther = false;
+                ApplyAll(requested, force: true);
                 return;
-            _waitingForInput = false;
-            _logger.LogInformation("Input again after idle dimming; putting the profile back");
-            ApplyAll(requested, force: true);
-            ScheduleQuickChecks(); // The dimmer often restores its own ramp a moment after the input.
-            return;
+            }
         }
 
-        DateTimeOffset now = _time.GetUtcNow();
+        // Dimmed by the laptop while nobody is here: leave it be until input comes back.
+        if (_dimmedByOther)
+            return;
+
         if (now < _backoffUntil || _appliedRamps.Count == 0)
             return;
 
-        bool reset = false;
+        // While idle the loop wakes often to notice input; the ramps themselves are read less often.
+        if (_wasIdle && now >= _fastUntil && now - _lastRampCheck < IdleRampInterval)
+            return;
+        _lastRampCheck = now;
+
+        GammaRamp? changed = null;
         foreach (MonitorInfo monitor in _monitors)
         {
-            if (!_appliedRamps.TryGetValue(monitor.Key, out GammaRamp? ramp) || _states.GetValueOrDefault(monitor.Key) != MonitorColorState.Applied)
+            if (!_watched.Contains(monitor.Key) || !_appliedRamps.TryGetValue(monitor.Key, out GammaRamp? ramp))
                 continue;
             GammaRamp? current = _backend.GetRamp(monitor.DeviceName);
             if (current is not null && !current.ApproximatelyEquals(ramp, 512))
-                reset = true;
+                changed = current;
         }
 
-        if (!reset)
+        if (changed is null)
             return;
 
-        if (_idleTime() >= IdleForDimming)
+        if (idle >= IdleForDimming && changed.DimFactor() is not null)
         {
-            _waitingForInput = true;
-            _logger.LogInformation("Display colours changed while the PC was idle (power-saving dimming); waiting for input");
+            _dimmedByOther = true;
+            _logger.LogInformation("The screen was dimmed while idle (power saving); the profile comes back with the next input");
+            return;
+        }
+
+        if (now < _fastUntil)
+        {
+            // The dimmer putting its own colours back as the user returns: not a fight, just put the profile back.
+            ApplyAll(requested, force: true);
             return;
         }
 

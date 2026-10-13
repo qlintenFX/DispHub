@@ -51,7 +51,7 @@ public static class RuleEngine
         AppConfig config = input.Config;
         var monitors = new Dictionary<string, MonitorTarget>(StringComparer.OrdinalIgnoreCase);
 
-        if (config.IsPaused)
+        if (config.IsPaused || config.IsOff)
         {
             foreach (string monitor in input.Monitors)
                 monitors[monitor] = new MonitorTarget(null, null, TargetReason.Paused);

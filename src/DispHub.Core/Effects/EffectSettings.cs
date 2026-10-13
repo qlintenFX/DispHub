@@ -177,9 +177,6 @@ public sealed class EffectsConfig
     /// <summary>Step aside while a full-screen app or game is in front, so effects can't add latency there.</summary>
     public bool HideOverFullScreen { get; set; } = true;
 
-    /// <summary>Keep looks that only add layers out of screenshots and recordings (processed looks always are).</summary>
-    public bool HideFromCapture { get; set; } = true;
-
     /// <summary>Only the main display; otherwise every display.</summary>
     public bool MainDisplayOnly { get; set; }
 }

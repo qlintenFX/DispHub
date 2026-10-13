@@ -30,6 +30,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
         Editor = new ProfileEditorViewModel(app, upgrade);
         _app.ConfigChanged += (_, _) => Rebuild();
         _app.StateChanged += (_, _) => Refresh();
+        _app.PowerChanged += (_, _) => Refresh();
         _app.ProfileEdited += (_, id) =>
         {
             if (Profiles.FirstOrDefault(p => p.Id == id) is { } item && _app.FindProfile(id) is { } profile)
@@ -236,6 +237,8 @@ public sealed partial class ProfilesViewModel : PageViewModel
 
     private string DescribeStatus(RuleOutput? current)
     {
+        if (_app.Config.IsOff)
+            return Loc.Get("Profiles_StatusOff");
         if (_app.Config.IsPaused)
             return Loc.Get("Profiles_StatusPaused");
         if (current?.ProfileId is not { } id || _app.FindProfile(id) is not { } profile)

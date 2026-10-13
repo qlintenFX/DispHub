@@ -22,6 +22,7 @@ public sealed partial class DisplaysViewModel : PageViewModel
         _app = app;
         _app.MonitorsChanged += (_, _) => Load();
         _app.StateChanged += (_, _) => Load();
+        _app.PowerChanged += (_, _) => Load();
         Load();
     }
 
@@ -99,6 +100,8 @@ public sealed partial class DisplayItem : ObservableObject
         string showing;
         if (!Included)
             showing = Loc.Get("Displays_LeftAlone");
+        else if (_app.Config.IsOff)
+            showing = Loc.Get("Displays_ShowingOff");
         else if (_app.Config.IsPaused)
             showing = Loc.Get("Displays_ShowingOriginal");
         else if (_app.Current?.Monitors.GetValueOrDefault(_key)?.ProfileId is { } id && _app.FindProfile(id) is { } profile)

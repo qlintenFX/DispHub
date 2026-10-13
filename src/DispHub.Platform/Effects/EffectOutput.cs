@@ -57,7 +57,7 @@ internal sealed unsafe class EffectOutput : IDisposable
         _ = ClassRegistered.Value;
         _window = CreateWindow(info);
         _settings = new Settings(look, options, Hidden: false);
-        ApplyCaptureExclusion(look, options);
+        ApplyCaptureExclusion();
         _thread = new Thread(Run) { IsBackground = true, Name = $"Effects {info.DeviceName}", Priority = ThreadPriority.AboveNormal };
         _thread.Start();
     }
@@ -71,7 +71,6 @@ internal sealed unsafe class EffectOutput : IDisposable
 
     public void Update(Look look, EffectOptions options)
     {
-        ApplyCaptureExclusion(look, options);
         _settings = _settings with { Look = look, Options = options };
         _wake.Set();
     }
@@ -100,14 +99,13 @@ internal sealed unsafe class EffectOutput : IDisposable
     }
 
     /// <summary>
-    /// A window that changes the picture must be left out of screen capture, or it would capture itself. If Windows
-    /// can't do that (before version 2004), only layers are drawn.
+    /// The effect window is always left out of screen capture: a window that changes the picture would otherwise
+    /// capture itself, and Windows has one switch for that and for screenshots, recordings and screen sharing.
+    /// If Windows can't do it (before version 2004), only layers are drawn.
     /// </summary>
-    private void ApplyCaptureExclusion(Look look, EffectOptions options)
+    private void ApplyCaptureExclusion()
     {
-        bool exclude = look.NeedsCapture || options.HideFromCapture;
-        bool excluded = PInvoke.SetWindowDisplayAffinity(_window, exclude ? WINDOW_DISPLAY_AFFINITY.WDA_EXCLUDEFROMCAPTURE : WINDOW_DISPLAY_AFFINITY.WDA_NONE);
-        _captureAllowed = exclude && excluded;
+        _captureAllowed = PInvoke.SetWindowDisplayAffinity(_window, WINDOW_DISPLAY_AFFINITY.WDA_EXCLUDEFROMCAPTURE);
     }
 
     private void Run()

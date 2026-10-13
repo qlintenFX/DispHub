@@ -68,14 +68,26 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
-    public void PauseHotkey_RestoresOriginalAndResumes()
+    public void OnOffHotkey_TurnsDispHubOffAndOn()
     {
         _hotkeys.Press(AppController.PauseAction);
         Assert.Null(_colors.Last!.Default);
-        Assert.True(_app.Config.IsPaused);
+        Assert.True(_app.Config.IsOff);
+        Assert.False(_app.Config.IsPaused); // the Profiles switch is separate
 
         _hotkeys.Press(AppController.PauseAction);
         Assert.Equal(Standard.Color, _colors.Last!.Default);
+    }
+
+    [Fact]
+    public void PickingAProfile_TurnsDispHubBackOn()
+    {
+        _app.ToggleOff(ChangeSource.Editor);
+
+        _app.ActivateProfile(Gaming.Id, ChangeSource.Tray);
+
+        Assert.False(_app.Config.IsOff);
+        Assert.Equal(Gaming.Color, _colors.Last!.Default);
     }
 
     [Fact]

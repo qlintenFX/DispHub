@@ -32,6 +32,13 @@ public sealed partial class EffectsViewModel : PageViewModel
     private readonly IUpgradeService _upgrade;
     private readonly List<LookTile> _allTiles = [];
     private readonly Dictionary<string, LookPartViewModel> _partCache = [];
+
+    /// <summary>
+    /// The effects shown in the editor. An effect stays, even turned down to nothing, until the user removes it
+    /// or picks another look: it doesn't vanish under the slider.
+    /// </summary>
+    private readonly HashSet<string> _shownParts = [];
+    private string? _shownPartsLook;
     private readonly DispatcherTimer _animation = new(DispatcherPriority.Background);
     private readonly DispatcherTimer _copiedTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private readonly DateTime _started = DateTime.UtcNow;
@@ -49,6 +56,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         _previews = previews;
         _upgrade = upgrade;
         Basics = [.. LookParts.Basics.Select(p => new LookSettingViewModel(this, p))];
+        Library = [.. LookParts.All.GroupBy(p => p.Group).Select(g => new LibraryGroup(Loc.Get($"LookGroup_{g.Key}"), [.. g.Select(p => new LibraryEffect(this, p))]))];
         FrameRates =
         [
             new(30, Loc.Get("Effects_Fps30")),
@@ -78,9 +86,8 @@ public sealed partial class EffectsViewModel : PageViewModel
     /// <summary>The effects in the current look, in editor order.</summary>
     public ObservableCollection<LookPartViewModel> Parts { get; } = [];
 
-    /// <summary>What "Add an effect" offers: every effect not in the look yet, grouped.</summary>
-    /// <summary>The effects that can still be added to the look, by group.</summary>
-    public ObservableCollection<LibraryGroup> Library { get; } = [];
+    /// <summary>Every effect, by group, to add to the look; the ones already in it are marked.</summary>
+    public IReadOnlyList<LibraryGroup> Library { get; }
 
     public IReadOnlyList<FrameRateChoice> FrameRates { get; }
 
@@ -118,7 +125,6 @@ public sealed partial class EffectsViewModel : PageViewModel
     [ObservableProperty] public partial bool LinkCopied { get; set; }
 
     [ObservableProperty] public partial bool HideOverFullScreen { get; set; }
-    [ObservableProperty] public partial bool HideFromCapture { get; set; }
     [ObservableProperty] public partial bool MainDisplayOnly { get; set; }
     [ObservableProperty] public partial FrameRateChoice? FrameRate { get; set; }
 
@@ -189,6 +195,7 @@ public sealed partial class EffectsViewModel : PageViewModel
 
     internal void AddPart(LookPart part)
     {
+        _shownParts.Add(part.Key);
         EffectsConfig effects = _app.Config.Effects;
         effects.Look = part.Add(effects.Look);
         Commit();
@@ -202,12 +209,13 @@ public sealed partial class EffectsViewModel : PageViewModel
     /// <summary>An effect dropped on the look, by its key.</summary>
     internal void AddEffect(string key)
     {
-        if (LookParts.Find(key) is { } part && !part.IsIn(CurrentLook))
+        if (LookParts.Find(key) is { } part && !_shownParts.Contains(key))
             AddPart(part);
     }
 
     internal void RemovePart(LookPart part)
     {
+        _shownParts.Remove(part.Key);
         EffectsConfig effects = _app.Config.Effects;
         effects.Look = part.Remove(effects.Look);
         Commit();
@@ -220,6 +228,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         EffectsConfig effects = _app.Config.Effects;
         // Picking a look only selects it for the preview; the switch above decides whether the screen shows it.
         (effects.Preset, effects.Look, effects.Strength) = (tile.Id, tile.Look, 1);
+        _shownParts.Clear();
         Commit();
         Load();
     }
@@ -283,8 +292,6 @@ public sealed partial class EffectsViewModel : PageViewModel
 
     partial void OnHideOverFullScreenChanged(bool value) => SaveOptions();
 
-    partial void OnHideFromCaptureChanged(bool value) => SaveOptions();
-
     partial void OnMainDisplayOnlyChanged(bool value) => SaveOptions();
 
     partial void OnFrameRateChanged(FrameRateChoice? value) => SaveOptions();
@@ -303,6 +310,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         if (LookLibrary.Find(effects, effects.Preset) is not { } original)
             return;
         (effects.Look, effects.Strength) = (original, 1);
+        _shownParts.Clear();
         Commit();
         Load();
     }
@@ -313,9 +321,13 @@ public sealed partial class EffectsViewModel : PageViewModel
     {
         EffectsConfig effects = _app.Config.Effects;
         (effects.Preset, effects.Look, effects.Strength) = (null, Look.Neutral, 1);
+        _shownParts.Clear();
         Commit();
         Load();
     }
+
+    [RelayCommand]
+    private void ResetStrength() => Strength = 1;
 
     [RelayCommand]
     private void SaveLook()
@@ -389,7 +401,6 @@ public sealed partial class EffectsViewModel : PageViewModel
             return;
         EffectsConfig effects = _app.Config.Effects;
         effects.HideOverFullScreen = HideOverFullScreen;
-        effects.HideFromCapture = HideFromCapture;
         effects.MainDisplayOnly = MainDisplayOnly;
         effects.MaxFps = FrameRate?.Fps ?? 60;
         Commit();
@@ -405,7 +416,6 @@ public sealed partial class EffectsViewModel : PageViewModel
             Enabled = effects.Enabled && IsPro;
             Strength = effects.Strength;
             HideOverFullScreen = effects.HideOverFullScreen;
-            HideFromCapture = effects.HideFromCapture;
             MainDisplayOnly = effects.MainDisplayOnly;
             FrameRate = FrameRates.FirstOrDefault(f => f.Fps == effects.MaxFps) ?? FrameRates[1];
             if (_allTiles.Count(t => t.IsSaved) != effects.SavedLooks.Count)
@@ -442,7 +452,14 @@ public sealed partial class EffectsViewModel : PageViewModel
             foreach (LookSettingViewModel setting in Basics)
                 setting.Refresh(look, except);
 
-            List<LookPart> inLook = [.. LookParts.In(look)];
+            // Another look (picked here, from the quick panel or by a profile): show what it uses.
+            if (_app.Config.Effects.Preset != _shownPartsLook)
+            {
+                _shownParts.Clear();
+                _shownPartsLook = _app.Config.Effects.Preset;
+            }
+            List<LookPart> inLook = [.. LookParts.All.Where(p => p.IsIn(look) || _shownParts.Contains(p.Key))];
+            _shownParts.UnionWith(inLook.Select(p => p.Key));
             for (int i = Parts.Count - 1; i >= 0; i--)
             {
                 if (!inLook.Contains(Parts[i].Part))
@@ -464,9 +481,8 @@ public sealed partial class EffectsViewModel : PageViewModel
                 item.Refresh(look, except);
             }
 
-            Library.Clear();
-            foreach (IGrouping<LookGroup, LookPart> group in LookParts.All.Where(p => !p.IsIn(look)).GroupBy(p => p.Group))
-                Library.Add(new LibraryGroup(Loc.Get($"LookGroup_{group.Key}"), [.. group.Select(p => new LibraryEffect(this, p))]));
+            foreach (LibraryEffect effect in Library.SelectMany(g => g.Effects))
+                effect.IsAdded = _shownParts.Contains(effect.Key);
         }
         finally
         {
@@ -696,8 +712,8 @@ public sealed partial class LookPartViewModel : ObservableObject
 
 public sealed record LibraryGroup(string Name, IReadOnlyList<LibraryEffect> Effects);
 
-/// <summary>An effect in the box beside the look: dragged onto the look, or added with its + button.</summary>
-public sealed partial class LibraryEffect(EffectsViewModel owner, LookPart part)
+/// <summary>An effect in the box beside the look: clicked or dragged onto the look.</summary>
+public sealed partial class LibraryEffect(EffectsViewModel owner, LookPart part) : ObservableObject
 {
     public string Key { get; } = part.Key;
 
@@ -706,6 +722,12 @@ public sealed partial class LibraryEffect(EffectsViewModel owner, LookPart part)
     public string Hint { get; } = Loc.Get($"LookPart_{part.Key}Hint");
 
     public SymbolRegular Icon { get; } = EffectsViewModel.GroupIcon(part.Group);
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanAdd))]
+    public partial bool IsAdded { get; set; }
+
+    public bool CanAdd => !IsAdded;
 
     [RelayCommand]
     private void Add() => owner.AddPart(part);

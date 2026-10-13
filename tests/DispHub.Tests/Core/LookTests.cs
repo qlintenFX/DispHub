@@ -179,14 +179,14 @@ public sealed class LookTests
         var none = new Profile { Effect = LookLibrary.None };
         var keep = new Profile();
 
-        Assert.Equal(("redNight", Looks.Find("redNight")!.Look), Swap(LookLibrary.Effective(effects, night, paused: false)));
-        Assert.Equal((null, null), Swap(LookLibrary.Effective(effects, none, paused: false)));
-        Assert.Equal(("film", effects.Look), Swap(LookLibrary.Effective(effects, keep, paused: false)));
-        Assert.Equal((null, null), Swap(LookLibrary.Effective(effects, night, paused: true)));
+        Assert.Equal(("redNight", Looks.Find("redNight")!.Look), Swap(LookLibrary.Effective(effects, night, profilesOff: false)));
+        Assert.Equal((null, null), Swap(LookLibrary.Effective(effects, none, profilesOff: false)));
+        Assert.Equal(("film", effects.Look), Swap(LookLibrary.Effective(effects, keep, profilesOff: false)));
+        Assert.Equal(("film", effects.Look), Swap(LookLibrary.Effective(effects, night, profilesOff: true))); // profiles off: the page's look
 
         effects.Enabled = false;
-        Assert.Equal((null, null), Swap(LookLibrary.Effective(effects, keep, paused: false)));
-        Assert.Equal("redNight", LookLibrary.Effective(effects, night, paused: false).Id);
+        Assert.Equal((null, null), Swap(LookLibrary.Effective(effects, keep, profilesOff: false)));
+        Assert.Equal("redNight", LookLibrary.Effective(effects, night, profilesOff: false).Id);
     }
 
     [Fact]
@@ -232,7 +232,7 @@ public sealed class LookTests
     {
         var effects = new EffectsConfig { Enabled = true, Look = new Look { Grain = 0.6 }, Strength = 0.5 };
 
-        Assert.Equal(0.3, LookLibrary.Effective(effects, null, paused: false).Look!.Grain, 6);
+        Assert.Equal(0.3, LookLibrary.Effective(effects, null, profilesOff: false).Look!.Grain, 6);
     }
 
     [Fact]
@@ -289,7 +289,7 @@ public sealed class LookTests
             ],
         };
         config.Effects.Strength = double.NaN;
-        config.Ui.Backdrop = WindowBackdrop.Acrylic;
+        config.Ui.Backdrop = (WindowBackdrop)42;
         config.Profiles[0].Effect = "saved:missing";
         config.Profiles[1].Effect = LookLibrary.None;
 

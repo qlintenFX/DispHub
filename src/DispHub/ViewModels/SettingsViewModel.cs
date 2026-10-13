@@ -33,7 +33,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     }
 
     public IReadOnlyList<ThemePreference> Themes { get; } = Enum.GetValues<ThemePreference>();
-    public IReadOnlyList<WindowBackdrop> Backdrops { get; } = [WindowBackdrop.Mica, WindowBackdrop.MicaAlt, WindowBackdrop.Solid];
+    public IReadOnlyList<WindowBackdrop> Backdrops { get; } = [WindowBackdrop.Mica, WindowBackdrop.MicaAlt, WindowBackdrop.Acrylic, WindowBackdrop.Solid];
     public IReadOnlyList<TrayClickAction> TrayActions { get; } = Enum.GetValues<TrayClickAction>();
     public IReadOnlyList<OsdPosition> OsdPositions { get; } = Enum.GetValues<OsdPosition>();
 

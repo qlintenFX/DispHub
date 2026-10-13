@@ -29,20 +29,22 @@ public sealed partial class QuickPanelViewModel : ObservableObject
         _app.ConfigChanged += (_, _) => Refresh();
         _app.ProfileEdited += (_, _) => Refresh();
         _effects.Changed += (_, _) => Refresh();
+        _app.PowerChanged += (_, _) => Refresh();
     }
 
     /// <summary>Opens the main window; set by the tray.</summary>
     public Action? OpenWindow { get; set; }
-
-    /// <summary>Quits DispHub; set by the tray.</summary>
-    public Action? Exit { get; set; }
 
     /// <summary>Asks the panel to close.</summary>
     public event EventHandler? CloseRequested;
 
     public ObservableCollection<QuickProfile> Profiles { get; } = [];
 
+    /// <summary>Profiles on (the switch at the top).</summary>
     [ObservableProperty] public partial bool IsActive { get; set; }
+
+    /// <summary>DispHub's master switch (the power button).</summary>
+    [ObservableProperty] public partial bool IsOn { get; set; }
     [ObservableProperty] public partial string Status { get; set; } = "";
     [ObservableProperty] public partial bool CanAdjust { get; set; }
     [ObservableProperty] public partial string AdjustingText { get; set; } = "";
@@ -62,14 +64,15 @@ public sealed partial class QuickPanelViewModel : ObservableObject
             AppConfig config = _app.Config;
             RuleOutput? current = _app.Current;
             IsActive = !config.IsPaused;
+            IsOn = !config.IsOff;
 
             Profiles.Clear();
             foreach (Profile profile in config.Profiles.Take(8))
-                Profiles.Add(new QuickProfile(this, profile.Id, profile.Name, Controls.ColorPreview.Render(profile.Color), !config.IsPaused && current?.ProfileId == profile.Id));
+                Profiles.Add(new QuickProfile(this, profile.Id, profile.Name, Controls.ColorPreview.Render(profile.Color), !config.IsPaused && !config.IsOff && current?.ProfileId == profile.Id));
 
             Profile? active = current?.ProfileId is { } id ? _app.FindProfile(id) : null;
-            Status = config.IsPaused || active is null
-                ? Loc.Get("Quick_Paused")
+            Status = config.IsOff ? Loc.Get("Quick_Off")
+                : config.IsPaused || active is null ? Loc.Get("Quick_Paused")
                 : Loc.Format(current!.Reason switch
                 {
                     TargetReason.Schedule => "Quick_FromSchedule",
@@ -77,7 +80,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
                     _ => "Quick_Active",
                 }, active.Name);
 
-            _adjusting = config.IsPaused ? null : active?.Id;
+            _adjusting = config.IsPaused || config.IsOff ? null : active?.Id;
             CanAdjust = _adjusting is not null;
             AdjustingText = active is null ? "" : Loc.Format("Quick_Adjusting", active.Name);
             Brightness = active?.Color.Brightness ?? 0;
@@ -149,11 +152,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Quit()
-    {
-        CloseRequested?.Invoke(this, EventArgs.Empty);
-        Exit?.Invoke();
-    }
+    private void TogglePower() => _app.ToggleOff(ChangeSource.Tray);
 
     private void Adjust(Func<ColorSettings, ColorSettings> change)
     {

@@ -57,6 +57,8 @@ public sealed partial class MainViewModel : ObservableObject
         SelectedPage = AllPages.FirstOrDefault(p => p.Key == app.Config.Ui.StartPage) ?? profiles;
         _license.Changed += (_, _) => System.Windows.Application.Current?.Dispatcher.BeginInvoke(RefreshLicense);
         _app.ConfigChanged += (_, _) => RefreshLayout();
+        _app.PowerChanged += (_, _) => IsOn = !_app.Config.IsOff;
+        IsOn = !_app.Config.IsOff;
         RefreshLicense();
         RefreshLayout();
     }
@@ -130,6 +132,12 @@ public sealed partial class MainViewModel : ObservableObject
         _isNarrow = narrow;
         RefreshLayout();
     }
+
+    /// <summary>DispHub's master switch, at the top of the menu on every page.</summary>
+    [ObservableProperty] public partial bool IsOn { get; set; }
+
+    [RelayCommand]
+    private void TogglePower() => _app.ToggleOff(ChangeSource.Editor);
 
     [RelayCommand]
     private Task Upgrade() => _upgrade.PurchaseAsync();

@@ -250,9 +250,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   <data name="Profiles_OneDisplay" xml:space="preserve">
     <value>1 Bildschirm</value>
   </data>
-  <data name="Profiles_PauseTooltip" xml:space="preserve">
-    <value>Ausschalten, um die Originalfarben deiner Bildschirme anzuzeigen</value>
-  </data>
   <data name="Profiles_Reset" xml:space="preserve">
     <value>Auf Original zurücksetzen</value>
   </data>

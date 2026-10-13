@@ -6,9 +6,8 @@ using Microsoft.Extensions.Logging;
 namespace DispHub.Platform.Effects;
 
 /// <param name="MaxFps">Most frames per second for processed looks; 0 follows the display's refresh rate.</param>
-/// <param name="HideFromCapture">Keep layer-only looks out of screenshots and recordings.</param>
 /// <param name="MainDisplayOnly">Only the main display; otherwise all of them.</param>
-public sealed record EffectOptions(int MaxFps = 0, bool HideFromCapture = true, bool MainDisplayOnly = false);
+public sealed record EffectOptions(int MaxFps = 0, bool MainDisplayOnly = false);
 
 /// <summary>
 /// Shows a <see cref="Look"/> on the displays, each drawn by its own GPU thread (see <see cref="EffectOutput"/>).

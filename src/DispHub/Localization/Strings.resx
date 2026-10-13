@@ -254,7 +254,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>1 display</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
-    <value>Turn off to show your displays' original colours</value>
+    <value>Turn profiles off to show your displays' original colours. Screen effects stay as set on the Effects page.</value>
   </data>
   <data name="Profiles_Reset" xml:space="preserve">
     <value>Reset to original</value>
@@ -272,7 +272,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>{0} (picked by hand) on {1}</value>
   </data>
   <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>Off: your displays show their original colours.</value>
+    <value>Profiles are off: your displays show their original colours.</value>
   </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
     <value>{0} (schedule) on {1}</value>
@@ -338,10 +338,10 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>On-screen message</value>
   </data>
   <data name="Settings_Pause" xml:space="preserve">
-    <value>On or off</value>
+    <value>DispHub on or off</value>
   </data>
   <data name="Settings_PauseHint" xml:space="preserve">
-    <value>Turns your profile off to show the original colours, and back on.</value>
+    <value>Turns DispHub off (original colours, no effects) and back on, like the power button.</value>
   </data>
   <data name="Settings_Previous" xml:space="preserve">
     <value>Previous profile</value>
@@ -420,7 +420,7 @@ Logs: {1}</value>
     <value>Open DispHub</value>
   </data>
   <data name="Tray_Pause" xml:space="preserve">
-    <value>Turn off (original colours)</value>
+    <value>Turn DispHub off</value>
   </data>
   <data name="Tray_Paused" xml:space="preserve">
     <value>DispHub · Off</value>
@@ -429,7 +429,7 @@ Logs: {1}</value>
     <value>Ready</value>
   </data>
   <data name="Tray_Resume" xml:space="preserve">
-    <value>Turn on</value>
+    <value>Turn DispHub on</value>
   </data>
   <data name="Upgrade_AppRules" xml:space="preserve">
     <value>Per-app profiles</value>
@@ -663,7 +663,7 @@ It also supports development of DispHub.</value>
     <value>Background</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica tints the window with your wallpaper's colours. Solid is a plain colour.</value>
+    <value>Mica tints the window with your wallpaper's colours, acrylic blurs what's behind it. Windows shows a plain colour while energy saver is on.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Text size</value>
@@ -690,7 +690,7 @@ It also supports development of DispHub.</value>
     <value>Mica</value>
   </data>
   <data name="Enum_WindowBackdrop_MicaAlt" xml:space="preserve">
-    <value>Mica alt</value>
+    <value>Mica Alt</value>
   </data>
   <data name="Enum_WindowBackdrop_Acrylic" xml:space="preserve">
     <value>Acrylic</value>
@@ -779,9 +779,6 @@ It also supports development of DispHub.</value>
   <data name="Effects_Reset" xml:space="preserve">
     <value>Undo changes</value>
   </data>
-  <data name="Effects_ResetSetting" xml:space="preserve">
-    <value>Back to neutral</value>
-  </data>
   <data name="Effects_Clear" xml:space="preserve">
     <value>Start from scratch</value>
   </data>
@@ -803,14 +800,8 @@ It also supports development of DispHub.</value>
   <data name="Effects_PreviewFailed" xml:space="preserve">
     <value>Previews need a graphics driver with Direct3D 11.</value>
   </data>
-  <data name="Effects_Looks" xml:space="preserve">
-    <value>Looks</value>
-  </data>
   <data name="Effects_Adjust" xml:space="preserve">
     <value>Adjust</value>
-  </data>
-  <data name="Effects_Modified" xml:space="preserve">
-    <value>changed</value>
   </data>
   <data name="Effects_Custom" xml:space="preserve">
     <value>Custom</value>
@@ -890,12 +881,6 @@ It also supports development of DispHub.</value>
   <data name="Effects_HideFullScreenHint" xml:space="preserve">
     <value>Turns effects off while a game or video fills a screen, so they can't add delay.</value>
   </data>
-  <data name="Effects_HideCapture" xml:space="preserve">
-    <value>Hide from screenshots</value>
-  </data>
-  <data name="Effects_HideCaptureHint" xml:space="preserve">
-    <value>Keeps grain, vignette and other layers out of screenshots and recordings. Looks that change the picture are always left out.</value>
-  </data>
   <data name="Effects_MainDisplayOnly" xml:space="preserve">
     <value>Main display only</value>
   </data>
@@ -918,7 +903,7 @@ It also supports development of DispHub.</value>
     <value>Match the display</value>
   </data>
   <data name="Effects_Notes" xml:space="preserve">
-    <value>Looks that change the picture follow the screen one frame behind, and can't show protected video or windows that hide themselves from capture. A hotkey to turn effects on and off can be set in Settings.</value>
+    <value>Screenshots, recordings and screen sharing always show your screen without effects. Looks that change the picture follow the screen one frame behind, and can't show protected video. A hotkey to turn effects on and off can be set in Settings.</value>
   </data>
   <data name="LookCategory_All" xml:space="preserve">
     <value>All</value>
@@ -1530,7 +1515,7 @@ It also supports development of DispHub.</value>
     <value>Add effects</value>
   </data>
   <data name="Effects_NoParts" xml:space="preserve">
-    <value>No effects in this look yet. Drag one here from the box, or select its + button.</value>
+    <value>No effects in this look yet. Click one in the box to add it, or drag it here.</value>
   </data>
   <data name="Effects_RemovePart" xml:space="preserve">
     <value>Remove</value>
@@ -1557,7 +1542,7 @@ It also supports development of DispHub.</value>
     <value>Showing {0}</value>
   </data>
   <data name="Displays_ShowingOriginal" xml:space="preserve">
-    <value>Original colours (DispHub is off)</value>
+    <value>Original colours (profiles off)</value>
   </data>
   <data name="Displays_LeftAlone" xml:space="preserve">
     <value>DispHub leaves this display alone</value>
@@ -1713,10 +1698,7 @@ It also supports development of DispHub.</value>
     <value>AM or PM</value>
   </data>
   <data name="Effects_AddPartHint" xml:space="preserve">
-    <value>Drag an effect onto the look, or select +.</value>
-  </data>
-  <data name="Effects_AddThis" xml:space="preserve">
-    <value>Add to the look</value>
+    <value>Click an effect to add it, or drag it onto the look.</value>
   </data>
   <data name="Effects_Customise" xml:space="preserve">
     <value>Customise</value>
@@ -1750,5 +1732,92 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Hue_magenta" xml:space="preserve">
     <value>Magenta</value>
+  </data>
+  <data name="Effects_DoubleClickReset" xml:space="preserve">
+    <value>Double-click to reset</value>
+  </data>
+  <data name="Effects_MoreLooksBack" xml:space="preserve">
+    <value>Earlier looks</value>
+  </data>
+  <data name="Effects_MoreLooksForward" xml:space="preserve">
+    <value>More looks</value>
+  </data>
+  <data name="Power_Name" xml:space="preserve">
+    <value>DispHub on or off</value>
+  </data>
+  <data name="Power_On" xml:space="preserve">
+    <value>DispHub is on</value>
+  </data>
+  <data name="Power_Off" xml:space="preserve">
+    <value>DispHub is off</value>
+  </data>
+  <data name="Power_TurnOff" xml:space="preserve">
+    <value>Turn DispHub off: original colours and no effects</value>
+  </data>
+  <data name="Power_TurnOn" xml:space="preserve">
+    <value>Turn DispHub on</value>
+  </data>
+  <data name="Quick_Off" xml:space="preserve">
+    <value>Off: original colours, no effects</value>
+  </data>
+  <data name="Quick_ProfilesTooltip" xml:space="preserve">
+    <value>Profiles on or off</value>
+  </data>
+  <data name="Osd_ProfilesOff" xml:space="preserve">
+    <value>Profiles off</value>
+  </data>
+  <data name="Tray_ProfilesOff" xml:space="preserve">
+    <value>DispHub · Profiles off</value>
+  </data>
+  <data name="Profiles_StatusOff" xml:space="preserve">
+    <value>DispHub is off: original colours and no effects. Turn it on with the power button.</value>
+  </data>
+  <data name="Displays_ShowingOff" xml:space="preserve">
+    <value>Original colours (DispHub is off)</value>
+  </data>
+  <data name="Onboarding_WelcomeTitle" xml:space="preserve">
+    <value>Welcome to DispHub</value>
+  </data>
+  <data name="Onboarding_WelcomeText" xml:space="preserve">
+    <value>DispHub keeps display profiles: brighter shadows and richer colours for games, warmer and dimmer for the evening, or your screen's own colours. Switch with one click or a hotkey, or let DispHub switch for you per app or by the time of day. Here's how to find everything.</value>
+  </data>
+  <data name="Onboarding_TrayTitle" xml:space="preserve">
+    <value>DispHub lives next to the clock</value>
+  </data>
+  <data name="Onboarding_TrayText" xml:space="preserve">
+    <value>Its icon sits in the notification area at the right of the taskbar. If you don't see it, it's under the ^ arrow; you can drag it out to keep it in view.</value>
+  </data>
+  <data name="Onboarding_LeftClick" xml:space="preserve">
+    <value>Left-click</value>
+  </data>
+  <data name="Onboarding_LeftClickHint" xml:space="preserve">
+    <value>Choose what it opens. You can change this later in Settings.</value>
+  </data>
+  <data name="Onboarding_RightClick" xml:space="preserve">
+    <value>Right-click</value>
+  </data>
+  <data name="Onboarding_RightClickHint" xml:space="preserve">
+    <value>The menu: your profiles, turn DispHub off or on, open the window and exit.</value>
+  </data>
+  <data name="Onboarding_HotkeysTitle" xml:space="preserve">
+    <value>Switch from anywhere</value>
+  </data>
+  <data name="Onboarding_HotkeysText" xml:space="preserve">
+    <value>These keyboard shortcuts work in any app, even in full-screen games. A small message shows which profile is on. Change them in Settings.</value>
+  </data>
+  <data name="Onboarding_PowerTitle" xml:space="preserve">
+    <value>One button turns it all off</value>
+  </data>
+  <data name="Onboarding_PowerText" xml:space="preserve">
+    <value>The power button at the top of DispHub's menu, and in the quick panel, turns DispHub off: your displays show their original colours and screen effects stop. Press it again to carry on where you were.</value>
+  </data>
+  <data name="Onboarding_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Onboarding_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Onboarding_Done" xml:space="preserve">
+    <value>Start using DispHub</value>
   </data>
 </root>

@@ -103,6 +103,9 @@ public sealed class AppController : IDisposable
     /// <summary>The program in front changed (on the UI thread).</summary>
     public event EventHandler? ForegroundChanged;
 
+    /// <summary>The master switch went on or off.</summary>
+    public event EventHandler? PowerChanged;
+
     /// <summary>Hotkeys that couldn't be registered, keyed by action ID.</summary>
     public IReadOnlyDictionary<string, string> HotkeyFailures { get; private set; } = new Dictionary<string, string>();
 
@@ -143,8 +146,9 @@ public sealed class AppController : IDisposable
         if (FindProfile(profileId) is null)
             return;
 
-        if (Config.IsPaused)
-            Config.IsPaused = false;
+        // Picking a profile means wanting to see it.
+        Config.IsPaused = false;
+        Config.IsOff = false;
 
         string context = Current?.ContextKey ?? RuleEngine.BaseContext;
         if (context == RuleEngine.BaseContext)
@@ -160,11 +164,21 @@ public sealed class AppController : IDisposable
         Evaluate(source);
     }
 
+    /// <summary>Profiles on or off (the Profiles page switch). Screen effects follow the Effects page either way.</summary>
     public void TogglePause(ChangeSource source)
     {
         Config.IsPaused = !Config.IsPaused;
         ScheduleSave();
         Evaluate(source);
+    }
+
+    /// <summary>DispHub's master switch: off is original colours, no effects and no automation.</summary>
+    public void ToggleOff(ChangeSource source)
+    {
+        Config.IsOff = !Config.IsOff;
+        ScheduleSave();
+        Evaluate(source);
+        PowerChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void CycleProfile(int direction, ChangeSource source)
@@ -416,7 +430,7 @@ public sealed class AppController : IDisposable
 
     private ColorSettings? DefaultTarget(RuleOutput output)
     {
-        if (Config.IsPaused || output.ProfileId is not { } id || FindProfile(id) is not { } profile)
+        if (Config.IsPaused || Config.IsOff || output.ProfileId is not { } id || FindProfile(id) is not { } profile)
             return null;
         return profile.Color;
     }
@@ -434,7 +448,7 @@ public sealed class AppController : IDisposable
         switch (action)
         {
             case PauseAction:
-                TogglePause(ChangeSource.Hotkey);
+                ToggleOff(ChangeSource.Hotkey);
                 break;
             case NextAction:
                 CycleProfile(1, ChangeSource.Hotkey);

@@ -250,9 +250,6 @@ Se agregará como un perfil nuevo y se activará para que puedas verlo.</value>
   <data name="Profiles_OneDisplay" xml:space="preserve">
     <value>1 pantalla</value>
   </data>
-  <data name="Profiles_PauseTooltip" xml:space="preserve">
-    <value>Desactívalo para ver los colores originales de tus pantallas</value>
-  </data>
   <data name="Profiles_Reset" xml:space="preserve">
     <value>Restablecer original</value>
   </data>

@@ -302,4 +302,9 @@
       </Setter.Value>
     </Setter>
   </Style>
+
+  <!-- Every slider jumps to where it's pressed and keeps following the pointer, like in Windows Settings. -->
+  <Style BasedOn="{StaticResource {x:Type Slider}}" TargetType="Slider">
+    <Setter Property="IsMoveToPointEnabled" Value="True" />
+  </Style>
 </ResourceDictionary>

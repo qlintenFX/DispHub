@@ -9,12 +9,13 @@ namespace DispHub.Controls;
 /// <param name="SlotId">The schedule change that starts this stretch; null when the day continues yesterday's last one.</param>
 /// <param name="Colour">A colour for the profile, from what it does to a photo (warmer, dimmer...).</param>
 /// <param name="FadeMinutes">How long the stretch takes to fade in from the one before it.</param>
-public sealed record TimelineSegment(Guid? SlotId, string Label, Color Colour, double Start, double End, double FadeMinutes);
+/// <param name="Picture">The preview photo in the profile's colours, as on the profile cards.</param>
+public sealed record TimelineSegment(Guid? SlotId, string Label, Color Colour, double Start, double End, double FadeMinutes, ImageSource? Picture = null);
 
 /// <summary>
-/// A 24-hour bar showing which profile runs when: one calm colour per profile, fades blending into each other,
-/// and sunrise, sunset and "now" marked. Clicking a stretch selects the change that starts it. It only shows the
-/// day; the changes are edited in the list under it.
+/// A 24-hour bar showing which profile runs when: each stretch shows the preview photo in that profile's colours
+/// (as on the profile cards), fades blend one photo into the next, and sunrise, sunset and "now" are marked.
+/// Names sit on a small dark label so they read on any photo. Clicking a stretch selects the change that starts it.
 /// </summary>
 public sealed class DayTimeline : FrameworkElement
 {
@@ -84,25 +85,35 @@ public sealed class DayTimeline : FrameworkElement
             if (x1 <= x0)
                 continue;
             var area = new Rect(x0, TrackTop, x1 - x0, TrackHeight);
-            Brush fill = Frozen(new SolidColorBrush(segment.Colour));
             double fadeEnd = X(Math.Min(segment.Start + segment.FadeMinutes, segment.End));
-            if (segment.FadeMinutes > 0 && i > 0 && fadeEnd > x0)
+            bool fades = segment.FadeMinutes > 0 && i > 0 && fadeEnd > x0;
+
+            // A fade shows the photo before it underneath, and this one coming in over it.
+            if (fades)
+                dc.DrawRectangle(Fill(segments[i - 1], track), null, new Rect(x0, TrackTop, fadeEnd - x0, TrackHeight));
+            Brush fill = Fill(segment, track);
+            if (fades)
             {
-                // The fade: from the previous profile's colour into this one's.
-                dc.DrawRectangle(new LinearGradientBrush(segments[i - 1].Colour, segment.Colour, new Point(0, 0), new Point(1, 0)), null,
-                    new Rect(x0, TrackTop, fadeEnd - x0, TrackHeight));
-                dc.DrawRectangle(fill, null, new Rect(fadeEnd, TrackTop, Math.Max(0, x1 - fadeEnd), TrackHeight));
+                var mask = new LinearGradientBrush(Colors.Transparent, Colors.Black, new Point(x0, 0), new Point(fadeEnd, 0)) { MappingMode = BrushMappingMode.Absolute };
+                dc.PushOpacityMask(Frozen(mask));
+                dc.DrawRectangle(fill, null, area);
+                dc.Pop();
             }
             else
             {
                 dc.DrawRectangle(fill, null, area);
+                if (i > 0)
+                    dc.DrawRectangle(Resource("CardBackgroundFillColorDefaultBrush", Brushes.Black), null, new Rect(x0 - 1, TrackTop, 2, TrackHeight));
             }
 
-            // The profile's name, if it fits, in a colour that reads on the fill.
-            Brush ink = Luminance(segment.Colour) > 0.55 ? Brushes.Black : Brushes.White;
-            FormattedText label = Text(segment.Label, 12, ink, dpi, FontWeights.SemiBold);
-            if (label.Width + 16 < area.Width)
-                dc.DrawText(label, new Point(x0 + 8, TrackTop + ((TrackHeight - label.Height) / 2)));
+            // The profile's name on a small dark label, if it fits.
+            FormattedText label = Text(segment.Label, 12, Brushes.White, dpi, FontWeights.SemiBold);
+            var plate = new Rect(Math.Max(x0, fades ? fadeEnd : x0) + 6, TrackTop + ((TrackHeight - label.Height - 4) / 2), label.Width + 12, label.Height + 4);
+            if (plate.Right + 4 < x1)
+            {
+                dc.DrawRoundedRectangle(Frozen(new SolidColorBrush(Color.FromArgb(150, 0, 0, 0))), null, plate, 4, 4);
+                dc.DrawText(label, new Point(plate.X + 6, plate.Y + 2));
+            }
 
             if (segment.SlotId is { } id && id == SelectedSlot)
                 dc.DrawRoundedRectangle(null, new Pen(accent, 2.5), Inset(area, 1.25), 5, 5);
@@ -175,7 +186,11 @@ public sealed class DayTimeline : FrameworkElement
         dc.DrawLine(new Pen(brush, 1) { DashStyle = DashStyles.Dot }, new Point(x, 20), new Point(x, TrackTop));
     }
 
-    private static double Luminance(Color c) => ((0.2126 * c.R) + (0.7152 * c.G) + (0.0722 * c.B)) / 255;
+    /// <summary>The stretch's photo, laid out across the whole bar so neighbouring stretches line up.</summary>
+    private static Brush Fill(TimelineSegment segment, Rect track) =>
+        segment.Picture is { } picture
+            ? Frozen(new ImageBrush(picture) { Stretch = Stretch.UniformToFill, ViewboxUnits = BrushMappingMode.RelativeToBoundingBox, Viewport = track, ViewportUnits = BrushMappingMode.Absolute })
+            : Frozen(new SolidColorBrush(segment.Colour));
 
     private static Rect Inset(Rect r, double by) => new(r.X + by, r.Y + by, Math.Max(0, r.Width - (2 * by)), Math.Max(0, r.Height - (2 * by)));
 

@@ -33,10 +33,13 @@ public sealed class RuleEngineTests
         Assert.Equal(RuleEngine.BaseContext, output.ContextKey);
     }
 
-    [Fact]
-    public void Resolve_Paused_RestoresAllMonitors()
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public void Resolve_ProfilesOffOrDispHubOff_RestoresAllMonitors(bool profilesOff, bool dispHubOff)
     {
-        _config.IsPaused = true;
+        _config.IsPaused = profilesOff;
+        _config.IsOff = dispHubOff;
 
         RuleOutput output = Resolve();
 

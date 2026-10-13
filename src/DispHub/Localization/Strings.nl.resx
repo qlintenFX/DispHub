@@ -250,9 +250,6 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   <data name="Profiles_OneDisplay" xml:space="preserve">
     <value>1 beeldscherm</value>
   </data>
-  <data name="Profiles_PauseTooltip" xml:space="preserve">
-    <value>Schakel uit om de oorspronkelijke kleuren van je beeldschermen te tonen</value>
-  </data>
   <data name="Profiles_Reset" xml:space="preserve">
     <value>Terugzetten naar origineel</value>
   </data>

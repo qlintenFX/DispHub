@@ -143,7 +143,7 @@ public sealed class ColorApplierTests : IDisposable
     }
 
     [Fact]
-    public void RampDimmedWhileIdle_IsLeftUntilInputThenPutBack()
+    public void IdleDimming_IsLeftAlone_AndTheProfileComesBackAtOnceOnInput()
     {
         long idleMs = 0;
         using var applier = new ColorApplier(
@@ -152,15 +152,28 @@ public sealed class ColorApplierTests : IDisposable
         applier.Apply(new MonitorTargets(new Dictionary<string, ColorSettings?>(), Warm));
         WaitFor(() => _backend.SetCalls == 1);
 
-        // A minute without input, and the laptop's OLED care darkens the screen through the ramp.
-        Interlocked.Exchange(ref idleMs, 60_000);
-        _backend.SetFromOutside(RampBuilder.Build(new ColorSettings(Brightness: -40)));
-        Thread.Sleep(2500);
-        Assert.Equal(1, _backend.SetCalls);
+        // Minutes without input: the laptop dims by writing a plain ramp at 60 % (and again every second).
+        Interlocked.Exchange(ref idleMs, 200_000);
+        _backend.SetFromOutside(GammaRamp.Identity().Scaled(0.6));
+        Thread.Sleep(1500);
+        Assert.Equal(1, _backend.SetCalls); // no fight, no flicker
 
-        Interlocked.Exchange(ref idleMs, 0); // the mouse moves
+        // The mouse moves: the profile is back straight away, and again right after the laptop's own undim.
+        Interlocked.Exchange(ref idleMs, 0);
         WaitFor(() => _backend.SetCalls == 2);
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        _backend.SetFromOutside(GammaRamp.Identity());
+        WaitFor(() => _backend.SetCalls == 3);
+        Assert.True(clock.Elapsed < TimeSpan.FromMilliseconds(300), $"took {clock.Elapsed}");
         Assert.True(RampBuilder.Build(Warm).ApproximatelyEquals(_backend.Ramps["\\\\.\\DISPLAY1"], 0));
+    }
+
+    [Fact]
+    public void DimFactor_RecognisesAPlainDimmedRamp()
+    {
+        Assert.Equal(0.6, GammaRamp.Identity().Scaled(0.6).DimFactor()!.Value, 2);
+        Assert.Null(GammaRamp.Identity().DimFactor()); // not dimmed
+        Assert.Null(RampBuilder.Build(Warm).Scaled(0.6).DimFactor()); // coloured: not a plain dimmer
     }
 
     private void Apply(ColorSettings settings) =>

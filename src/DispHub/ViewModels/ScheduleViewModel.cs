@@ -387,7 +387,7 @@ public sealed partial class ScheduleViewModel : PageViewModel
         TimelineSegment Segment(ScheduleSlot slot, Guid? id, double start, double end, double fade)
         {
             Profile profile = RuleEngine.FindProfile(_app.Config, slot.ProfileId)!;
-            return new TimelineSegment(id, profile.Name, ProfileColour(profile.Color), start, end, fade);
+            return new TimelineSegment(id, profile.Name, ProfileColour(profile.Color), start, end, fade, ColorPreview.Render(profile.Color));
         }
 
         Guid? ProfileOf(TimelineSegment segment) =>

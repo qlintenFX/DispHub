@@ -5,6 +5,18 @@ using DispHub.Localization;
 
 namespace DispHub.Controls;
 
+/// <summary>Hides (keeping its space, so nothing moves) when true.</summary>
+public sealed class InverseBoolToHiddenConverter : IValueConverter
+{
+    public static InverseBoolToHiddenConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is true ? Visibility.Hidden : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 public sealed class InverseBoolToVisibilityConverter : IValueConverter
 {
     public static InverseBoolToVisibilityConverter Instance { get; } = new();

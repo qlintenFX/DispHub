@@ -91,6 +91,7 @@ public static class WindowHelpers
         {
             WindowBackdrop.Mica => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_MAINWINDOW,
             WindowBackdrop.MicaAlt => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TABBEDWINDOW,
+            WindowBackdrop.Acrylic => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TRANSIENTWINDOW,
             _ => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_NONE,
         };
         _ = PInvoke.DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, &type, (uint)sizeof(DWM_SYSTEMBACKDROP_TYPE));

@@ -49,6 +49,7 @@ public sealed class EffectsService : IDisposable
         _engine.ProblemChanged += (_, _) => _dispatcher.BeginInvoke(UpdateState);
         _fullScreenCheck.Tick += (_, _) => UpdateFullScreen();
         _app.StateChanged += (_, _) => Apply();
+        _app.PowerChanged += (_, _) => Apply();
         _app.ConfigChanged += (_, _) => Apply();
         _app.MonitorsChanged += (_, _) =>
         {
@@ -78,10 +79,10 @@ public sealed class EffectsService : IDisposable
         Profile? profile = _app.Current?.ProfileId is { } id ? _app.FindProfile(id) : null;
         if (_hiddenProfile is not null && _hiddenProfile != profile?.Id)
             _hiddenProfile = null;
-        (Look? look, string? lookId) = _app.Config.Ui.ShowEffects
-            ? LookLibrary.Effective(effects, profile, _app.Config.IsPaused)
-            : (null, null);
-        FromProfile = profile?.Effect is not null && !_app.Config.IsPaused && _app.Config.Ui.ShowEffects;
+        // DispHub's master switch turns effects off too; the Profiles switch only stops profiles picking them.
+        bool shown = _app.Config.Ui.ShowEffects && !_app.Config.IsOff;
+        (Look? look, string? lookId) = shown ? LookLibrary.Effective(effects, profile, _app.Config.IsPaused) : (null, null);
+        FromProfile = profile?.Effect is not null && !_app.Config.IsPaused && shown;
         if (FromProfile && _hiddenProfile == profile?.Id)
             (look, lookId) = (null, null);
         Current = look;
@@ -95,7 +96,7 @@ public sealed class EffectsService : IDisposable
         }
         else
         {
-            _engine.Apply(look, new EffectOptions(effects.MaxFps, effects.HideFromCapture, effects.MainDisplayOnly));
+            _engine.Apply(look, new EffectOptions(effects.MaxFps, effects.MainDisplayOnly));
             if (effects.HideOverFullScreen)
             {
                 _fullScreenCheck.Start();
@@ -119,7 +120,7 @@ public sealed class EffectsService : IDisposable
     {
         EffectsConfig effects = _app.Config.Effects;
         Profile? profile = _app.Current?.ProfileId is { } id ? _app.FindProfile(id) : null;
-        if (profile?.Effect is not null and not LookLibrary.None && !_app.Config.IsPaused)
+        if (profile?.Effect is not null and not LookLibrary.None && !_app.Config.IsPaused && !_app.Config.IsOff)
         {
             _hiddenProfile = _hiddenProfile == profile.Id ? null : profile.Id;
             Apply();
@@ -128,12 +129,6 @@ public sealed class EffectsService : IDisposable
             return;
         }
         effects.Enabled = !effects.Enabled;
-        if (effects.Enabled && effects.Look.IsEmpty)
-        {
-            // Nothing set up yet: start from a gentle look that does something visible.
-            LookPreset first = Looks.Find("film")!;
-            (effects.Preset, effects.Look) = (first.Id, first.Look);
-        }
         _app.EffectsChanged();
         Apply();
         if (fromHotkey)

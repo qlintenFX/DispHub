@@ -107,7 +107,7 @@ public static class ConfigNormalizer
         config.Hotkeys.ToggleEffects = ValidHotkeyOrNull(config.Hotkeys.ToggleEffects);
         config.Hotkeys.QuickPanel = ValidHotkeyOrNull(config.Hotkeys.QuickPanel);
         config.Ui.OsdDurationMs = Math.Clamp(config.Ui.OsdDurationMs, 500, 10_000);
-        if (config.Ui.Backdrop == WindowBackdrop.Acrylic || !Enum.IsDefined(config.Ui.Backdrop))
+        if (!Enum.IsDefined(config.Ui.Backdrop))
             config.Ui.Backdrop = WindowBackdrop.Mica;
         config.Ui.TextScale = double.IsFinite(config.Ui.TextScale) ? Math.Clamp(config.Ui.TextScale, 0.9, 1.25) : 1.0;
         // Only the offered colours: an older or hand-edited code becomes the closest one.

@@ -86,7 +86,6 @@ public partial class App : Application
         }
 
         ComboBoxClickFix.Register();
-        SliderDragFix.Register();
         _services = ConfigureServices(args);
         _logger = _services.GetRequiredService<ILogger<App>>();
         _logger.LogInformation("DispHub {Version} starting (packaged: {Packaged})", AboutViewModel.Version, PackageInfo.IsPackaged);
@@ -150,9 +149,12 @@ public partial class App : Application
             _logger.LogWarning(ex, "Couldn't register disphub:// links");
         }
 
+        bool startup = LaunchInfo.IsStartupLaunch(args);
         if (FindPresetLink(args) is not null)
             HandleActivation(args);
-        else if (!LaunchInfo.IsStartupLaunch(args))
+        else if (!_controller.Config.Ui.OnboardingDone)
+            ShowOnboarding(openWindowAfter: !startup);
+        else if (!startup)
             ShowMainWindow();
         else
             MemoryTrim.Schedule();
@@ -216,11 +218,22 @@ public partial class App : Application
     {
         QuickPanelViewModel viewModel = _services!.GetRequiredService<QuickPanelViewModel>();
         viewModel.OpenWindow = ShowMainWindow;
-        viewModel.Exit = RequestExit;
         var panel = new QuickPanel(viewModel);
         ThemeService theme = _services!.GetRequiredService<ThemeService>();
         panel.SourceInitialized += (_, _) => theme.Attach(panel);
         return panel;
+    }
+
+    /// <summary>The first-run walkthrough, then (unless DispHub started with Windows) the main window.</summary>
+    private void ShowOnboarding(bool openWindowAfter)
+    {
+        var window = new OnboardingWindow(new OnboardingViewModel(_controller!, _services!.GetRequiredService<IAutostart>()));
+        ThemeService theme = _services!.GetRequiredService<ThemeService>();
+        window.SourceInitialized += (_, _) => theme.Attach(window);
+        if (openWindowAfter)
+            window.Closed += (_, _) => ShowMainWindow();
+        window.Show();
+        window.Activate();
     }
 
     /// <summary>Windows sends several messages for one theme or accent change; follow them once.</summary>

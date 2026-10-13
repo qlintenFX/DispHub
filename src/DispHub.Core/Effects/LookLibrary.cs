@@ -25,15 +25,13 @@ public static class LookLibrary
     }
 
     /// <summary>
-    /// What the screen shows: nothing while paused; the active profile's look when it picks one; otherwise the
-    /// Effects page. Returns the look and the id it came from.
+    /// What the screen shows: the active profile's look when it picks one (unless profiles are off); otherwise
+    /// the Effects page. Returns the look and the id it came from. DispHub's master switch is the caller's job.
     /// </summary>
-    public static (Look? Look, string? Id) Effective(EffectsConfig effects, Profile? activeProfile, bool paused)
+    public static (Look? Look, string? Id) Effective(EffectsConfig effects, Profile? activeProfile, bool profilesOff)
     {
         ArgumentNullException.ThrowIfNull(effects);
-        if (paused)
-            return (null, null);
-        string? chosen = activeProfile?.Effect;
+        string? chosen = profilesOff ? null : activeProfile?.Effect;
         if (chosen == None)
             return (null, null);
         if (chosen is not null && Find(effects, chosen) is { } look)

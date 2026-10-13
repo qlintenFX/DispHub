@@ -14,7 +14,16 @@ public sealed class AppConfig
     /// <summary>The profile applied when no automation rule is active.</summary>
     public Guid? ActiveProfileId { get; set; }
 
-    /// <summary>Paused means DispHub has restored the original colours and ignores rules until resumed.</summary>
+    /// <summary>
+    /// The master switch is off: original colours, no screen effects, no automation, until it's turned back on.
+    /// The power button in the window and the quick panel, the tray menu and the on/off hotkey use it.
+    /// </summary>
+    public bool IsOff { get; set; }
+
+    /// <summary>
+    /// Profiles are off (the switch on the Profiles page): original colours and no automation. Screen effects
+    /// still follow the Effects page.
+    /// </summary>
     public bool IsPaused { get; set; }
 
     /// <summary>Per-monitor options keyed by monitor device path (stable across reboots).</summary>
@@ -173,7 +182,7 @@ public enum WindowBackdrop
     Mica,
     MicaAlt,
 
-    /// <summary>No longer offered for the window (acrylic is for flyouts); read as <see cref="Mica"/>.</summary>
+    /// <summary>Blurs what's behind the window.</summary>
     Acrylic,
     Solid,
 }
@@ -218,6 +227,9 @@ public sealed class UiConfig
 
     /// <summary>The one-time "still running" notification was shown.</summary>
     public bool TrayHintShown { get; set; }
+
+    /// <summary>The first-run walkthrough was finished or closed.</summary>
+    public bool OnboardingDone { get; set; }
 
     /// <summary>The page the window opens on, by name; null for Profiles.</summary>
     public string? StartPage { get; set; }

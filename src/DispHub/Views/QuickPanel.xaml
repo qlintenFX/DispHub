@@ -47,7 +47,7 @@
           HorizontalAlignment="Right"
           VerticalAlignment="Center"
           IsChecked="{Binding IsActive}"
-          ToolTip="{l:Tr Profiles_PauseTooltip}" />
+          ToolTip="{l:Tr Quick_ProfilesTooltip}" />
       </Grid>
 
       <!-- Profiles -->
@@ -214,13 +214,28 @@
           Command="{Binding OpenCommand}"
           Content="{l:Tr Quick_Open}"
           Icon="{ui:SymbolIcon Open24}" />
+        <!-- DispHub's master switch: lit while on. -->
         <ui:Button
+          Width="40"
+          Height="34"
+          Padding="0"
           HorizontalAlignment="Right"
-          Appearance="Transparent"
-          Command="{Binding QuitCommand}"
+          Command="{Binding TogglePowerCommand}"
           Icon="{ui:SymbolIcon Power24}"
-          ToolTip="{l:Tr Tray_Exit}"
-          AutomationProperties.Name="{l:Tr Tray_Exit}" />
+          AutomationProperties.Name="{l:Tr Power_Name}">
+          <ui:Button.Style>
+            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
+              <Setter Property="Appearance" Value="Primary" />
+              <Setter Property="ToolTip" Value="{l:Tr Power_TurnOff}" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsOn}" Value="False">
+                  <Setter Property="Appearance" Value="Secondary" />
+                  <Setter Property="ToolTip" Value="{l:Tr Power_TurnOn}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ui:Button.Style>
+        </ui:Button>
       </Grid>
     </StackPanel>
   </Grid>
