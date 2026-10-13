@@ -6,7 +6,7 @@ namespace DispHub.Core.Licensing;
 /// </summary>
 public sealed record FeatureGate(bool IsPro)
 {
-    public const int FreeProfileLimit = 5;
+    public const int FreeProfileLimit = 3;
 
     public int MaxProfiles => IsPro ? int.MaxValue : FreeProfileLimit;
     public bool AppRules => IsPro;

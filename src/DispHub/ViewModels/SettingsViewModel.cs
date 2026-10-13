@@ -23,7 +23,11 @@ public sealed partial class SettingsViewModel : PageViewModel
         _autostart = autostart;
         _theme = theme;
         _app.ConfigChanged += (_, _) => Load();
-        Swatches = [.. ThemeService.AccentPalette.Select(a => new AccentChoice(a, a, Brush(a)))];
+        AccentChoices =
+        [
+            new(null, Loc.Get("Settings_AccentWindows"), Brush(SystemAccentHex())),
+            .. Accents.All.Select(a => new AccentChoice(a.Hex, Loc.Get($"Accent_{a.Key}"), Brush(a.Hex))),
+        ];
         Load();
         _ = LoadAutostartAsync();
     }
@@ -32,10 +36,9 @@ public sealed partial class SettingsViewModel : PageViewModel
     public IReadOnlyList<WindowBackdrop> Backdrops { get; } = [WindowBackdrop.Mica, WindowBackdrop.MicaAlt, WindowBackdrop.Solid];
     public IReadOnlyList<TrayClickAction> TrayActions { get; } = Enum.GetValues<TrayClickAction>();
     public IReadOnlyList<OsdPosition> OsdPositions { get; } = Enum.GetValues<OsdPosition>();
-    public IReadOnlyList<AccentChoice> Swatches { get; }
 
-    public IReadOnlyList<AccentModeChoice> AccentModes { get; } =
-        [new(false, Loc.Get("Settings_AccentWindows")), new(true, Loc.Get("Settings_AccentCustom"))];
+    /// <summary>Same as Windows first, then the colours DispHub offers.</summary>
+    public IReadOnlyList<AccentChoice> AccentChoices { get; }
 
     public IReadOnlyList<ScaleChoice> TextScales { get; } =
         [new(0.9, "90 %"), new(1.0, Loc.Get("Settings_TextNormal")), new(1.1, "110 %"), new(1.25, "125 %")];
@@ -50,17 +53,13 @@ public sealed partial class SettingsViewModel : PageViewModel
     public IReadOnlyList<StartPageChoice> StartPages { get; set; } = [];
 
     [ObservableProperty] public partial ThemePreference Theme { get; set; }
-    [ObservableProperty] public partial AccentModeChoice? AccentMode { get; set; }
-    [ObservableProperty] public partial bool IsCustomAccent { get; set; }
-    [ObservableProperty] public partial AccentChoice? Swatch { get; set; }
-    [ObservableProperty] public partial string CustomAccent { get; set; } = "";
-    [ObservableProperty] public partial bool CustomAccentInvalid { get; set; }
+    [ObservableProperty] public partial AccentChoice? Accent { get; set; }
     [ObservableProperty] public partial bool ShowEffects { get; set; }
     [ObservableProperty] public partial string? QuickPanelHotkey { get; set; }
     [ObservableProperty] public partial WindowBackdrop Backdrop { get; set; }
     [ObservableProperty] public partial bool CompactNavigation { get; set; }
     [ObservableProperty] public partial ScaleChoice? TextScale { get; set; }
-    [ObservableProperty] public partial bool ReduceMotion { get; set; }
+    [ObservableProperty] public partial bool Animations { get; set; }
     [ObservableProperty] public partial PreviewPictureChoice? PreviewPicture { get; set; }
     [ObservableProperty] public partial StartPageChoice? StartPage { get; set; }
     [ObservableProperty] public partial LanguageChoice? Language { get; set; }
@@ -80,35 +79,10 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     partial void OnThemeChanged(ThemePreference value) => SaveAppearance(c => c.Ui.Theme = value);
 
-    partial void OnAccentModeChanged(AccentModeChoice? value)
+    partial void OnAccentChanged(AccentChoice? value)
     {
-        IsCustomAccent = value?.Custom == true;
-        if (_loading || value is null)
-            return;
-        // Choosing a colour starts from the Windows accent, so nothing jumps until a colour is picked.
-        string? hex = value.Custom ? Swatch?.Hex ?? SystemAccentHex() : null;
-        SaveAppearance(c => c.Ui.AccentColor = hex);
-        Load();
-    }
-
-    partial void OnSwatchChanged(AccentChoice? value)
-    {
-        if (_loading || value?.Hex is null)
-            return;
-        SaveAppearance(c => c.Ui.AccentColor = value.Hex);
-        Load();
-    }
-
-    partial void OnCustomAccentChanged(string value)
-    {
-        if (_loading)
-            return;
-        string hex = value.Trim();
-        if (!hex.StartsWith('#'))
-            hex = "#" + hex;
-        CustomAccentInvalid = ThemeService.ParseAccent(hex) is null;
-        if (!CustomAccentInvalid)
-            SaveAppearance(c => c.Ui.AccentColor = hex.ToUpperInvariant());
+        if (value is not null)
+            SaveAppearance(c => c.Ui.AccentColor = value.Hex);
     }
 
     partial void OnShowEffectsChanged(bool value)
@@ -131,7 +105,7 @@ public sealed partial class SettingsViewModel : PageViewModel
             Save(c => c.Ui.TextScale = value.Scale);
     }
 
-    partial void OnReduceMotionChanged(bool value) => Save(c => c.Ui.ReduceMotion = value);
+    partial void OnAnimationsChanged(bool value) => Save(c => c.Ui.ReduceMotion = !value);
 
     partial void OnPreviewPictureChanged(PreviewPictureChoice? value)
     {
@@ -214,17 +188,13 @@ public sealed partial class SettingsViewModel : PageViewModel
         {
             UiConfig ui = _app.Config.Ui;
             Theme = ui.Theme;
-            AccentMode = AccentModes[ui.AccentColor is null ? 0 : 1];
-            IsCustomAccent = ui.AccentColor is not null;
-            Swatch = Swatches.FirstOrDefault(a => string.Equals(a.Hex, ui.AccentColor, StringComparison.OrdinalIgnoreCase));
-            CustomAccent = ui.AccentColor ?? "";
-            CustomAccentInvalid = false;
+            Accent = AccentChoices.FirstOrDefault(a => string.Equals(a.Hex, ui.AccentColor, StringComparison.OrdinalIgnoreCase)) ?? AccentChoices[0];
             ShowEffects = ui.ShowEffects;
             QuickPanelHotkey = _app.Config.Hotkeys.QuickPanel;
-            Backdrop = ui.Backdrop == WindowBackdrop.Acrylic ? WindowBackdrop.Mica : ui.Backdrop;
+            Backdrop = ui.Backdrop;
             CompactNavigation = ui.CompactNavigation;
             TextScale = TextScales.MinBy(s => Math.Abs(s.Scale - ui.TextScale));
-            ReduceMotion = ui.ReduceMotion;
+            Animations = !ui.ReduceMotion;
             PreviewPicture = PreviewPictures.FirstOrDefault(p => p.Id == Controls.ColorPreview.Picture);
             StartPage = StartPages.FirstOrDefault(p => p.Key == ui.StartPage) ?? (StartPages.Count > 0 ? StartPages[0] : null);
             Language = LanguageChoices.FirstOrDefault(l => l.Code == ui.Language) ?? LanguageChoices[0];
@@ -339,11 +309,6 @@ public sealed record PreviewPictureChoice(string Id, string Name, ImageSource Im
 }
 
 public sealed record AccentChoice(string? Hex, string Name, Brush Swatch)
-{
-    public override string ToString() => Name;
-}
-
-public sealed record AccentModeChoice(bool Custom, string Name)
 {
     public override string ToString() => Name;
 }

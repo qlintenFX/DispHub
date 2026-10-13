@@ -161,6 +161,8 @@ public sealed class RuleEngineTests
     [InlineData("cs2.exe", @"C:\Games\cs2_launcher.exe", false)]
     [InlineData(@"C:\Games\cs2.exe", @"c:\games\cs2.exe", true)]
     [InlineData(@"C:\Games\cs2.exe", @"D:\Games\cs2.exe", false)]
+    [InlineData(@"C:\Games\cs2.exe", "cs2.exe", true)] // Windows only told us the name
+    [InlineData(@"C:\Games\cs2.exe", "notepad.exe", false)]
     public void Matches_ByFileNameOrFullPath(string rule, string path, bool expected) =>
         Assert.Equal(expected, RuleEngine.Matches(new AppRule { Executable = rule }, path));
 

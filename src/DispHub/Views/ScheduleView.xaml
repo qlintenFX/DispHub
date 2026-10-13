@@ -12,40 +12,11 @@
   d:DataContext="{d:DesignInstance Type=vm:ScheduleViewModel}"
   mc:Ignorable="d">
   <UserControl.Resources>
-    <Style x:Key="FieldCaption" BasedOn="{StaticResource Hint}" TargetType="TextBlock">
-      <Setter Property="Margin" Value="2,0,0,4" />
+    <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
+      <Setter Property="MinWidth" Value="200" />
     </Style>
-    <Style x:Key="Field" TargetType="StackPanel">
-      <Setter Property="Margin" Value="0,0,16,8" />
-    </Style>
-
-    <!-- A big button that starts a schedule from a common setup. -->
-    <Style x:Key="StarterButton" TargetType="Button">
-      <Setter Property="Margin" Value="0,0,8,8" />
-      <Setter Property="Width" Value="236" />
-      <Setter Property="Cursor" Value="Hand" />
-      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="Button">
-            <Border
-              x:Name="Card"
-              Padding="14,12"
-              Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-              BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-              BorderThickness="1"
-              CornerRadius="8">
-              <ContentPresenter />
-            </Border>
-            <ControlTemplate.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="Card" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
-                <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-              </Trigger>
-            </ControlTemplate.Triggers>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
+    <Style BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
+      <Setter Property="Margin" Value="0,6" />
     </Style>
   </UserControl.Resources>
 
@@ -69,87 +40,12 @@
       Severity="Informational"
       Visibility="{Binding IsPro, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
 
-    <!-- No schedule yet: start from a common setup. -->
-    <StackPanel Visibility="{Binding HasSlots, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
-      <TextBlock
-        Margin="2,4,0,10"
-        FontWeight="SemiBold"
-        Text="{l:Tr Schedule_StartTitle}" />
-      <WrapPanel>
-        <Button
-          Command="{Binding ApplyTemplateCommand}"
-          CommandParameter="sunset"
-          Style="{StaticResource StarterButton}">
-          <StackPanel>
-            <ui:SymbolIcon
-              HorizontalAlignment="Left"
-              FontSize="24"
-              Symbol="WeatherSunnyLow24" />
-            <TextBlock
-              Margin="0,8,0,2"
-              FontWeight="SemiBold"
-              Text="{l:Tr Schedule_StartSun}" />
-            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Schedule_StartSunHint}" />
-          </StackPanel>
-        </Button>
-        <Button
-          Command="{Binding ApplyTemplateCommand}"
-          CommandParameter="hours"
-          Style="{StaticResource StarterButton}">
-          <StackPanel>
-            <ui:SymbolIcon
-              HorizontalAlignment="Left"
-              FontSize="24"
-              Symbol="Clock24" />
-            <TextBlock
-              Margin="0,8,0,2"
-              FontWeight="SemiBold"
-              Text="{l:Tr Schedule_StartHours}" />
-            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Schedule_StartHoursHint}" />
-          </StackPanel>
-        </Button>
-        <Button
-          Command="{Binding ApplyTemplateCommand}"
-          CommandParameter="blank"
-          Style="{StaticResource StarterButton}">
-          <StackPanel>
-            <ui:SymbolIcon
-              HorizontalAlignment="Left"
-              FontSize="24"
-              Symbol="Add24" />
-            <TextBlock
-              Margin="0,8,0,2"
-              FontWeight="SemiBold"
-              Text="{l:Tr Schedule_StartBlank}" />
-            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Schedule_StartBlankHint}" />
-          </StackPanel>
-        </Button>
-      </WrapPanel>
-    </StackPanel>
-
-    <!-- The day -->
-    <StackPanel Visibility="{Binding HasSlots, Converter={StaticResource BoolToVisibility}}">
-      <Border Padding="18,12,18,14" Style="{StaticResource SettingCard}">
-        <StackPanel>
-          <Grid Margin="0,0,0,4" Visibility="{Binding ShowDayPicker, Converter={StaticResource BoolToVisibility}}">
-            <TextBlock
-              VerticalAlignment="Center"
-              Style="{StaticResource Hint}"
-              Text="{l:Tr Schedule_ShowingDay}" />
-            <ComboBox
-              MinWidth="170"
-              HorizontalAlignment="Right"
-              AutomationProperties.Name="{l:Tr Schedule_ShowingDay}"
-              ItemsSource="{Binding Days}"
-              SelectedItem="{Binding SelectedDay}" />
-          </Grid>
-          <ctl:DayTimeline
-            Now="{Binding Now}"
-            Segments="{Binding Segments}"
-            SelectedSlot="{Binding SelectedSlotId}"
-            Sunrise="{Binding Sunrise}"
-            Sunset="{Binding Sunset}" />
-          <DockPanel Margin="0,6,0,0" Visibility="{Binding UsesSun, Converter={StaticResource BoolToVisibility}}">
+    <!-- When: like Night light in Windows Settings. -->
+    <Border Padding="18,8,18,10" Style="{StaticResource SettingCard}">
+      <StackPanel>
+        <RadioButton Content="{l:Tr Schedule_SunsetToSunrise}" IsChecked="{Binding IsSunMode}" />
+        <StackPanel Margin="28,0,0,4" Visibility="{Binding IsSunMode, Converter={StaticResource BoolToVisibility}}">
+          <DockPanel>
             <ui:HyperlinkButton
               Padding="6,2"
               Command="{Binding EditPlaceCommand}"
@@ -164,186 +60,190 @@
             <TextBlock
               VerticalAlignment="Center"
               Style="{StaticResource Hint}"
-              Text="{Binding SunText}" />
+              Text="{Binding SunText}"
+              TextWrapping="Wrap" />
           </DockPanel>
-
-          <!-- Where sunrise and sunset are worked out for. -->
-          <StackPanel Margin="0,10,0,0" Visibility="{Binding IsEditingPlace, Converter={StaticResource BoolToVisibility}}">
-            <DockPanel>
-              <ui:Button
-                Margin="8,0,0,0"
-                Command="{Binding UseMyLocationCommand}"
-                Content="{l:Tr Schedule_UseMyLocation}"
-                DockPanel.Dock="Right"
-                Icon="{ui:SymbolIcon Location24}" />
-              <ui:ProgressRing
-                Width="18"
-                Height="18"
-                Margin="8,0,0,0"
-                DockPanel.Dock="Right"
-                IsIndeterminate="True"
-                Visibility="{Binding IsLocating, Converter={StaticResource BoolToVisibility}}" />
-              <ui:TextBox
-                Icon="{ui:SymbolIcon Search24}"
-                PlaceholderText="{l:Tr Schedule_SearchCity}"
-                Text="{Binding LocationQuery, UpdateSourceTrigger=PropertyChanged}" />
-            </DockPanel>
-            <TextBlock
-              Margin="0,6,0,0"
-              Style="{StaticResource ErrorText}"
-              Text="{Binding LocationError}"
-              Visibility="{Binding LocationError, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
-            <ItemsControl Margin="0,4,0,0" ItemsSource="{Binding LocationResults}">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <WrapPanel />
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type sch:Place}">
-                  <ui:Button
-                    Margin="0,4,6,0"
-                    Command="{Binding DataContext.ChoosePlaceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    CommandParameter="{Binding}"
-                    Icon="{ui:SymbolIcon Location24}">
-                    <TextBlock>
-                      <Run Text="{Binding Name, Mode=OneWay}" />
-                      <Run Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding Country, Mode=OneWay}" />
-                    </TextBlock>
-                  </ui:Button>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <TextBlock
-              Margin="0,6,0,0"
-              Style="{StaticResource Hint}"
-              Text="{l:Tr Schedule_LocationHint}" />
-          </StackPanel>
         </StackPanel>
-      </Border>
+        <RadioButton Content="{l:Tr Schedule_SetHours}" IsChecked="{Binding IsHoursMode}" />
+        <RadioButton Content="{l:Tr Schedule_Custom}" IsChecked="{Binding IsCustomMode}" />
+      </StackPanel>
+    </Border>
 
-      <!-- The changes -->
+    <!-- Where sunrise and sunset are worked out for. -->
+    <Border Style="{StaticResource SettingCard}" Visibility="{Binding IsEditingPlace, Converter={StaticResource BoolToVisibility}}">
+      <StackPanel>
+        <DockPanel>
+          <ui:Button
+            Margin="8,0,0,0"
+            Command="{Binding UseMyLocationCommand}"
+            Content="{l:Tr Schedule_UseMyLocation}"
+            DockPanel.Dock="Right"
+            Icon="{ui:SymbolIcon Location24}" />
+          <ui:ProgressRing
+            Width="18"
+            Height="18"
+            Margin="8,0,0,0"
+            DockPanel.Dock="Right"
+            IsIndeterminate="True"
+            Visibility="{Binding IsLocating, Converter={StaticResource BoolToVisibility}}" />
+          <ui:TextBox
+            Icon="{ui:SymbolIcon Search24}"
+            PlaceholderText="{l:Tr Schedule_SearchCity}"
+            Text="{Binding LocationQuery, UpdateSourceTrigger=PropertyChanged}" />
+        </DockPanel>
+        <TextBlock
+          Margin="0,6,0,0"
+          Style="{StaticResource ErrorText}"
+          Text="{Binding LocationError}"
+          Visibility="{Binding LocationError, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
+        <ItemsControl Margin="0,4,0,0" ItemsSource="{Binding LocationResults}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type sch:Place}">
+              <ui:Button
+                Margin="0,4,6,0"
+                Command="{Binding DataContext.ChoosePlaceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding}"
+                Icon="{ui:SymbolIcon Location24}">
+                <TextBlock>
+                  <Run Text="{Binding Name, Mode=OneWay}" />
+                  <Run Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding Country, Mode=OneWay}" />
+                </TextBlock>
+              </ui:Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock
+          Margin="0,6,0,0"
+          Style="{StaticResource Hint}"
+          Text="{l:Tr Schedule_LocationHint}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Set hours -->
+    <StackPanel Visibility="{Binding IsHoursMode, Converter={StaticResource BoolToVisibility}}">
+      <ctl:SettingsCard Header="{l:Tr Schedule_TurnOn}" Icon="WeatherMoon24">
+        <ctl:TimePicker Time="{Binding TurnOn}" />
+      </ctl:SettingsCard>
+      <ctl:SettingsCard Header="{l:Tr Schedule_TurnOff}" Icon="WeatherSunny24">
+        <ctl:TimePicker Time="{Binding TurnOff}" />
+      </ctl:SettingsCard>
+    </StackPanel>
+
+    <!-- Night and day profiles, for both simple modes. -->
+    <StackPanel Visibility="{Binding IsSimpleMode, Converter={StaticResource BoolToVisibility}}">
+      <ctl:SettingsCard
+        Description="{l:Tr Schedule_NightProfileHint}"
+        Header="{l:Tr Schedule_NightProfile}"
+        Icon="WeatherMoon24">
+        <ComboBox ItemsSource="{Binding ProfileChoices}" SelectedItem="{Binding NightProfile}" />
+      </ctl:SettingsCard>
+      <ctl:SettingsCard
+        Description="{l:Tr Schedule_DayProfileHint}"
+        Header="{l:Tr Schedule_DayProfile}"
+        Icon="WeatherSunny24">
+        <ComboBox ItemsSource="{Binding ProfileChoices}" SelectedItem="{Binding DayProfile}" />
+      </ctl:SettingsCard>
+    </StackPanel>
+
+    <!-- Custom: a plain list of changes. -->
+    <StackPanel Visibility="{Binding IsCustomMode, Converter={StaticResource BoolToVisibility}}">
       <ctl:SectionHeader Text="{l:Tr Schedule_Changes}">
         <ui:Button
-          Command="{Binding AddSlotCommand}"
+          Command="{Binding AddChangeCommand}"
           Content="{l:Tr Schedule_AddSlot}"
           Icon="{ui:SymbolIcon Add20}" />
       </ctl:SectionHeader>
-      <ItemsControl ItemsSource="{Binding Slots}">
+      <ItemsControl ItemsSource="{Binding Changes}">
         <ItemsControl.ItemTemplate>
-          <DataTemplate DataType="{x:Type vm:ScheduleSlotItem}">
-            <Border Padding="16,12,12,6" Style="{StaticResource SelectableCard}">
+          <DataTemplate DataType="{x:Type vm:ScheduleChangeItem}">
+            <Border Padding="14,8,8,4" Style="{StaticResource SelectableCard}">
               <Border.InputBindings>
                 <MouseBinding Command="{Binding SelectCommand}" MouseAction="LeftClick" />
               </Border.InputBindings>
-              <StackPanel>
-                <Grid Margin="0,0,0,10">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <Border
-                    Width="44"
-                    Height="30"
-                    Margin="0,0,12,0"
-                    VerticalAlignment="Center"
-                    CornerRadius="4">
-                    <Border.Background>
-                      <ImageBrush ImageSource="{Binding Profile.Preview}" RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill" />
-                    </Border.Background>
-                  </Border>
+              <DockPanel>
+                <ui:Button
+                  Width="32"
+                  Height="32"
+                  Margin="4,0,0,4"
+                  Padding="0"
+                  VerticalAlignment="Top"
+                  Appearance="Transparent"
+                  Command="{Binding RemoveCommand}"
+                  DockPanel.Dock="Right"
+                  Icon="{ui:SymbolIcon Dismiss16}"
+                  ToolTip="{l:Tr Schedule_Remove}"
+                  AutomationProperties.Name="{l:Tr Schedule_Remove}" />
+                <WrapPanel>
                   <ComboBox
-                    Grid.Column="1"
-                    MaxWidth="320"
-                    HorizontalAlignment="Left"
+                    MinWidth="150"
+                    Margin="0,0,8,4"
+                    AutomationProperties.Name="{l:Tr Schedule_Starts}"
+                    ItemsSource="{Binding Whens}"
+                    SelectedItem="{Binding When}" />
+                  <ctl:TimePicker
+                    Margin="0,0,8,4"
+                    Time="{Binding Time}"
+                    Visibility="{Binding IsTimeAnchor, Converter={StaticResource BoolToVisibility}}" />
+                  <ComboBox
+                    MinWidth="170"
+                    Margin="0,0,8,4"
                     AutomationProperties.Name="{l:Tr Schedule_Profile}"
                     ItemsSource="{Binding Profiles}"
                     SelectedItem="{Binding Profile}" />
-                  <ui:Button
-                    Grid.Column="2"
-                    Width="32"
-                    Height="32"
-                    Padding="0"
-                    Appearance="Transparent"
-                    Command="{Binding RemoveCommand}"
-                    Icon="{ui:SymbolIcon Delete20}"
-                    ToolTip="{l:Tr Schedule_Remove}"
-                    AutomationProperties.Name="{l:Tr Schedule_Remove}" />
-                </Grid>
-                <WrapPanel Margin="56,0,0,0">
-                  <StackPanel Style="{StaticResource Field}">
-                    <TextBlock Style="{StaticResource FieldCaption}" Text="{l:Tr Schedule_Starts}" />
-                    <StackPanel Orientation="Horizontal">
-                      <ComboBox
-                        MinWidth="140"
-                        AutomationProperties.Name="{l:Tr Schedule_Starts}"
-                        ItemsSource="{Binding Whens}"
-                        SelectedItem="{Binding When}" />
-                      <ComboBox
-                        MinWidth="130"
-                        Margin="6,0,0,0"
-                        AutomationProperties.Name="{l:Tr Schedule_Time}"
-                        ItemsSource="{Binding Times}"
-                        MaxDropDownHeight="300"
-                        SelectedItem="{Binding Time}"
-                        Visibility="{Binding IsTimeAnchor, Converter={StaticResource BoolToVisibility}}" />
-                      <ComboBox
-                        MinWidth="160"
-                        Margin="6,0,0,0"
-                        AutomationProperties.Name="{l:Tr Schedule_Offset}"
-                        ItemsSource="{Binding Offsets}"
-                        MaxDropDownHeight="300"
-                        SelectedItem="{Binding Offset}"
-                        Visibility="{Binding IsSunAnchor, Converter={StaticResource BoolToVisibility}}" />
-                    </StackPanel>
-                  </StackPanel>
-                  <StackPanel Style="{StaticResource Field}">
-                    <TextBlock Style="{StaticResource FieldCaption}" Text="{l:Tr Schedule_Fade}" />
-                    <ComboBox
-                      MinWidth="120"
-                      AutomationProperties.Name="{l:Tr Schedule_Fade}"
-                      ItemsSource="{Binding Fades}"
-                      SelectedItem="{Binding Fade}" />
-                  </StackPanel>
-                  <StackPanel Style="{StaticResource Field}">
-                    <TextBlock Style="{StaticResource FieldCaption}" Text="{l:Tr Schedule_On}" />
-                    <ComboBox
-                      MinWidth="140"
-                      AutomationProperties.Name="{l:Tr Schedule_On}"
-                      ItemsSource="{Binding DaysChoices}"
-                      SelectedItem="{Binding DaysChoice}" />
-                  </StackPanel>
+                  <ComboBox
+                    MinWidth="150"
+                    Margin="0,0,8,4"
+                    AutomationProperties.Name="{l:Tr Schedule_On}"
+                    ItemsSource="{Binding DaysChoices}"
+                    SelectedItem="{Binding DaysChoice}" />
                 </WrapPanel>
-                <ItemsControl
-                  Margin="56,0,0,8"
-                  ItemsSource="{Binding Days}"
-                  Visibility="{Binding IsSomeDays, Converter={StaticResource BoolToVisibility}}">
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <WrapPanel />
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:DayToggle}">
-                      <ToggleButton
-                        Margin="0,0,4,4"
-                        Content="{Binding Label}"
-                        IsChecked="{Binding IsOn}"
-                        Style="{StaticResource ChipToggle}" />
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <TextBlock
-                  Margin="58,0,0,8"
-                  Style="{StaticResource Hint}"
-                  Text="{Binding StartsText}"
-                  Visibility="{Binding StartsText, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
-              </StackPanel>
+              </DockPanel>
             </Border>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
+      <DockPanel Margin="4,4,0,0" Visibility="{Binding UsesSun, Converter={StaticResource BoolToVisibility}}">
+        <ui:HyperlinkButton
+          Padding="6,2"
+          Command="{Binding EditPlaceCommand}"
+          Content="{l:Tr Schedule_ChangePlace}"
+          DockPanel.Dock="Right" />
+        <ui:SymbolIcon
+          Margin="0,0,6,0"
+          VerticalAlignment="Center"
+          FontSize="16"
+          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+          Symbol="Location16" />
+        <TextBlock
+          VerticalAlignment="Center"
+          Style="{StaticResource Hint}"
+          Text="{Binding SunText}"
+          TextWrapping="Wrap" />
+      </DockPanel>
     </StackPanel>
+
+    <ctl:SettingsCard
+      Margin="0,4,0,0"
+      Description="{l:Tr Schedule_FadeHint}"
+      Header="{l:Tr Schedule_Fade}"
+      Icon="ArrowSync24">
+      <ComboBox ItemsSource="{Binding Fades}" SelectedItem="{Binding Fade}" />
+    </ctl:SettingsCard>
+
+    <!-- What today looks like. -->
+    <ctl:SectionHeader Text="{l:Tr Schedule_TodayTitle}" />
+    <Border Padding="18,12,18,14" Style="{StaticResource SettingCard}">
+      <ctl:DayTimeline
+        Now="{Binding Now}"
+        Segments="{Binding Segments}"
+        SelectedSlot="{Binding SelectedSlotId}"
+        Sunrise="{Binding Sunrise}"
+        Sunset="{Binding Sunset}" />
+    </Border>
   </StackPanel>
 </UserControl>

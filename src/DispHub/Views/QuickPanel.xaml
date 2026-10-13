@@ -17,7 +17,7 @@
   ShowInTaskbar="False"
   SizeToContent="Height"
   Topmost="True"
-  WindowBackdropType="Acrylic"
+  WindowBackdropType="Mica"
   WindowCornerPreference="Round"
   mc:Ignorable="d">
   <Grid x:Name="Root" Margin="16,14,16,14">

@@ -31,6 +31,7 @@ public partial class App : Application
     private ILogger<App>? _logger;
     private bool _exiting;
     private bool _restart;
+    private bool _themeChangePending;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -85,6 +86,7 @@ public partial class App : Application
         }
 
         ComboBoxClickFix.Register();
+        SliderDragFix.Register();
         _services = ConfigureServices(args);
         _logger = _services.GetRequiredService<ILogger<App>>();
         _logger.LogInformation("DispHub {Version} starting (packaged: {Packaged})", AboutViewModel.Version, PackageInfo.IsPackaged);
@@ -120,6 +122,7 @@ public partial class App : Application
         _router.DisplayChanged += (_, _) => _controller.OnDisplayChanged();
         _router.Resumed += (_, _) => Dispatcher.BeginInvoke(_controller.OnResumed, DispatcherPriority.Background);
         _router.SessionUnlocked += (_, _) => _controller.OnResumed();
+        _router.ThemeChanged += (_, _) => OnWindowsThemeChanged();
         HotkeyBox.RecordingChanged += (_, recording) =>
         {
             if (recording)
@@ -215,8 +218,22 @@ public partial class App : Application
         viewModel.OpenWindow = ShowMainWindow;
         viewModel.Exit = RequestExit;
         var panel = new QuickPanel(viewModel);
-        _services!.GetRequiredService<ThemeService>().AttachFlyout(panel);
+        ThemeService theme = _services!.GetRequiredService<ThemeService>();
+        panel.SourceInitialized += (_, _) => theme.Attach(panel);
         return panel;
+    }
+
+    /// <summary>Windows sends several messages for one theme or accent change; follow them once.</summary>
+    private void OnWindowsThemeChanged()
+    {
+        if (_themeChangePending)
+            return;
+        _themeChangePending = true;
+        Dispatcher.BeginInvoke(() =>
+        {
+            _themeChangePending = false;
+            _services?.GetRequiredService<ThemeService>().OnWindowsThemeChanged();
+        }, DispatcherPriority.Background);
     }
 
     private void HandleActivation(string[] args)

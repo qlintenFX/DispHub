@@ -158,8 +158,8 @@ public sealed class TrayService : IDisposable
 
         menu.Items.Add(new Separator());
         menu.Items.Add(_app.Config.IsPaused
-            ? Item(Loc.Get("Tray_Resume"), SymbolRegular.Play24, () => _app.TogglePause(ChangeSource.Tray))
-            : Item(Loc.Get("Tray_Pause"), SymbolRegular.Pause24, () => _app.TogglePause(ChangeSource.Tray)));
+            ? Item(Loc.Get("Tray_Resume"), SymbolRegular.Power24, () => _app.TogglePause(ChangeSource.Tray))
+            : Item(Loc.Get("Tray_Pause"), SymbolRegular.Power24, () => _app.TogglePause(ChangeSource.Tray)));
         menu.Items.Add(Item(Loc.Get("Tray_Open"), SymbolRegular.Open24, _openWindow));
         menu.Items.Add(new Separator());
         menu.Items.Add(Item(Loc.Get("Tray_Exit"), SymbolRegular.Dismiss24, _exit));

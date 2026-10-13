@@ -22,7 +22,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         _theme = theme;
         DataContext = viewModel;
         InitializeComponent();
-        Loaded += (_, _) => _theme.Attach(this, _app.Config.Ui);
+        SourceInitialized += (_, _) => _theme.Attach(this);
         SizeChanged += (_, e) => viewModel.SetNarrow(e.NewSize.Width < NarrowWidth);
         Activated += async (_, _) => await review.OnWindowActivatedAsync(this);
         viewModel.PropertyChanged += (_, e) =>

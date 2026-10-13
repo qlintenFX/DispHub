@@ -20,7 +20,7 @@ public sealed class ColorApplierTests : IDisposable
 
     public ColorApplierTests()
     {
-        _applier = new ColorApplier(_backend, JournalPath, NullLogger<ColorApplier>.Instance);
+        _applier = new ColorApplier(_backend, JournalPath, NullLogger<ColorApplier>.Instance, idleTime: () => TimeSpan.Zero);
     }
 
     private string JournalPath => Path.Combine(_dir.Path, "restore.json");
@@ -126,6 +126,43 @@ public sealed class ColorApplierTests : IDisposable
         Assert.Equal(12, _backend.Vibrance.Level);
     }
 
+    [Fact]
+    public void Apply_RampResetJustAfter_IsPutBackQuickly()
+    {
+        _applier.Start();
+        Apply(Warm);
+        WaitFor(() => _backend.SetCalls == 1);
+
+        // A game starting up puts the plain ramp back.
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        _backend.SetFromOutside(GammaRamp.Identity());
+        WaitFor(() => _backend.SetCalls == 2);
+
+        Assert.True(clock.Elapsed < TimeSpan.FromSeconds(3), $"took {clock.Elapsed}");
+        Assert.True(RampBuilder.Build(Warm).ApproximatelyEquals(_backend.Ramps["\\\\.\\DISPLAY1"], 0));
+    }
+
+    [Fact]
+    public void RampDimmedWhileIdle_IsLeftUntilInputThenPutBack()
+    {
+        long idleMs = 0;
+        using var applier = new ColorApplier(
+            _backend, Path.Combine(_dir.Path, "idle.json"), NullLogger<ColorApplier>.Instance, idleTime: () => TimeSpan.FromMilliseconds(Interlocked.Read(ref idleMs)));
+        applier.Start();
+        applier.Apply(new MonitorTargets(new Dictionary<string, ColorSettings?>(), Warm));
+        WaitFor(() => _backend.SetCalls == 1);
+
+        // A minute without input, and the laptop's OLED care darkens the screen through the ramp.
+        Interlocked.Exchange(ref idleMs, 60_000);
+        _backend.SetFromOutside(RampBuilder.Build(new ColorSettings(Brightness: -40)));
+        Thread.Sleep(2500);
+        Assert.Equal(1, _backend.SetCalls);
+
+        Interlocked.Exchange(ref idleMs, 0); // the mouse moves
+        WaitFor(() => _backend.SetCalls == 2);
+        Assert.True(RampBuilder.Build(Warm).ApproximatelyEquals(_backend.Ramps["\\\\.\\DISPLAY1"], 0));
+    }
+
     private void Apply(ColorSettings settings) =>
         _applier.Apply(new MonitorTargets(new Dictionary<string, ColorSettings?>(), settings));
 
@@ -152,13 +189,25 @@ public sealed class ColorApplierTests : IDisposable
         public IReadOnlyList<MonitorInfo> GetMonitors() =>
             [new MonitorInfo(MonitorKey, "\\\\.\\DISPLAY1", "Test", true, false, Hdr, "TST0001")];
 
-        public GammaRamp? GetRamp(string deviceName) => Ramps.TryGetValue(deviceName, out GammaRamp? ramp) ? ramp.Clone() : null;
+        public GammaRamp? GetRamp(string deviceName)
+        {
+            lock (Ramps)
+                return Ramps.TryGetValue(deviceName, out GammaRamp? ramp) ? ramp.Clone() : null;
+        }
 
         public GammaResult SetRamp(string deviceName, GammaRamp ramp)
         {
+            lock (Ramps)
+                Ramps[deviceName] = ramp.Clone();
             Interlocked.Increment(ref _setCalls);
-            Ramps[deviceName] = ramp.Clone();
             return RampLimits.Default.Accepts(ramp) ? GammaResult.Applied : GammaResult.Failed;
+        }
+
+        /// <summary>Another program changes the ramp.</summary>
+        public void SetFromOutside(GammaRamp ramp)
+        {
+            lock (Ramps)
+                Ramps["\\\\.\\DISPLAY1"] = ramp;
         }
 
         public RampLimits GetRampLimits() => RampLimits.Default;

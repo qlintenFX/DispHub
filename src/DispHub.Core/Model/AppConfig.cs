@@ -81,10 +81,29 @@ public sealed class AppRule
 public sealed class ScheduleConfig
 {
     public bool Enabled { get; set; }
+
+    /// <summary>
+    /// How the Schedule page shows <see cref="Slots"/>. The two simple modes are always exactly two slots: the
+    /// night profile first, then the day profile.
+    /// </summary>
+    public ScheduleMode Mode { get; set; }
+
     public List<ScheduleSlot> Slots { get; set; } = [];
 
     /// <summary>Where sunrise and sunset are calculated for; null until the user sets it.</summary>
     public GeoLocation? Location { get; set; }
+}
+
+public enum ScheduleMode
+{
+    /// <summary>A night profile from sunset, a day profile from sunrise.</summary>
+    SunsetToSunrise,
+
+    /// <summary>A night profile between two clock times.</summary>
+    SetHours,
+
+    /// <summary>Any number of changes, each at a time or at sunrise or sunset, on chosen days.</summary>
+    Custom,
 }
 
 /// <summary>What a slot's start time is measured from.</summary>

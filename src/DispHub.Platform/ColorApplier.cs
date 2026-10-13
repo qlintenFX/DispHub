@@ -67,12 +67,27 @@ public sealed class ColorApplier : IColorApplier
 {
     private static readonly TimeSpan WatchdogInterval = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan BackoffDuration = TimeSpan.FromMinutes(5);
+
+    /// <summary>
+    /// Extra checks soon after a change: games and some graphics software reset the ramp just after they start or
+    /// switch to full screen, which is exactly when an app profile was applied.
+    /// </summary>
+    private static readonly TimeSpan[] QuickChecks = [TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(2)];
+
+    /// <summary>
+    /// A ramp changed after this long without input is power-saving dimming (Lenovo and other OLED laptops darken
+    /// the screen after a short idle time). DispHub leaves it and puts the profile back at the next input.
+    /// </summary>
+    private static readonly TimeSpan IdleForDimming = TimeSpan.FromSeconds(15);
+
+    private static readonly TimeSpan InputAgain = TimeSpan.FromSeconds(2);
     private const int MaxResetsPerMinute = 3;
 
     private readonly IDisplayBackend _backend;
     private readonly string _journalPath;
     private readonly ILogger _logger;
     private readonly TimeProvider _time;
+    private readonly Func<TimeSpan> _idleTime;
     private readonly Lock _gate = new();
     private readonly AutoResetEvent _wake = new(false);
     private readonly Thread _thread;
@@ -92,17 +107,27 @@ public sealed class ColorApplier : IColorApplier
     private readonly Dictionary<string, int> _appliedVibrance = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, MonitorColorState> _states = new(StringComparer.OrdinalIgnoreCase);
     private readonly Queue<DateTimeOffset> _externalResets = new();
+    private readonly List<DateTimeOffset> _quickChecks = [];
+    private readonly HashSet<string> _vibranceFailures = new(StringComparer.OrdinalIgnoreCase);
+    private bool _waitingForInput;
     private DateTimeOffset _backoffUntil;
     private RampLimits _limits = RampLimits.Default;
 
     private volatile IReadOnlyList<MonitorStatus> _status = [];
 
-    public ColorApplier(IDisplayBackend backend, string journalPath, ILogger<ColorApplier> logger, TimeProvider? timeProvider = null)
+    /// <param name="idleTime">Time since the last user input; defaults to Windows' own.</param>
+    public ColorApplier(
+        IDisplayBackend backend,
+        string journalPath,
+        ILogger<ColorApplier> logger,
+        TimeProvider? timeProvider = null,
+        Func<TimeSpan>? idleTime = null)
     {
         _backend = backend;
         _journalPath = journalPath;
         _logger = logger;
         _time = timeProvider ?? TimeProvider.System;
+        _idleTime = idleTime ?? Shell.WindowHelpers.IdleTime;
         _thread = new Thread(Run) { IsBackground = true, Name = "DispHub colour" };
     }
 
@@ -181,7 +206,7 @@ public sealed class ColorApplier : IColorApplier
 
         while (true)
         {
-            _wake.WaitOne(WatchdogInterval);
+            _wake.WaitOne(UntilNextCheck());
 
             MonitorTargets requested;
             bool apply, refresh, reapply, stopping;
@@ -209,9 +234,17 @@ public sealed class ColorApplier : IColorApplier
                     RefreshMonitors();
 
                 if (apply || refresh || reapply)
+                {
+                    if (apply)
+                        OnNewTarget();
                     ApplyAll(requested, force: refresh || reapply);
+                }
                 else
+                {
+                    DateTimeOffset now = _time.GetUtcNow();
+                    _quickChecks.RemoveAll(t => t <= now);
                     Watchdog(requested);
+                }
             }
             catch (Exception ex)
             {
@@ -221,6 +254,32 @@ public sealed class ColorApplier : IColorApplier
         }
     }
 
+    /// <summary>A new profile or setting: fight resets again even if another program won earlier, and check soon.</summary>
+    private void OnNewTarget()
+    {
+        _backoffUntil = default;
+        _externalResets.Clear();
+        _waitingForInput = false;
+        ScheduleQuickChecks();
+    }
+
+    private void ScheduleQuickChecks()
+    {
+        DateTimeOffset now = _time.GetUtcNow();
+        _quickChecks.Clear();
+        _quickChecks.AddRange(QuickChecks.Select(delay => now + delay));
+    }
+
+    private TimeSpan UntilNextCheck()
+    {
+        if (_waitingForInput)
+            return TimeSpan.FromMilliseconds(250);
+        if (_quickChecks.Count == 0)
+            return WatchdogInterval;
+        TimeSpan wait = _quickChecks.Min() - _time.GetUtcNow();
+        return wait <= TimeSpan.Zero ? TimeSpan.Zero : wait < WatchdogInterval ? wait : WatchdogInterval;
+    }
+
     private void RefreshMonitors()
     {
         _limits = _backend.GetRampLimits();
@@ -228,6 +287,7 @@ public sealed class ColorApplier : IColorApplier
         _backend.Vibrance?.Refresh(_monitors);
         _appliedRamps.Clear();
         _appliedVibrance.Clear();
+        _vibranceFailures.Clear();
         _logger.LogInformation("Monitors: {Monitors}", string.Join(", ", _monitors.Select(m => $"{m.Name} ({m.DeviceName})")));
     }
 
@@ -329,9 +389,15 @@ public sealed class ColorApplier : IColorApplier
         }
 
         if (vibrance.SetLevel(monitor.DeviceName, level))
+        {
             _appliedVibrance[monitor.Key] = level;
-        else
+            _vibranceFailures.Remove(monitor.Key);
+        }
+        else if (_vibranceFailures.Add(monitor.Key))
+        {
+            // Once per display until it works or the displays change, not on every slider step.
             _logger.LogWarning("{Vendor} vibrance could not be set on {Monitor}", vibrance.Vendor, monitor.Name);
+        }
     }
 
     private bool EnsureOriginalCaptured(MonitorInfo monitor)
@@ -415,6 +481,17 @@ public sealed class ColorApplier : IColorApplier
     /// <summary>Other programs, games and display events can reset the ramp. Put ours back, unless it keeps happening.</summary>
     private void Watchdog(MonitorTargets requested)
     {
+        if (_waitingForInput)
+        {
+            if (_idleTime() >= InputAgain)
+                return;
+            _waitingForInput = false;
+            _logger.LogInformation("Input again after idle dimming; putting the profile back");
+            ApplyAll(requested, force: true);
+            ScheduleQuickChecks(); // The dimmer often restores its own ramp a moment after the input.
+            return;
+        }
+
         DateTimeOffset now = _time.GetUtcNow();
         if (now < _backoffUntil || _appliedRamps.Count == 0)
             return;
@@ -431,6 +508,13 @@ public sealed class ColorApplier : IColorApplier
 
         if (!reset)
             return;
+
+        if (_idleTime() >= IdleForDimming)
+        {
+            _waitingForInput = true;
+            _logger.LogInformation("Display colours changed while the PC was idle (power-saving dimming); waiting for input");
+            return;
+        }
 
         while (_externalResets.Count > 0 && now - _externalResets.Peek() > TimeSpan.FromMinutes(1))
             _externalResets.Dequeue();

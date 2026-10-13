@@ -3,9 +3,11 @@ using System.Windows.Interop;
 using DispHub.Core.Licensing;
 using DispHub.Core.Model;
 using DispHub.Localization;
+using DispHub.Platform.Shell;
 using DispHub.Platform.Store;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using WindowBackdrop = DispHub.Core.Model.WindowBackdrop;
 
 namespace DispHub.Services;
 
@@ -62,126 +64,111 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
 }
 
 /// <summary>
-/// Applies the Appearance settings (theme, accent colour, backdrop) to every DispHub window. WPF-UI only updates
-/// Application.MainWindow, which in DispHub is the hidden host window, so each visible window is registered here.
+/// Applies the Appearance settings (theme, accent colour, window material) to DispHub's windows.
 /// </summary>
+/// <remarks>
+/// Kept deliberately small. WPF-UI swaps the light and dark colours; DispHub sets the accent shades and asks
+/// Windows for the material itself. WPF-UI's window helpers only reach Application.MainWindow (DispHub's hidden
+/// host), and changing a FluentWindow's backdrop after it is created rebuilds its window chrome, which can throw
+/// while the window loads and leave the title bar buttons dead.
+/// </remarks>
 public sealed class ThemeService
 {
-    private readonly List<(FluentWindow Window, bool Flyout)> _windows = [];
-    private FluentWindow? _main;
-    private bool _watching;
+    private readonly List<FluentWindow> _windows = [];
     private UiConfig _ui = new();
 
     public ThemeService()
     {
-        // The Windows theme or accent changed while following it.
+        // Windows got the new theme colours: match the window material (dark or light Mica).
         ApplicationThemeManager.Changed += (_, _) => UpdateWindows();
     }
-
-    /// <summary>Windows' own accent colour palette, in the order Settings shows it.</summary>
-    public static IReadOnlyList<string> AccentPalette { get; } =
-    [
-        "#FFB900", "#FF8C00", "#F7630C", "#CA5010", "#DA3B01", "#EF6950", "#D13438", "#FF4343",
-        "#E74856", "#E81123", "#EA005E", "#C30052", "#E3008C", "#BF0077", "#C239B3", "#9A0089",
-        "#0078D4", "#0063B1", "#8E8CD8", "#6B69D6", "#8764B8", "#744DA9", "#B146C2", "#881798",
-        "#0099BC", "#2D7D9A", "#00B7C3", "#038387", "#00B294", "#018574", "#00CC6A", "#10893E",
-        "#7A7574", "#5D5A58", "#68768A", "#515C6B", "#567C73", "#486860", "#498205", "#107C10",
-        "#767676", "#4C4A48", "#69797E", "#4A5459", "#647C64", "#525E54", "#847545", "#7E735F",
-    ];
 
     public void Apply(UiConfig ui)
     {
         ArgumentNullException.ThrowIfNull(ui);
         _ui = ui;
-        WindowBackdropType backdrop = Backdrop(ui.Backdrop, flyout: false);
-        bool systemAccent = ParseAccent(ui.AccentColor) is null;
-        switch (ui.Theme)
+        ApplicationTheme theme = ui.Theme switch
         {
-            case ThemePreference.Light:
-                ApplicationThemeManager.Apply(ApplicationTheme.Light, backdrop, updateAccent: systemAccent);
-                break;
-            case ThemePreference.Dark:
-                ApplicationThemeManager.Apply(ApplicationTheme.Dark, backdrop, updateAccent: systemAccent);
-                break;
-            default:
-                ApplicationThemeManager.ApplySystemTheme(updateAccent: systemAccent);
-                break;
-        }
-        if (ParseAccent(ui.AccentColor) is { } accent)
-            ApplicationAccentColorManager.Apply(accent, ApplicationThemeManager.GetAppTheme());
+            ThemePreference.Light => ApplicationTheme.Light,
+            ThemePreference.Dark => ApplicationTheme.Dark,
+            _ => WindowsTheme(),
+        };
+
+        // Accent first, then reload the theme colours: WPF-UI's switch, slider and check box brushes read the accent
+        // only when its theme colours load, so a new accent alone would leave them in the old colour.
+        ApplyAccent(theme);
+        ApplicationThemeManager.Apply(theme, WindowBackdropType.None, updateAccent: false);
+        ApplyAccent(theme); // Picks the fill shade for the theme that is now on.
         UpdateWindows();
+    }
 
-        // Follow live Windows theme changes only when the user chose "System". The watcher needs a loaded window.
-        if (_main is not { IsLoaded: true })
+    /// <summary>Windows switched light or dark mode, or its accent colour.</summary>
+    public void OnWindowsThemeChanged() => Apply(_ui);
+
+    /// <summary>Call from the window's SourceInitialized, before it first shows.</summary>
+    public void Attach(FluentWindow window)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+        if (_windows.Contains(window))
             return;
-        if (_watching)
+        _windows.Add(window);
+        window.Closed += (_, _) => _windows.Remove(window);
+        UpdateWindow(window);
+    }
+
+    private static ApplicationTheme WindowsTheme()
+    {
+        SystemThemeManager.UpdateSystemThemeCache();
+        return ApplicationThemeManager.GetSystemTheme() switch
         {
-            SystemThemeWatcher.UnWatch(_main);
-            _watching = false;
-        }
-        if (ui.Theme == ThemePreference.System)
-        {
-            SystemThemeWatcher.Watch(_main, backdrop, updateAccents: systemAccent);
-            _watching = true;
-        }
-    }
-
-    /// <summary>The main window; call once it has loaded.</summary>
-    public void Attach(FluentWindow window, UiConfig ui)
-    {
-        _main = window;
-        Register(window, flyout: false);
-        Apply(ui);
-    }
-
-    /// <summary>A panel such as the quick panel: acrylic like Windows' own flyouts, unless backdrops are off.</summary>
-    public void AttachFlyout(FluentWindow window)
-    {
-        Register(window, flyout: true);
-        if (window.IsLoaded)
-            UpdateWindows();
-        else
-            window.Loaded += (_, _) => UpdateWindows();
-    }
-
-    public void Reapply() => Apply(_ui);
-
-    /// <summary>A colour from settings, or null for none or an invalid one.</summary>
-    public static System.Windows.Media.Color? ParseAccent(string? hex)
-    {
-        if (hex is null || !System.Text.RegularExpressions.Regex.IsMatch(hex, "^#[0-9A-Fa-f]{6}$"))
-            return null;
-        return (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hex);
-    }
-
-    private void Register(FluentWindow window, bool flyout)
-    {
-        if (_windows.Any(w => w.Window == window))
-            return;
-        _windows.Add((window, flyout));
-        window.Closed += (_, _) => _windows.RemoveAll(w => w.Window == window);
+            SystemTheme.Dark or SystemTheme.Glow or SystemTheme.CapturedMotion => ApplicationTheme.Dark,
+            SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite => ApplicationTheme.HighContrast,
+            _ => ApplicationTheme.Light,
+        };
     }
 
     private void UpdateWindows()
     {
-        ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
-        foreach ((FluentWindow window, bool flyout) in _windows)
-        {
-            if (new WindowInteropHelper(window).Handle == 0)
-                continue;
-            WindowBackdropType backdrop = Backdrop(_ui.Backdrop, flyout);
-            if (window.WindowBackdropType != backdrop)
-                window.WindowBackdropType = backdrop;
-            // Sets the backdrop and, just as important, the dark title bar and dark backdrop tint.
-            WindowBackgroundManager.UpdateBackground(window, theme, backdrop);
-        }
+        foreach (FluentWindow window in _windows)
+            UpdateWindow(window);
     }
 
-    private static WindowBackdropType Backdrop(Core.Model.WindowBackdrop backdrop, bool flyout) => backdrop switch
+    private void ApplyAccent(ApplicationTheme theme)
     {
-        Core.Model.WindowBackdrop.Solid => WindowBackdropType.None,
-        _ when flyout => WindowBackdropType.Acrylic,
-        Core.Model.WindowBackdrop.MicaAlt => WindowBackdropType.Tabbed,
-        _ => WindowBackdropType.Mica,
-    };
+        if (_ui.AccentColor is not { } hex || theme == ApplicationTheme.HighContrast)
+        {
+            // Windows' own shades of its accent, as Settings and File Explorer use them.
+            ApplicationAccentColorManager.Apply(ApplicationAccentColorManager.GetColorizationColor(), theme, systemGlassColor: false, systemAccentColor: true);
+            return;
+        }
+        (string primary, string secondary, string tertiary) = Accents.Shades(hex, dark: theme == ApplicationTheme.Dark);
+        ApplicationAccentColorManager.Apply(ToColor(hex), ToColor(primary), ToColor(secondary), ToColor(tertiary));
+    }
+
+    private void UpdateWindow(FluentWindow window)
+    {
+        nint handle = new WindowInteropHelper(window).Handle;
+        if (handle == 0)
+            return;
+        ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
+
+        // Materials need Windows 11 22H2; high contrast always gets a plain background.
+        WindowBackdrop backdrop = theme == ApplicationTheme.HighContrast || !OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621)
+            ? WindowBackdrop.Solid
+            : _ui.Backdrop;
+        if (backdrop == WindowBackdrop.Solid)
+        {
+            window.SetResourceReference(System.Windows.Controls.Control.BackgroundProperty, "ApplicationBackgroundBrush");
+        }
+        else
+        {
+            window.Background = System.Windows.Media.Brushes.Transparent;
+            if (HwndSource.FromHwnd(handle)?.CompositionTarget is { } target)
+                target.BackgroundColor = System.Windows.Media.Colors.Transparent;
+        }
+        WindowHelpers.SetMaterial(handle, backdrop, dark: theme == ApplicationTheme.Dark);
+    }
+
+    private static System.Windows.Media.Color ToColor(string hex) =>
+        (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hex);
 }

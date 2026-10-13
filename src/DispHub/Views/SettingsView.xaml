@@ -14,38 +14,6 @@
     <DataTemplate x:Key="EnumItem">
       <TextBlock Text="{Binding Converter={x:Static ctl:EnumWordsConverter.Instance}}" />
     </DataTemplate>
-    <Style x:Key="Swatch" TargetType="ListBoxItem">
-      <Setter Property="Margin" Value="0,0,4,4" />
-      <Setter Property="Cursor" Value="Hand" />
-      <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-      <Setter Property="ToolTip" Value="{Binding Name}" />
-      <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="ListBoxItem">
-            <Grid Width="36" Height="36">
-              <Border
-                x:Name="Ring"
-                BorderBrush="Transparent"
-                BorderThickness="2"
-                CornerRadius="6" />
-              <Border
-                Margin="4"
-                Background="{Binding Swatch}"
-                CornerRadius="3" />
-            </Grid>
-            <ControlTemplate.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="Ring" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
-              </Trigger>
-              <Trigger Property="IsSelected" Value="True">
-                <Setter TargetName="Ring" Property="BorderBrush" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-              </Trigger>
-            </ControlTemplate.Triggers>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
     <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
       <Setter Property="MinWidth" Value="200" />
     </Style>
@@ -108,6 +76,38 @@
       </ctl:SettingsCard.Footer>
     </ctl:SettingsCard>
 
+    <ctl:SettingsCard
+      Description="{l:Tr Settings_OsdHint}"
+      Header="{l:Tr Settings_OsdToggle}"
+      Icon="SlideText24">
+      <ui:ToggleSwitch IsChecked="{Binding ShowOsd}" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard Header="{l:Tr Settings_OsdPosition}" IsEnabled="{Binding ShowOsd}">
+      <ComboBox
+        ItemTemplate="{StaticResource EnumItem}"
+        ItemsSource="{Binding OsdPositions}"
+        SelectedItem="{Binding OsdPosition}" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard Header="{l:Tr Settings_OsdDuration}" IsEnabled="{Binding ShowOsd}">
+      <StackPanel Orientation="Horizontal">
+        <Slider
+          Width="180"
+          VerticalAlignment="Center"
+          AutomationProperties.Name="{l:Tr Settings_OsdDuration}"
+          IsSnapToTickEnabled="True"
+          Maximum="5"
+          Minimum="0.5"
+          TickFrequency="0.5"
+          Value="{Binding OsdSeconds}" />
+        <TextBlock
+          Width="40"
+          Margin="12,0,0,0"
+          VerticalAlignment="Center"
+          Text="{Binding OsdSeconds, StringFormat={}{0:0.#} s}"
+          TextAlignment="Right" />
+      </StackPanel>
+    </ctl:SettingsCard>
+
     <!-- Appearance -->
     <ctl:SectionHeader Text="{l:Tr Settings_Appearance}">
       <ui:HyperlinkButton
@@ -128,47 +128,11 @@
       Description="{l:Tr Settings_AccentHint}"
       Header="{l:Tr Settings_Accent}"
       Icon="Color24">
-      <ComboBox ItemsSource="{Binding AccentModes}" SelectedItem="{Binding AccentMode}" />
-      <ctl:SettingsCard.Footer>
-        <StackPanel Margin="0,12,0,0" Visibility="{Binding IsCustomAccent, Converter={StaticResource BoolToVisibility}}">
-          <ListBox
-            HorizontalAlignment="Left"
-            Background="Transparent"
-            BorderThickness="0"
-            ItemContainerStyle="{StaticResource Swatch}"
-            ItemsSource="{Binding Swatches}"
-            SelectedItem="{Binding Swatch}">
-            <ListBox.Template>
-              <ControlTemplate TargetType="ListBox">
-                <ItemsPresenter />
-              </ControlTemplate>
-            </ListBox.Template>
-            <ListBox.ItemsPanel>
-              <ItemsPanelTemplate>
-                <WrapPanel MaxWidth="320" />
-              </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-          </ListBox>
-          <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-            <TextBlock
-              Margin="0,0,10,0"
-              VerticalAlignment="Center"
-              Text="{l:Tr Settings_AccentHex}" />
-            <ui:TextBox
-              Width="120"
-              ctl:CommitOnEnter.IsEnabled="True"
-              MaxLength="7"
-              PlaceholderText="#0078D4"
-              Text="{Binding CustomAccent, UpdateSourceTrigger=LostFocus}" />
-            <TextBlock
-              Margin="10,0,0,0"
-              VerticalAlignment="Center"
-              Style="{StaticResource ErrorText}"
-              Text="{l:Tr Settings_AccentHexInvalid}"
-              Visibility="{Binding CustomAccentInvalid, Converter={StaticResource BoolToVisibility}}" />
-          </StackPanel>
-        </StackPanel>
-      </ctl:SettingsCard.Footer>
+      <ListBox
+        AutomationProperties.Name="{l:Tr Settings_Accent}"
+        ItemsSource="{Binding AccentChoices}"
+        SelectedItem="{Binding Accent}"
+        Style="{StaticResource SwatchList}" />
     </ctl:SettingsCard>
     <ctl:SettingsCard
       Description="{l:Tr Settings_BackdropHint}"
@@ -222,44 +186,10 @@
       <ComboBox ItemsSource="{Binding StartPages}" SelectedItem="{Binding StartPage}" />
     </ctl:SettingsCard>
     <ctl:SettingsCard
-      Description="{l:Tr Settings_ReduceMotionHint}"
-      Header="{l:Tr Settings_ReduceMotion}"
+      Description="{l:Tr Settings_AnimationsHint}"
+      Header="{l:Tr Settings_Animations}"
       Icon="TopSpeed24">
-      <ui:ToggleSwitch IsChecked="{Binding ReduceMotion}" />
-    </ctl:SettingsCard>
-
-    <!-- On-screen display -->
-    <ctl:SectionHeader Text="{l:Tr Settings_Osd}" />
-    <ctl:SettingsCard
-      Description="{l:Tr Settings_OsdHint}"
-      Header="{l:Tr Settings_OsdToggle}"
-      Icon="SlideText24">
-      <ui:ToggleSwitch IsChecked="{Binding ShowOsd}" />
-    </ctl:SettingsCard>
-    <ctl:SettingsCard Header="{l:Tr Settings_OsdPosition}" IsEnabled="{Binding ShowOsd}">
-      <ComboBox
-        ItemTemplate="{StaticResource EnumItem}"
-        ItemsSource="{Binding OsdPositions}"
-        SelectedItem="{Binding OsdPosition}" />
-    </ctl:SettingsCard>
-    <ctl:SettingsCard Header="{l:Tr Settings_OsdDuration}" IsEnabled="{Binding ShowOsd}">
-      <StackPanel Orientation="Horizontal">
-        <Slider
-          Width="180"
-          VerticalAlignment="Center"
-          AutomationProperties.Name="{l:Tr Settings_OsdDuration}"
-          IsSnapToTickEnabled="True"
-          Maximum="5"
-          Minimum="0.5"
-          TickFrequency="0.5"
-          Value="{Binding OsdSeconds}" />
-        <TextBlock
-          Width="40"
-          Margin="12,0,0,0"
-          VerticalAlignment="Center"
-          Text="{Binding OsdSeconds, StringFormat={}{0:0.#} s}"
-          TextAlignment="Right" />
-      </StackPanel>
+      <ui:ToggleSwitch IsChecked="{Binding Animations}" />
     </ctl:SettingsCard>
 
     <!-- Hotkeys -->
@@ -267,7 +197,7 @@
     <ctl:SettingsCard
       Description="{l:Tr Settings_PauseHint}"
       Header="{l:Tr Settings_Pause}"
-      Icon="Pause24">
+      Icon="Power24">
       <ctl:HotkeyBox Gesture="{Binding PauseHotkey}" />
     </ctl:SettingsCard>
     <ctl:SettingsCard Header="{l:Tr Settings_Next}" Icon="ArrowRight24">

@@ -106,12 +106,6 @@
   <data name="Common_On" xml:space="preserve">
     <value>On</value>
   </data>
-  <data name="Control_Active" xml:space="preserve">
-    <value>On</value>
-  </data>
-  <data name="Control_Paused" xml:space="preserve">
-    <value>Paused</value>
-  </data>
   <data name="Default_Gaming" xml:space="preserve">
     <value>Gaming</value>
   </data>
@@ -164,7 +158,7 @@
     <value>Settings</value>
   </data>
   <data name="Osd_Paused" xml:space="preserve">
-    <value>Paused</value>
+    <value>DispHub off</value>
   </data>
   <data name="Osd_StillRunning" xml:space="preserve">
     <value>DispHub is still running</value>
@@ -278,7 +272,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>{0} (picked by hand) on {1}</value>
   </data>
   <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>Paused: your displays show their original colours.</value>
+    <value>Off: your displays show their original colours.</value>
   </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
     <value>{0} (schedule) on {1}</value>
@@ -290,7 +284,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>Profiles</value>
   </data>
   <data name="Profiles_UseMainSettings" xml:space="preserve">
-    <value>Use the main settings on this display</value>
+    <value>Same as the other displays</value>
   </data>
   <data name="Profiles_Vibrance" xml:space="preserve">
     <value>Vibrance</value>
@@ -314,10 +308,10 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>Hotkeys</value>
   </data>
   <data name="Settings_KeepRunning" xml:space="preserve">
-    <value>Keep running when the window is closed</value>
+    <value>Run in the background</value>
   </data>
   <data name="Settings_KeepRunningHint" xml:space="preserve">
-    <value>Hotkeys and automation keep working from the notification area.</value>
+    <value>Closing the window keeps DispHub in the notification area, so hotkeys and schedules keep working.</value>
   </data>
   <data name="Settings_Language" xml:space="preserve">
     <value>Language</value>
@@ -334,23 +328,20 @@ It will be added as a new profile and switched on so you can see it.</value>
   <data name="Settings_Next" xml:space="preserve">
     <value>Next profile</value>
   </data>
-  <data name="Settings_Osd" xml:space="preserve">
-    <value>On-screen display</value>
-  </data>
   <data name="Settings_OsdDuration" xml:space="preserve">
-    <value>How long it stays</value>
+    <value>Message duration</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Appears above the taskbar after a hotkey or tray switch. Never takes focus from games.</value>
+    <value>Shows the profile name above the taskbar when it changes. Never takes focus from games.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
-    <value>Show the profile name when it changes</value>
+    <value>On-screen message</value>
   </data>
   <data name="Settings_Pause" xml:space="preserve">
-    <value>Pause or resume</value>
+    <value>On or off</value>
   </data>
   <data name="Settings_PauseHint" xml:space="preserve">
-    <value>Switches between your profile and the original colours.</value>
+    <value>Turns your profile off to show the original colours, and back on.</value>
   </data>
   <data name="Settings_Previous" xml:space="preserve">
     <value>Previous profile</value>
@@ -380,19 +371,19 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>How DispHub starts, looks and responds.</value>
   </data>
   <data name="Settings_Theme" xml:space="preserve">
-    <value>App theme</value>
+    <value>Theme</value>
   </data>
   <data name="Settings_ThemeHint" xml:space="preserve">
-    <value>System follows your Windows light or dark mode.</value>
+    <value>System follows Windows' light or dark mode.</value>
   </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="Settings_TrayClick" xml:space="preserve">
-    <value>Clicking the tray icon</value>
+    <value>Tray icon</value>
   </data>
   <data name="Settings_TrayClickHint" xml:space="preserve">
-    <value>Right-click always shows the profile menu.</value>
+    <value>What a click on DispHub's icon in the notification area opens. Right-click always shows the menu.</value>
   </data>
   <data name="Startup_Failed" xml:space="preserve">
     <value>DispHub couldn't start.
@@ -429,16 +420,16 @@ Logs: {1}</value>
     <value>Open DispHub</value>
   </data>
   <data name="Tray_Pause" xml:space="preserve">
-    <value>Pause (original colours)</value>
+    <value>Turn off (original colours)</value>
   </data>
   <data name="Tray_Paused" xml:space="preserve">
-    <value>DispHub · Paused</value>
+    <value>DispHub · Off</value>
   </data>
   <data name="Tray_Ready" xml:space="preserve">
     <value>Ready</value>
   </data>
   <data name="Tray_Resume" xml:space="preserve">
-    <value>Resume</value>
+    <value>Turn on</value>
   </data>
   <data name="Upgrade_AppRules" xml:space="preserve">
     <value>Per-app profiles</value>
@@ -666,40 +657,34 @@ It also supports development of DispHub.</value>
     <value>Accent colour</value>
   </data>
   <data name="Settings_AccentHint" xml:space="preserve">
-    <value>Used for switches, buttons and selections.</value>
+    <value>Used for switches, sliders and buttons. The first colour is the one Windows uses.</value>
   </data>
   <data name="Settings_Backdrop" xml:space="preserve">
-    <value>Window background</value>
+    <value>Background</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica tints the window with your wallpaper's colours, gently. Like Windows, it turns solid while the window isn't in use.</value>
+    <value>Mica tints the window with your wallpaper's colours. Solid is a plain colour.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Text size</value>
   </data>
   <data name="Settings_TextSizeHint" xml:space="preserve">
-    <value>Makes everything in DispHub's window larger or smaller.</value>
+    <value>Makes DispHub's window larger or smaller.</value>
   </data>
   <data name="Settings_CompactNav" xml:space="preserve">
-    <value>Compact navigation</value>
+    <value>Compact menu</value>
   </data>
   <data name="Settings_CompactNavHint" xml:space="preserve">
-    <value>Show the pages on the left as icons only.</value>
+    <value>Shows the pages on the left as icons only.</value>
   </data>
   <data name="Settings_StartPage" xml:space="preserve">
-    <value>Open on</value>
+    <value>Start page</value>
   </data>
   <data name="Settings_StartPageHint" xml:space="preserve">
-    <value>The page DispHub's window shows first.</value>
-  </data>
-  <data name="Settings_ReduceMotion" xml:space="preserve">
-    <value>Reduce motion</value>
-  </data>
-  <data name="Settings_ReduceMotionHint" xml:space="preserve">
-    <value>Scroll without animation, whatever Windows' animation setting is.</value>
+    <value>The page the window opens on.</value>
   </data>
   <data name="Settings_OsdPosition" xml:space="preserve">
-    <value>Position</value>
+    <value>Message position</value>
   </data>
   <data name="Enum_WindowBackdrop_Mica" xml:space="preserve">
     <value>Mica</value>
@@ -771,7 +756,7 @@ It also supports development of DispHub.</value>
     <value>Show the quick panel</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
-    <value>Paused: original colours</value>
+    <value>Off: original colours</value>
   </data>
   <data name="Quick_FromSchedule" xml:space="preserve">
     <value>{0}, from your schedule</value>
@@ -900,22 +885,22 @@ It also supports development of DispHub.</value>
     <value>The profile {0} chooses the screen effect while it's on. Changes here show once it's off.</value>
   </data>
   <data name="Effects_HideFullScreen" xml:space="preserve">
-    <value>Step aside for full-screen games and videos</value>
+    <value>Hide during full-screen apps</value>
   </data>
   <data name="Effects_HideFullScreenHint" xml:space="preserve">
-    <value>Turns effects off while something fills a screen, so they can't add delay.</value>
+    <value>Turns effects off while a game or video fills a screen, so they can't add delay.</value>
   </data>
   <data name="Effects_HideCapture" xml:space="preserve">
-    <value>Keep out of screenshots and recordings</value>
+    <value>Hide from screenshots</value>
   </data>
   <data name="Effects_HideCaptureHint" xml:space="preserve">
-    <value>Looks that change the picture are always left out. This also leaves out grain, vignette and other layers.</value>
+    <value>Keeps grain, vignette and other layers out of screenshots and recordings. Looks that change the picture are always left out.</value>
   </data>
   <data name="Effects_MainDisplayOnly" xml:space="preserve">
     <value>Main display only</value>
   </data>
   <data name="Effects_MainDisplayOnlyHint" xml:space="preserve">
-    <value>Leave your other displays as they are.</value>
+    <value>Leaves your other displays as they are.</value>
   </data>
   <data name="Effects_FrameRate" xml:space="preserve">
     <value>Frame rate</value>
@@ -1326,19 +1311,19 @@ It also supports development of DispHub.</value>
     <value>Save your own looks and let profiles pick them with DispHub Pro.</value>
   </data>
   <data name="Settings_EffectsHotkey" xml:space="preserve">
-    <value>Turn effects on or off</value>
+    <value>Screen effects</value>
   </data>
   <data name="Settings_EffectsHotkeyHint" xml:space="preserve">
-    <value>Shows the look from the Effects page, or hides it.</value>
+    <value>Turns the look from the Effects page on or off.</value>
   </data>
   <data name="Profiles_Effect" xml:space="preserve">
     <value>Screen effect</value>
   </data>
   <data name="Profiles_EffectHint" xml:space="preserve">
-    <value>A look to show while this profile is on, for example greyscale at bedtime.</value>
+    <value>A look to show while this profile is on, such as greyscale at bedtime.</value>
   </data>
   <data name="Profiles_EffectKeep" xml:space="preserve">
-    <value>As on the Effects page</value>
+    <value>No change</value>
   </data>
   <data name="Profiles_EffectNone" xml:space="preserve">
     <value>None</value>
@@ -1352,20 +1337,11 @@ It also supports development of DispHub.</value>
   <data name="Effects_CustomHint" xml:space="preserve">
     <value>Your own mix of settings.</value>
   </data>
-  <data name="Settings_AccentCustom" xml:space="preserve">
-    <value>Choose a colour</value>
-  </data>
-  <data name="Settings_AccentHex" xml:space="preserve">
-    <value>Or a colour code</value>
-  </data>
-  <data name="Settings_AccentHexInvalid" xml:space="preserve">
-    <value>Use a code like #0078D4.</value>
-  </data>
   <data name="Settings_QuickPanelHotkey" xml:space="preserve">
-    <value>Open the quick panel</value>
+    <value>Quick panel</value>
   </data>
   <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
-    <value>Profiles, brightness and warmth, without opening the window.</value>
+    <value>Profiles, brightness and warmth without opening the window.</value>
   </data>
   <data name="Settings_Extras" xml:space="preserve">
     <value>Extras</value>
@@ -1374,7 +1350,7 @@ It also supports development of DispHub.</value>
     <value>Screen effects</value>
   </data>
   <data name="Settings_ShowEffectsHint" xml:space="preserve">
-    <value>Film, VHS, retro and comfort looks for the whole screen. Adds an Effects page.</value>
+    <value>Adds the Effects page: film, VHS, retro and comfort looks for the whole screen.</value>
   </data>
   <data name="LookPart_vibrance" xml:space="preserve">
     <value>Vibrance</value>
@@ -1551,16 +1527,13 @@ It also supports development of DispHub.</value>
     <value>Effects in this look</value>
   </data>
   <data name="Effects_AddPart" xml:space="preserve">
-    <value>Add an effect</value>
+    <value>Add effects</value>
   </data>
   <data name="Effects_NoParts" xml:space="preserve">
-    <value>No effects yet. Pick a look above or add an effect.</value>
+    <value>No effects in this look yet. Drag one here from the box, or select its + button.</value>
   </data>
   <data name="Effects_RemovePart" xml:space="preserve">
     <value>Remove</value>
-  </data>
-  <data name="Effects_MoreSettings" xml:space="preserve">
-    <value>More settings</value>
   </data>
   <data name="Upgrade_Effects" xml:space="preserve">
     <value>Screen effects</value>
@@ -1584,7 +1557,7 @@ It also supports development of DispHub.</value>
     <value>Showing {0}</value>
   </data>
   <data name="Displays_ShowingOriginal" xml:space="preserve">
-    <value>Original colours (paused)</value>
+    <value>Original colours (DispHub is off)</value>
   </data>
   <data name="Displays_LeftAlone" xml:space="preserve">
     <value>DispHub leaves this display alone</value>
@@ -1599,7 +1572,7 @@ It also supports development of DispHub.</value>
     <value>Vibrance isn't available on this display.</value>
   </data>
   <data name="Displays_UseOnThis" xml:space="preserve">
-    <value>Change this display</value>
+    <value>Use DispHub on this display</value>
   </data>
   <data name="Schedule_Today" xml:space="preserve">
     <value>{0} (today)</value>
@@ -1613,9 +1586,6 @@ It also supports development of DispHub.</value>
   <data name="Schedule_Weekends" xml:space="preserve">
     <value>Weekends</value>
   </data>
-  <data name="Schedule_SomeDays" xml:space="preserve">
-    <value>Some days</value>
-  </data>
   <data name="Schedule_Minutes" xml:space="preserve">
     <value>{0} min</value>
   </data>
@@ -1624,45 +1594,6 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Schedule_HoursMinutes" xml:space="preserve">
     <value>{0} h {1} min</value>
-  </data>
-  <data name="Schedule_StartsToday" xml:space="preserve">
-    <value>Today that's {0}.</value>
-  </data>
-  <data name="Schedule_StartsThatDay" xml:space="preserve">
-    <value>That day it's {0}.</value>
-  </data>
-  <data name="Schedule_Exactly" xml:space="preserve">
-    <value>Exactly</value>
-  </data>
-  <data name="Schedule_Before" xml:space="preserve">
-    <value>{0} before</value>
-  </data>
-  <data name="Schedule_After" xml:space="preserve">
-    <value>{0} after</value>
-  </data>
-  <data name="Schedule_StartTitle" xml:space="preserve">
-    <value>Start with</value>
-  </data>
-  <data name="Schedule_StartSun" xml:space="preserve">
-    <value>Warmer evenings</value>
-  </data>
-  <data name="Schedule_StartSunHint" xml:space="preserve">
-    <value>Your night profile from sunset, back to normal at sunrise. Follows the seasons.</value>
-  </data>
-  <data name="Schedule_StartHours" xml:space="preserve">
-    <value>Set hours</value>
-  </data>
-  <data name="Schedule_StartHoursHint" xml:space="preserve">
-    <value>Your night profile from 9 PM to 7 AM. You can change the times.</value>
-  </data>
-  <data name="Schedule_StartBlank" xml:space="preserve">
-    <value>Start from scratch</value>
-  </data>
-  <data name="Schedule_StartBlankHint" xml:space="preserve">
-    <value>Add changes one at a time.</value>
-  </data>
-  <data name="Schedule_ShowingDay" xml:space="preserve">
-    <value>Showing</value>
   </data>
   <data name="Schedule_ChangePlace" xml:space="preserve">
     <value>Change place</value>
@@ -1676,20 +1607,14 @@ It also supports development of DispHub.</value>
   <data name="Schedule_Starts" xml:space="preserve">
     <value>Starts</value>
   </data>
-  <data name="Schedule_Time" xml:space="preserve">
-    <value>Time</value>
-  </data>
-  <data name="Schedule_Offset" xml:space="preserve">
-    <value>Before or after</value>
-  </data>
   <data name="Schedule_Fade" xml:space="preserve">
-    <value>Fade in</value>
+    <value>Fade</value>
   </data>
   <data name="Schedule_On" xml:space="preserve">
     <value>On</value>
   </data>
   <data name="Schedule_AtTime" xml:space="preserve">
-    <value>At a set time</value>
+    <value>At a time</value>
   </data>
   <data name="Schedule_Sunrise" xml:space="preserve">
     <value>At sunrise</value>
@@ -1703,9 +1628,6 @@ It also supports development of DispHub.</value>
   <data name="Schedule_Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-  <data name="Schedule_StatusEmpty" xml:space="preserve">
-    <value>Switch profiles by the time of day, or with sunrise and sunset.</value>
-  </data>
   <data name="Schedule_NoLocation" xml:space="preserve">
     <value>Sunrise and sunset are {0} and {1} until you choose a place.</value>
   </data>
@@ -1714,5 +1636,119 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Schedule_LocationPolar" xml:space="preserve">
     <value>No sunrise or sunset on this day · {0}</value>
+  </data>
+  <data name="Accent_blue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="Accent_purple" xml:space="preserve">
+    <value>Purple</value>
+  </data>
+  <data name="Accent_pink" xml:space="preserve">
+    <value>Pink</value>
+  </data>
+  <data name="Accent_red" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="Accent_orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="Accent_yellow" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="Accent_green" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="Accent_teal" xml:space="preserve">
+    <value>Teal</value>
+  </data>
+  <data name="Accent_graphite" xml:space="preserve">
+    <value>Graphite</value>
+  </data>
+  <data name="Settings_Animations" xml:space="preserve">
+    <value>Animations</value>
+  </data>
+  <data name="Settings_AnimationsHint" xml:space="preserve">
+    <value>Smooth scrolling and other motion in DispHub's window.</value>
+  </data>
+  <data name="Schedule_SunsetToSunrise" xml:space="preserve">
+    <value>Sunset to sunrise</value>
+  </data>
+  <data name="Schedule_SetHours" xml:space="preserve">
+    <value>Set hours</value>
+  </data>
+  <data name="Schedule_Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Schedule_TurnOn" xml:space="preserve">
+    <value>Night starts</value>
+  </data>
+  <data name="Schedule_TurnOff" xml:space="preserve">
+    <value>Night ends</value>
+  </data>
+  <data name="Schedule_NightProfile" xml:space="preserve">
+    <value>Night profile</value>
+  </data>
+  <data name="Schedule_NightProfileHint" xml:space="preserve">
+    <value>Used at night.</value>
+  </data>
+  <data name="Schedule_DayProfile" xml:space="preserve">
+    <value>Day profile</value>
+  </data>
+  <data name="Schedule_DayProfileHint" xml:space="preserve">
+    <value>Used during the day.</value>
+  </data>
+  <data name="Schedule_FadeHint" xml:space="preserve">
+    <value>How long each change takes. A slow fade is easy on the eyes.</value>
+  </data>
+  <data name="Schedule_TodayTitle" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="TimePicker_Hour" xml:space="preserve">
+    <value>Hour</value>
+  </data>
+  <data name="TimePicker_Minute" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="TimePicker_Period" xml:space="preserve">
+    <value>AM or PM</value>
+  </data>
+  <data name="Effects_AddPartHint" xml:space="preserve">
+    <value>Drag an effect onto the look, or select +.</value>
+  </data>
+  <data name="Effects_AddThis" xml:space="preserve">
+    <value>Add to the look</value>
+  </data>
+  <data name="Effects_Customise" xml:space="preserve">
+    <value>Customise</value>
+  </data>
+  <data name="Hue_red" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="Hue_orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="Hue_amber" xml:space="preserve">
+    <value>Amber</value>
+  </data>
+  <data name="Hue_yellow" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="Hue_green" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="Hue_teal" xml:space="preserve">
+    <value>Teal</value>
+  </data>
+  <data name="Hue_cyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="Hue_blue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="Hue_purple" xml:space="preserve">
+    <value>Purple</value>
+  </data>
+  <data name="Hue_magenta" xml:space="preserve">
+    <value>Magenta</value>
   </data>
 </root>

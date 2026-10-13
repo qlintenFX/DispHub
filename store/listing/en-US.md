@@ -25,15 +25,15 @@ PROFILES THAT FIT HOW YOU USE YOUR PC
 • Brightness, contrast, gamma and colour temperature for every connected display
 • Vibrance (colour saturation) on NVIDIA, Intel and AMD graphics, including the built-in screen of most laptops
 • Stream-friendly: OBS, Discord and screenshots capture your normal colours, so viewers see a regular picture
-• Global hotkeys for each profile, plus pause, next and previous
+• Global hotkeys for each profile, plus on or off, next and previous
 • Quick switching from the notification area
 
-SCREEN EFFECTS
+SCREEN EFFECTS (DISPHUB PRO)
 • Film, Super 8, black and white, VHS, body cam, night vision and cinema bars
 • Retro: arcade CRT with scanlines and glow, Game Boy, PICO-8, Commodore 64, 1-bit and amber or green terminals
-• Comfort: dim below your screen's lowest brightness, greyscale, red night light and sharpening (free)
-• Colour vision help for red-green colour blindness (free)
-• See every look on a photo before and after, adjust every setting, save your own and share them as links
+• Comfort: dim below your screen's lowest brightness, greyscale, red night light and sharpening
+• Colour vision help for red-green colour blindness
+• Try every look on a photo before and after for free, build your own from effects, save them and share them as links
 • Drawn by the GPU; steps aside for full-screen games and stays out of screenshots
 
 TEMPLATES AND SHARING
@@ -43,17 +43,17 @@ TEMPLATES AND SHARING
 AUTOMATION (DISPHUB PRO)
 • Per-game profiles: your game gets its look while it's in front, and your desktop goes back to normal when you
   switch away
-• Schedules that fade smoothly to warmer colours in the evening
+• Schedules like Windows' Night light: from sunset to sunrise or set hours, with a smooth fade
 • Different settings for each display
 • Unlimited profiles
 
 SAFE AND LIGHT
-• Your original colours are saved before anything changes and restored when you pause or quit, even after a crash
+• Your original colours are saved before anything changes and restored when you turn DispHub off or quit, even after a crash
 • Runs quietly in the notification area and uses very little memory
 • No account, no ads, no telemetry
 
-DispHub is free. The one-time Pro upgrade unlocks every screen effect, automation, per-display settings and
-unlimited profiles, and supports development. DispHub is open source: https://github.com/qlintenFX/DispHub
+DispHub is free with three profiles. The one-time Pro upgrade unlocks screen effects, automation, per-display
+settings and unlimited profiles, and supports development. DispHub is open source: https://github.com/qlintenFX/DispHub
 
 Notes: gamma-based adjustments aren't available while Windows HDR is on. Windows limits how far colours can change
 by default; DispHub can lift that limit with your permission for very warm night profiles.

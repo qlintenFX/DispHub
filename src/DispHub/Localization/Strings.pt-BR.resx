@@ -106,12 +106,6 @@
   <data name="Common_On" xml:space="preserve">
     <value>Ativado</value>
   </data>
-  <data name="Control_Active" xml:space="preserve">
-    <value>Ativado</value>
-  </data>
-  <data name="Control_Paused" xml:space="preserve">
-    <value>Pausado</value>
-  </data>
   <data name="Default_Gaming" xml:space="preserve">
     <value>Jogos</value>
   </data>
@@ -162,9 +156,6 @@
   </data>
   <data name="Nav_Settings" xml:space="preserve">
     <value>Configurações</value>
-  </data>
-  <data name="Osd_Paused" xml:space="preserve">
-    <value>Pausado</value>
   </data>
   <data name="Osd_StillRunning" xml:space="preserve">
     <value>O DispHub continua em execução</value>
@@ -277,9 +268,6 @@ Ela será adicionada como um novo perfil e ativada para você ver o resultado.</
   <data name="Profiles_StatusManual" xml:space="preserve">
     <value>{0} (escolhido manualmente) em {1}</value>
   </data>
-  <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>Pausado: suas telas mostram as cores originais.</value>
-  </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
     <value>{0} (agendamento) em {1}</value>
   </data>
@@ -288,9 +276,6 @@ Ela será adicionada como um novo perfil e ativada para você ver o resultado.</
   </data>
   <data name="Profiles_Title" xml:space="preserve">
     <value>Perfis</value>
-  </data>
-  <data name="Profiles_UseMainSettings" xml:space="preserve">
-    <value>Usar os ajustes principais nesta tela</value>
   </data>
   <data name="Profiles_Vibrance" xml:space="preserve">
     <value>Vivacidade</value>
@@ -313,12 +298,6 @@ Ela será adicionada como um novo perfil e ativada para você ver o resultado.</
   <data name="Settings_Hotkeys" xml:space="preserve">
     <value>Atalhos</value>
   </data>
-  <data name="Settings_KeepRunning" xml:space="preserve">
-    <value>Continuar em execução ao fechar a janela</value>
-  </data>
-  <data name="Settings_KeepRunningHint" xml:space="preserve">
-    <value>Os atalhos e a automação continuam funcionando pela área de notificação.</value>
-  </data>
   <data name="Settings_Language" xml:space="preserve">
     <value>Idioma</value>
   </data>
@@ -333,24 +312,6 @@ Ela será adicionada como um novo perfil e ativada para você ver o resultado.</
   </data>
   <data name="Settings_Next" xml:space="preserve">
     <value>Próximo perfil</value>
-  </data>
-  <data name="Settings_Osd" xml:space="preserve">
-    <value>Indicador na tela</value>
-  </data>
-  <data name="Settings_OsdDuration" xml:space="preserve">
-    <value>Quanto tempo fica visível</value>
-  </data>
-  <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Aparece acima da barra de tarefas após uma troca por atalho ou pela área de notificação. Nunca tira o foco dos jogos.</value>
-  </data>
-  <data name="Settings_OsdToggle" xml:space="preserve">
-    <value>Mostrar o nome do perfil ao trocar</value>
-  </data>
-  <data name="Settings_Pause" xml:space="preserve">
-    <value>Pausar ou retomar</value>
-  </data>
-  <data name="Settings_PauseHint" xml:space="preserve">
-    <value>Alterna entre o seu perfil e as cores originais.</value>
   </data>
   <data name="Settings_Previous" xml:space="preserve">
     <value>Perfil anterior</value>
@@ -379,20 +340,8 @@ Ela será adicionada como um novo perfil e ativada para você ver o resultado.</
   <data name="Settings_Subtitle" xml:space="preserve">
     <value>Como o DispHub inicia, aparece e responde.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Tema do app</value>
-  </data>
-  <data name="Settings_ThemeHint" xml:space="preserve">
-    <value>Sistema segue o modo claro ou escuro do Windows.</value>
-  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Configurações</value>
-  </data>
-  <data name="Settings_TrayClick" xml:space="preserve">
-    <value>Clique no ícone da área de notificação</value>
-  </data>
-  <data name="Settings_TrayClickHint" xml:space="preserve">
-    <value>O clique com o botão direito sempre mostra o menu de perfis.</value>
   </data>
   <data name="Startup_Failed" xml:space="preserve">
     <value>Não foi possível iniciar o DispHub.
@@ -428,17 +377,8 @@ Logs: {1}</value>
   <data name="Tray_Open" xml:space="preserve">
     <value>Abrir o DispHub</value>
   </data>
-  <data name="Tray_Pause" xml:space="preserve">
-    <value>Pausar (cores originais)</value>
-  </data>
-  <data name="Tray_Paused" xml:space="preserve">
-    <value>DispHub · Pausado</value>
-  </data>
   <data name="Tray_Ready" xml:space="preserve">
     <value>Pronto</value>
-  </data>
-  <data name="Tray_Resume" xml:space="preserve">
-    <value>Retomar</value>
   </data>
   <data name="Upgrade_AppRules" xml:space="preserve">
     <value>Perfis por app</value>

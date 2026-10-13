@@ -106,12 +106,6 @@
   <data name="Common_On" xml:space="preserve">
     <value>Aan</value>
   </data>
-  <data name="Control_Active" xml:space="preserve">
-    <value>Aan</value>
-  </data>
-  <data name="Control_Paused" xml:space="preserve">
-    <value>Gepauzeerd</value>
-  </data>
   <data name="Default_Gaming" xml:space="preserve">
     <value>Gaming</value>
   </data>
@@ -162,9 +156,6 @@
   </data>
   <data name="Nav_Settings" xml:space="preserve">
     <value>Instellingen</value>
-  </data>
-  <data name="Osd_Paused" xml:space="preserve">
-    <value>Gepauzeerd</value>
   </data>
   <data name="Osd_StillRunning" xml:space="preserve">
     <value>DispHub blijft actief</value>
@@ -277,9 +268,6 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   <data name="Profiles_StatusManual" xml:space="preserve">
     <value>{0} (handmatig gekozen) op {1}</value>
   </data>
-  <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>Gepauzeerd: je beeldschermen tonen hun oorspronkelijke kleuren.</value>
-  </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
     <value>{0} (planning) op {1}</value>
   </data>
@@ -288,9 +276,6 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   </data>
   <data name="Profiles_Title" xml:space="preserve">
     <value>Profielen</value>
-  </data>
-  <data name="Profiles_UseMainSettings" xml:space="preserve">
-    <value>De hoofdinstellingen op dit beeldscherm gebruiken</value>
   </data>
   <data name="Profiles_Vibrance" xml:space="preserve">
     <value>Levendigheid</value>
@@ -313,12 +298,6 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   <data name="Settings_Hotkeys" xml:space="preserve">
     <value>Sneltoetsen</value>
   </data>
-  <data name="Settings_KeepRunning" xml:space="preserve">
-    <value>Actief blijven als het venster wordt gesloten</value>
-  </data>
-  <data name="Settings_KeepRunningHint" xml:space="preserve">
-    <value>Sneltoetsen en automatisering blijven werken vanuit het systeemvak.</value>
-  </data>
   <data name="Settings_Language" xml:space="preserve">
     <value>Taal</value>
   </data>
@@ -333,24 +312,6 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   </data>
   <data name="Settings_Next" xml:space="preserve">
     <value>Volgend profiel</value>
-  </data>
-  <data name="Settings_Osd" xml:space="preserve">
-    <value>Schermmelding</value>
-  </data>
-  <data name="Settings_OsdDuration" xml:space="preserve">
-    <value>Hoelang hij blijft staan</value>
-  </data>
-  <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Verschijnt boven de taakbalk na een wissel met een sneltoets of via het systeemvak. Neemt nooit de focus van games over.</value>
-  </data>
-  <data name="Settings_OsdToggle" xml:space="preserve">
-    <value>De profielnaam tonen bij een wissel</value>
-  </data>
-  <data name="Settings_Pause" xml:space="preserve">
-    <value>Pauzeren of hervatten</value>
-  </data>
-  <data name="Settings_PauseHint" xml:space="preserve">
-    <value>Schakelt tussen je profiel en de oorspronkelijke kleuren.</value>
   </data>
   <data name="Settings_Previous" xml:space="preserve">
     <value>Vorig profiel</value>
@@ -379,20 +340,8 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   <data name="Settings_Subtitle" xml:space="preserve">
     <value>Hoe DispHub start, eruitziet en reageert.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>App-thema</value>
-  </data>
-  <data name="Settings_ThemeHint" xml:space="preserve">
-    <value>Systeem volgt de lichte of donkere modus van Windows.</value>
-  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Instellingen</value>
-  </data>
-  <data name="Settings_TrayClick" xml:space="preserve">
-    <value>Klikken op het systeemvakpictogram</value>
-  </data>
-  <data name="Settings_TrayClickHint" xml:space="preserve">
-    <value>Rechtsklikken toont altijd het profielmenu.</value>
   </data>
   <data name="Startup_Failed" xml:space="preserve">
     <value>DispHub kon niet starten.
@@ -428,17 +377,8 @@ Logboeken: {1}</value>
   <data name="Tray_Open" xml:space="preserve">
     <value>DispHub openen</value>
   </data>
-  <data name="Tray_Pause" xml:space="preserve">
-    <value>Pauzeren (oorspronkelijke kleuren)</value>
-  </data>
-  <data name="Tray_Paused" xml:space="preserve">
-    <value>DispHub · Gepauzeerd</value>
-  </data>
   <data name="Tray_Ready" xml:space="preserve">
     <value>Klaar</value>
-  </data>
-  <data name="Tray_Resume" xml:space="preserve">
-    <value>Hervatten</value>
   </data>
   <data name="Upgrade_AppRules" xml:space="preserve">
     <value>Profielen per app</value>

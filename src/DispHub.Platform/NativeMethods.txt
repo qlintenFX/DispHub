@@ -92,6 +92,8 @@ SetWindowDisplayAffinity
 GetModuleHandle
 EnumDisplayMonitors
 GetForegroundWindow
+GetLastInputInfo
+LASTINPUTINFO
 GetWindowRect
 GetClassName
 MonitorFromWindow
@@ -128,7 +130,10 @@ GetWindowTextLength
 IsWindowVisible
 GetWindow
 DwmGetWindowAttribute
+DwmSetWindowAttribute
 DWMWINDOWATTRIBUTE
+DWM_SYSTEMBACKDROP_TYPE
+WM_DWMCOLORIZATIONCOLORCHANGED
 SHDefExtractIcon
 EnumDisplaySettings
 ENUM_DISPLAY_SETTINGS_MODE

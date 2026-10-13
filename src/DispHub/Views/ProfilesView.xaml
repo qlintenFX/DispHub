@@ -22,7 +22,7 @@
       <ui:ToggleSwitch
         HorizontalAlignment="Right"
         VerticalAlignment="Center"
-        Content="{Binding IsActive, Converter={x:Static ctl:ActiveTextConverter.Instance}}"
+        Content="{Binding IsActive, Converter={x:Static ctl:OnOffConverter.Instance}}"
         IsChecked="{Binding IsActive}"
         ToolTip="{l:Tr Profiles_PauseTooltip}" />
     </Grid>
@@ -363,7 +363,7 @@
             <ColumnDefinition Width="64" />
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="WeatherSunny24" />
+            <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Temperature24" />
             <TextBlock Text="{l:Tr Profiles_Temperature}" />
           </StackPanel>
           <Slider

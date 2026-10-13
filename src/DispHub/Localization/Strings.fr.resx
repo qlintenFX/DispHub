@@ -106,12 +106,6 @@
   <data name="Common_On" xml:space="preserve">
     <value>Activé</value>
   </data>
-  <data name="Control_Active" xml:space="preserve">
-    <value>Activé</value>
-  </data>
-  <data name="Control_Paused" xml:space="preserve">
-    <value>En pause</value>
-  </data>
   <data name="Default_Gaming" xml:space="preserve">
     <value>Jeu</value>
   </data>
@@ -162,9 +156,6 @@
   </data>
   <data name="Nav_Settings" xml:space="preserve">
     <value>Paramètres</value>
-  </data>
-  <data name="Osd_Paused" xml:space="preserve">
-    <value>En pause</value>
   </data>
   <data name="Osd_StillRunning" xml:space="preserve">
     <value>DispHub continue de fonctionner</value>
@@ -277,9 +268,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Profiles_StatusManual" xml:space="preserve">
     <value>{0} (choisi manuellement) sur {1}</value>
   </data>
-  <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>En pause : vos écrans affichent leurs couleurs d'origine.</value>
-  </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
     <value>{0} (planification) sur {1}</value>
   </data>
@@ -288,9 +276,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   </data>
   <data name="Profiles_Title" xml:space="preserve">
     <value>Profils</value>
-  </data>
-  <data name="Profiles_UseMainSettings" xml:space="preserve">
-    <value>Utiliser les réglages principaux sur cet écran</value>
   </data>
   <data name="Profiles_Vibrance" xml:space="preserve">
     <value>Éclat</value>
@@ -313,12 +298,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Settings_Hotkeys" xml:space="preserve">
     <value>Raccourcis</value>
   </data>
-  <data name="Settings_KeepRunning" xml:space="preserve">
-    <value>Continuer à fonctionner après la fermeture de la fenêtre</value>
-  </data>
-  <data name="Settings_KeepRunningHint" xml:space="preserve">
-    <value>Les raccourcis et l'automatisation continuent depuis la zone de notification.</value>
-  </data>
   <data name="Settings_Language" xml:space="preserve">
     <value>Langue</value>
   </data>
@@ -333,24 +312,6 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   </data>
   <data name="Settings_Next" xml:space="preserve">
     <value>Profil suivant</value>
-  </data>
-  <data name="Settings_Osd" xml:space="preserve">
-    <value>Affichage à l'écran</value>
-  </data>
-  <data name="Settings_OsdDuration" xml:space="preserve">
-    <value>Durée d'affichage</value>
-  </data>
-  <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Apparaît au-dessus de la barre des tâches après un changement par raccourci ou depuis la zone de notification. Ne prend jamais le focus aux jeux.</value>
-  </data>
-  <data name="Settings_OsdToggle" xml:space="preserve">
-    <value>Afficher le nom du profil lors d'un changement</value>
-  </data>
-  <data name="Settings_Pause" xml:space="preserve">
-    <value>Suspendre ou reprendre</value>
-  </data>
-  <data name="Settings_PauseHint" xml:space="preserve">
-    <value>Bascule entre votre profil et les couleurs d'origine.</value>
   </data>
   <data name="Settings_Previous" xml:space="preserve">
     <value>Profil précédent</value>
@@ -379,20 +340,8 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
   <data name="Settings_Subtitle" xml:space="preserve">
     <value>La façon dont DispHub démarre, s'affiche et réagit.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Thème de l'application</value>
-  </data>
-  <data name="Settings_ThemeHint" xml:space="preserve">
-    <value>Système suit le mode clair ou sombre de Windows.</value>
-  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Paramètres</value>
-  </data>
-  <data name="Settings_TrayClick" xml:space="preserve">
-    <value>Clic sur l'icône de la zone de notification</value>
-  </data>
-  <data name="Settings_TrayClickHint" xml:space="preserve">
-    <value>Un clic droit affiche toujours le menu des profils.</value>
   </data>
   <data name="Startup_Failed" xml:space="preserve">
     <value>Impossible de démarrer DispHub.
@@ -428,17 +377,8 @@ Journaux : {1}</value>
   <data name="Tray_Open" xml:space="preserve">
     <value>Ouvrir DispHub</value>
   </data>
-  <data name="Tray_Pause" xml:space="preserve">
-    <value>Suspendre (couleurs d'origine)</value>
-  </data>
-  <data name="Tray_Paused" xml:space="preserve">
-    <value>DispHub · En pause</value>
-  </data>
   <data name="Tray_Ready" xml:space="preserve">
     <value>Prêt</value>
-  </data>
-  <data name="Tray_Resume" xml:space="preserve">
-    <value>Reprendre</value>
   </data>
   <data name="Upgrade_AppRules" xml:space="preserve">
     <value>Les profils par application</value>

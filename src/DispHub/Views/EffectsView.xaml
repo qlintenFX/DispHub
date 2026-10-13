@@ -46,16 +46,6 @@
       </Setter>
     </Style>
 
-    <LinearGradientBrush x:Key="HueBrush" StartPoint="0,0" EndPoint="1,0">
-      <GradientStop Offset="0" Color="#E04848" />
-      <GradientStop Offset="0.17" Color="#E0E048" />
-      <GradientStop Offset="0.33" Color="#48E048" />
-      <GradientStop Offset="0.5" Color="#48E0E0" />
-      <GradientStop Offset="0.67" Color="#4848E0" />
-      <GradientStop Offset="0.83" Color="#E048E0" />
-      <GradientStop Offset="1" Color="#E04848" />
-    </LinearGradientBrush>
-
     <Style x:Key="SettingSlider" BasedOn="{StaticResource {x:Type Slider}}" TargetType="Slider">
       <Setter Property="VerticalAlignment" Value="Center" />
       <Setter Property="IsMoveToPointEnabled" Value="True" />
@@ -84,22 +74,22 @@
             </Style>
           </TextBlock.Style>
         </TextBlock>
-        <Grid Grid.Column="1" Visibility="{Binding IsChoice, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
-          <Slider
-            AutomationProperties.Name="{Binding Name}"
-            SmallChange="{Binding Step}"
-            Style="{StaticResource SettingSlider}"
-            Value="{Binding Position}" />
-          <!-- Colour sliders show the hues under the track. -->
-          <Border
-            Height="3"
-            Margin="10,0,10,2"
-            VerticalAlignment="Bottom"
-            Background="{StaticResource HueBrush}"
-            CornerRadius="1.5"
-            IsHitTestVisible="False"
-            Visibility="{Binding IsHue, Converter={StaticResource BoolToVisibility}}" />
-        </Grid>
+        <Slider
+          Grid.Column="1"
+          AutomationProperties.Name="{Binding Name}"
+          SmallChange="{Binding Step}"
+          Style="{StaticResource SettingSlider}"
+          Value="{Binding Position}"
+          Visibility="{Binding IsSlider, Converter={StaticResource BoolToVisibility}}" />
+        <!-- A tint's colour: a few clear colours to pick from. -->
+        <ListBox
+          Grid.Column="1"
+          Grid.ColumnSpan="2"
+          AutomationProperties.Name="{Binding Name}"
+          ItemsSource="{Binding Hues}"
+          SelectedItem="{Binding SelectedHue}"
+          Style="{StaticResource SwatchList}"
+          Visibility="{Binding IsHue, Converter={StaticResource BoolToVisibility}}" />
         <ComboBox
           Grid.Column="1"
           Grid.ColumnSpan="2"
@@ -115,7 +105,7 @@
           VerticalAlignment="Center"
           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
           Text="{Binding DisplayValue}"
-          Visibility="{Binding IsChoice, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+          Visibility="{Binding IsSlider, Converter={StaticResource BoolToVisibility}}" />
         <ui:Button
           Grid.Column="3"
           Width="28"
@@ -387,96 +377,193 @@
       </StackPanel>
     </Border>
 
-    <ctl:SectionHeader Text="{l:Tr Effects_InLook}">
-      <ui:Button
-        x:Name="AddPartButton"
-        Click="OnAddPartClick"
-        Content="{l:Tr Effects_AddPart}"
-        Icon="{ui:SymbolIcon Add20}" />
-    </ctl:SectionHeader>
-    <Border Style="{StaticResource SettingCard}" Visibility="{Binding Parts.Count, Converter={x:Static ctl:ZeroToVisibleConverter.Instance}}">
-      <TextBlock
-        Margin="0,6"
-        HorizontalAlignment="Center"
-        Style="{StaticResource Hint}"
-        Text="{l:Tr Effects_NoParts}" />
-    </Border>
-    <ItemsControl ItemsSource="{Binding Parts}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate DataType="{x:Type vm:LookPartViewModel}">
-          <Border Style="{StaticResource SettingCard}">
-            <StackPanel>
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto" />
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" />
-                  <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <ui:SymbolIcon
-                  Margin="0,0,10,0"
-                  VerticalAlignment="Center"
-                  FontSize="18"
-                  Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                  Symbol="{Binding Icon}" />
-                <ContentPresenter
-                  Grid.Column="1"
-                  Content="{Binding Main}"
-                  ContentTemplate="{StaticResource SettingRow}" />
-                <ui:Button
-                  Grid.Column="2"
-                  Width="28"
-                  Height="28"
-                  Padding="0"
-                  Appearance="Transparent"
-                  Command="{Binding ToggleDetailsCommand}"
-                  ToolTip="{l:Tr Effects_MoreSettings}"
-                  AutomationProperties.Name="{l:Tr Effects_MoreSettings}">
-                  <ui:Button.Style>
-                    <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
-                      <Style.Triggers>
-                        <!-- Hidden, not collapsed: every row keeps the same columns. -->
-                        <DataTrigger Binding="{Binding HasDetails}" Value="False">
-                          <Setter Property="Visibility" Value="Hidden" />
-                        </DataTrigger>
-                      </Style.Triggers>
-                    </Style>
-                  </ui:Button.Style>
-                  <ui:SymbolIcon FontSize="16">
-                    <ui:SymbolIcon.Style>
-                      <Style TargetType="ui:SymbolIcon">
-                        <Setter Property="Symbol" Value="ChevronDown16" />
-                        <Style.Triggers>
-                          <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                            <Setter Property="Symbol" Value="ChevronUp16" />
-                          </DataTrigger>
-                        </Style.Triggers>
-                      </Style>
-                    </ui:SymbolIcon.Style>
-                  </ui:SymbolIcon>
-                </ui:Button>
-                <ui:Button
-                  Grid.Column="3"
-                  Width="28"
-                  Height="28"
-                  Margin="2,0,0,0"
-                  Padding="0"
-                  Appearance="Transparent"
-                  Command="{Binding RemoveCommand}"
-                  Icon="{ui:SymbolIcon Dismiss16}"
-                  ToolTip="{l:Tr Effects_RemovePart}"
-                  AutomationProperties.Name="{l:Tr Effects_RemovePart}" />
-              </Grid>
-              <ItemsControl
-                Margin="28,6,64,0"
-                ItemTemplate="{StaticResource SettingRow}"
-                ItemsSource="{Binding Details}"
-                Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibility}}" />
-            </StackPanel>
+    <!-- The effects in the look on the left, the ones to add on the right (below, when narrow). -->
+    <ctl:SectionHeader Text="{l:Tr Effects_InLook}" />
+    <Grid x:Name="EditorPanes" SizeChanged="OnEditorSizeChanged">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition x:Name="LibraryColumn" Width="270" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <Border
+        x:Name="DropZone"
+        MinHeight="96"
+        AllowDrop="True"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        BorderThickness="2"
+        CornerRadius="10"
+        DragEnter="OnDragOverLook"
+        DragLeave="OnDragLeaveLook"
+        DragOver="OnDragOverLook"
+        Drop="OnDropOnLook">
+        <StackPanel>
+          <Border
+            Padding="16,24"
+            Style="{StaticResource SettingCard}"
+            Visibility="{Binding Parts.Count, Converter={x:Static ctl:ZeroToVisibleConverter.Instance}}">
+            <TextBlock
+              HorizontalAlignment="Center"
+              Style="{StaticResource Hint}"
+              Text="{l:Tr Effects_NoParts}"
+              TextAlignment="Center"
+              TextWrapping="Wrap" />
           </Border>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+          <ItemsControl ItemsSource="{Binding Parts}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type vm:LookPartViewModel}">
+                <Border Padding="12,4,6,4" Style="{StaticResource SettingCard}">
+                  <StackPanel>
+                    <DockPanel MinHeight="36">
+                      <ui:Button
+                        Width="28"
+                        Height="28"
+                        Margin="2,0,0,0"
+                        Padding="0"
+                        Appearance="Transparent"
+                        Command="{Binding RemoveCommand}"
+                        DockPanel.Dock="Right"
+                        Icon="{ui:SymbolIcon Dismiss16}"
+                        ToolTip="{l:Tr Effects_RemovePart}"
+                        AutomationProperties.Name="{l:Tr Effects_RemovePart}" />
+                      <ui:Button
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        Appearance="Transparent"
+                        Command="{Binding ToggleDetailsCommand}"
+                        DockPanel.Dock="Right"
+                        ToolTip="{l:Tr Effects_Customise}"
+                        AutomationProperties.Name="{l:Tr Effects_Customise}">
+                        <ui:SymbolIcon FontSize="16">
+                          <ui:SymbolIcon.Style>
+                            <Style TargetType="ui:SymbolIcon">
+                              <Setter Property="Symbol" Value="ChevronDown16" />
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                  <Setter Property="Symbol" Value="ChevronUp16" />
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </ui:SymbolIcon.Style>
+                        </ui:SymbolIcon>
+                      </ui:Button>
+                      <TextBlock
+                        Margin="8,0"
+                        VerticalAlignment="Center"
+                        DockPanel.Dock="Right"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{Binding Main.DisplayValue}" />
+                      <ui:SymbolIcon
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Symbol="{Binding Icon}" />
+                      <TextBlock
+                        VerticalAlignment="Center"
+                        Text="{Binding Name}"
+                        TextTrimming="CharacterEllipsis" />
+                    </DockPanel>
+                    <StackPanel Margin="28,4,30,6" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibility}}">
+                      <ContentPresenter Content="{Binding Main}" ContentTemplate="{StaticResource SettingRow}" />
+                      <ItemsControl ItemTemplate="{StaticResource SettingRow}" ItemsSource="{Binding Details}" />
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+
+      <!-- Effects to add: drag one onto the look, or select its + button. -->
+      <Border
+        x:Name="LibraryBox"
+        Grid.Column="1"
+        MaxHeight="440"
+        Margin="12,0,0,6"
+        Padding="0"
+        VerticalAlignment="Top"
+        Style="{StaticResource SettingCard}">
+        <DockPanel>
+          <TextBlock
+            Margin="14,10,14,2"
+            DockPanel.Dock="Top"
+            FontWeight="SemiBold"
+            Text="{l:Tr Effects_AddPart}" />
+          <TextBlock
+            Margin="14,0,14,6"
+            DockPanel.Dock="Top"
+            Style="{StaticResource Hint}"
+            Text="{l:Tr Effects_AddPartHint}"
+            TextWrapping="Wrap" />
+          <ctl:SmoothScrollViewer Padding="6,0,6,6">
+            <ItemsControl ItemsSource="{Binding Library}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:LibraryGroup}">
+                  <StackPanel>
+                    <TextBlock
+                      Margin="8,8,8,2"
+                      Style="{StaticResource Hint}"
+                      Text="{Binding Name}" />
+                    <ItemsControl ItemsSource="{Binding Effects}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:LibraryEffect}">
+                          <Border
+                            x:Name="Item"
+                            Padding="8,2,2,2"
+                            Background="Transparent"
+                            CornerRadius="4"
+                            Cursor="SizeAll"
+                            MouseMove="OnLibraryItemMouseMove"
+                            PreviewMouseLeftButtonDown="OnLibraryItemPressed"
+                            Tag="{Binding Key}"
+                            ToolTip="{Binding Hint}">
+                            <DockPanel>
+                              <ui:Button
+                                Width="28"
+                                Height="28"
+                                Padding="0"
+                                Appearance="Transparent"
+                                Command="{Binding AddCommand}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Icon="{ui:SymbolIcon Add16}"
+                                ToolTip="{l:Tr Effects_AddThis}"
+                                AutomationProperties.Name="{Binding Name}" />
+                              <ui:SymbolIcon
+                                Margin="0,0,8,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Symbol="{Binding Icon}" />
+                              <TextBlock
+                                VerticalAlignment="Center"
+                                Text="{Binding Name}"
+                                TextTrimming="CharacterEllipsis" />
+                            </DockPanel>
+                          </Border>
+                          <DataTemplate.Triggers>
+                            <Trigger SourceName="Item" Property="IsMouseOver" Value="True">
+                              <Setter TargetName="Item" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+                            </Trigger>
+                          </DataTemplate.Triggers>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ctl:SmoothScrollViewer>
+        </DockPanel>
+      </Border>
+    </Grid>
 
     <!-- Save -->
     <ctl:SettingsCard

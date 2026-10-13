@@ -106,12 +106,6 @@
   <data name="Common_On" xml:space="preserve">
     <value>Ein</value>
   </data>
-  <data name="Control_Active" xml:space="preserve">
-    <value>Ein</value>
-  </data>
-  <data name="Control_Paused" xml:space="preserve">
-    <value>Pausiert</value>
-  </data>
   <data name="Default_Gaming" xml:space="preserve">
     <value>Gaming</value>
   </data>
@@ -162,9 +156,6 @@
   </data>
   <data name="Nav_Settings" xml:space="preserve">
     <value>Einstellungen</value>
-  </data>
-  <data name="Osd_Paused" xml:space="preserve">
-    <value>Pausiert</value>
   </data>
   <data name="Osd_StillRunning" xml:space="preserve">
     <value>DispHub läuft weiter</value>
@@ -277,9 +268,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   <data name="Profiles_StatusManual" xml:space="preserve">
     <value>{0} (manuell gewählt) auf {1}</value>
   </data>
-  <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>Pausiert: Deine Bildschirme zeigen ihre Originalfarben.</value>
-  </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
     <value>{0} (Zeitplan) auf {1}</value>
   </data>
@@ -288,9 +276,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   </data>
   <data name="Profiles_Title" xml:space="preserve">
     <value>Profile</value>
-  </data>
-  <data name="Profiles_UseMainSettings" xml:space="preserve">
-    <value>Haupteinstellungen auf diesem Bildschirm verwenden</value>
   </data>
   <data name="Profiles_Vibrance" xml:space="preserve">
     <value>Farbintensität</value>
@@ -313,12 +298,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   <data name="Settings_Hotkeys" xml:space="preserve">
     <value>Tastenkombinationen</value>
   </data>
-  <data name="Settings_KeepRunning" xml:space="preserve">
-    <value>Weiter ausführen, wenn das Fenster geschlossen wird</value>
-  </data>
-  <data name="Settings_KeepRunningHint" xml:space="preserve">
-    <value>Tastenkombinationen und Automatisierung funktionieren weiter über den Infobereich.</value>
-  </data>
   <data name="Settings_Language" xml:space="preserve">
     <value>Sprache</value>
   </data>
@@ -333,24 +312,6 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   </data>
   <data name="Settings_Next" xml:space="preserve">
     <value>Nächstes Profil</value>
-  </data>
-  <data name="Settings_Osd" xml:space="preserve">
-    <value>Bildschirmanzeige</value>
-  </data>
-  <data name="Settings_OsdDuration" xml:space="preserve">
-    <value>Anzeigedauer</value>
-  </data>
-  <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Erscheint über der Taskleiste nach einem Wechsel per Tastenkombination oder Infobereich. Nimmt Spielen nie den Fokus.</value>
-  </data>
-  <data name="Settings_OsdToggle" xml:space="preserve">
-    <value>Profilnamen beim Wechsel anzeigen</value>
-  </data>
-  <data name="Settings_Pause" xml:space="preserve">
-    <value>Pausieren oder fortsetzen</value>
-  </data>
-  <data name="Settings_PauseHint" xml:space="preserve">
-    <value>Wechselt zwischen deinem Profil und den Originalfarben.</value>
   </data>
   <data name="Settings_Previous" xml:space="preserve">
     <value>Vorheriges Profil</value>
@@ -379,20 +340,8 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
   <data name="Settings_Subtitle" xml:space="preserve">
     <value>Wie DispHub startet, aussieht und reagiert.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>App-Design</value>
-  </data>
-  <data name="Settings_ThemeHint" xml:space="preserve">
-    <value>„System“ folgt dem hellen oder dunklen Modus von Windows.</value>
-  </data>
   <data name="Settings_Title" xml:space="preserve">
     <value>Einstellungen</value>
-  </data>
-  <data name="Settings_TrayClick" xml:space="preserve">
-    <value>Klick auf das Infobereichssymbol</value>
-  </data>
-  <data name="Settings_TrayClickHint" xml:space="preserve">
-    <value>Ein Rechtsklick zeigt immer das Profilmenü.</value>
   </data>
   <data name="Startup_Failed" xml:space="preserve">
     <value>DispHub konnte nicht gestartet werden.
@@ -428,17 +377,8 @@ Protokolle: {1}</value>
   <data name="Tray_Open" xml:space="preserve">
     <value>DispHub öffnen</value>
   </data>
-  <data name="Tray_Pause" xml:space="preserve">
-    <value>Pausieren (Originalfarben)</value>
-  </data>
-  <data name="Tray_Paused" xml:space="preserve">
-    <value>DispHub · Pausiert</value>
-  </data>
   <data name="Tray_Ready" xml:space="preserve">
     <value>Bereit</value>
-  </data>
-  <data name="Tray_Resume" xml:space="preserve">
-    <value>Fortsetzen</value>
   </data>
   <data name="Upgrade_AppRules" xml:space="preserve">
     <value>Profile pro App</value>

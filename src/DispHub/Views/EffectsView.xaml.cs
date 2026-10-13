@@ -1,16 +1,19 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using DispHub.ViewModels;
-using Wpf.Ui.Controls;
-using MenuItem = System.Windows.Controls.MenuItem;
 
 namespace DispHub.Views;
 
 public partial class EffectsView : UserControl
 {
-    /// <summary>Below this width the look's name and actions go under the preview.</summary>
+    /// <summary>Below this width the look's name and actions go under the preview, and the effects box under the look.</summary>
     private const double NarrowWidth = 640;
+
+    /// <summary>The clipboard-style format an effect is dragged in: its key.</summary>
+    private const string EffectFormat = "DispHub.Effect";
+
+    private Point _pressedAt;
 
     public EffectsView() => InitializeComponent();
 
@@ -25,20 +28,46 @@ public partial class EffectsView : UserControl
         InfoColumn.MinWidth = narrow ? 0 : 220;
     }
 
-    /// <summary>The effects that can be added, grouped under headings, as a menu under the button.</summary>
-    private void OnAddPartClick(object sender, RoutedEventArgs e)
+    private void OnEditorSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (DataContext is not EffectsViewModel viewModel)
-            return;
-        var menu = new ContextMenu { PlacementTarget = AddPartButton, Placement = PlacementMode.Bottom, MaxHeight = 480 };
-        foreach (AddPartGroup group in viewModel.AddableParts)
-        {
-            if (menu.Items.Count > 0)
-                menu.Items.Add(new Separator());
-            menu.Items.Add(new MenuItem { Header = group.Name, IsEnabled = false, FontWeight = FontWeights.SemiBold });
-            foreach (AddPartChoice part in group.Parts)
-                menu.Items.Add(new MenuItem { Header = part.Name, ToolTip = part.Hint, Command = part.AddCommand, Icon = new SymbolIcon { Symbol = SymbolRegular.Add16 } });
-        }
-        menu.IsOpen = true;
+        bool narrow = e.NewSize.Width < NarrowWidth;
+        Grid.SetColumn(LibraryBox, narrow ? 0 : 1);
+        Grid.SetRow(LibraryBox, narrow ? 1 : 0);
+        LibraryBox.Margin = narrow ? new Thickness(0, 8, 0, 6) : new Thickness(12, 0, 0, 6);
+        LibraryColumn.Width = narrow ? new GridLength(0) : new GridLength(270);
     }
+
+    private void OnLibraryItemPressed(object sender, MouseButtonEventArgs e) => _pressedAt = e.GetPosition(this);
+
+    /// <summary>Starts dragging an effect from the box once the mouse has moved a little with the button down.</summary>
+    private void OnLibraryItemMouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton != MouseButtonState.Pressed || sender is not FrameworkElement { Tag: string key } item)
+            return;
+        Vector moved = e.GetPosition(this) - _pressedAt;
+        if (Math.Abs(moved.X) < SystemParameters.MinimumHorizontalDragDistance && Math.Abs(moved.Y) < SystemParameters.MinimumVerticalDragDistance)
+            return;
+        DragDrop.DoDragDrop(item, new DataObject(EffectFormat, key), DragDropEffects.Copy);
+        ShowDropTarget(false);
+    }
+
+    private void OnDragOverLook(object sender, DragEventArgs e)
+    {
+        bool effect = e.Data.GetDataPresent(EffectFormat);
+        e.Effects = effect ? DragDropEffects.Copy : DragDropEffects.None;
+        ShowDropTarget(effect);
+        e.Handled = true;
+    }
+
+    private void OnDragLeaveLook(object sender, DragEventArgs e) => ShowDropTarget(false);
+
+    private void OnDropOnLook(object sender, DragEventArgs e)
+    {
+        ShowDropTarget(false);
+        if (e.Data.GetData(EffectFormat) is string key && DataContext is EffectsViewModel viewModel)
+            viewModel.AddEffect(key);
+    }
+
+    private void ShowDropTarget(bool show) =>
+        DropZone.BorderBrush = show ? (System.Windows.Media.Brush)FindResource("AccentFillColorDefaultBrush") : System.Windows.Media.Brushes.Transparent;
 }

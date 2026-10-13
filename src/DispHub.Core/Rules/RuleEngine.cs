@@ -108,9 +108,13 @@ public static class RuleEngine
             return false;
 
         string wanted = rule.Executable.Trim();
-        return wanted.Contains('\\', StringComparison.Ordinal) || wanted.Contains('/', StringComparison.Ordinal)
-            ? string.Equals(Path.GetFullPath(wanted), Path.GetFullPath(executablePath), StringComparison.OrdinalIgnoreCase)
-            : string.Equals(wanted, Path.GetFileName(executablePath), StringComparison.OrdinalIgnoreCase);
+        if (HasFolder(wanted) && HasFolder(executablePath))
+            return string.Equals(Path.GetFullPath(wanted), Path.GetFullPath(executablePath), StringComparison.OrdinalIgnoreCase);
+
+        // A rule by name, or a program whose folder Windows wouldn't tell us: compare the file names.
+        return string.Equals(Path.GetFileName(wanted), Path.GetFileName(executablePath), StringComparison.OrdinalIgnoreCase);
+
+        static bool HasFolder(string path) => path.Contains('\\', StringComparison.Ordinal) || path.Contains('/', StringComparison.Ordinal);
     }
 
     private static AppRule? FindAppRule(AppConfig config, string? executable) =>

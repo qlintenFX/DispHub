@@ -79,7 +79,8 @@ public sealed partial class EffectsViewModel : PageViewModel
     public ObservableCollection<LookPartViewModel> Parts { get; } = [];
 
     /// <summary>What "Add an effect" offers: every effect not in the look yet, grouped.</summary>
-    public ObservableCollection<AddPartGroup> AddableParts { get; } = [];
+    /// <summary>The effects that can still be added to the look, by group.</summary>
+    public ObservableCollection<LibraryGroup> Library { get; } = [];
 
     public IReadOnlyList<FrameRateChoice> FrameRates { get; }
 
@@ -193,8 +194,16 @@ public sealed partial class EffectsViewModel : PageViewModel
         Commit();
         RefreshEditor();
         RefreshCurrent();
+        // Open, so its settings are right there to adjust.
         if (_partCache.TryGetValue(part.Key, out LookPartViewModel? added))
-            added.IsExpanded = added.HasDetails;
+            added.IsExpanded = true;
+    }
+
+    /// <summary>An effect dropped on the look, by its key.</summary>
+    internal void AddEffect(string key)
+    {
+        if (LookParts.Find(key) is { } part && !part.IsIn(CurrentLook))
+            AddPart(part);
     }
 
     internal void RemovePart(LookPart part)
@@ -209,10 +218,8 @@ public sealed partial class EffectsViewModel : PageViewModel
     internal void SelectLook(LookTile tile)
     {
         EffectsConfig effects = _app.Config.Effects;
+        // Picking a look only selects it for the preview; the switch above decides whether the screen shows it.
         (effects.Preset, effects.Look, effects.Strength) = (tile.Id, tile.Look, 1);
-        // Free: try it in the preview; the screen stays as it is.
-        if (_app.Features.ScreenEffects)
-            effects.Enabled = true;
         Commit();
         Load();
     }
@@ -457,9 +464,9 @@ public sealed partial class EffectsViewModel : PageViewModel
                 item.Refresh(look, except);
             }
 
-            AddableParts.Clear();
+            Library.Clear();
             foreach (IGrouping<LookGroup, LookPart> group in LookParts.All.Where(p => !p.IsIn(look)).GroupBy(p => p.Group))
-                AddableParts.Add(new AddPartGroup(Loc.Get($"LookGroup_{group.Key}"), [.. group.Select(p => new AddPartChoice(this, p))]));
+                Library.Add(new LibraryGroup(Loc.Get($"LookGroup_{group.Key}"), [.. group.Select(p => new LibraryEffect(this, p))]));
         }
         finally
         {
@@ -655,7 +662,7 @@ public sealed partial class LookPartViewModel : ObservableObject
         Part = part;
         Name = Loc.Get($"LookPart_{part.Key}");
         Icon = EffectsViewModel.GroupIcon(part.Group);
-        Main = new LookSettingViewModel(owner, part.Main, Name, canReset: false);
+        Main = new LookSettingViewModel(owner, part.Main, canReset: false);
         Details = [.. part.Details.Select(d => new LookSettingViewModel(owner, d))];
     }
 
@@ -687,17 +694,58 @@ public sealed partial class LookPartViewModel : ObservableObject
     private void ToggleDetails() => IsExpanded = !IsExpanded;
 }
 
-public sealed record AddPartGroup(string Name, IReadOnlyList<AddPartChoice> Parts);
+public sealed record LibraryGroup(string Name, IReadOnlyList<LibraryEffect> Effects);
 
-/// <summary>An entry in the "Add an effect" menu.</summary>
-public sealed partial class AddPartChoice(EffectsViewModel owner, LookPart part)
+/// <summary>An effect in the box beside the look: dragged onto the look, or added with its + button.</summary>
+public sealed partial class LibraryEffect(EffectsViewModel owner, LookPart part)
 {
+    public string Key { get; } = part.Key;
+
     public string Name { get; } = Loc.Get($"LookPart_{part.Key}");
 
     public string Hint { get; } = Loc.Get($"LookPart_{part.Key}Hint");
 
+    public SymbolRegular Icon { get; } = EffectsViewModel.GroupIcon(part.Group);
+
     [RelayCommand]
     private void Add() => owner.AddPart(part);
+}
+
+/// <summary>A colour to pick for a tint, instead of a hue slider.</summary>
+public sealed record HueChoice(double Degrees, string Name, SolidColorBrush Swatch)
+{
+    /// <summary>Ten clear colours around the colour wheel.</summary>
+    public static IReadOnlyList<HueChoice> All { get; } =
+    [
+        .. new (double Degrees, string Key)[]
+        {
+            (0, "red"), (30, "orange"), (45, "amber"), (60, "yellow"), (120, "green"),
+            (170, "teal"), (190, "cyan"), (215, "blue"), (270, "purple"), (320, "magenta"),
+        }.Select(h => new HueChoice(h.Degrees, Loc.Get($"Hue_{h.Key}"), Brush(h.Degrees))),
+    ];
+
+    /// <summary>The choice closest to <paramref name="degrees"/> around the wheel.</summary>
+    public static HueChoice Nearest(double degrees) =>
+        All.MinBy(h => Math.Min(Math.Abs(h.Degrees - degrees), 360 - Math.Abs(h.Degrees - degrees)))!;
+
+    private static SolidColorBrush Brush(double hue)
+    {
+        // A bright, slightly soft colour of this hue.
+        double c = 0.78, x = c * (1 - Math.Abs((hue / 60 % 2) - 1)), m = 0.16;
+        (double r, double g, double b) = (int)(hue / 60) switch
+        {
+            0 => (c, x, 0d),
+            1 => (x, c, 0d),
+            2 => (0d, c, x),
+            3 => (0d, x, c),
+            4 => (x, 0d, c),
+            _ => (c, 0d, x),
+        };
+        static byte B(double v) => (byte)Math.Round(Math.Clamp(v, 0, 1) * 255);
+        var brush = new SolidColorBrush(Color.FromRgb(B(r + m), B(g + m), B(b + m)));
+        brush.Freeze();
+        return brush;
+    }
 }
 
 /// <summary>One setting: a slider, or a list for choices such as the palette.</summary>
@@ -726,7 +774,12 @@ public sealed partial class LookSettingViewModel : ObservableObject
 
     public bool ShowReset => CanReset && IsChanged;
 
+    /// <summary>A tint's colour: picked from swatches rather than a slider.</summary>
     public bool IsHue => Parameter.Unit == LookUnit.Degrees;
+
+    public bool IsSlider => !IsChoice && !IsHue;
+
+    public IReadOnlyList<HueChoice> Hues => IsHue ? HueChoice.All : [];
 
     /// <summary>One step of the slider as a fraction of its length, for the arrow keys.</summary>
     public double Step => Range > 0 ? Math.Max(Parameter.Step / Range, 0.01) : 0.01;
@@ -741,6 +794,7 @@ public sealed partial class LookSettingViewModel : ObservableObject
 
     [ObservableProperty] public partial double Value { get; set; }
     [ObservableProperty] public partial LookOption? SelectedOption { get; set; }
+    [ObservableProperty] public partial HueChoice? SelectedHue { get; set; }
     [ObservableProperty] public partial string DisplayValue { get; set; } = "";
     [ObservableProperty] public partial bool IsApplicable { get; set; } = true;
     [ObservableProperty]
@@ -762,6 +816,7 @@ public sealed partial class LookSettingViewModel : ObservableObject
             Value = value;
             Position = Range > 0 ? (value - Parameter.Min) / Range : 0;
             SelectedOption = Options.FirstOrDefault(o => Math.Abs(o.Value - value) < 1e-6);
+            SelectedHue = IsHue ? HueChoice.Nearest(value) : null;
             DisplayValue = EffectsViewModel.Format(Parameter, value);
         }
         finally
@@ -787,6 +842,12 @@ public sealed partial class LookSettingViewModel : ObservableObject
             _owner.SetParameter(Parameter, value.Value);
     }
 
+    partial void OnSelectedHueChanged(HueChoice? value)
+    {
+        if (!_refreshing && value is not null)
+            _owner.SetParameter(Parameter, value.Degrees);
+    }
+
     [RelayCommand]
     private void Reset()
     {
@@ -795,6 +856,7 @@ public sealed partial class LookSettingViewModel : ObservableObject
         _refreshing = true;
         Value = Parameter.Default;
         Position = Range > 0 ? (Parameter.Default - Parameter.Min) / Range : 0;
+        SelectedHue = IsHue ? HueChoice.Nearest(Parameter.Default) : null;
         DisplayValue = EffectsViewModel.Format(Parameter, Parameter.Default);
         _refreshing = false;
     }

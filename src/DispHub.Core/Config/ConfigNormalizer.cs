@@ -92,6 +92,7 @@ public static class ConfigNormalizer
             if ((slot.Days & ScheduleDays.Every) == ScheduleDays.None)
                 slot.Days = ScheduleDays.Every;
         }
+        ScheduleShapes.Normalize(config.Schedule, config.Profiles);
         if (config.Schedule.Location is { } location &&
             (!double.IsFinite(location.Latitude) || !double.IsFinite(location.Longitude) ||
              Math.Abs(location.Latitude) > 90 || Math.Abs(location.Longitude) > 180))
@@ -109,8 +110,8 @@ public static class ConfigNormalizer
         if (config.Ui.Backdrop == WindowBackdrop.Acrylic || !Enum.IsDefined(config.Ui.Backdrop))
             config.Ui.Backdrop = WindowBackdrop.Mica;
         config.Ui.TextScale = double.IsFinite(config.Ui.TextScale) ? Math.Clamp(config.Ui.TextScale, 0.9, 1.25) : 1.0;
-        if (config.Ui.AccentColor is { } accent && !System.Text.RegularExpressions.Regex.IsMatch(accent, "^#[0-9A-Fa-f]{6}$"))
-            config.Ui.AccentColor = null;
+        // Only the offered colours: an older or hand-edited code becomes the closest one.
+        config.Ui.AccentColor = Accents.Nearest(config.Ui.AccentColor)?.Hex;
 
         return fixes;
     }

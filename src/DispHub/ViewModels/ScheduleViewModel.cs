@@ -16,16 +16,19 @@ using DispHub.Services;
 namespace DispHub.ViewModels;
 
 /// <summary>
-/// The schedule, made of changes ("from sunset, Night"). A day bar shows the result; each change is one card with
-/// four plain choices. A new schedule starts from one of two common setups. Free users can build one and see it;
-/// running it is Pro.
+/// The schedule, set up like Windows' Night light: a night profile from sunset to sunrise, or between two times.
+/// Custom is there for more than two changes or different days. Underneath, every mode is a list of slots, so
+/// the rule engine doesn't care which one the user picked. Free users can set one up and see it; running it is Pro.
 /// </summary>
 public sealed partial class ScheduleViewModel : PageViewModel
 {
+    private static readonly TimeOnly DefaultTurnOn = new(21, 0), DefaultTurnOff = new(7, 0);
+
     private readonly AppController _app;
     private readonly IUpgradeService _upgrade;
     private readonly TimeProvider _time;
     private readonly DispatcherTimer _clock = new() { Interval = TimeSpan.FromSeconds(30) };
+    private List<ScheduleSlot>? _customSlots;
     private bool _loading;
     private bool _ownChange;
 
@@ -44,47 +47,35 @@ public sealed partial class ScheduleViewModel : PageViewModel
                 Load();
         };
         _app.StateChanged += (_, _) => RefreshStatus();
-
-        DayOfWeek first = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
-        for (int i = 0; i < 7; i++)
-        {
-            var day = (DayOfWeek)(((int)first + i) % 7);
-            string name = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(day);
-            Days.Add(new DayChoice(day, day == Today.DayOfWeek ? Loc.Format("Schedule_Today", name) : name));
-        }
-        SelectedDay = Days.First(d => d.Day == Today.DayOfWeek);
         Load();
     }
 
-    /// <summary>Which day the bar shows; only offered when some change is limited to certain days.</summary>
-    public ObservableCollection<DayChoice> Days { get; } = [];
-
-    public ObservableCollection<ScheduleSlotItem> Slots { get; } = [];
     public ObservableCollection<ProfileChoice> ProfileChoices { get; } = [];
+    public ObservableCollection<ScheduleChangeItem> Changes { get; } = [];
     public ObservableCollection<Place> LocationResults { get; } = [];
+
+    public IReadOnlyList<FadeChoice> Fades { get; } =
+        [.. new[] { 0, 15, 30, 60 }.Select(m => new FadeChoice(m, m == 0 ? Loc.Get("Schedule_Instant") : Duration(m)))];
 
     public IReadOnlyList<WhenChoice> Whens { get; } =
     [
-        new(ScheduleAnchor.Sunrise, Loc.Get("Schedule_Sunrise")),
-        new(ScheduleAnchor.Sunset, Loc.Get("Schedule_Sunset")),
         new(ScheduleAnchor.Time, Loc.Get("Schedule_AtTime")),
-    ];
-
-    public IReadOnlyList<FadeChoice> Fades { get; } =
-        [.. new[] { 0, 5, 10, 15, 30, 45, 60, 90, 120 }.Select(m => new FadeChoice(m, m == 0 ? Loc.Get("Schedule_Instant") : Duration(m)))];
-
-    public IReadOnlyList<DaysChoice> DaysChoices { get; } =
-    [
-        new(ScheduleDays.Every, Loc.Get("Schedule_EveryDay")),
-        new(ScheduleDays.Weekdays, Loc.Get("Schedule_Weekdays")),
-        new(ScheduleDays.Weekend, Loc.Get("Schedule_Weekends")),
-        new(ScheduleDays.None, Loc.Get("Schedule_SomeDays")),
+        new(ScheduleAnchor.Sunset, Loc.Get("Schedule_Sunset")),
+        new(ScheduleAnchor.Sunrise, Loc.Get("Schedule_Sunrise")),
     ];
 
     [ObservableProperty] public partial bool Enabled { get; set; }
     [ObservableProperty] public partial bool IsPro { get; set; }
-    [ObservableProperty] public partial DayChoice? SelectedDay { get; set; }
-    [ObservableProperty] public partial bool ShowDayPicker { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsSunMode), nameof(IsHoursMode), nameof(IsCustomMode), nameof(IsSimpleMode))]
+    public partial ScheduleMode Mode { get; set; }
+
+    [ObservableProperty] public partial ProfileChoice? NightProfile { get; set; }
+    [ObservableProperty] public partial ProfileChoice? DayProfile { get; set; }
+    [ObservableProperty] public partial TimeOnly TurnOn { get; set; } = DefaultTurnOn;
+    [ObservableProperty] public partial TimeOnly TurnOff { get; set; } = DefaultTurnOff;
+    [ObservableProperty] public partial FadeChoice? Fade { get; set; }
     [ObservableProperty] public partial IReadOnlyList<TimelineSegment> Segments { get; set; } = [];
     [ObservableProperty] public partial double? Sunrise { get; set; }
     [ObservableProperty] public partial double? Sunset { get; set; }
@@ -97,7 +88,26 @@ public sealed partial class ScheduleViewModel : PageViewModel
     [ObservableProperty] public partial string LocationQuery { get; set; } = "";
     [ObservableProperty] public partial string? LocationError { get; set; }
     [ObservableProperty] public partial bool IsLocating { get; set; }
-    [ObservableProperty] public partial bool HasSlots { get; set; }
+
+    public bool IsSunMode
+    {
+        get => Mode == ScheduleMode.SunsetToSunrise;
+        set => SetMode(value, ScheduleMode.SunsetToSunrise);
+    }
+
+    public bool IsHoursMode
+    {
+        get => Mode == ScheduleMode.SetHours;
+        set => SetMode(value, ScheduleMode.SetHours);
+    }
+
+    public bool IsCustomMode
+    {
+        get => Mode == ScheduleMode.Custom;
+        set => SetMode(value, ScheduleMode.Custom);
+    }
+
+    public bool IsSimpleMode => Mode != ScheduleMode.Custom;
 
     private DateOnly Today => DateOnly.FromDateTime(_time.GetLocalNow().DateTime);
 
@@ -108,9 +118,6 @@ public sealed partial class ScheduleViewModel : PageViewModel
     }
 
     public override void OnHidden() => _clock.Stop();
-
-    /// <summary>A time of day in the user's format, rounded to the minute.</summary>
-    internal static string TimeText(TimeOnly time) => DayTimeline.TimeLabel(time.ToTimeSpan().TotalMinutes);
 
     /// <summary>"30 min", "1 h", "1 h 30 min".</summary>
     internal static string Duration(int minutes)
@@ -128,7 +135,9 @@ public sealed partial class ScheduleViewModel : PageViewModel
         if (value && !IsPro)
         {
             _upgrade.ShowUpgrade(Loc.Get("Upgrade_Schedules"));
-            SetEnabledSilently(false);
+            _loading = true;
+            Enabled = false;
+            _loading = false;
             return;
         }
         _app.Config.Schedule.Enabled = value;
@@ -136,12 +145,27 @@ public sealed partial class ScheduleViewModel : PageViewModel
         RefreshStatus();
     }
 
-    partial void OnSelectedDayChanged(DayChoice? value) => RefreshTimeline();
+    partial void OnNightProfileChanged(ProfileChoice? value) => WriteSimple();
+
+    partial void OnDayProfileChanged(ProfileChoice? value) => WriteSimple();
+
+    partial void OnTurnOnChanged(TimeOnly value) => WriteSimple();
+
+    partial void OnTurnOffChanged(TimeOnly value) => WriteSimple();
+
+    partial void OnFadeChanged(FadeChoice? value)
+    {
+        if (_loading || value is null)
+            return;
+        foreach (ScheduleSlot slot in _app.Config.Schedule.Slots)
+            slot.FadeMinutes = value.Minutes;
+        Save();
+    }
 
     partial void OnSelectedSlotIdChanged(Guid? value)
     {
-        foreach (ScheduleSlotItem slot in Slots)
-            slot.IsSelected = slot.Id == value;
+        foreach (ScheduleChangeItem change in Changes)
+            change.IsSelected = change.Id == value;
     }
 
     partial void OnLocationQueryChanged(string value)
@@ -188,61 +212,86 @@ public sealed partial class ScheduleViewModel : PageViewModel
         }
     }
 
-    /// <summary>Adds a change after the last one, to the profile that isn't on then.</summary>
+    /// <summary>Custom schedule: one more change, two hours after the last timed one.</summary>
     [RelayCommand]
-    private void AddSlot()
+    private void AddChange()
     {
         List<ScheduleSlot> slots = _app.Config.Schedule.Slots;
+        TimeOnly latest = slots.Where(s => s.Anchor == ScheduleAnchor.Time).Select(s => s.Start).DefaultIfEmpty(new TimeOnly(19, 0)).Max();
         var slot = new ScheduleSlot
         {
-            Start = slots.Count == 0 ? new TimeOnly(7, 0) : NextFreeTime(),
-            ProfileId = slots.Count == 0 ? DayProfile().Id : NightProfile().Id,
-            FadeMinutes = slots.Count == 0 ? 0 : 30,
+            Start = latest.AddHours(2),
+            ProfileId = slots.Count == 0 ? DefaultDayProfile().Id : DefaultNightProfile().Id,
+            FadeMinutes = Fade?.Minutes ?? 30,
         };
         slots.Add(slot);
         SelectedSlotId = slot.Id;
         Save(reload: true);
     }
 
-    /// <summary>Starts a schedule from a common setup, built from the user's own profiles.</summary>
-    [RelayCommand]
-    private void ApplyTemplate(string? name)
-    {
-        Profile day = DayProfile(), night = NightProfile();
-        List<ScheduleSlot> slots = name switch
-        {
-            "hours" =>
-            [
-                new() { Start = new TimeOnly(7, 0), ProfileId = day.Id, FadeMinutes = 15 },
-                new() { Start = new TimeOnly(21, 0), ProfileId = night.Id, FadeMinutes = 30 },
-            ],
-            "blank" => [new() { Start = new TimeOnly(21, 0), ProfileId = night.Id, FadeMinutes = 30 }],
-            _ =>
-            [
-                new() { Anchor = ScheduleAnchor.Sunrise, ProfileId = day.Id, FadeMinutes = 30 },
-                new() { Anchor = ScheduleAnchor.Sunset, ProfileId = night.Id, FadeMinutes = 60 },
-            ],
-        };
-        if (slots.Any(s => s.Anchor != ScheduleAnchor.Time))
-            EnsureLocation();
-        _app.Config.Schedule.Slots = slots;
-        // Setting one up is a clear sign it should run.
-        if (IsPro)
-            _app.Config.Schedule.Enabled = true;
-        Save(reload: true);
-    }
-
-    internal void SlotChanged(bool needsLocation)
+    internal void ChangeEdited(bool needsLocation)
     {
         if (needsLocation)
             EnsureLocation();
+        _customSlots = null;
         Save();
     }
 
-    internal void RemoveSlot(ScheduleSlot slot)
+    internal void RemoveChange(ScheduleSlot slot)
     {
         _app.Config.Schedule.Slots.Remove(slot);
         Save(reload: true);
+    }
+
+    private void SetMode(bool selected, ScheduleMode mode)
+    {
+        if (!selected || _loading || Mode == mode)
+            return;
+        ScheduleConfig schedule = _app.Config.Schedule;
+        if (Mode == ScheduleMode.Custom)
+            _customSlots = schedule.Slots; // Back to custom in this session brings these back.
+        Mode = mode;
+        schedule.Mode = mode;
+        if (mode == ScheduleMode.Custom)
+        {
+            if (_customSlots is { Count: > 0 } custom)
+                schedule.Slots = custom;
+            Save(reload: true);
+            return;
+        }
+        WriteSimple(force: true);
+        Load();
+    }
+
+    /// <summary>The simple modes are two slots, night first, rebuilt from the choices on the page.</summary>
+    private void WriteSimple(bool force = false)
+    {
+        if ((_loading && !force) || Mode == ScheduleMode.Custom)
+            return;
+        ScheduleConfig schedule = _app.Config.Schedule;
+        Guid night = NightProfile?.Id ?? DefaultNightProfile().Id, day = DayProfile?.Id ?? DefaultDayProfile().Id;
+        int fade = Fade?.Minutes ?? 30;
+        ScheduleSlot nightSlot = schedule.Slots.ElementAtOrDefault(0) ?? new ScheduleSlot();
+        ScheduleSlot daySlot = schedule.Slots.ElementAtOrDefault(1) ?? new ScheduleSlot();
+        bool sun = Mode == ScheduleMode.SunsetToSunrise;
+        foreach ((ScheduleSlot slot, Guid profile, ScheduleAnchor anchor, TimeOnly start) in new[]
+                 {
+                     (nightSlot, night, ScheduleAnchor.Sunset, TurnOn),
+                     (daySlot, day, ScheduleAnchor.Sunrise, TurnOff),
+                 })
+        {
+            slot.ProfileId = profile;
+            slot.Anchor = sun ? anchor : ScheduleAnchor.Time;
+            slot.Start = sun ? default : start;
+            slot.OffsetMinutes = 0;
+            slot.Days = ScheduleDays.Every;
+            slot.FadeMinutes = fade;
+        }
+        schedule.Mode = Mode;
+        schedule.Slots = [nightSlot, daySlot];
+        if (sun)
+            EnsureLocation();
+        Save();
     }
 
     private void Save(bool reload = false)
@@ -261,23 +310,41 @@ public sealed partial class ScheduleViewModel : PageViewModel
     private void Load()
     {
         _loading = true;
+        ScheduleConfig schedule = _app.Config.Schedule;
         try
         {
             IsPro = _app.Features.Schedules;
-            Enabled = _app.Config.Schedule.Enabled;
+            Enabled = schedule.Enabled;
+            Mode = schedule.Mode;
             ProfileChoices.Clear();
             foreach (Profile profile in _app.Config.Profiles)
                 ProfileChoices.Add(ProfileChoice.From(profile));
-            Slots.Clear();
-            DateOnly today = Today;
-            foreach (ScheduleSlot slot in _app.Config.Schedule.Slots.OrderBy(s => ScheduleTimeline.StartOn(s, today, _app.Config.Schedule.Location, _time.LocalTimeZone)))
-                Slots.Add(new ScheduleSlotItem(this, slot, ProfileChoices, Days));
-            HasSlots = Slots.Count > 0;
+
+            ScheduleSlot? night = Mode == ScheduleMode.Custom ? null : schedule.Slots.ElementAtOrDefault(0);
+            ScheduleSlot? day = Mode == ScheduleMode.Custom ? null : schedule.Slots.ElementAtOrDefault(1);
+            NightProfile = ProfileChoices.FirstOrDefault(p => p.Id == (night?.ProfileId ?? DefaultNightProfile().Id));
+            DayProfile = ProfileChoices.FirstOrDefault(p => p.Id == (day?.ProfileId ?? DefaultDayProfile().Id));
+            if (Mode == ScheduleMode.SetHours && night is not null && day is not null)
+                (TurnOn, TurnOff) = (night.Start, day.Start);
+            int fade = schedule.Slots.Select(s => s.FadeMinutes).DefaultIfEmpty(30).Max();
+            Fade = Fades.MinBy(f => Math.Abs(f.Minutes - fade));
+
+            Changes.Clear();
+            if (Mode == ScheduleMode.Custom)
+            {
+                DateOnly today = Today;
+                foreach (ScheduleSlot slot in schedule.Slots.OrderBy(s => ScheduleTimeline.StartOn(s, today, schedule.Location, _time.LocalTimeZone)))
+                    Changes.Add(new ScheduleChangeItem(this, slot, ProfileChoices));
+            }
         }
         finally
         {
             _loading = false;
         }
+
+        // A new schedule starts as the common one, so the page shows (and can run) something right away.
+        if (Mode != ScheduleMode.Custom && schedule.Slots.Count != 2)
+            WriteSimple(force: true);
         RefreshTimeline();
         OnSelectedSlotIdChanged(SelectedSlotId);
     }
@@ -285,16 +352,8 @@ public sealed partial class ScheduleViewModel : PageViewModel
     private void RefreshTimeline()
     {
         ScheduleConfig schedule = _app.Config.Schedule;
-        ShowDayPicker = schedule.Slots.Any(s => s.Days != ScheduleDays.Every);
-        if (!ShowDayPicker && SelectedDay?.Day != Today.DayOfWeek)
-        {
-            SelectedDay = Days.First(d => d.Day == Today.DayOfWeek);
-            return;
-        }
-        if (SelectedDay is null)
-            return;
         TimeZoneInfo zone = _time.LocalTimeZone;
-        DateOnly day = DateOfSelectedDay();
+        DateOnly day = Today;
         DateTime midnight = day.ToDateTime(TimeOnly.MinValue);
         bool Valid(Guid id) => RuleEngine.FindProfile(_app.Config, id) is not null;
 
@@ -320,11 +379,8 @@ public sealed partial class ScheduleViewModel : PageViewModel
         (DateTime sunrise, DateTime sunset) = ScheduleTimeline.SunOn(day, schedule.Location, zone);
         Sunrise = UsesSun ? (sunrise - midnight).TotalMinutes : null;
         Sunset = UsesSun ? (sunset - midnight).TotalMinutes : null;
-        DateTime now = _time.GetLocalNow().DateTime;
-        Now = day == DateOnly.FromDateTime(now) ? (now - midnight).TotalMinutes : null;
+        Now = (_time.GetLocalNow().DateTime - midnight).TotalMinutes;
 
-        foreach (ScheduleSlotItem item in Slots)
-            item.RefreshStart(day, schedule.Location, zone, day == Today);
         RefreshSunText(day);
         RefreshStatus();
 
@@ -341,12 +397,7 @@ public sealed partial class ScheduleViewModel : PageViewModel
     private void RefreshStatus()
     {
         ScheduleConfig schedule = _app.Config.Schedule;
-        if (schedule.Slots.Count == 0)
-        {
-            StatusText = Loc.Get("Schedule_StatusEmpty");
-            return;
-        }
-        if (!schedule.Enabled || !IsPro)
+        if (!schedule.Enabled || !IsPro || schedule.Slots.Count == 0)
         {
             StatusText = Loc.Get(IsPro ? "Schedule_StatusOff" : "Schedule_StatusPro");
             return;
@@ -381,13 +432,6 @@ public sealed partial class ScheduleViewModel : PageViewModel
             : Loc.Format("Schedule_LocationPolar", name);
     }
 
-    private DateOnly DateOfSelectedDay()
-    {
-        DateOnly today = Today;
-        int delta = ((int)SelectedDay!.Day - (int)today.DayOfWeek + 7) % 7;
-        return today.AddDays(delta);
-    }
-
     private void SetLocation(GeoLocation location)
     {
         _app.Config.Schedule.Location = location;
@@ -395,33 +439,38 @@ public sealed partial class ScheduleViewModel : PageViewModel
         Save(reload: true);
     }
 
-    /// <summary>Sunrise needs a place; start from the capital of the Windows region, which the user can change.</summary>
+    /// <summary>Sunrise needs a place: start from the capital of the user's home country in Windows.</summary>
     private void EnsureLocation()
     {
         if (_app.Config.Schedule.Location is not null)
             return;
-        if (Places.ForCountry(RegionInfo.CurrentRegion.TwoLetterISORegionName) is { } place)
+        if (Places.ForCountry(HomeCountry()) is { } place)
             _app.Config.Schedule.Location = new GeoLocation { Latitude = place.Latitude, Longitude = place.Longitude, Name = place.Name };
     }
 
-    private TimeOnly NextFreeTime()
+    /// <summary>
+    /// The country set as home location in Windows (Settings, Time and language, Region). The formatting culture
+    /// is often en-US on PCs elsewhere, so it is only the fallback.
+    /// </summary>
+    private static string HomeCountry()
     {
-        TimeOnly latest = _app.Config.Schedule.Slots.Where(s => s.Anchor == ScheduleAnchor.Time).Select(s => s.Start).DefaultIfEmpty(new TimeOnly(19, 0)).Max();
-        return latest.AddHours(2);
+        try
+        {
+            string region = global::Windows.System.UserProfile.GlobalizationPreferences.HomeGeographicRegion;
+            if (region.Length == 2)
+                return region;
+        }
+        catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or UnauthorizedAccessException)
+        {
+        }
+        return RegionInfo.CurrentRegion.TwoLetterISORegionName;
     }
 
-    private Profile DayProfile() =>
+    private Profile DefaultDayProfile() =>
         _app.Config.Profiles.FirstOrDefault(p => p.Color.HasNeutralRamp) ?? _app.Config.Profiles[0];
 
-    private Profile NightProfile() =>
+    private Profile DefaultNightProfile() =>
         _app.Config.Profiles.Where(p => p.Color.TemperatureK < 6000).MinBy(p => p.Color.TemperatureK) ?? _app.Config.Profiles[^1];
-
-    private void SetEnabledSilently(bool value)
-    {
-        _loading = true;
-        Enabled = value;
-        _loading = false;
-    }
 
     /// <summary>
     /// A colour that says what a profile does: neutral grey for original colours, amber as it gets warmer, darker
@@ -444,11 +493,6 @@ public sealed partial class ScheduleViewModel : PageViewModel
     }
 }
 
-public sealed record DayChoice(DayOfWeek Day, string Name)
-{
-    public override string ToString() => Name;
-}
-
 public sealed record WhenChoice(ScheduleAnchor Anchor, string Name)
 {
     public override string ToString() => Name;
@@ -459,201 +503,99 @@ public sealed record FadeChoice(int Minutes, string Name)
     public override string ToString() => Name;
 }
 
-/// <param name="Days">Every day, weekdays or weekends; <see cref="ScheduleDays.None"/> for "some days" (pick below).</param>
 public sealed record DaysChoice(ScheduleDays Days, string Name)
 {
     public override string ToString() => Name;
 }
 
-public sealed record TimeChoice(TimeOnly Time, string Name)
+/// <summary>One change in a custom schedule: when, which profile, and on which days.</summary>
+public sealed partial class ScheduleChangeItem : ObservableObject
 {
-    public override string ToString() => Name;
-}
-
-public sealed record OffsetChoice(int Minutes, string Name)
-{
-    public override string ToString() => Name;
-}
-
-/// <summary>One change: from when, which profile, how it fades in, on which days.</summary>
-public sealed partial class ScheduleSlotItem : ObservableObject
-{
-    private static readonly int[] OffsetSteps = [-120, -90, -60, -45, -30, -15, 0, 15, 30, 45, 60, 90, 120];
     private readonly ScheduleViewModel _owner;
     private readonly ScheduleSlot _slot;
     private readonly bool _ready;
 
-    public ScheduleSlotItem(ScheduleViewModel owner, ScheduleSlot slot, IReadOnlyList<ProfileChoice> profiles, IEnumerable<DayChoice> days)
+    public ScheduleChangeItem(ScheduleViewModel owner, ScheduleSlot slot, IReadOnlyList<ProfileChoice> profiles)
     {
         _owner = owner;
         _slot = slot;
         Profiles = profiles;
+        DaysChoices = [.. StandardDays(), .. StandardDays().Any(d => d.Days == slot.Days) ? [] : new[] { new DaysChoice(slot.Days, DaysText(slot.Days)) }];
         Profile = profiles.FirstOrDefault(p => p.Id == slot.ProfileId);
-
-        // Every quarter of an hour, plus the slot's own time if it's in between.
-        var times = Enumerable.Range(0, 96).Select(i => new TimeOnly(i / 4, i % 4 * 15)).ToList();
-        if (!times.Contains(slot.Start))
-            times.Add(slot.Start);
-        Times = [.. times.Order().Select(t => new TimeChoice(t, ScheduleViewModel.TimeText(t)))];
-
-        var offsets = OffsetSteps.ToList();
-        if (!offsets.Contains(slot.OffsetMinutes))
-            offsets.Add(slot.OffsetMinutes);
-        Offsets = [.. offsets.Order().Select(m => new OffsetChoice(m, OffsetText(m)))];
-
         When = owner.Whens.First(w => w.Anchor == slot.Anchor);
-        Time = Times.First(t => t.Time == slot.Start);
-        Offset = Offsets.First(o => o.Minutes == slot.OffsetMinutes);
-        Fade = owner.Fades.MinBy(f => Math.Abs(f.Minutes - slot.FadeMinutes));
-        DaysChoice = owner.DaysChoices.FirstOrDefault(d => d.Days == slot.Days) ?? owner.DaysChoices[^1];
-        foreach (DayChoice day in days)
-        {
-            string name = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedDayName(day.Day);
-            Days.Add(new DayToggle(this, ScheduleTimeline.DayFlag(day.Day), name[..Math.Min(2, name.Length)], (slot.Days & ScheduleTimeline.DayFlag(day.Day)) != 0));
-        }
+        Time = slot.Start;
+        DaysChoice = DaysChoices.First(d => d.Days == slot.Days);
         _ready = true;
     }
 
     public Guid Id => _slot.Id;
     public IReadOnlyList<ProfileChoice> Profiles { get; }
     public IReadOnlyList<WhenChoice> Whens => _owner.Whens;
-    public IReadOnlyList<TimeChoice> Times { get; }
-    public IReadOnlyList<OffsetChoice> Offsets { get; }
-    public IReadOnlyList<FadeChoice> Fades => _owner.Fades;
-    public IReadOnlyList<DaysChoice> DaysChoices => _owner.DaysChoices;
-    public ObservableCollection<DayToggle> Days { get; } = [];
+    public IReadOnlyList<DaysChoice> DaysChoices { get; }
 
     [ObservableProperty] public partial ProfileChoice? Profile { get; set; }
-    [ObservableProperty] public partial WhenChoice When { get; set; }
-    [ObservableProperty] public partial TimeChoice Time { get; set; }
-    [ObservableProperty] public partial OffsetChoice Offset { get; set; }
-    [ObservableProperty] public partial FadeChoice? Fade { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTimeAnchor))]
+    public partial WhenChoice When { get; set; }
+
+    [ObservableProperty] public partial TimeOnly Time { get; set; }
     [ObservableProperty] public partial DaysChoice DaysChoice { get; set; }
-    [ObservableProperty] public partial string StartsText { get; set; } = "";
     [ObservableProperty] public partial bool IsSelected { get; set; }
 
     public bool IsTimeAnchor => When.Anchor == ScheduleAnchor.Time;
-    public bool IsSunAnchor => !IsTimeAnchor;
-    public bool IsSomeDays => DaysChoice.Days == ScheduleDays.None;
 
     partial void OnProfileChanged(ProfileChoice? value)
     {
         if (!_ready || value is null || value.Id == _slot.ProfileId)
             return;
         _slot.ProfileId = value.Id;
-        _owner.SlotChanged(false);
+        _owner.ChangeEdited(false);
     }
 
     partial void OnWhenChanged(WhenChoice value)
     {
-        OnPropertyChanged(nameof(IsTimeAnchor));
-        OnPropertyChanged(nameof(IsSunAnchor));
         if (!_ready || value.Anchor == _slot.Anchor)
             return;
         _slot.Anchor = value.Anchor;
-        _owner.SlotChanged(value.Anchor != ScheduleAnchor.Time);
+        _slot.OffsetMinutes = 0;
+        _owner.ChangeEdited(value.Anchor != ScheduleAnchor.Time);
     }
 
-    partial void OnTimeChanged(TimeChoice value)
+    partial void OnTimeChanged(TimeOnly value)
     {
-        if (!_ready || value.Time == _slot.Start)
+        if (!_ready || value == _slot.Start)
             return;
-        _slot.Start = value.Time;
-        _owner.SlotChanged(false);
-    }
-
-    partial void OnOffsetChanged(OffsetChoice value)
-    {
-        if (!_ready || value.Minutes == _slot.OffsetMinutes)
-            return;
-        _slot.OffsetMinutes = value.Minutes;
-        _owner.SlotChanged(false);
-    }
-
-    partial void OnFadeChanged(FadeChoice? value)
-    {
-        if (!_ready || value is null || value.Minutes == _slot.FadeMinutes)
-            return;
-        _slot.FadeMinutes = value.Minutes;
-        _owner.SlotChanged(false);
+        _slot.Start = value;
+        _owner.ChangeEdited(false);
     }
 
     partial void OnDaysChoiceChanged(DaysChoice value)
     {
-        OnPropertyChanged(nameof(IsSomeDays));
-        if (!_ready)
+        if (!_ready || value.Days == _slot.Days)
             return;
-        // "Some days" keeps the current days, so the chips start from something sensible.
-        ScheduleDays days = value.Days == ScheduleDays.None ? _slot.Days : value.Days;
-        foreach (DayToggle toggle in Days)
-            toggle.SetSilently((days & toggle.Day) != 0);
-        if (days == _slot.Days)
-            return;
-        _slot.Days = days;
-        _owner.SlotChanged(false);
-    }
-
-    internal void SetDay(ScheduleDays day, bool on)
-    {
-        ScheduleDays days = on ? _slot.Days | day : _slot.Days & ~day;
-        if (days == ScheduleDays.None)
-        {
-            // A change needs at least one day; turn the last one back on.
-            Days.First(d => d.Day == day).SetSilently(true);
-            return;
-        }
-        _slot.Days = days;
-        _owner.SlotChanged(false);
-    }
-
-    internal void RefreshStart(DateOnly day, GeoLocation? location, TimeZoneInfo zone, bool isToday)
-    {
-        DateTime start = ScheduleTimeline.StartOn(_slot, day, location, zone);
-        string time = DayTimeline.TimeLabel(start.TimeOfDay.TotalMinutes);
-        StartsText = IsSunAnchor ? Loc.Format(isToday ? "Schedule_StartsToday" : "Schedule_StartsThatDay", time) : "";
+        _slot.Days = value.Days;
+        _owner.ChangeEdited(false);
     }
 
     [RelayCommand]
-    private void Remove() => _owner.RemoveSlot(_slot);
+    private void Remove() => _owner.RemoveChange(_slot);
 
     [RelayCommand]
     private void Select() => _owner.SelectedSlotId = Id;
 
-    private static string OffsetText(int minutes) => minutes == 0
-        ? Loc.Get("Schedule_Exactly")
-        : Loc.Format(minutes < 0 ? "Schedule_Before" : "Schedule_After", ScheduleViewModel.Duration(minutes));
-}
+    private static DaysChoice[] StandardDays() =>
+    [
+        new(ScheduleDays.Every, Loc.Get("Schedule_EveryDay")),
+        new(ScheduleDays.Weekdays, Loc.Get("Schedule_Weekdays")),
+        new(ScheduleDays.Weekend, Loc.Get("Schedule_Weekends")),
+    ];
 
-public sealed partial class DayToggle : ObservableObject
-{
-    private readonly ScheduleSlotItem _slot;
-    private bool _silent;
-
-    public DayToggle(ScheduleSlotItem slot, ScheduleDays day, string label, bool isOn)
+    /// <summary>Days from an older or hand-made schedule, such as "Mon, Wed, Fri".</summary>
+    private static string DaysText(ScheduleDays days)
     {
-        _slot = slot;
-        Day = day;
-        Label = label;
-        _silent = true;
-        IsOn = isOn;
-        _silent = false;
-    }
-
-    public ScheduleDays Day { get; }
-    public string Label { get; }
-
-    [ObservableProperty] public partial bool IsOn { get; set; }
-
-    partial void OnIsOnChanged(bool value)
-    {
-        if (!_silent)
-            _slot.SetDay(Day, value);
-    }
-
-    internal void SetSilently(bool value)
-    {
-        _silent = true;
-        IsOn = value;
-        _silent = false;
+        DateTimeFormatInfo format = CultureInfo.CurrentCulture.DateTimeFormat;
+        IEnumerable<DayOfWeek> week = Enumerable.Range(0, 7).Select(i => (DayOfWeek)(((int)format.FirstDayOfWeek + i) % 7));
+        return string.Join(", ", week.Where(d => (days & ScheduleTimeline.DayFlag(d)) != 0).Select(format.GetAbbreviatedDayName));
     }
 }
