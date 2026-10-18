@@ -83,6 +83,13 @@
             Content="{l:Tr Power_TurnOn}"
             Icon="{ui:SymbolIcon Power24}"
             Visibility="{Binding IsOn, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+          <ui:Button
+            Margin="0,12,0,0"
+            Appearance="Primary"
+            Command="{Binding TurnProfilesOnCommand}"
+            Content="{l:Tr Home_TurnProfilesOn}"
+            Icon="{ui:SymbolIcon Color24}"
+            Visibility="{Binding ProfilesOff, Converter={StaticResource BoolToVisibility}}" />
         </StackPanel>
       </Grid>
     </Border>

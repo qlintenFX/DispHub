@@ -63,7 +63,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
         {
             AppConfig config = _app.Config;
             RuleOutput? current = _app.Current;
-            IsActive = !config.IsPaused;
+            IsActive = _app.ProfilesOn;
             IsOn = !config.IsOff;
 
             Profiles.Clear();
@@ -82,7 +82,8 @@ public sealed partial class QuickPanelViewModel : ObservableObject
 
             _adjusting = config.IsPaused || config.IsOff ? null : active?.Id;
             CanAdjust = _adjusting is not null;
-            AdjustingText = active is null ? "" : Loc.Format("Quick_Adjusting", active.Name);
+            // Always a line here, so the sliders don't move when there's nothing to adjust.
+            AdjustingText = _adjusting is null ? Loc.Get("Quick_NothingToAdjust") : Loc.Format("Quick_Adjusting", active!.Name);
             Brightness = active?.Color.Brightness ?? 0;
             Warmth = active?.Color.TemperatureK ?? ColorSettings.NeutralTemperatureK;
 
@@ -97,8 +98,8 @@ public sealed partial class QuickPanelViewModel : ObservableObject
 
     partial void OnIsActiveChanged(bool value)
     {
-        if (!_loading && value == _app.Config.IsPaused)
-            _app.TogglePause(ChangeSource.Tray);
+        if (!_loading && value != _app.ProfilesOn)
+            _app.SetProfilesOn(value, ChangeSource.Tray);
     }
 
     partial void OnBrightnessChanged(double value) => Adjust(c => c with { Brightness = (int)Math.Round(value) });
@@ -110,18 +111,13 @@ public sealed partial class QuickPanelViewModel : ObservableObject
         if (_loading || value is null)
             return;
         EffectsConfig effects = _app.Config.Effects;
-        if (value.Id is null)
+        if (value.Id is not null && !value.IsCurrent && LookLibrary.Find(effects, value.Id) is { } look)
         {
-            effects.Enabled = false;
+            (effects.Preset, effects.Look, effects.Strength) = (value.Id, look, 1);
+            _app.EffectsChanged();
         }
-        else
-        {
-            if (!value.IsCurrent && LookLibrary.Find(effects, value.Id) is { } look)
-                (effects.Preset, effects.Look, effects.Strength) = (value.Id, look, 1);
-            effects.Enabled = true;
-        }
-        _effects.Apply();
-        _app.EffectsChanged();
+        // Picking a look while DispHub is off turns it on, like picking a profile.
+        _effects.SetEnabled(value.Id is not null, ChangeSource.Tray);
     }
 
     private void RefreshLooks(EffectsConfig effects)
@@ -138,7 +134,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
             Looks.Add(new QuickLook(saved.Key, saved.Name));
         foreach (LookPreset preset in Core.Effects.Looks.All)
             Looks.Add(new QuickLook(preset.Id, Loc.Get($"Look_{preset.Id}")));
-        Look = !effects.Enabled || effects.Look.IsEmpty ? Looks[0]
+        Look = !effects.Enabled || effects.Look.IsEmpty || _app.Config.IsOff ? Looks[0]
             : current ?? Looks.FirstOrDefault(l => l.Id is not null && l.Id == effects.Preset) ?? Looks[0];
     }
 

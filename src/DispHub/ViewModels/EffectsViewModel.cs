@@ -72,7 +72,11 @@ public sealed partial class EffectsViewModel : PageViewModel
             LinkCopied = false;
         };
         _effects.Changed += (_, _) => RefreshStatus();
-        _app.PowerChanged += (_, _) => RefreshStatus();
+        _app.PowerChanged += (_, _) =>
+        {
+            SetSilently(() => Enabled = ShowsEnabled);
+            RefreshStatus();
+        };
         _app.ConfigChanged += (_, _) =>
         {
             if (!_loading)
@@ -258,7 +262,7 @@ public sealed partial class EffectsViewModel : PageViewModel
 
     partial void OnEnabledChanged(bool value)
     {
-        if (_loading || value == _app.Config.Effects.Enabled)
+        if (_loading)
             return;
         if (value && !_app.Features.ScreenEffects)
         {
@@ -266,7 +270,7 @@ public sealed partial class EffectsViewModel : PageViewModel
             _upgrade.ShowUpgrade(Loc.Get("Upgrade_Effects"));
             return;
         }
-        _effects.Toggle();
+        _effects.SetEnabled(value, ChangeSource.Editor);
         Load();
     }
 
@@ -404,6 +408,9 @@ public sealed partial class EffectsViewModel : PageViewModel
         UpdateAnimation();
     }
 
+    /// <summary>The switch shows effects on only when they can be: Pro, turned on, and DispHub on.</summary>
+    private bool ShowsEnabled => _app.Config.Effects.Enabled && _app.Features.ScreenEffects && !_app.Config.IsOff;
+
     private void SaveOptions()
     {
         if (_loading)
@@ -422,7 +429,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         {
             EffectsConfig effects = _app.Config.Effects;
             IsPro = _app.Features.ScreenEffects;
-            Enabled = effects.Enabled && IsPro;
+            Enabled = ShowsEnabled;
             Strength = effects.Strength;
             InFullScreen = FullScreenChoices.FirstOrDefault(c => c.Mode == effects.InFullScreen) ?? FullScreenChoices[0];
             MainDisplayOnly = effects.MainDisplayOnly;

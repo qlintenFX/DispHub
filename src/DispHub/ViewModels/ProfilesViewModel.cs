@@ -74,10 +74,18 @@ public sealed partial class ProfilesViewModel : PageViewModel
             _app.ActivateProfile(value.Id, ChangeSource.Editor);
     }
 
+    /// <summary>A profile was clicked: it goes on screen if it isn't already (DispHub or profiles off, or another on).</summary>
+    public void Pick(ProfileItemViewModel item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        if (!_app.ProfilesOn || _app.Current?.ProfileId != item.Id)
+            _app.ActivateProfile(item.Id, ChangeSource.Editor);
+    }
+
     partial void OnIsActiveChanged(bool value)
     {
-        if (value == _app.Config.IsPaused)
-            _app.TogglePause(ChangeSource.Editor);
+        if (value != _app.ProfilesOn)
+            _app.SetProfilesOn(value, ChangeSource.Editor);
     }
 
     [RelayCommand]
@@ -198,7 +206,8 @@ public sealed partial class ProfilesViewModel : PageViewModel
     private void Refresh()
     {
         RuleOutput? current = _app.Current;
-        IsActive = !_app.Config.IsPaused;
+        // Off while DispHub is off, so the switch shows what's on screen; turning it on turns DispHub on.
+        IsActive = _app.ProfilesOn;
         foreach (ProfileItemViewModel item in Profiles)
         {
             if (_app.FindProfile(item.Id) is { } profile)

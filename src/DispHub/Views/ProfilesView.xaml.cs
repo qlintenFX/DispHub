@@ -7,6 +7,22 @@ public partial class ProfilesView : UserControl
 {
     public ProfilesView() => InitializeComponent();
 
+    /// <summary>
+    /// A click on a profile turns it on, even the one already selected: a list only reports new selections, so
+    /// with DispHub off the highlighted profile wouldn't react.
+    /// </summary>
+    private void OnProfileClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is ItemsControl list && list.ContainerFromElement((DependencyObject)e.OriginalSource) is FrameworkElement { DataContext: ViewModels.ProfileItemViewModel item })
+            ((ViewModels.ProfilesViewModel)DataContext).Pick(item);
+    }
+
+    private void OnProfileKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key is System.Windows.Input.Key.Space or System.Windows.Input.Key.Enter && DataContext is ViewModels.ProfilesViewModel { SelectedProfile: { } item } profiles)
+            profiles.Pick(item);
+    }
+
     private void OnTemplatesClick(object sender, RoutedEventArgs e)
     {
         if (TemplatesButton.ContextMenu is { } menu)

@@ -103,8 +103,11 @@ public sealed class AppController : IDisposable
     /// <summary>The program in front changed (on the UI thread).</summary>
     public event EventHandler? ForegroundChanged;
 
-    /// <summary>The master switch went on or off.</summary>
+    /// <summary>DispHub, or its profiles, went on or off (<see cref="AppConfig.IsOff"/> or <see cref="AppConfig.IsPaused"/>).</summary>
     public event EventHandler? PowerChanged;
+
+    /// <summary>Profiles are on screen: DispHub is on and its profiles are on.</summary>
+    public bool ProfilesOn => !Config.IsOff && !Config.IsPaused;
 
     /// <summary>Hotkeys that couldn't be registered, keyed by action ID.</summary>
     public IReadOnlyDictionary<string, string> HotkeyFailures { get; private set; } = new Dictionary<string, string>();
@@ -146,11 +149,12 @@ public sealed class AppController : IDisposable
         if (FindProfile(profileId) is null)
             return;
 
-        // Picking a profile means wanting to see it.
-        Config.IsPaused = false;
-        Config.IsOff = false;
+        // Picking a profile means wanting to see it: DispHub and its profiles come on.
+        bool powerChanged = SetPowerState(off: false, paused: false, source);
 
-        string context = Current?.ContextKey ?? RuleEngine.BaseContext;
+        // The rule in force now, with DispHub on: while it was off, every rule looked like the everyday profile, and
+        // a pick saved there would lose to a schedule or app rule straight away.
+        string context = Resolve().ContextKey;
         if (context == RuleEngine.BaseContext)
         {
             Config.ActiveProfileId = profileId;
@@ -162,24 +166,40 @@ public sealed class AppController : IDisposable
             _manual = new ManualOverride(profileId, context);
         }
         Evaluate(source);
+        if (powerChanged)
+            PowerChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>Profiles on or off (the Profiles page switch). Screen effects follow the Effects page either way.</summary>
-    public void TogglePause(ChangeSource source)
-    {
-        Config.IsPaused = !Config.IsPaused;
-        ScheduleSave();
-        Evaluate(source);
-    }
+    /// <summary>DispHub on or off (the power button): off is original colours, no effects and no automation.</summary>
+    public void SetOn(bool on, ChangeSource source) => SetPower(off: !on, paused: Config.IsPaused, source);
 
-    /// <summary>DispHub's master switch: off is original colours, no effects and no automation.</summary>
-    public void ToggleOff(ChangeSource source)
+    /// <summary>The power button, the on/off hotkey and the tray menu.</summary>
+    public void ToggleOff(ChangeSource source) => SetOn(Config.IsOff, source);
+
+    /// <summary>
+    /// Profiles on or off (the Profiles switch). Turning them on turns DispHub on too, so the switch always does
+    /// what it shows. Screen effects follow the Effects page either way.
+    /// </summary>
+    public void SetProfilesOn(bool on, ChangeSource source) => SetPower(off: !on && Config.IsOff, paused: !on, source);
+
+    private void SetPower(bool off, bool paused, ChangeSource source)
     {
-        Config.IsOff = !Config.IsOff;
-        _logger.LogInformation("Turned {State} from the {Source}", Config.IsOff ? "off" : "on", source);
-        ScheduleSave();
+        if (!SetPowerState(off, paused, source))
+            return;
         Evaluate(source);
         PowerChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Changes the on/off state and saves it; returns whether anything changed.</summary>
+    private bool SetPowerState(bool off, bool paused, ChangeSource source)
+    {
+        if (off == Config.IsOff && paused == Config.IsPaused)
+            return false;
+        if (off != Config.IsOff)
+            _logger.LogInformation("Turned {State} from the {Source}", off ? "off" : "on", source);
+        (Config.IsOff, Config.IsPaused) = (off, paused);
+        ScheduleSave();
+        return true;
     }
 
     public void CycleProfile(int direction, ChangeSource source)
@@ -403,14 +423,19 @@ public sealed class AppController : IDisposable
         return HotkeyFailures.GetValueOrDefault(action);
     }
 
-    private void Evaluate(ChangeSource source)
+    /// <summary>What the rules say right now, without applying it.</summary>
+    private RuleOutput Resolve()
     {
         var monitorKeys = _colors.Monitors.Select(m => m.Monitor.Key).ToList();
-        var input = new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, _license.IsPro, _time.LocalTimeZone);
-        RuleOutput output = RuleEngine.Resolve(input);
+        return RuleEngine.Resolve(new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, _license.IsPro, _time.LocalTimeZone));
+    }
 
-        // A manual pick from another context has ended.
-        if (_manual is not null && _manual.ContextKey != output.ContextKey)
+    private void Evaluate(ChangeSource source)
+    {
+        RuleOutput output = Resolve();
+
+        // A manual pick from another context has ended. Being off isn't a context: turned back on, the pick carries on.
+        if (_manual is not null && output.Reason != TargetReason.Paused && _manual.ContextKey != output.ContextKey)
             _manual = null;
 
         // Monitors can appear later (the colour thread enumerates them); send a wildcard for the default.

@@ -73,6 +73,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     {
         if (args.Reason != Wpf.Ui.Controls.AutoSuggestionBoxTextChangeReason.UserInput)
             return;
+        // Otherwise the box filters its own (empty) list afterwards and the results vanish.
+        args.Handled = true;
         _searchIndex ??= SettingsSearch.Index(((MainViewModel)DataContext).AllPages);
         IReadOnlyList<SearchResult> results = SettingsSearch.Find(_searchIndex, sender.Text);
         sender.ItemsSource = results;
@@ -103,7 +105,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         {
             if (FindCard(PageScroller, setting) is { } card)
             {
-                card.BringIntoView();
+                // With room around it, so it doesn't land half hidden at the window's edge.
+                card.BringIntoView(new Rect(0, -120, card.ActualWidth, card.ActualHeight + 240));
                 TourOverlay.Highlight(card);
             }
         }, System.Windows.Threading.DispatcherPriority.ContextIdle);

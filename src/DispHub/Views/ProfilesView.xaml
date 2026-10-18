@@ -54,6 +54,8 @@
       BorderThickness="0"
       ItemContainerStyle="{StaticResource ProfileTile}"
       ItemsSource="{Binding Profiles}"
+      KeyUp="OnProfileKeyUp"
+      PreviewMouseLeftButtonUp="OnProfileClicked"
       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
       ScrollViewer.VerticalScrollBarVisibility="Disabled"
       SelectedItem="{Binding SelectedProfile}">

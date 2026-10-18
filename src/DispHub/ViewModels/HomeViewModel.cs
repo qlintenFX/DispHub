@@ -72,6 +72,9 @@ public sealed partial class HomeViewModel : PageViewModel
 
     [ObservableProperty] public partial bool IsOn { get; set; }
 
+    /// <summary>DispHub is on but its profiles are off: the card offers to turn them back on.</summary>
+    [ObservableProperty] public partial bool ProfilesOff { get; set; }
+
     public ObservableCollection<HomeProfile> Profiles { get; } = [];
 
     /// <summary>The profile on now, if any; picking another one switches to it.</summary>
@@ -102,7 +105,10 @@ public sealed partial class HomeViewModel : PageViewModel
     private void ManageProfiles() => NavigateRequested?.Invoke(this, typeof(ProfilesViewModel));
 
     [RelayCommand]
-    private void TurnOn() => _app.ToggleOff(ChangeSource.Editor);
+    private void TurnOn() => _app.SetOn(true, ChangeSource.Editor);
+
+    [RelayCommand]
+    private void TurnProfilesOn() => _app.SetProfilesOn(true, ChangeSource.Editor);
 
     [RelayCommand]
     private void Tour() => TourRequested?.Invoke(this, EventArgs.Empty);
@@ -126,6 +132,7 @@ public sealed partial class HomeViewModel : PageViewModel
             RuleOutput? current = _app.Current;
             Profile? active = current?.ProfileId is { } id && !config.IsOff && !config.IsPaused ? _app.FindProfile(id) : null;
             IsOn = !config.IsOff;
+            ProfilesOff = !config.IsOff && config.IsPaused;
             ShowPro = _license.CanPurchase && !_license.IsPro;
 
             NowPicture = ColorPreview.Large(active?.Color ?? ColorSettings.Neutral);

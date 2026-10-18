@@ -81,9 +81,11 @@
                     <Trigger Property="IsMouseOver" Value="True">
                       <Setter TargetName="Card" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
                     </Trigger>
+                    <!-- The thicker border takes its room from the padding, so the tile keeps its size. -->
                     <DataTrigger Binding="{Binding IsActive}" Value="True">
                       <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
                       <Setter TargetName="Card" Property="BorderThickness" Value="2" />
+                      <Setter TargetName="Card" Property="Padding" Value="7" />
                     </DataTrigger>
                   </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -111,6 +113,15 @@
         Style="{StaticResource Hint}"
         Text="{Binding AdjustingText}" />
       <Grid IsEnabled="{Binding CanAdjust}">
+        <Grid.Style>
+          <Style TargetType="Grid">
+            <Style.Triggers>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.4" />
+              </Trigger>
+            </Style.Triggers>
+          </Style>
+        </Grid.Style>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="Auto" />

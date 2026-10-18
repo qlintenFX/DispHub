@@ -80,20 +80,76 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
-    public void PickingAProfile_TurnsDispHubBackOn()
+    public void PickingAProfile_TurnsDispHubBackOn_AndSaysSo()
     {
         _app.ToggleOff(ChangeSource.Editor);
+        int powerChanges = 0;
+        _app.PowerChanged += (_, _) => powerChanges++;
 
         _app.ActivateProfile(Gaming.Id, ChangeSource.Tray);
 
         Assert.False(_app.Config.IsOff);
+        Assert.True(_app.ProfilesOn);
         Assert.Equal(Gaming.Color, _colors.Last!.Default);
+        // Everything that shows the power state (title bar, quick panel, tray) hears about it.
+        Assert.Equal(1, powerChanges);
+    }
+
+    [Fact]
+    public void ProfilesSwitch_TurnedOnWhileOff_TurnsDispHubOn()
+    {
+        _app.SetOn(false, ChangeSource.Editor);
+        Assert.False(_app.ProfilesOn);
+
+        _app.SetProfilesOn(true, ChangeSource.Editor);
+
+        Assert.False(_app.Config.IsOff);
+        Assert.False(_app.Config.IsPaused);
+        Assert.Equal(Standard.Color, _colors.Last!.Default);
+    }
+
+    [Fact]
+    public void ProfilesSwitch_TurnedOff_LeavesDispHubOn_AndPowerRemembersIt()
+    {
+        _app.SetProfilesOn(false, ChangeSource.Editor);
+        Assert.False(_app.Config.IsOff);
+        Assert.Null(_colors.Last!.Default);
+
+        _app.ToggleOff(ChangeSource.Editor);
+        _app.ToggleOff(ChangeSource.Editor);
+
+        // Back on, profiles are still off: the power button restores what was there.
+        Assert.False(_app.Config.IsOff);
+        Assert.True(_app.Config.IsPaused);
+        Assert.Null(_colors.Last!.Default);
+    }
+
+    [Fact]
+    public void SwitchingToWhatIsAlreadySo_ChangesNothing()
+    {
+        int powerChanges = 0;
+        _app.PowerChanged += (_, _) => powerChanges++;
+
+        _app.SetOn(true, ChangeSource.Editor);
+        _app.SetProfilesOn(true, ChangeSource.Editor);
+
+        Assert.Equal(0, powerChanges);
+    }
+
+    [Fact]
+    public void ManyQuickPresses_EndWhereTheCountSays()
+    {
+        for (int i = 0; i < 11; i++)
+            _hotkeys.Press(AppController.PauseAction);
+
+        Assert.True(_app.Config.IsOff);
+        Assert.Null(_colors.Last!.Default);
     }
 
     [Fact]
     public void ActivatingWhilePaused_Resumes()
     {
-        _app.TogglePause(ChangeSource.Editor);
+        _app.SetProfilesOn(false, ChangeSource.Editor);
 
         _app.ActivateProfile(Gaming.Id, ChangeSource.Tray);
 
@@ -173,6 +229,41 @@ public sealed class AppControllerTests : IDisposable
         _foreground.Switch(@"C:\Windows\explorer.exe");
         _app.OnForegroundChanged();
         Assert.Equal(Standard.Id, _app.Current!.ProfileId);
+    }
+
+    [Fact]
+    public async Task PickingAProfileWhileOff_DuringAnAppRule_ShowsThePick()
+    {
+        // Regression: while off every rule looked like the everyday profile, so the pick lost to the rule.
+        await _license.PurchaseProAsync(0);
+        _app.Config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id });
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.SettingsChanged();
+        _app.SetOn(false, ChangeSource.Editor);
+
+        _app.ActivateProfile(Night.Id, ChangeSource.Editor);
+
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
+        Assert.Equal(Night.Color, _colors.Last!.Default);
+        Assert.Equal(Standard.Id, _app.Config.ActiveProfileId);
+    }
+
+    [Fact]
+    public async Task APickDuringAnAppRule_SurvivesTurningOffAndOn()
+    {
+        await _license.PurchaseProAsync(0);
+        _app.Config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id });
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.SettingsChanged();
+        _app.ActivateProfile(Night.Id, ChangeSource.Editor);
+
+        _app.ToggleOff(ChangeSource.Editor);
+        _app.ToggleOff(ChangeSource.Editor);
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
+
+        _app.SetProfilesOn(false, ChangeSource.Editor);
+        _app.SetProfilesOn(true, ChangeSource.Editor);
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
     }
 
     [Fact]

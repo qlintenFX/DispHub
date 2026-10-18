@@ -106,12 +106,39 @@ public sealed class EffectsService : IDisposable
     }
 
     /// <summary>
-    /// Shows or hides effects (a hotkey or the quick panel). A look picked by the active profile is hidden until it's
-    /// toggled back or another profile is on; otherwise the Effects page's look is turned on or off.
+    /// Turns the Effects page's look on or off (its switch, the quick panel). Turning it on while DispHub is off
+    /// turns DispHub on, so the switch always does what it shows.
+    /// </summary>
+    public void SetEnabled(bool enabled, ChangeSource source)
+    {
+        EffectsConfig effects = _app.Config.Effects;
+        if (effects.Enabled != enabled)
+        {
+            effects.Enabled = enabled;
+            _app.EffectsChanged();
+        }
+        if (enabled && _app.Config.IsOff)
+            _app.SetOn(true, source);
+        else
+            Apply();
+    }
+
+    /// <summary>
+    /// Shows or hides effects (the effects hotkey). A look picked by the active profile is hidden until it's toggled
+    /// back or another profile is on; otherwise the Effects page's look is turned on or off. With DispHub off the
+    /// hotkey shows effects, which turns DispHub on.
     /// </summary>
     public void Toggle(bool fromHotkey = false)
     {
         EffectsConfig effects = _app.Config.Effects;
+        if (_app.Config.IsOff)
+        {
+            _hiddenProfile = null;
+            SetEnabled(true, ChangeSource.Hotkey);
+            if (fromHotkey)
+                _osd.ShowEffects(Current is not null ? NameOf(CurrentId) : null);
+            return;
+        }
         Profile? profile = _app.Current?.ProfileId is { } id ? _app.FindProfile(id) : null;
         if (profile?.Effect is not null and not LookLibrary.None && !_app.Config.IsPaused && !_app.Config.IsOff)
         {
@@ -121,9 +148,7 @@ public sealed class EffectsService : IDisposable
                 _osd.ShowEffects(_hiddenProfile is null ? NameOf(CurrentId) : null);
             return;
         }
-        effects.Enabled = !effects.Enabled;
-        _app.EffectsChanged();
-        Apply();
+        SetEnabled(!effects.Enabled, ChangeSource.Hotkey);
         if (fromHotkey)
             _osd.ShowEffects(effects.Enabled ? NameOf(CurrentId) : null);
     }

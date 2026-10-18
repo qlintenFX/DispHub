@@ -2003,4 +2003,10 @@ It also supports development of DispHub.</value>
   <data name="Search_Page" xml:space="preserve">
     <value>Page</value>
   </data>
+  <data name="Quick_NothingToAdjust" xml:space="preserve">
+    <value>Pick a profile to adjust it</value>
+  </data>
+  <data name="Home_TurnProfilesOn" xml:space="preserve">
+    <value>Turn profiles on</value>
+  </data>
 </root>
