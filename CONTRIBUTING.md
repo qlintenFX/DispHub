@@ -9,7 +9,7 @@ DispHub's state, which is usually what we need to reproduce a colour problem.
 
 ## Translations and presets
 
-- Translate DispHub on [Crowdin](https://crowdin.com/project/disphub); no coding needed. See
+- Translate DispHub on [Weblate](https://hosted.weblate.org/engage/disphub/); no coding needed. See
   [docs/translating.md](docs/translating.md) for the style notes.
 - Share a profile with the community from DispHub itself: **Share**, then **Submit it to the gallery**.
   See [presets/README.md](presets/README.md).
@@ -30,6 +30,9 @@ DispHub's state, which is usually what we need to reproduce a colour problem.
 
 Where things live is described in [CLAUDE.md](CLAUDE.md), which doubles as the project guide for AI coding agents.
 
+AI tools are welcome, as long as you design the change yourself and review every line they write. A pull request
+you can't explain won't be merged.
+
 ## Commits and pull requests
 
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org):
@@ -41,6 +44,6 @@ Where things live is described in [CLAUDE.md](CLAUDE.md), which doubles as the p
 ## Licensing of contributions
 
 DispHub is licensed under GPL-3.0-or-later and is also sold through the Microsoft Store. Before your first pull
-request is merged, a bot asks you to agree to the short [contributor licence agreement](docs/CLA.md) by leaving a
-comment. You keep the copyright in your work; the agreement lets DispHub ship it in the Store as well, and
-DispHub's source stays open either way.
+request is merged, a bot asks you to agree to the [contributor licence agreement](docs/CLA.md) by leaving a
+comment; translators accept it in Weblate. You keep the copyright in your work; the agreement lets DispHub ship
+it in the Store too.

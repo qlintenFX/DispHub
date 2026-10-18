@@ -1,30 +1,70 @@
-# DispHub Contributor Licence Agreement
+# DispHub Individual Contributor Licence Agreement
 
 Version 1
 
-DispHub is open source under GPL-3.0-or-later and is also sold through the Microsoft Store. So that DispHub can
-keep doing both, contributors agree to the following before a pull request is merged. You agree by commenting
-on your pull request as the CLA bot asks; it records your GitHub name and the date.
+Thank you for contributing to DispHub ("the Project"), maintained by the owner of
+[github.com/qlintenFX/DispHub](https://github.com/qlintenFX/DispHub) ("the Maintainer"). DispHub is open source
+under GPL-3.0-or-later and is also sold through the Microsoft Store. So that the Maintainer can keep doing both,
+every contributor agrees to this Contributor Licence Agreement ("Agreement") before their first contribution is
+merged. It protects you as a contributor as well as the Project's users.
 
-"You" means the person submitting the contribution. "The maintainer" means the owner of the DispHub repository
-on GitHub (github.com/qlintenFX) and anyone they pass DispHub on to. "Contribution" means anything you submit to
-DispHub: code, translations, presets, documentation, images or other material.
+By submitting a Contribution to the Project (by pull request, translation, patch or in any other way), you accept
+this Agreement for your present and future Contributions.
 
-1. **Your rights stay yours.** You keep the copyright in your contribution and may use it however you like.
+## 1. Definitions
 
-2. **Licence to the maintainer.** You give the maintainer a perpetual, worldwide, non-exclusive, free,
-   irrevocable licence to use, copy, change, distribute and sublicense your contribution as part of DispHub or
-   related projects, under GPL-3.0-or-later and under other terms, including the Microsoft Store's terms and
-   future licences the maintainer chooses.
+**"You"** means the individual submitting a Contribution.
 
-3. **Patents.** If you hold patents that your contribution uses, you give everyone who receives DispHub a
-   perpetual, worldwide, free, irrevocable licence under those patents for the contribution as you submitted it.
+**"Contribution"** means any original work of authorship, including code, translations, presets, documentation,
+images or other material, that You intentionally submit to the Project.
 
-4. **You may contribute it.** The contribution is your own work, or you have the right to submit it under this
-   agreement (for example, your employer agreed). If parts come from someone else, you say so in the pull request
-   and name their licence.
+## 2. Copyright licence
 
-5. **No warranty.** You provide the contribution as it is, without warranty, unless you choose to give one.
+You grant the Maintainer, and recipients of software distributed by the Maintainer, a perpetual, worldwide,
+non-exclusive, royalty-free, irrevocable copyright licence to reproduce, prepare derivative works of, publicly
+display, publicly perform, sublicense and distribute Your Contributions and such derivative works, under any
+licence terms the Maintainer chooses, including proprietary or commercial ones such as the Microsoft Store's,
+whether or not they are the same as the licence the Project is distributed under at the time.
 
-6. **It stays open.** Whatever else the maintainer does, DispHub's source code stays available under
-   GPL-3.0-or-later, including your contribution.
+## 3. Patent licence
+
+You grant the Maintainer, and recipients of software distributed by the Maintainer, a perpetual, worldwide,
+non-exclusive, royalty-free, irrevocable (except as stated in this section) patent licence to make, have made, use,
+offer to sell, sell, import and otherwise transfer the Contribution. It applies only to the patent claims You can
+licence that are necessarily infringed by Your Contribution alone or by its combination with the Project. If anyone
+starts patent litigation alleging that Your Contribution, or the Project it is part of, infringes a patent, the
+patent licences granted to them under this Agreement for that Contribution end on the date the litigation is filed.
+
+## 4. You keep ownership
+
+You keep all right, title and interest in Your Contributions, and You may use them however You like. This
+Agreement does not transfer ownership: it grants the licences above, so the Maintainer can distribute, relicense
+and sublicense the Project, including in closed-source or commercial forms, without having to find every
+contributor again later.
+
+## 5. Your right to contribute
+
+You confirm that:
+
+- each Contribution is Your original creation, or You have the right to submit it under this Agreement;
+- if Your employer has rights to what You create, they allowed You to make the Contribution or waived those rights;
+- Your Contribution doesn't knowingly include anyone else's code or content, unless You say so in the pull request
+  and name its licence.
+
+## 6. No obligation
+
+Whether a Contribution is used is entirely up to the Maintainer. This Agreement doesn't oblige the Maintainer to
+accept, merge or ship any Contribution.
+
+## 7. No warranty
+
+Unless the law requires it or You agree in writing, You provide Your Contributions "as is", without warranties or
+conditions of any kind, express or implied.
+
+## 8. How You agree
+
+You agree to this Agreement by either:
+
+- commenting "I have read and agree to the DispHub CLA" on Your pull request, when the CLA bot asks; it records
+  Your GitHub name and the date; or
+- accepting the contributor agreement Weblate shows before Your first translation of DispHub.

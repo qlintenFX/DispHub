@@ -62,7 +62,7 @@ Windows doesn't allow gamma changes while HDR is on. Vibrance still works.
 
 ## Help make it better
 
-- **Translate** DispHub into your language on [Crowdin](https://crowdin.com/project/disphub). No coding needed.
+- **Translate** DispHub into your language on [Weblate](https://hosted.weblate.org/engage/disphub/). No coding needed.
 - **Share a look**: copy a profile or an effect look as a link and post it anywhere.
 - **Report a bug** with About > Copy diagnostics, or read [CONTRIBUTING.md](CONTRIBUTING.md) to send code.
 
