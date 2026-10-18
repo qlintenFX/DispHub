@@ -56,7 +56,7 @@ internal sealed unsafe class EffectOutput : IDisposable
         _logger = logger;
         _ = ClassRegistered.Value;
         _window = CreateWindow(info);
-        _settings = new Settings(look, options, Hidden: false);
+        _settings = new Settings(look, options, Hidden: false, FullScreen: false);
         ApplyCaptureExclusion();
         _thread = new Thread(Run) { IsBackground = true, Name = $"Effects {info.DeviceName}", Priority = ThreadPriority.AboveNormal };
         _thread.Start();
@@ -83,6 +83,19 @@ internal sealed unsafe class EffectOutput : IDisposable
         if (hidden)
             PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_HIDE);
         _settings = _settings with { Hidden = hidden };
+        _wake.Set();
+    }
+
+    /// <summary>
+    /// A full-screen game or video is in front. Kept smooth (<see cref="FullScreenEffects.Smooth"/>), it isn't
+    /// copied at all and only the layers are drawn on top of it; with the full effect, every frame the display can
+    /// show is drawn, whatever the frame rate setting, because a capped copy of a game makes it feel capped too.
+    /// </summary>
+    public void SetFullScreen(bool fullScreen)
+    {
+        if (_settings.FullScreen == fullScreen)
+            return;
+        _settings = _settings with { FullScreen = fullScreen };
         _wake.Set();
     }
 
@@ -158,7 +171,8 @@ internal sealed unsafe class EffectOutput : IDisposable
             {
                 Settings settings = _settings;
                 Look look = settings.Look;
-                if (settings.Hidden || look.IsEmpty)
+                bool layersOnly = settings.FullScreen && settings.Options.InFullScreen == FullScreenEffects.Smooth;
+                if (settings.Hidden || look.IsEmpty || (layersOnly && !look.HasLayers))
                 {
                     Hide(ref shown);
                     Release(ref capture);
@@ -167,7 +181,7 @@ internal sealed unsafe class EffectOutput : IDisposable
                     continue;
                 }
 
-                bool processing = look.NeedsCapture && _captureAllowed && !captureUnsupported;
+                bool processing = look.NeedsCapture && _captureAllowed && !captureUnsupported && !layersOnly;
                 if (surface.EnsureSwapChain(opaque: processing))
                     drawn = null;
                 int fps = look.IsAnimated ? look.GrainFps : 0;
@@ -212,9 +226,10 @@ internal sealed unsafe class EffectOutput : IDisposable
                     // new settings show up promptly). When a redraw is due anyway, just take the newest picture.
                     uint timeout = due ? 0u : (uint)Math.Min(fps > 0 ? untilNextFrame : 100, 100);
                     CaptureResult result = capture.Next(surface.Context, timeout);
-                    // Presenting makes Windows report a new frame even when nothing beneath changed. Comparing the
-                    // two latest captures on the GPU stops that loop, so a still desktop costs nothing.
-                    if (result == CaptureResult.NewFrame && !due && !surface.Differs(capture))
+                    // Other windows often redraw without changing a pixel. On the desktop, comparing the area Windows
+                    // says changed skips those, so a still desktop costs next to nothing. A full-screen game changes
+                    // every frame: there the comparison would only add work and delay.
+                    if (result == CaptureResult.NewFrame && !due && !settings.FullScreen && !surface.Differs(capture))
                     {
                         result = CaptureResult.NoChange;
                         framesUnchanged++;
@@ -233,8 +248,9 @@ internal sealed unsafe class EffectOutput : IDisposable
                 else
                 {
                     Release(ref capture);
-                    // Only reached with a look that needs capture when this display can't do it.
-                    SetProblem(look.NeedsCapture ? EffectProblem.CaptureUnsupported : EffectProblem.None);
+                    // Only reached with a look that needs capture when this display can't do it (or when a full-screen
+                    // game is kept smooth, which is a choice, not a problem).
+                    SetProblem(look.NeedsCapture && !layersOnly ? EffectProblem.CaptureUnsupported : EffectProblem.None);
                     if (!due)
                     {
                         _wake.WaitOne(untilNextFrame);
@@ -243,7 +259,8 @@ internal sealed unsafe class EffectOutput : IDisposable
                 }
 
                 surface.Draw(look, new FrameClock(now, frame), Info.Scale, capture);
-                uint syncInterval = processing ? SyncInterval(capture!.RefreshRate, settings.Options.MaxFps) : 1;
+                int maxFps = settings.FullScreen ? 0 : settings.Options.MaxFps;
+                uint syncInterval = processing ? SyncInterval(capture!.RefreshRate, maxFps) : 1;
                 // Throws when the GPU was reset or removed; the outer loop then starts again.
                 surface.Present(syncInterval).ThrowOnFailure();
                 drawn = settings;
@@ -251,8 +268,8 @@ internal sealed unsafe class EffectOutput : IDisposable
                 framesDrawn++;
                 if (Environment.TickCount64 >= statsAt)
                 {
-                    _logger.LogDebug("Effect on {Display}: {Frames} frames in 10 s ({Unchanged} unchanged captures skipped), processing {Processing}",
-                        Info.DeviceName, framesDrawn, framesUnchanged, processing);
+                    _logger.LogDebug("Effect on {Display}: {Frames} frames in 10 s ({Unchanged} unchanged captures skipped), processing {Processing}, full screen {FullScreen}",
+                        Info.DeviceName, framesDrawn, framesUnchanged, processing, settings.FullScreen);
                     framesDrawn = 0;
                     framesUnchanged = 0;
                     statsAt = Environment.TickCount64 + 10_000;
@@ -350,7 +367,7 @@ internal sealed unsafe class EffectOutput : IDisposable
         };
     }
 
-    private sealed record Settings(Look Look, EffectOptions Options, bool Hidden);
+    private sealed record Settings(Look Look, EffectOptions Options, bool Hidden, bool FullScreen);
 
     /// <summary>The GPU side of one display: renderer, composition and swap chain.</summary>
     private sealed class Surface : IDisposable
@@ -466,7 +483,7 @@ internal sealed unsafe class EffectOutput : IDisposable
         /// <summary>Compares the two latest captures, using the back buffer as scratch (it's redrawn before presenting).</summary>
         public bool Differs(ScreenCapture capture) =>
             capture.PreviousView is null || capture.Width != _width || capture.Height != _height ||
-            _renderer.Differs(capture.View, capture.PreviousView, _backBuffer, _width, _height);
+            _renderer.Differs(capture.View, capture.PreviousView, _backBuffer, capture.ChangedArea);
 
         public HRESULT Present(uint syncInterval)
         {

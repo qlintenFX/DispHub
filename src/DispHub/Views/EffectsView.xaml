@@ -605,10 +605,13 @@
     <!-- Options -->
     <ctl:SectionHeader Text="{l:Tr Effects_Options}" />
     <ctl:SettingsCard
-      Description="{l:Tr Effects_HideFullScreenHint}"
-      Header="{l:Tr Effects_HideFullScreen}"
-      Icon="FullScreenMaximize24">
-      <ui:ToggleSwitch IsChecked="{Binding HideOverFullScreen}" />
+      Description="{l:Tr Effects_GamesHint}"
+      Header="{l:Tr Effects_Games}"
+      Icon="Games24">
+      <ComboBox
+        MinWidth="170"
+        ItemsSource="{Binding FullScreenChoices}"
+        SelectedItem="{Binding InFullScreen}" />
     </ctl:SettingsCard>
     <ctl:SettingsCard
       Description="{l:Tr Effects_MainDisplayOnlyHint}"

@@ -7,6 +7,17 @@ namespace DispHub.Tests.Core;
 
 public sealed class LookTests
 {
+    [Theory]
+    [InlineData("film", true)]
+    [InlineData("vhs", true)]
+    [InlineData("arcadeCrt", true)]
+    [InlineData("greyscale", false)]
+    [InlineData("gameBoy", false)]
+    public void HasLayers_SaysWhatCanStayOnTopOfAGame(string id, bool hasLayers)
+    {
+        Assert.Equal(hasLayers, Looks.Find(id)!.Look.HasLayers);
+    }
+
     [Fact]
     public void Neutral_ChangesNothing()
     {

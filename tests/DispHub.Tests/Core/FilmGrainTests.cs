@@ -37,6 +37,21 @@ public sealed class FilmGrainTests
     }
 
     [Fact]
+    public void ScalingTable_InterpolatesThePointsLikeAV1Decoders()
+    {
+        float[] table = FilmGrain.ScalingTable();
+
+        Assert.Equal(256, table.Length);
+        Assert.Equal(0, table[0]);
+        Assert.Equal(0, table[16]);
+        Assert.Equal(136 / 184f, table[25]);
+        Assert.Equal(1, table[178]);
+        Assert.Equal(1, table[255]);
+        // Halfway between (16, 0) and (25, 136), rounded the way dav1d rounds.
+        Assert.Equal(76 / 184f, table[21]);
+    }
+
+    [Fact]
     public void Scaling_IsAV1TestVectorOne()
     {
         Assert.Equal(14, FilmGrain.LumaScaling.Count);

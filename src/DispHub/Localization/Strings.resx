@@ -875,12 +875,6 @@ It also supports development of DispHub.</value>
   <data name="Effects_FromProfileText" xml:space="preserve">
     <value>The profile {0} chooses the screen effect while it's on. Changes here show once it's off.</value>
   </data>
-  <data name="Effects_HideFullScreen" xml:space="preserve">
-    <value>Hide during full-screen apps</value>
-  </data>
-  <data name="Effects_HideFullScreenHint" xml:space="preserve">
-    <value>Turns effects off while a game or video fills a screen, so they can't add delay.</value>
-  </data>
   <data name="Effects_MainDisplayOnly" xml:space="preserve">
     <value>Main display only</value>
   </data>
@@ -891,7 +885,7 @@ It also supports development of DispHub.</value>
     <value>Frame rate</value>
   </data>
   <data name="Effects_FrameRateHint" xml:space="preserve">
-    <value>For looks that change the picture. Lower uses less power.</value>
+    <value>For looks that change the picture. Lower uses less power; with the full effect, full-screen games always get every frame.</value>
   </data>
   <data name="Effects_Fps30" xml:space="preserve">
     <value>30 fps</value>
@@ -1825,5 +1819,20 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Schedule_StatusDispHubOff" xml:space="preserve">
     <value>DispHub is off, so the schedule waits. Turn it on with the power button.</value>
+  </data>
+  <data name="Effects_Games" xml:space="preserve">
+    <value>Full-screen games and videos</value>
+  </data>
+  <data name="Effects_GamesHint" xml:space="preserve">
+    <value>Keep smooth: the game runs at its own frame rate and only grain, scanlines, vignette, dust and fades go on top. Colour changes come from your profile there.</value>
+  </data>
+  <data name="Effects_GamesSmooth" xml:space="preserve">
+    <value>Keep smooth</value>
+  </data>
+  <data name="Effects_GamesFull" xml:space="preserve">
+    <value>Full effect</value>
+  </data>
+  <data name="Effects_GamesHide" xml:space="preserve">
+    <value>Hide effects</value>
   </data>
 </root>

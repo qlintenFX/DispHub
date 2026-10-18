@@ -5,9 +5,13 @@ using Microsoft.Extensions.Logging;
 
 namespace DispHub.Platform.Effects;
 
-/// <param name="MaxFps">Most frames per second for processed looks; 0 follows the display's refresh rate.</param>
+/// <param name="MaxFps">
+/// Most frames per second for processed looks; 0 follows the display's refresh rate. Displays with a full-screen app
+/// in front ignore it (see <see cref="EffectsEngine.SetFullScreen"/>).
+/// </param>
 /// <param name="MainDisplayOnly">Only the main display; otherwise all of them.</param>
-public sealed record EffectOptions(int MaxFps = 0, bool MainDisplayOnly = false);
+/// <param name="InFullScreen">What a display with a full-screen app in front shows (see <see cref="EffectsEngine.SetFullScreen"/>).</param>
+public sealed record EffectOptions(int MaxFps = 0, bool MainDisplayOnly = false, FullScreenEffects InFullScreen = FullScreenEffects.Smooth);
 
 /// <summary>
 /// Shows a <see cref="Look"/> on the displays, each drawn by its own GPU thread (see <see cref="EffectOutput"/>).
@@ -18,6 +22,7 @@ public sealed class EffectsEngine : IDisposable
     private readonly ILogger _logger;
     private readonly List<EffectOutput> _outputs = [];
     private readonly HashSet<Rectangle> _hidden = [];
+    private readonly HashSet<Rectangle> _fullScreen = [];
     private Look? _look;
     private EffectOptions _options = new();
 
@@ -72,6 +77,18 @@ public sealed class EffectsEngine : IDisposable
             output.SetHidden(hidden);
     }
 
+    /// <summary>
+    /// A full-screen game or video is in front on one display: it gets only the layers on top
+    /// (<see cref="FullScreenEffects.Smooth"/>), or the whole look at every frame, uncapped.
+    /// </summary>
+    public void SetFullScreen(Rectangle monitor, bool fullScreen)
+    {
+        if (fullScreen ? !_fullScreen.Add(monitor) : !_fullScreen.Remove(monitor))
+            return;
+        foreach (EffectOutput output in _outputs.Where(o => o.Info.Bounds == monitor))
+            output.SetFullScreen(fullScreen);
+    }
+
     public void Stop()
     {
         _look = null;
@@ -79,6 +96,7 @@ public sealed class EffectsEngine : IDisposable
             output.Dispose();
         _outputs.Clear();
         _hidden.Clear();
+        _fullScreen.Clear();
         ProblemChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -112,6 +130,8 @@ public sealed class EffectsEngine : IDisposable
                 output.ProblemChanged += (_, _) => ProblemChanged?.Invoke(this, EventArgs.Empty);
                 if (_hidden.Contains(info.Bounds))
                     output.SetHidden(true);
+                if (_fullScreen.Contains(info.Bounds))
+                    output.SetFullScreen(true);
                 _outputs.Add(output);
             }
             catch (InvalidOperationException ex)

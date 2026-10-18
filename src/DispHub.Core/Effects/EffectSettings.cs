@@ -90,8 +90,15 @@ public sealed record Look
     public bool IsAnimated => GrainFps > 0 && (Grain > 0 || Flicker > 0 || Dust > 0 || Tracking > 0 || Jitter > 0 || Weave > 0);
 
     [JsonIgnore]
-    public bool IsEmpty => !NeedsCapture && Grain <= 0 && Vignette <= 0 && Flicker <= 0 && Dust <= 0 && Letterbox <= 0 &&
-        Scanlines <= 0 && Mask <= 0 && Tracking <= 0 && Dim <= 0;
+    public bool IsEmpty => !NeedsCapture && !HasLayers;
+
+    /// <summary>
+    /// True when part of it can be drawn on top of the live screen without reading it: grain, dust, tape snow,
+    /// vignette, scanlines and mask (as shading), flicker, dimming, fading and letterbox bars.
+    /// </summary>
+    [JsonIgnore]
+    public bool HasLayers => Grain > 0 || Vignette > 0 || Flicker > 0 || Dust > 0 || Letterbox > 0 || Scanlines > 0 ||
+        Mask > 0 || Tracking > 0 || Dim > 0 || Fade > 0;
 
     public Look Clamp() => this with
     {
@@ -152,6 +159,22 @@ public enum ColorVision
     BlueWeak,
 }
 
+/// <summary>What screen effects do while a full-screen game or video is in front.</summary>
+public enum FullScreenEffects
+{
+    /// <summary>
+    /// Only what can be drawn on top (see <see cref="Look.HasLayers"/>): the game itself is never copied, so it
+    /// shows at its own frame rate with no added delay.
+    /// </summary>
+    Smooth,
+
+    /// <summary>The whole look, from a copy of the screen: up to the display's refresh rate, a frame behind.</summary>
+    Full,
+
+    /// <summary>No effects until the game or video leaves the front.</summary>
+    Hide,
+}
+
 public sealed class EffectsConfig
 {
     public bool Enabled { get; set; }
@@ -171,11 +194,14 @@ public sealed class EffectsConfig
     /// <summary>Looks the user saved, shown with the built-in ones.</summary>
     public List<SavedLook> SavedLooks { get; set; } = [];
 
-    /// <summary>Most frames per second for looks that process the screen; 0 follows the display.</summary>
-    public int MaxFps { get; set; } = 60;
+    /// <summary>
+    /// Most frames per second for looks that process the screen, on the desktop; 0 follows the display. A full-screen
+    /// game always gets every frame the display shows.
+    /// </summary>
+    public int MaxFps { get; set; }
 
-    /// <summary>Step aside while a full-screen app or game is in front, so effects can't add latency there.</summary>
-    public bool HideOverFullScreen { get; set; } = true;
+    /// <summary>What effects do while a full-screen game or video is in front.</summary>
+    public FullScreenEffects InFullScreen { get; set; }
 
     /// <summary>Only the main display; otherwise every display.</summary>
     public bool MainDisplayOnly { get; set; }

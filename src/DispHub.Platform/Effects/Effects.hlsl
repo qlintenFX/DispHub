@@ -8,14 +8,22 @@
 //   colour, colour delay, the tape's sharpening ring, colour phase noise, edge wave, head switching, tracking
 //   noise and snow. ntsc-rs filters each scanline in order; here each step is a few taps per pixel.
 //
-// Passes: Bright (quarter size: what glows), Blur (separable Gaussian), Main (everything else).
-// Main runs in two modes. With a captured screen (HasSource = 1) it outputs the finished picture. Without one it
-// outputs only the layers drawn on top (grain, vignette, scanlines...) as premultiplied alpha over the live desktop.
-// The constant layout matches ShaderConstants in EffectRenderer.cs.
+// Passes: Quarter (quarter size: what glows, and the plain picture for the tape's colour), Blur (separable
+// Gaussian), Main (everything else). Main runs in two modes. With a captured screen (HasSource = 1) it outputs the
+// finished picture. Without one it outputs only the layers drawn on top (grain, vignette, scanlines...) as
+// premultiplied alpha over the live desktop.
+//
+// Main runs for every pixel of the screen up to 240 times a second, on integrated GPUs too, so anything that is the
+// same for a whole frame or a whole line is worked out on the CPU (ShaderConstants and the line data in
+// EffectRenderer.cs, whose constant layout matches cbuffer Params).
 
 Texture2D Source : register(t0);
 Texture2D BloomTex : register(t1);
 Texture2D GrainTex : register(t2);
+Texture2D GrainScale : register(t3);   // AV1's grain strength by brightness, 256 entries
+Texture2D Lines : register(t4);        // per 96-dpi line: sideways shift, tracking band, tape colour phase (cos, sin)
+Texture2D QuarterTex : register(t5);   // the picture at quarter size
+Texture2D<uint> GrainBlocks : register(t6);   // per 32-pixel grain block: where in the template it reads this frame
 SamplerState LinearClamp : register(s0);
 
 cbuffer Params : register(b0)
@@ -77,12 +85,17 @@ cbuffer Params : register(b0)
     float2 SourceTexel;
 
     float2 BlurStep;
-    float2 Unused1;
+    float2 WeaveOffset;   // This frame's gate weave, in uv.
 
     float PaletteSize;    // 0 = no palette
     float PaletteSpread;
     float PaletteByBrightness;
     float Dim;
+
+    float FlickerGain;    // This frame's brightness, 1 = no flicker.
+    float ScratchX;       // This frame's dust scratch, in 96-dpi pixels; negative for none.
+    float HasLines;       // Lines holds this frame's line data.
+    float Unused2;
 
     float4 Palette[16];
 };
@@ -104,7 +117,8 @@ VSOut VS(uint id : SV_VertexID)
     return o;
 }
 
-// Integer hash, so the noise is the same on every GPU.
+// Integer hash, so the noise is the same on every GPU (and in FrameNoise.cs, which works out the per-frame and
+// per-line noise).
 uint HashU(uint x)
 {
     x ^= x >> 16;
@@ -118,20 +132,6 @@ uint HashU(uint x)
 float Hash(uint2 p, uint seed)
 {
     return HashU(p.x * 1597334677u ^ HashU(p.y * 3812015801u ^ seed)) * (1.0 / 4294967295.0);
-}
-
-float Hash1(uint x)
-{
-    return HashU(x) * (1.0 / 4294967295.0);
-}
-
-// Smooth noise along one axis: 0 to 1, changing gently every unit.
-float Noise1(float x, uint seed)
-{
-    float i = floor(x);
-    float f = x - i;
-    f = f * f * (3 - 2 * f);
-    return lerp(Hash1((uint)(int)i * 2654435761u ^ seed), Hash1((uint)(int)(i + 1) * 2654435761u ^ seed), f);
 }
 
 float Luma(float3 c)
@@ -150,15 +150,24 @@ float3 Src(float2 uv)
     return Source.SampleLevel(LinearClamp, uv, 0).rgb;
 }
 
-// ---- Bloom passes ---------------------------------------------------------------------------------------------
+// ---- Quarter-size passes ----------------------------------------------------------------------------------------
 
-float4 Bright(VSOut i) : SV_Target
+struct QuarterOut
+{
+    float4 Bright : SV_Target0;   // What glows, for bloom and halation.
+    float4 Plain : SV_Target1;    // The picture, for the tape's wide filters.
+};
+
+QuarterOut Quarter(VSOut i)
 {
     // The target is a quarter of the source each way: four bilinear taps average a 4 x 4 block.
     float2 t = SourceTexel;
     float3 c = Src(i.Uv + t * float2(-1, -1)) + Src(i.Uv + t * float2(1, -1)) + Src(i.Uv + t * float2(-1, 1)) + Src(i.Uv + t * float2(1, 1));
     c *= 0.25;
-    return float4(c * saturate((Luma(c) - BloomThreshold) / max(1 - BloomThreshold, 0.05)), 1);
+    QuarterOut o;
+    o.Bright = float4(c * saturate((Luma(c) - BloomThreshold) / max(1 - BloomThreshold, 0.05)), 1);
+    o.Plain = float4(c, 1);
+    return o;
 }
 
 float4 Blur(VSOut i) : SV_Target
@@ -226,40 +235,35 @@ float3 YiqToRgb(float3 y)
     return float3(dot(y, float3(1, 0.956, 0.621)), dot(y, float3(1, -0.272, -0.647)), dot(y, float3(1, -1.106, 1.703)));
 }
 
+float3 QuarterAt(float2 uv)
+{
+    return QuarterTex.SampleLevel(LinearClamp, uv, 0).rgb;
+}
+
 // VHS tape (after ntsc-rs): the tape keeps brightness at roughly 3 MHz and colour at 0.4 MHz, recorded a little
-// late; playback sharpens brightness (which rings around edges) and colours drift from line to line.
-float3 Tape(float2 uv, uint row)
+// late; playback sharpens brightness (which rings around edges) and colours drift from line to line (phase holds
+// this line's colour error as cos, sin). The wide filters read the quarter-size picture, which already averages
+// 4 x 4 pixels.
+float3 Tape(float2 uv, float2 phase)
 {
     float k = ChromaBleed;
     float px = PixelScale / OutSize.x;
     float lumaStep = (0.6 + k * 1.2) * px;
-    float y = 0, wide = 0, weights = 0;
-    [unroll] for (int t = -2; t <= 2; t++)
-    {
-        float w = exp(-0.5 * t * t);
-        float l = Luma(Fetch(uv + float2(t * lumaStep, 0)));
-        y += l * w;
-        weights += w;
-        wide += Luma(Fetch(uv + float2(t * lumaStep * 3, 0))) * 0.2;
-    }
-    y /= weights;
+    // A five-step Gaussian (weights e^(-t*t/2)) from three taps: each outer pair merged into one bilinear tap.
+    float y = (Luma(Fetch(uv)) + 0.7418 * (Luma(Fetch(uv + float2(1.1824 * lumaStep, 0))) + Luma(Fetch(uv - float2(1.1824 * lumaStep, 0))))) / 2.4836;
+    float wide = (Luma(QuarterAt(uv - float2(4 * lumaStep, 0))) + Luma(QuarterAt(uv)) + Luma(QuarterAt(uv + float2(4 * lumaStep, 0)))) / 3;
     y += (y - wide) * 1.6 * k;
 
-    float2 iq = 0;
     float colourStep = k * 5 * px;
     float delay = k * 9 * px;
-    [unroll] for (int c = 0; c < 6; c++)
-        iq += RgbToYiq(Fetch(uv - float2(delay + (c - 2.5) * colourStep, 0))).yz;
-    iq /= 6;
-    float phase = (Hash(uint2(row, 3), (uint)Seed) - 0.5) * k * 0.5;
-    float s = sin(phase), co = cos(phase);
-    iq = float2(iq.x * co - iq.y * s, iq.x * s + iq.y * co) * (1 - 0.15 * k);
+    float2 iq = (RgbToYiq(QuarterAt(uv - float2(delay - 1.25 * colourStep, 0))).yz + RgbToYiq(QuarterAt(uv - float2(delay + 1.25 * colourStep, 0))).yz) * 0.5;
+    iq = float2(iq.x * phase.x - iq.y * phase.y, iq.x * phase.y + iq.y * phase.x) * (1 - 0.15 * k);
     return YiqToRgb(float3(y, iq));
 }
 
-float3 Picture(float2 uv, uint row)
+float3 Picture(float2 uv, float2 phase)
 {
-    float3 c = ChromaBleed > 0 ? Tape(uv, row) : Fetch(uv);
+    float3 c = ChromaBleed > 0 ? Tape(uv, phase) : Fetch(uv);
     if (Sharpen > 0)
     {
         float2 t = 1 / OutSize;
@@ -387,9 +391,7 @@ float Darkening(float2 fine, float2 uv)
     }
     if (Mask > 0 && HasSource < 0.5)
         m *= lerp(1, fmod(fine.x, 3) < 1 ? 1 : 0.7, Mask);
-    if (Flicker > 0)
-        m *= 1 - Flicker * 0.12 * Hash1((uint)Seed * 747796405u + 1u);
-    return m * (1 - Dim);
+    return m * FlickerGain * (1 - Dim);
 }
 
 // Aperture grille (Lottes' shadow mask 2): each column of three pixels lets through red, green or blue.
@@ -407,31 +409,20 @@ float3 GrilleMask(float2 pos)
     return mask;
 }
 
-// AV1's grain strength by brightness (libaom's film grain test vector 1), 0 to 1.
-static const float2 GrainScaling[14] =
-{
-    float2(16, 0), float2(25, 136), float2(33, 144), float2(41, 160), float2(48, 168), float2(56, 136), float2(67, 128),
-    float2(82, 144), float2(97, 152), float2(113, 144), float2(128, 176), float2(143, 168), float2(158, 176), float2(178, 184),
-};
-
+// AV1's grain strength by brightness, 0 to 1: a 256-entry table, the way AV1 decoders build it from the scaling
+// points (libaom's film grain test vector 1, see FilmGrain.cs).
 float GrainStrength(float luma)
 {
-    float l = saturate(luma) * 255;
-    float s = GrainScaling[13].y;
-    [unroll] for (int i = 12; i >= 0; i--)
-    {
-        if (l < GrainScaling[i + 1].x)
-            s = lerp(GrainScaling[i].y, GrainScaling[i + 1].y, saturate((l - GrainScaling[i].x) / (GrainScaling[i + 1].x - GrainScaling[i].x)));
-    }
-    return s / 184;
+    return GrainScale.SampleLevel(LinearClamp, float2(saturate(luma) * (255.0 / 256) + 0.5 / 256, 0.5), 0).r;
 }
 
-// Film grain, the AV1 way: 32 by 32 blocks of the grain template, each from a random place in it every frame.
+// Film grain, the AV1 way: 32 by 32 blocks of the grain template, each from a random place in it every frame
+// (picked on the CPU, see FrameNoise.GrainBlocks).
 float3 FilmGrain(float2 pos, float3 picture)
 {
     float2 p = pos / GrainSize;
     float2 block = floor(p / 32);
-    uint r = (uint)(Hash(uint2(block), (uint)Seed) * 255.99);
+    uint r = GrainBlocks.Load(int3(block, 0));
     float2 offset = 3 + 2 * (3 + float2(r >> 4, r & 15));
     float2 t = offset + (p - block * 32);
     float3 g = GrainTex.SampleLevel(LinearClamp, t / float2(82, 73), 0).rgb;
@@ -443,7 +434,7 @@ float3 FilmGrain(float2 pos, float3 picture)
 }
 
 // What adds light or dark: grain, dust and scratches, tape snow. Signed.
-float3 Layers(float2 pos, float3 picture)
+float3 Layers(float2 pos, float3 picture, float4 scan)
 {
     uint seed = (uint)Seed;
     float3 add = 0;
@@ -459,19 +450,14 @@ float3 Layers(float2 pos, float3 picture)
             add += (Hash(cell, seed + 17u) > 0.5 ? 0.6 : -0.6) * speck;
         }
         // Now and then a thin vertical scratch.
-        if (Hash1(seed * 31u + 7u) < Dust * 0.5)
-        {
-            float x = Hash1(seed * 17u + 3u) * VirtualSize().x;
-            add -= 0.35 * smoothstep(1.5, 0, abs(pos.x - x));
-        }
+        if (ScratchX >= 0)
+            add -= 0.35 * smoothstep(1.5, 0, abs(pos.x - ScratchX));
     }
     if (Tracking > 0)
     {
         // Snow (ntsc-rs): dropouts start bright and fade along the line, many more inside the tracking band.
         uint row = (uint)pos.y;
-        float size = VirtualSize().y;
-        float band = frac(Time * 0.07) * (size + 160) - 80;
-        float inBand = smoothstep(48, 0, abs(pos.y - band)) + smoothstep(size * 0.975, size, pos.y);
+        float inBand = scan.y;
         uint cell = (uint)(pos.x / 32);
         float chance = Tracking * (0.003 + inBand * 0.45);
         if (Hash(uint2(cell, row), seed) < chance)
@@ -482,12 +468,19 @@ float3 Layers(float2 pos, float3 picture)
             if (x >= 0)
                 add += pow(saturate(1 - x / tail), 3) * (0.5 + 0.5 * inBand);
         }
-        add += (Hash(uint2(pos.x / 2, row), seed ^ 0x9e3779b9u) - 0.5) * inBand * Tracking * 0.35;
+        if (inBand > 0)
+            add += (Hash(uint2(pos.x / 2, row), seed ^ 0x9e3779b9u) - 0.5) * inBand * Tracking * 0.35;
     }
     return add;
 }
 
 // ---- Main pass ------------------------------------------------------------------------------------------------
+
+// This line's data (see Lines); none when the look doesn't move lines.
+float4 LineData(float2 pos)
+{
+    return HasLines > 0.5 ? Lines.Load(int3(0, (int)pos.y, 0)) : float4(0, 0, 1, 0);
+}
 
 float4 Main(VSOut i) : SV_Target
 {
@@ -504,14 +497,14 @@ float4 Main(VSOut i) : SV_Target
     float2 uv = i.Uv;
     if (HasSource < 0.5)
     {
-        // No picture: darken by alpha, lighten by adding white (premultiplied).
+        // No picture: darken by alpha, lighten by adding white (premultiplied), then fade towards white on top.
         float dark = 1 - Darkening(fine, uv);
-        float g = Layers(pos, 0.5).g;
+        float g = Layers(pos, 0.5, LineData(pos)).g;
         float a = abs(g);
-        return float4((g > 0 ? a : 0).xxx, a + dark * (1 - a));
+        float4 o = float4((g > 0 ? a : 0).xxx, a + dark * (1 - a));
+        return float4(FadeAmount + (1 - FadeAmount) * o.rgb, 1 - (1 - FadeAmount) * (1 - o.a));
     }
 
-    uint seed = (uint)Seed;
     if (Curvature > 0)
     {
         uv = CrtWarp(uv);
@@ -520,38 +513,18 @@ float4 Main(VSOut i) : SV_Target
     }
     if (Distortion > 0)
         uv = Lens(uv);
-    if (Weave > 0)
-        uv += (float2(Hash1(seed * 13u + 1u), Hash1(seed * 29u + 2u)) - 0.5) * Weave * float2(0.0025, 0.004);
+    uv += WeaveOffset;
 
-    // Lines pushed sideways (ntsc-rs), in 96-dpi pixels.
-    uint row = (uint)pos.y;
-    float shift = 0;
-    if (Jitter > 0)
-    {
-        // Edge wave: every line wobbles a little, smoothly down the picture and over time.
-        shift += (Noise1(pos.y * 0.035 + Time * 2.3, 0x68e31da4u) - 0.5) * Jitter * 6;
-        shift += (Noise1(pos.y * 0.21 + Time * 9.0, 0x1b56c4e9u) - 0.5) * Jitter * 2;
-    }
-    if (Tracking > 0)
-    {
-        // Head switching: the last lines before the bottom are pushed right, more the lower they are.
-        float rows = size.y * 0.02;
-        float into = (pos.y - (size.y - rows)) / rows;
-        if (into > 0)
-            shift += Tracking * (pow(into, 1.5) * 26 + (Hash(uint2(row, 1), seed) - 0.5) * 4);
-        // The tracking band: lines inside it shake sideways.
-        float band = frac(Time * 0.07) * (size.y + 160) - 80;
-        float inBand = smoothstep(48, 0, abs(pos.y - band));
-        shift += inBand * Tracking * (Noise1(pos.y * 0.4 + Time * 30, 0x2545f491u) - 0.5) * 22;
-    }
-    uv.x -= shift / size.x;
+    // Lines pushed sideways (ntsc-rs's edge wave, head switching and tracking band), in 96-dpi pixels.
+    float4 scan = LineData(pos);
+    uv.x -= scan.x / size.x;
 
     // Pixel blocks snap to whole screen pixels, or small previews would shimmer.
     float block = Pixelate > 1 ? max(round(Pixelate * PixelScale), 1) : 1;
     if (block > 1)
         uv = (floor(uv * OutSize / block) + 0.5) * block / OutSize;
 
-    float3 c = Picture(uv, row);
+    float3 c = Picture(uv, scan.zw);
     if (BloomAmount > 0 || Halation > 0)
     {
         float3 glow = BloomTex.SampleLevel(LinearClamp, uv, 0).rgb;
@@ -568,15 +541,17 @@ float4 Main(VSOut i) : SV_Target
     }
     if (Scanlines > 0 || Mask > 0)
     {
-        // Lottes: beams and mask work on light, not on the encoded values.
-        float3 light = pow(saturate(c), 2.2);
+        // Lottes: beams and mask work on light, not on the encoded values. Gamma 2 (a square) is close enough
+        // here and much cheaper than 2.2.
+        float3 light = saturate(c);
+        light *= light;
         if (Scanlines > 0)
             light *= Beam(fine);
         if (Mask > 0)
             light *= GrilleMask(fine);
-        c = pow(light, 1 / 2.2);
+        c = sqrt(light);
     }
 
-    c = c * Darkening(fine, uv) + Layers(pos, c);
+    c = c * Darkening(fine, uv) + Layers(pos, c, scan);
     return float4(saturate(c), 1);
 }

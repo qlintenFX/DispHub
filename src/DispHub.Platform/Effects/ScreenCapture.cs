@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D11;
@@ -120,6 +121,7 @@ internal sealed unsafe class ScreenCapture : IDisposable
     private IDXGIOutputDuplication* _duplication;
     private bool _aIsLatest;
     private int _frames;
+    private byte[] _metadata = [];
 
     private ScreenCapture(IDXGIOutputDuplication* duplication, ID3D11Device* device)
     {
@@ -148,6 +150,12 @@ internal sealed unsafe class ScreenCapture : IDisposable
 
     /// <summary>The copy before the latest, to see whether anything changed; null before the second frame.</summary>
     public ID3D11ShaderResourceView* PreviousView => _frames > 1 ? Older.View : null;
+
+    /// <summary>
+    /// Where the latest copy may differ from the one before, as Windows reports it (moved and redrawn areas), in
+    /// pixels. Other windows often redraw without changing anything, so this is where to compare.
+    /// </summary>
+    public Rectangle ChangedArea { get; private set; }
 
     private Copy Latest => _aIsLatest ? _a : _b;
 
@@ -180,6 +188,7 @@ internal sealed unsafe class ScreenCapture : IDisposable
             // Only the mouse moved: the picture is the same.
             if (info.LastPresentTime == 0 && _frames > 0)
                 return CaptureResult.NoChange;
+            ChangedArea = ReadChangedArea(info.TotalMetadataBufferSize);
             ID3D11Texture2D* frame = Com.Query<ID3D11Texture2D>(resource, ID3D11Texture2D.IID_Guid);
             try
             {
@@ -206,6 +215,42 @@ internal sealed unsafe class ScreenCapture : IDisposable
         _b.Dispose();
         Com.Release(ref _duplication);
     }
+
+    /// <summary>The bounds of this frame's moved and redrawn areas; the whole screen when Windows doesn't say.</summary>
+    private Rectangle ReadChangedArea(uint size)
+    {
+        var whole = new Rectangle(0, 0, Width, Height);
+        if (size == 0)
+            return whole;
+        if (_metadata.Length < size)
+            _metadata = new byte[size];
+        try
+        {
+            Rectangle area = Rectangle.Empty;
+            fixed (byte* buffer = _metadata)
+            {
+                uint used;
+                _duplication->GetFrameMoveRects(size, (DXGI_OUTDUPL_MOVE_RECT*)buffer, &used);
+                var moves = new ReadOnlySpan<DXGI_OUTDUPL_MOVE_RECT>(buffer, (int)(used / (uint)sizeof(DXGI_OUTDUPL_MOVE_RECT)));
+                foreach (DXGI_OUTDUPL_MOVE_RECT move in moves)
+                {
+                    RECT to = move.DestinationRect;
+                    area = Union(area, Rectangle.FromLTRB(to.left, to.top, to.right, to.bottom));
+                    area = Union(area, new Rectangle(move.SourcePoint.X, move.SourcePoint.Y, to.right - to.left, to.bottom - to.top));
+                }
+                _duplication->GetFrameDirtyRects(size, (RECT*)buffer, &used);
+                foreach (RECT dirty in new ReadOnlySpan<RECT>(buffer, (int)(used / (uint)sizeof(RECT))))
+                    area = Union(area, Rectangle.FromLTRB(dirty.left, dirty.top, dirty.right, dirty.bottom));
+            }
+            return Rectangle.Intersect(area, whole);
+        }
+        catch (COMException)
+        {
+            return whole;
+        }
+    }
+
+    private static Rectangle Union(Rectangle a, Rectangle b) => a.IsEmpty ? b : b.IsEmpty ? a : Rectangle.Union(a, b);
 
     /// <summary>A texture the shaders can read, holding one captured frame.</summary>
     private sealed class Copy : IDisposable

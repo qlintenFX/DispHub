@@ -92,8 +92,12 @@ public sealed class EffectRendererTests : IDisposable
         var scratch = (ID3D11RenderTargetView*)Texture(renderer.Device, null, target: true);
         try
         {
-            Assert.False(renderer.Differs(a, b, scratch, Width, Height));
-            Assert.True(renderer.Differs(a, c, scratch, Width, Height));
+            var all = new System.Drawing.Rectangle(0, 0, Width, Height);
+            Assert.False(renderer.Differs(a, b, scratch, all));
+            Assert.True(renderer.Differs(a, c, scratch, all));
+            // Only the area Windows says changed is compared.
+            Assert.True(renderer.Differs(a, c, scratch, new System.Drawing.Rectangle(38, 15, 4, 4)));
+            Assert.False(renderer.Differs(a, c, scratch, new System.Drawing.Rectangle(0, 0, 30, Height)));
         }
         finally
         {
@@ -102,6 +106,30 @@ public sealed class EffectRendererTests : IDisposable
             c->Release();
             scratch->Release();
         }
+    }
+
+    [Fact]
+    public void Lines_StayPutWithoutLineEffects()
+    {
+        float[] lines = new float[100 * FrameNoise.LineStride];
+        FrameNoise.Lines(new Look { Grain = 0.5 }, 12.3f, 7, 100, lines);
+
+        for (int row = 0; row < 100; row++)
+        {
+            Assert.Equal(0, lines[row * FrameNoise.LineStride]);
+            Assert.Equal(1, lines[(row * FrameNoise.LineStride) + 2]);
+        }
+    }
+
+    [Fact]
+    public void Lines_HeadSwitchingPushesTheBottomLinesRight()
+    {
+        float[] lines = new float[400 * FrameNoise.LineStride];
+        // Early in the tracking band's roll, so it is above the picture.
+        FrameNoise.Lines(new Look { Tracking = 1 }, 0.01f, 7, 400, lines);
+
+        Assert.True(lines[399 * FrameNoise.LineStride] > 15);
+        Assert.Equal(0, lines[200 * FrameNoise.LineStride]);
     }
 
     private byte[] Render(Look look)

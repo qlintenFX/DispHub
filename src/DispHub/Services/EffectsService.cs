@@ -27,8 +27,9 @@ public enum EffectsState
 }
 
 /// <summary>
-/// Shows the right look on screen: the active profile's choice, or the Effects page's. Hides it over full-screen
-/// games and apps when asked. UI thread only; the drawing happens on GPU threads in <see cref="EffectsEngine"/>.
+/// Shows the right look on screen: the active profile's choice, or the Effects page's. Over full-screen games and
+/// videos it draws only what goes on top, the whole look uncapped, or nothing (see <see cref="FullScreenEffects"/>).
+/// UI thread only; the drawing happens on GPU threads in <see cref="EffectsEngine"/>.
 /// </summary>
 public sealed class EffectsService : IDisposable
 {
@@ -57,6 +58,7 @@ public sealed class EffectsService : IDisposable
             UpdateFullScreen();
         };
         _app.EffectsToggleRequested += (_, _) => Toggle(fromHotkey: true);
+        _app.ForegroundChanged += (_, _) => UpdateFullScreen();
     }
 
     public EffectsState State { get; private set; }
@@ -96,18 +98,9 @@ public sealed class EffectsService : IDisposable
         }
         else
         {
-            _engine.Apply(look, new EffectOptions(effects.MaxFps, effects.MainDisplayOnly));
-            if (effects.HideOverFullScreen)
-            {
-                _fullScreenCheck.Start();
-                UpdateFullScreen();
-            }
-            else
-            {
-                _fullScreenCheck.Stop();
-                foreach (Rectangle monitor in _engine.Monitors)
-                    _engine.SetHidden(monitor, false);
-            }
+            _engine.Apply(look, new EffectOptions(effects.MaxFps, effects.MainDisplayOnly, effects.InFullScreen));
+            _fullScreenCheck.Start();
+            UpdateFullScreen();
         }
         UpdateState(look is not null && !allowed);
     }
@@ -151,13 +144,18 @@ public sealed class EffectsService : IDisposable
 
     private void UpdateFullScreen()
     {
-        if (!_engine.IsRunning || !_app.Config.Effects.HideOverFullScreen)
+        if (!_engine.IsRunning)
             return;
         IReadOnlyList<Rectangle> monitors = _engine.Monitors;
-        bool hideAll = FullScreenApps.IsGameOrPresentationRunning();
+        bool hide = _app.Config.Effects.InFullScreen == FullScreenEffects.Hide;
+        bool everywhere = FullScreenApps.IsGameOrPresentationRunning();
         Rectangle? covered = FullScreenApps.ForegroundFullScreenBounds(monitors);
         foreach (Rectangle monitor in monitors)
-            _engine.SetHidden(monitor, hideAll || monitor == covered);
+        {
+            bool fullScreen = everywhere || monitor == covered;
+            _engine.SetHidden(monitor, hide && fullScreen);
+            _engine.SetFullScreen(monitor, fullScreen);
+        }
     }
 
     private void UpdateState() => UpdateState(State == EffectsState.NeedsPro);

@@ -31,6 +31,30 @@ public static class FilmGrain
     ];
 
     /// <summary>
+    /// <see cref="LumaScaling"/> as the 256-entry table AV1 decoders build from it (dav1d's generate_scaling), from 0
+    /// to 1: the grain's strength for each brightness.
+    /// </summary>
+    public static float[] ScalingTable()
+    {
+        int[] table = new int[256];
+        (int firstX, int firstY) = LumaScaling[0];
+        table.AsSpan(0, firstX).Fill(firstY);
+        for (int i = 0; i < LumaScaling.Count - 1; i++)
+        {
+            (int bx, int by) = LumaScaling[i];
+            (int ex, int ey) = LumaScaling[i + 1];
+            int dx = ex - bx;
+            int delta = (ey - by) * ((0x10000 + (dx >> 1)) / dx);
+            for (int x = 0, d = 0x8000; x < dx; x++, d += delta)
+                table[bx + x] = by + (d >> 16);
+        }
+        (int lastX, int lastY) = LumaScaling[^1];
+        table.AsSpan(lastX).Fill(lastY);
+        float max = LumaScaling.Max(p => p.Scale);
+        return [.. table.Select(v => v / max)];
+    }
+
+    /// <summary>
     /// The grain template, row by row, four floats per texel: luma grain, Cb grain, Cr grain, 0. Each plane has
     /// unit variance.
     /// </summary>

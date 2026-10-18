@@ -120,6 +120,8 @@ public static class ConfigNormalizer
     {
         effects.Look = (effects.Look ?? Look.Neutral).Clamp();
         effects.MaxFps = Math.Clamp(effects.MaxFps, 0, 240);
+        if (!Enum.IsDefined(effects.InFullScreen))
+            effects.InFullScreen = FullScreenEffects.Smooth;
         effects.Strength = double.IsFinite(effects.Strength) ? Math.Clamp(effects.Strength, 0, LookParameters.MaxStrength) : 1;
         effects.SavedLooks ??= [];
         effects.SavedLooks.RemoveAll(s => s is null);

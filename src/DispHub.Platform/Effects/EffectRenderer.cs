@@ -10,8 +10,9 @@ using Windows.Win32.Graphics.Dxgi.Common;
 namespace DispHub.Platform.Effects;
 
 /// <summary>
-/// Draws a <see cref="Look"/> with the effect shaders (Effects.hlsl) on one Direct3D 11 device: an optional bloom
-/// chain at quarter size, then the main pass into the caller's render target. Use from one thread.
+/// Draws a <see cref="Look"/> with the effect shaders (Effects.hlsl) on one Direct3D 11 device: an optional quarter
+/// size pass (bloom and the tape's wide filters), then the main pass into the caller's render target. Use from one
+/// thread.
 /// </summary>
 internal sealed unsafe class EffectRenderer : IDisposable
 {
@@ -22,11 +23,13 @@ internal sealed unsafe class EffectRenderer : IDisposable
         D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_10_0,
     ];
 
+    private const int ShaderInputs = 7;
+
     private ID3D11Device* _device;
     private ID3D11DeviceContext* _context;
     private ID3D11VertexShader* _vertexShader;
     private ID3D11PixelShader* _main;
-    private ID3D11PixelShader* _bright;
+    private ID3D11PixelShader* _quarter;
     private ID3D11PixelShader* _blur;
     private ID3D11PixelShader* _differs;
     private ID3D11Query* _anyPassed;
@@ -34,8 +37,18 @@ internal sealed unsafe class EffectRenderer : IDisposable
     private ID3D11Buffer* _constants;
     private ID3D11Texture2D* _grainTexture;
     private ID3D11ShaderResourceView* _grain;
-    private readonly RenderTexture _bloomA = new();
-    private readonly RenderTexture _bloomB = new();
+    private ID3D11Texture2D* _grainScaleTexture;
+    private ID3D11ShaderResourceView* _grainScale;
+    private ID3D11Texture2D* _linesTexture;
+    private ID3D11ShaderResourceView* _lines;
+    private float[] _lineData = [];
+    private ID3D11Texture2D* _blocksTexture;
+    private ID3D11ShaderResourceView* _blocks;
+    private uint[] _blockData = [];
+    private (int Columns, int Rows, uint Seed) _blocksFor;
+    private readonly RenderTexture _bloomA = new(DXGI_FORMAT.DXGI_FORMAT_R16G16B16A16_FLOAT);
+    private readonly RenderTexture _bloomB = new(DXGI_FORMAT.DXGI_FORMAT_R16G16B16A16_FLOAT);
+    private readonly RenderTexture _plain = new(DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM);
 
     /// <param name="adapter">The GPU to use; null for the default one.</param>
     /// <param name="software">Use WARP, Windows' software renderer (for tests and when there's no usable GPU).</param>
@@ -73,10 +86,16 @@ internal sealed unsafe class EffectRenderer : IDisposable
         int sourceHeight, ID3D11RenderTargetView* target, int width, int height)
     {
         ArgumentNullException.ThrowIfNull(look);
-        ShaderConstants constants = ShaderConstants.From(look, frame, width, height, source is not null);
-        constants.PixelScale = (float)Math.Clamp(pixelScale, 0.1, 8);
+        ShaderConstants constants = ShaderConstants.From(look, frame, width, height, source is not null, Math.Clamp(pixelScale, 0.1, 8));
         constants.SourceTexelX = 1f / Math.Max(sourceWidth, 1);
         constants.SourceTexelY = 1f / Math.Max(sourceHeight, 1);
+        if (FrameNoise.NeedsLines(look))
+        {
+            UpdateLines(look, ref constants, height);
+            constants.HasLines = 1;
+        }
+        if (look.Grain > 0)
+            UpdateGrainBlocks(ref constants, width, height);
 
         ID3D11DeviceContext* context = _context;
         context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY.D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -87,39 +106,48 @@ internal sealed unsafe class EffectRenderer : IDisposable
         context->PSSetSamplers(0, 1, &sampler);
 
         bool bloom = source is not null && (look.Bloom > 0 || look.Halation > 0);
-        if (bloom)
+        bool tape = source is not null && look.ChromaBleed > 0;
+        if (bloom || tape)
         {
+            // One read of the full picture gives both what glows and the plain picture, at quarter size.
             int w = Math.Max(sourceWidth / 4, 1), h = Math.Max(sourceHeight / 4, 1);
             _bloomA.EnsureSize(_device, w, h);
-            _bloomB.EnsureSize(_device, w, h);
-            Pass(_bright, ref constants, source, null, _bloomA.Target, w, h);
-            for (int round = 1; round <= 2; round++)
+            _plain.EnsureSize(_device, w, h);
+            Pass(_quarter, ref constants, source, null, null, [(nint)_bloomA.Target, (nint)_plain.Target], w, h);
+            if (bloom)
             {
-                // A second, wider round makes the glow spread like light rather than a blur.
-                (constants.BlurStepX, constants.BlurStepY) = (round / (float)w, 0);
-                Pass(_blur, ref constants, _bloomA.View, null, _bloomB.Target, w, h);
-                (constants.BlurStepX, constants.BlurStepY) = (0, round / (float)h);
-                Pass(_blur, ref constants, _bloomB.View, null, _bloomA.Target, w, h);
+                _bloomB.EnsureSize(_device, w, h);
+                for (int round = 1; round <= 2; round++)
+                {
+                    // A second, wider round makes the glow spread like light rather than a blur.
+                    (constants.BlurStepX, constants.BlurStepY) = (round / (float)w, 0);
+                    Pass(_blur, ref constants, _bloomA.View, null, null, [(nint)_bloomB.Target], w, h);
+                    (constants.BlurStepX, constants.BlurStepY) = (0, round / (float)h);
+                    Pass(_blur, ref constants, _bloomB.View, null, null, [(nint)_bloomA.Target], w, h);
+                }
             }
         }
-        Pass(_main, ref constants, source, bloom ? _bloomA.View : null, target, width, height);
+        Pass(_main, ref constants, source, bloom ? _bloomA.View : null, tape ? _plain.View : null, [(nint)target], width, height);
         Unbind();
     }
 
     /// <summary>
-    /// Whether two same-sized textures differ anywhere. Runs on the GPU and waits only for that tiny pass.
-    /// <paramref name="scratch"/> is a render target at least as big whose content may change (GPUs skip a pass
-    /// that writes nothing, and with it the comparison).
+    /// Whether two same-sized textures differ anywhere in <paramref name="area"/> (in pixels). Runs on the GPU and
+    /// waits only for that pass. <paramref name="scratch"/> is a render target at least as big whose content may
+    /// change (GPUs skip a pass that writes nothing, and with it the comparison).
     /// </summary>
-    public bool Differs(ID3D11ShaderResourceView* a, ID3D11ShaderResourceView* b, ID3D11RenderTargetView* scratch, int width, int height)
+    public bool Differs(ID3D11ShaderResourceView* a, ID3D11ShaderResourceView* b, ID3D11RenderTargetView* scratch, System.Drawing.Rectangle area)
     {
+        if (area.IsEmpty)
+            return false;
         ID3D11DeviceContext* context = _context;
         Unbind();
         context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY.D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         context->VSSetShader(_vertexShader, null, 0);
         context->PSSetShader(_differs, null, 0);
         context->OMSetRenderTargets(1, &scratch, null);
-        var viewport = new D3D11_VIEWPORT { Width = width, Height = height, MaxDepth = 1 };
+        // The full-screen triangle, clipped to the area: only those pixels are compared.
+        var viewport = new D3D11_VIEWPORT { TopLeftX = area.X, TopLeftY = area.Y, Width = area.Width, Height = area.Height, MaxDepth = 1 };
         context->RSSetViewports(1, &viewport);
         ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[2];
         views[0] = a;
@@ -145,6 +173,13 @@ internal sealed unsafe class EffectRenderer : IDisposable
     {
         _bloomA.Dispose();
         _bloomB.Dispose();
+        _plain.Dispose();
+        Com.Release(ref _lines);
+        Com.Release(ref _linesTexture);
+        Com.Release(ref _blocks);
+        Com.Release(ref _blocksTexture);
+        Com.Release(ref _grainScale);
+        Com.Release(ref _grainScaleTexture);
         Com.Release(ref _grain);
         Com.Release(ref _grainTexture);
         Com.Release(ref _anyPassed);
@@ -152,7 +187,7 @@ internal sealed unsafe class EffectRenderer : IDisposable
         Com.Release(ref _constants);
         Com.Release(ref _sampler);
         Com.Release(ref _blur);
-        Com.Release(ref _bright);
+        Com.Release(ref _quarter);
         Com.Release(ref _main);
         Com.Release(ref _vertexShader);
         if (_context is not null)
@@ -165,20 +200,25 @@ internal sealed unsafe class EffectRenderer : IDisposable
     }
 
     private void Pass(ID3D11PixelShader* shader, ref ShaderConstants constants, ID3D11ShaderResourceView* source,
-        ID3D11ShaderResourceView* bloom, ID3D11RenderTargetView* target, int width, int height)
+        ID3D11ShaderResourceView* bloom, ID3D11ShaderResourceView* plain, ReadOnlySpan<nint> targets, int width, int height)
     {
         ID3D11DeviceContext* context = _context;
         Unbind();
         fixed (ShaderConstants* data = &constants)
             context->UpdateSubresource((ID3D11Resource*)_constants, 0, null, data, 0, 0);
-        context->OMSetRenderTargets(1, &target, null);
+        fixed (nint* outputs = targets)
+            context->OMSetRenderTargets((uint)targets.Length, (ID3D11RenderTargetView**)outputs, null);
         var viewport = new D3D11_VIEWPORT { Width = width, Height = height, MaxDepth = 1 };
         context->RSSetViewports(1, &viewport);
-        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[3];
+        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[ShaderInputs];
         views[0] = source;
         views[1] = bloom;
         views[2] = _grain;
-        context->PSSetShaderResources(0, 3, views);
+        views[3] = _grainScale;
+        views[4] = _lines;
+        views[5] = plain;
+        views[6] = _blocks;
+        context->PSSetShaderResources(0, ShaderInputs, views);
         context->PSSetShader(shader, null, 0);
         context->Draw(3, 0);
     }
@@ -186,9 +226,77 @@ internal sealed unsafe class EffectRenderer : IDisposable
     /// <summary>Unbinds textures and targets, so a texture can switch between being read and written.</summary>
     private void Unbind()
     {
-        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[3];
-        _context->PSSetShaderResources(0, 3, views);
+        ID3D11ShaderResourceView** views = stackalloc ID3D11ShaderResourceView*[ShaderInputs];
+        _context->PSSetShaderResources(0, ShaderInputs, views);
         _context->OMSetRenderTargets(0, null, null);
+    }
+
+    /// <summary>Picks this grain frame's block offsets (see <see cref="FrameNoise.GrainBlocks"/>) and uploads them.</summary>
+    private void UpdateGrainBlocks(ref ShaderConstants constants, int width, int height)
+    {
+        float blockSize = 32 * constants.PixelScale * constants.GrainSize;
+        int columns = (int)(width / blockSize) + 1, rows = (int)(height / blockSize) + 1;
+        if (_blocksFor == (columns, rows, (uint)constants.Seed))
+            return;
+        if (_blocksFor.Columns != columns || _blocksFor.Rows != rows)
+        {
+            Com.Release(ref _blocks);
+            Com.Release(ref _blocksTexture);
+            _blockData = new uint[columns * rows];
+            var desc = new D3D11_TEXTURE2D_DESC
+            {
+                Width = (uint)columns,
+                Height = (uint)rows,
+                MipLevels = 1,
+                ArraySize = 1,
+                Format = DXGI_FORMAT.DXGI_FORMAT_R32_UINT,
+                SampleDesc = new DXGI_SAMPLE_DESC { Count = 1 },
+                Usage = D3D11_USAGE.D3D11_USAGE_DEFAULT,
+                BindFlags = D3D11_BIND_FLAG.D3D11_BIND_SHADER_RESOURCE,
+            };
+            ID3D11Texture2D* texture;
+            _device->CreateTexture2D(&desc, null, &texture);
+            _blocksTexture = texture;
+            ID3D11ShaderResourceView* view;
+            _device->CreateShaderResourceView((ID3D11Resource*)texture, null, &view);
+            _blocks = view;
+        }
+        FrameNoise.GrainBlocks((uint)constants.Seed, columns, _blockData);
+        fixed (uint* data = _blockData)
+            _context->UpdateSubresource((ID3D11Resource*)_blocksTexture, 0, null, data, (uint)(columns * sizeof(uint)), 0);
+        _blocksFor = (columns, rows, (uint)constants.Seed);
+    }
+
+    /// <summary>Works out this frame's line data (see <see cref="FrameNoise.Lines"/>) and uploads it.</summary>
+    private void UpdateLines(Look look, ref ShaderConstants constants, int height)
+    {
+        int rows = (int)Math.Ceiling(height / constants.PixelScale) + 1;
+        if (_lineData.Length != rows * FrameNoise.LineStride)
+        {
+            Com.Release(ref _lines);
+            Com.Release(ref _linesTexture);
+            _lineData = new float[rows * FrameNoise.LineStride];
+            var desc = new D3D11_TEXTURE2D_DESC
+            {
+                Width = 1,
+                Height = (uint)rows,
+                MipLevels = 1,
+                ArraySize = 1,
+                Format = DXGI_FORMAT.DXGI_FORMAT_R32G32B32A32_FLOAT,
+                SampleDesc = new DXGI_SAMPLE_DESC { Count = 1 },
+                Usage = D3D11_USAGE.D3D11_USAGE_DEFAULT,
+                BindFlags = D3D11_BIND_FLAG.D3D11_BIND_SHADER_RESOURCE,
+            };
+            ID3D11Texture2D* texture;
+            _device->CreateTexture2D(&desc, null, &texture);
+            _linesTexture = texture;
+            ID3D11ShaderResourceView* view;
+            _device->CreateShaderResourceView((ID3D11Resource*)texture, null, &view);
+            _lines = view;
+        }
+        FrameNoise.Lines(look, constants.Time, (uint)constants.Seed, height / constants.PixelScale, _lineData);
+        fixed (float* data = _lineData)
+            _context->UpdateSubresource((ID3D11Resource*)_linesTexture, 0, null, data, FrameNoise.LineStride * sizeof(float), 0);
     }
 
     private void CreatePipeline()
@@ -201,7 +309,7 @@ internal sealed unsafe class EffectRenderer : IDisposable
             _vertexShader = shader;
         }
         _main = CreatePixelShader(code.Main);
-        _bright = CreatePixelShader(code.Bright);
+        _quarter = CreatePixelShader(code.Quarter);
         _blur = CreatePixelShader(code.Blur);
         _differs = CreatePixelShader(code.Differs);
 
@@ -236,31 +344,40 @@ internal sealed unsafe class EffectRenderer : IDisposable
         CreateGrain();
     }
 
-    /// <summary>The film grain template (see <see cref="FilmGrain"/>), made once and read by the main pass.</summary>
+    /// <summary>
+    /// The film grain template (see <see cref="FilmGrain"/>) in half floats, and its 256-entry strength table; made
+    /// once and read by the main pass.
+    /// </summary>
     private void CreateGrain()
     {
-        float[] texels = FilmGrain.Template();
+        Half[] texels = [.. FilmGrain.Template().Select(v => (Half)v)];
+        fixed (Half* data = texels)
+            _grain = CreateTexture(FilmGrain.Width, FilmGrain.Height, DXGI_FORMAT.DXGI_FORMAT_R16G16B16A16_FLOAT, data, FilmGrain.Width * 8, out _grainTexture);
+        float[] table = FilmGrain.ScalingTable();
+        fixed (float* data = table)
+            _grainScale = CreateTexture(table.Length, 1, DXGI_FORMAT.DXGI_FORMAT_R32_FLOAT, data, table.Length * 4, out _grainScaleTexture);
+    }
+
+    private ID3D11ShaderResourceView* CreateTexture(int width, int height, DXGI_FORMAT format, void* data, int pitch, out ID3D11Texture2D* texture)
+    {
         var desc = new D3D11_TEXTURE2D_DESC
         {
-            Width = FilmGrain.Width,
-            Height = FilmGrain.Height,
+            Width = (uint)width,
+            Height = (uint)height,
             MipLevels = 1,
             ArraySize = 1,
-            Format = DXGI_FORMAT.DXGI_FORMAT_R32G32B32A32_FLOAT,
+            Format = format,
             SampleDesc = new DXGI_SAMPLE_DESC { Count = 1 },
             Usage = D3D11_USAGE.D3D11_USAGE_IMMUTABLE,
             BindFlags = D3D11_BIND_FLAG.D3D11_BIND_SHADER_RESOURCE,
         };
-        fixed (float* data = texels)
-        {
-            var initial = new D3D11_SUBRESOURCE_DATA { pSysMem = data, SysMemPitch = FilmGrain.Width * 16 };
-            ID3D11Texture2D* texture;
-            _device->CreateTexture2D(&desc, &initial, &texture);
-            _grainTexture = texture;
-        }
+        var initial = new D3D11_SUBRESOURCE_DATA { pSysMem = data, SysMemPitch = (uint)pitch };
+        ID3D11Texture2D* created;
+        _device->CreateTexture2D(&desc, &initial, &created);
+        texture = created;
         ID3D11ShaderResourceView* view;
-        _device->CreateShaderResourceView((ID3D11Resource*)_grainTexture, null, &view);
-        _grain = view;
+        _device->CreateShaderResourceView((ID3D11Resource*)created, null, &view);
+        return view;
     }
 
     private ID3D11PixelShader* CreatePixelShader(byte[] code)
@@ -273,8 +390,8 @@ internal sealed unsafe class EffectRenderer : IDisposable
         }
     }
 
-    /// <summary>A texture the bloom chain draws into and then reads from.</summary>
-    private sealed class RenderTexture : IDisposable
+    /// <summary>A texture the quarter-size passes draw into and then read from.</summary>
+    private sealed class RenderTexture(DXGI_FORMAT format) : IDisposable
     {
         private ID3D11Texture2D* _texture;
         private ID3D11RenderTargetView* _target;
@@ -297,8 +414,8 @@ internal sealed unsafe class EffectRenderer : IDisposable
                 Height = (uint)height,
                 MipLevels = 1,
                 ArraySize = 1,
-                // Half floats: an 8-bit glow bands visibly in dark gradients.
-                Format = DXGI_FORMAT.DXGI_FORMAT_R16G16B16A16_FLOAT,
+                // Half floats for the glow: an 8-bit glow bands visibly in dark gradients.
+                Format = format,
                 SampleDesc = new DXGI_SAMPLE_DESC { Count = 1 },
                 Usage = D3D11_USAGE.D3D11_USAGE_DEFAULT,
                 BindFlags = D3D11_BIND_FLAG.D3D11_BIND_RENDER_TARGET | D3D11_BIND_FLAG.D3D11_BIND_SHADER_RESOURCE,
@@ -348,11 +465,12 @@ internal unsafe struct ShaderConstants
     public float ShadowR, ShadowG, ShadowB, ShadowA;
     public float HighlightR, HighlightG, HighlightB, HighlightA;
     public float BloomThreshold, PixelScale, SourceTexelX, SourceTexelY;
-    public float BlurStepX, BlurStepY, Unused1, Unused2;
+    public float BlurStepX, BlurStepY, WeaveX, WeaveY;
     public float PaletteSize, PaletteSpread, PaletteByBrightness, Dim;
+    public float FlickerGain, ScratchX, HasLines, Unused;
     public fixed float Palette[Palettes.MaxColours * 4];
 
-    public static ShaderConstants From(Look look, FrameClock frame, int width, int height, bool hasSource)
+    public static ShaderConstants From(Look look, FrameClock frame, int width, int height, bool hasSource, double pixelScale)
     {
         (double sr, double sg, double sb) = LookColour.Tint(look.ShadowHue, look.ShadowTint);
         (double hr, double hg, double hb) = LookColour.Tint(look.HighlightHue, look.HighlightTint);
@@ -408,8 +526,23 @@ internal unsafe struct ShaderConstants
             HighlightB = (float)hb,
             HighlightA = 1,
             BloomThreshold = (float)look.BloomThreshold,
+            PixelScale = (float)pixelScale,
             Dim = (float)look.Dim,
+            FlickerGain = 1,
+            ScratchX = -1,
         };
+
+        // The same for every pixel this frame: worked out here, with the shader's hash.
+        uint seed = (uint)constants.Seed;
+        if (look.Weave > 0)
+        {
+            constants.WeaveX = (FrameNoise.Hash1((seed * 13u) + 1u) - 0.5f) * (float)look.Weave * 0.0025f;
+            constants.WeaveY = (FrameNoise.Hash1((seed * 29u) + 2u) - 0.5f) * (float)look.Weave * 0.004f;
+        }
+        if (look.Flicker > 0)
+            constants.FlickerGain = 1 - ((float)look.Flicker * 0.12f * FrameNoise.Hash1((seed * 747796405u) + 1u));
+        if (look.Dust > 0 && FrameNoise.Hash1((seed * 31u) + 7u) < look.Dust * 0.5)
+            constants.ScratchX = FrameNoise.Hash1((seed * 17u) + 3u) * (float)(width / pixelScale);
         if (Palettes.Get(look.Palette) is { } palette)
         {
             int count = Math.Min(palette.Colours.Count, Palettes.MaxColours);
@@ -439,7 +572,7 @@ internal sealed class ShaderCode
         byte[] source = LoadSource();
         Vertex = Compile(source, "VS", "vs_4_0");
         Main = Compile(source, "Main", "ps_4_0");
-        Bright = Compile(source, "Bright", "ps_4_0");
+        Quarter = Compile(source, "Quarter", "ps_4_0");
         Blur = Compile(source, "Blur", "ps_4_0");
         Differs = Compile(source, "Differs", "ps_4_0");
     }
@@ -450,7 +583,7 @@ internal sealed class ShaderCode
 
     public byte[] Main { get; }
 
-    public byte[] Bright { get; }
+    public byte[] Quarter { get; }
 
     public byte[] Blur { get; }
 
