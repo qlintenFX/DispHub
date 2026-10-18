@@ -35,6 +35,7 @@ public sealed partial class MainViewModel : ObservableObject
     private bool _isNarrow;
 
     public MainViewModel(
+        HomeViewModel home,
         ProfilesViewModel profiles,
         ScheduleViewModel schedule,
         AppsViewModel apps,
@@ -47,21 +48,26 @@ public sealed partial class MainViewModel : ObservableObject
         IUpgradeService upgrade)
     {
         _app = app;
+        Home = home;
         _license = license;
         _upgrade = upgrade;
         _effects = effects;
-        _allPages = [profiles, schedule, apps, effects, displays];
+        _allPages = [home, profiles, schedule, apps, effects, displays];
         Pages = [.. _allPages];
         FooterPages = [settings, about];
         settings.SetStartPages(_allPages);
-        SelectedPage = AllPages.FirstOrDefault(p => p.Key == app.Config.Ui.StartPage) ?? profiles;
+        SelectedPage = AllPages.FirstOrDefault(p => p.Key == app.Config.Ui.StartPage) ?? home;
+        home.NavigateRequested += (_, page) => SelectedPage = AllPages.FirstOrDefault(p => p.GetType() == page) ?? SelectedPage;
         _license.Changed += (_, _) => System.Windows.Application.Current?.Dispatcher.BeginInvoke(RefreshLicense);
         _app.ConfigChanged += (_, _) => RefreshLayout();
         _app.PowerChanged += (_, _) => IsOn = !_app.Config.IsOff;
+        _app.ConfigChanged += (_, _) => IsOn = !_app.Config.IsOff;
         IsOn = !_app.Config.IsOff;
         RefreshLicense();
         RefreshLayout();
     }
+
+    public HomeViewModel Home { get; }
 
     [ObservableProperty]
     public partial bool IsNavExpanded { get; set; } = true;
@@ -133,7 +139,7 @@ public sealed partial class MainViewModel : ObservableObject
         RefreshLayout();
     }
 
-    /// <summary>DispHub's master switch, at the top of the menu on every page.</summary>
+    /// <summary>DispHub is on: the power button in the title bar, on every page, shows it.</summary>
     [ObservableProperty] public partial bool IsOn { get; set; }
 
     [RelayCommand]

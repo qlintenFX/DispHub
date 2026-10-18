@@ -17,6 +17,9 @@ public interface IUpgradeService
     void ShowUpgrade(string feature);
 
     Task PurchaseAsync();
+
+    /// <summary>Shows the Microsoft Store's rating dialog.</summary>
+    Task RateAsync();
 }
 
 public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mainWindow) : IUpgradeService
@@ -53,6 +56,12 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
             };
             await box.ShowDialogAsync();
         }
+    }
+
+    public async Task RateAsync()
+    {
+        if (license.CanPurchase)
+            await license.RequestReviewAsync(new WindowInteropHelper(ShowMainWindow()).Handle);
     }
 
     private MainWindow ShowMainWindow()

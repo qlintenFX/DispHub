@@ -176,6 +176,7 @@ public sealed class AppController : IDisposable
     public void ToggleOff(ChangeSource source)
     {
         Config.IsOff = !Config.IsOff;
+        _logger.LogInformation("Turned {State} from the {Source}", Config.IsOff ? "off" : "on", source);
         ScheduleSave();
         Evaluate(source);
         PowerChanged?.Invoke(this, EventArgs.Empty);

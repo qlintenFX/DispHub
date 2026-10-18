@@ -24,12 +24,30 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         InitializeComponent();
         SourceInitialized += (_, _) => _theme.Attach(this);
         SizeChanged += (_, e) => viewModel.SetNarrow(e.NewSize.Width < NarrowWidth);
+        viewModel.Home.TourRequested += (_, _) => StartTour();
         Activated += async (_, _) => await review.OnWindowActivatedAsync(this);
         viewModel.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(MainViewModel.SelectedPage))
                 PageScroller.ResetToTop();
         };
+    }
+
+    /// <summary>The guided tour of this window, on the Home page.</summary>
+    public void StartTour()
+    {
+        ShowAndActivate();
+        var viewModel = (MainViewModel)DataContext;
+        viewModel.Navigate<HomeViewModel>();
+        // After the Home page is laid out.
+        Dispatcher.BeginInvoke(() => TourOverlay.Start(
+        [
+            new("power", Loc.Get("Tour_PowerTitle"), Loc.Get("Tour_PowerText")),
+            new("now", Loc.Get("Tour_NowTitle"), Loc.Get("Tour_NowText")),
+            new("switch", Loc.Get("Tour_SwitchTitle"), Loc.Get("Tour_SwitchText")),
+            new("pages", Loc.Get("Tour_PagesTitle"), Loc.Get("Tour_PagesText")),
+            new("settings", Loc.Get("Tour_SettingsTitle"), Loc.Get("Tour_SettingsText")),
+        ], this), System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
     public void ShowAndActivate()

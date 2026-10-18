@@ -1739,9 +1739,6 @@ It also supports development of DispHub.</value>
   <data name="Power_Name" xml:space="preserve">
     <value>DispHub on or off</value>
   </data>
-  <data name="Power_On" xml:space="preserve">
-    <value>DispHub is on</value>
-  </data>
   <data name="Power_Off" xml:space="preserve">
     <value>DispHub is off</value>
   </data>
@@ -1834,5 +1831,149 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Effects_GamesHide" xml:space="preserve">
     <value>Hide effects</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Home_Now" xml:space="preserve">
+    <value>On your screen now</value>
+  </data>
+  <data name="Home_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Home_Original" xml:space="preserve">
+    <value>Original colours</value>
+  </data>
+  <data name="Home_Effect" xml:space="preserve">
+    <value>Effect: {0}</value>
+  </data>
+  <data name="Home_ReasonOff" xml:space="preserve">
+    <value>DispHub is off: your displays show their original colours and no effects.</value>
+  </data>
+  <data name="Home_ReasonProfilesOff" xml:space="preserve">
+    <value>Profiles are off, so your displays show their original colours.</value>
+  </data>
+  <data name="Home_ReasonPicked" xml:space="preserve">
+    <value>You picked it.</value>
+  </data>
+  <data name="Home_ReasonSchedule" xml:space="preserve">
+    <value>From your schedule.</value>
+  </data>
+  <data name="Home_ReasonScheduleUntil" xml:space="preserve">
+    <value>From your schedule, until {0}.</value>
+  </data>
+  <data name="Home_ReasonApp" xml:space="preserve">
+    <value>Because {0} is in front.</value>
+  </data>
+  <data name="Home_ReasonAppUnknown" xml:space="preserve">
+    <value>For the app in front.</value>
+  </data>
+  <data name="Home_Switch" xml:space="preserve">
+    <value>Switch profile</value>
+  </data>
+  <data name="Home_ManageProfiles" xml:space="preserve">
+    <value>Edit profiles</value>
+  </data>
+  <data name="Home_NoHotkey" xml:space="preserve">
+    <value>No hotkey</value>
+  </data>
+  <data name="Home_Features" xml:space="preserve">
+    <value>At a glance</value>
+  </data>
+  <data name="Home_Profiles" xml:space="preserve">
+    <value>{0} profiles</value>
+  </data>
+  <data name="Home_OneProfile" xml:space="preserve">
+    <value>1 profile</value>
+  </data>
+  <data name="Home_ScheduleNext" xml:space="preserve">
+    <value>On: {0} at {1}</value>
+  </data>
+  <data name="Home_NoApps" xml:space="preserve">
+    <value>No apps yet</value>
+  </data>
+  <data name="Home_Apps" xml:space="preserve">
+    <value>{0} apps</value>
+  </data>
+  <data name="Home_OneApp" xml:space="preserve">
+    <value>1 app</value>
+  </data>
+  <data name="Home_EffectOn" xml:space="preserve">
+    <value>On: {0}</value>
+  </data>
+  <data name="Home_Displays" xml:space="preserve">
+    <value>{0} displays</value>
+  </data>
+  <data name="Home_OneDisplay" xml:space="preserve">
+    <value>1 display</value>
+  </data>
+  <data name="Home_SettingsStatus" xml:space="preserve">
+    <value>Hotkeys, start-up and appearance</value>
+  </data>
+  <data name="Home_WhatsNew" xml:space="preserve">
+    <value>What's new</value>
+  </data>
+  <data name="Home_Rate" xml:space="preserve">
+    <value>Rate DispHub</value>
+  </data>
+  <data name="Home_Report" xml:space="preserve">
+    <value>Report a problem</value>
+  </data>
+  <data name="Home_GitHub" xml:space="preserve">
+    <value>Source code</value>
+  </data>
+  <data name="Home_Version" xml:space="preserve">
+    <value>DispHub {0}</value>
+  </data>
+  <data name="Home_Tour" xml:space="preserve">
+    <value>Show me around</value>
+  </data>
+  <data name="Tour_Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="Tour_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Tour_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Tour_Done" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="Tour_Count" xml:space="preserve">
+    <value>{0} of {1}</value>
+  </data>
+  <data name="Tour_PowerTitle" xml:space="preserve">
+    <value>The power button</value>
+  </data>
+  <data name="Tour_PowerText" xml:space="preserve">
+    <value>Turns DispHub off and on, from any page. Off shows your displays' own colours and stops effects; on carries on where you were.</value>
+  </data>
+  <data name="Tour_NowTitle" xml:space="preserve">
+    <value>What's on your screen</value>
+  </data>
+  <data name="Tour_NowText" xml:space="preserve">
+    <value>The profile on now, and why: you picked it, your schedule did, or the app in front has its own.</value>
+  </data>
+  <data name="Tour_SwitchTitle" xml:space="preserve">
+    <value>Switch in one click</value>
+  </data>
+  <data name="Tour_SwitchText" xml:space="preserve">
+    <value>Pick a profile here, from the icon next to the clock, or with its hotkey, which works in games too.</value>
+  </data>
+  <data name="Tour_PagesTitle" xml:space="preserve">
+    <value>Set it up your way</value>
+  </data>
+  <data name="Tour_PagesText" xml:space="preserve">
+    <value>Make and edit profiles, switch them by time of day or per app, add screen effects, and set each display.</value>
+  </data>
+  <data name="Tour_SettingsTitle" xml:space="preserve">
+    <value>Hotkeys and more</value>
+  </data>
+  <data name="Tour_SettingsText" xml:space="preserve">
+    <value>Hotkeys, starting with Windows, the tray icon and how DispHub looks. Take this tour again from Home.</value>
   </data>
 </root>

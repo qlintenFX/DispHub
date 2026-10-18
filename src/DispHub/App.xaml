@@ -19,6 +19,9 @@
       <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ctl:SmoothScrollViewer" />
       <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="ctl:HotkeyBox" />
 
+      <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+        <views:HomeView />
+      </DataTemplate>
       <DataTemplate DataType="{x:Type vm:ProfilesViewModel}">
         <views:ProfilesView />
       </DataTemplate>

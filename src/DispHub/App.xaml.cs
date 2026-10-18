@@ -178,6 +178,7 @@ public partial class App : Application
         services.AddSingleton<ReviewPrompt>();
         services.AddSingleton<IUpgradeService>(sp => new UpgradeService(
             sp.GetRequiredService<ILicenseService>(), () => sp.GetRequiredService<MainWindow>()));
+        services.AddSingleton<HomeViewModel>();
         services.AddSingleton<ProfilesViewModel>();
         services.AddSingleton<ScheduleViewModel>();
         services.AddSingleton<AppsViewModel>();

@@ -53,6 +53,32 @@
       <ui:TitleBar.Icon>
         <ui:ImageIcon RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/DispHub-64.png" />
       </ui:TitleBar.Icon>
+      <!-- DispHub's power button, on every page: off is the original colours and no effects. -->
+      <ui:TitleBar.TrailingContent>
+        <ui:Button
+          Width="40"
+          Height="32"
+          Margin="0,0,12,0"
+          Padding="0"
+          VerticalAlignment="Center"
+          ctl:Tour.Stop="power"
+          AutomationProperties.Name="{l:Tr Power_Name}"
+          Command="{Binding TogglePowerCommand}"
+          Icon="{ui:SymbolIcon Power24}">
+          <ui:Button.Style>
+            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
+              <Setter Property="Appearance" Value="Primary" />
+              <Setter Property="ToolTip" Value="{l:Tr Power_TurnOff}" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsOn}" Value="False">
+                  <Setter Property="Appearance" Value="Secondary" />
+                  <Setter Property="ToolTip" Value="{l:Tr Power_TurnOn}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ui:Button.Style>
+        </ui:Button>
+      </ui:TitleBar.TrailingContent>
     </ui:TitleBar>
 
     <Grid Grid.Row="1">
@@ -65,54 +91,10 @@
       </Grid.ColumnDefinitions>
 
       <DockPanel Margin="8,4,8,10">
-        <!-- DispHub's master switch, on every page: off is the original colours and no effects. -->
-        <ui:Button
-          Height="40"
-          Margin="0,0,0,8"
-          Padding="12,0"
-          HorizontalAlignment="Stretch"
-          HorizontalContentAlignment="Left"
-          Command="{Binding TogglePowerCommand}"
-          DockPanel.Dock="Top"
-          AutomationProperties.Name="{l:Tr Power_Name}">
-          <ui:Button.Style>
-            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
-              <Setter Property="Appearance" Value="Primary" />
-              <Setter Property="ToolTip" Value="{l:Tr Power_TurnOff}" />
-              <Style.Triggers>
-                <DataTrigger Binding="{Binding IsOn}" Value="False">
-                  <Setter Property="Appearance" Value="Secondary" />
-                  <Setter Property="ToolTip" Value="{l:Tr Power_TurnOn}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding IsNavExpanded}" Value="False">
-                  <Setter Property="HorizontalContentAlignment" Value="Center" />
-                  <Setter Property="Padding" Value="0" />
-                </DataTrigger>
-              </Style.Triggers>
-            </Style>
-          </ui:Button.Style>
-          <StackPanel Orientation="Horizontal">
-            <ui:SymbolIcon FontSize="18" Symbol="Power24" />
-            <TextBlock
-              Margin="12,0,0,0"
-              VerticalAlignment="Center"
-              Visibility="{Binding IsNavExpanded, Converter={StaticResource BoolToVisibility}}">
-              <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                  <Setter Property="Text" Value="{l:Tr Power_On}" />
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsOn}" Value="False">
-                      <Setter Property="Text" Value="{l:Tr Power_Off}" />
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </TextBlock.Style>
-            </TextBlock>
-          </StackPanel>
-        </ui:Button>
         <ListBox
           Background="Transparent"
           BorderThickness="0"
+          ctl:Tour.Stop="settings"
           DockPanel.Dock="Bottom"
           ItemContainerStyle="{StaticResource NavItem}"
           ItemTemplate="{StaticResource NavEntry}"
@@ -143,8 +125,10 @@
         </Border>
 
         <ListBox
+          VerticalAlignment="Top"
           Background="Transparent"
           BorderThickness="0"
+          ctl:Tour.Stop="pages"
           ItemContainerStyle="{StaticResource NavItem}"
           ItemTemplate="{StaticResource NavEntry}"
           ItemsSource="{Binding Pages}"
@@ -166,5 +150,7 @@
         </ctl:SmoothScrollViewer>
       </Border>
     </Grid>
+
+    <ctl:TourOverlay x:Name="TourOverlay" Grid.RowSpan="2" />
   </Grid>
 </ui:FluentWindow>

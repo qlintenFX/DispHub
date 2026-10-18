@@ -108,7 +108,7 @@
               <TextBlock
                 FontSize="12"
                 Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                Text="{Binding Hotkey, TargetNullValue=No hotkey}" />
+                Text="{Binding Hotkey, TargetNullValue={l:Tr Home_NoHotkey}}" />
               <ui:SymbolIcon
                 Margin="6,0,0,0"
                 FontSize="13"
