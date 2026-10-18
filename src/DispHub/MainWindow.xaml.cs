@@ -14,6 +14,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     private readonly ThemeService _theme;
     private bool _rendered;
     private bool _tourPending;
+    private IReadOnlyList<SearchResult>? _searchIndex;
 
     /// <summary>Below this width the navigation shows icons only.</summary>
     private const double NarrowWidth = 960;
@@ -64,6 +65,62 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         new("pages", Loc.Get("Tour_PagesTitle"), Loc.Get("Tour_PagesText")),
         new("settings", Loc.Get("Tour_SettingsTitle"), Loc.Get("Tour_SettingsText")),
     ], this);
+
+    private void OnSearchFocused(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e) =>
+        _searchIndex ??= SettingsSearch.Index(((MainViewModel)DataContext).AllPages);
+
+    private void OnSearchTextChanged(Wpf.Ui.Controls.AutoSuggestBox sender, Wpf.Ui.Controls.AutoSuggestBoxTextChangedEventArgs args)
+    {
+        if (args.Reason != Wpf.Ui.Controls.AutoSuggestionBoxTextChangeReason.UserInput)
+            return;
+        _searchIndex ??= SettingsSearch.Index(((MainViewModel)DataContext).AllPages);
+        IReadOnlyList<SearchResult> results = SettingsSearch.Find(_searchIndex, sender.Text);
+        sender.ItemsSource = results;
+        sender.IsSuggestionListOpen = results.Count > 0;
+    }
+
+    private void OnSearchSubmitted(Wpf.Ui.Controls.AutoSuggestBox sender, Wpf.Ui.Controls.AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        if (_searchIndex is not null && SettingsSearch.Find(_searchIndex, args.QueryText) is [var best, ..])
+            Open(best);
+    }
+
+    private void OnSearchChosen(Wpf.Ui.Controls.AutoSuggestBox sender, Wpf.Ui.Controls.AutoSuggestBoxSuggestionChosenEventArgs args)
+    {
+        if (args.SelectedItem is SearchResult result)
+            Open(result);
+    }
+
+    /// <summary>Shows the result's page, and scrolls to its setting and lights it up.</summary>
+    private void Open(SearchResult result)
+    {
+        SearchBox.IsSuggestionListOpen = false;
+        SearchBox.Text = "";
+        ((MainViewModel)DataContext).SelectedPage = result.Page;
+        if (result.Setting is not { } setting)
+            return;
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (FindCard(PageScroller, setting) is { } card)
+            {
+                card.BringIntoView();
+                TourOverlay.Highlight(card);
+            }
+        }, System.Windows.Threading.DispatcherPriority.ContextIdle);
+    }
+
+    private static Controls.SettingsCard? FindCard(DependencyObject parent, string header)
+    {
+        for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            DependencyObject child = System.Windows.Media.VisualTreeHelper.GetChild(parent, i);
+            if (child is Controls.SettingsCard { IsVisible: true } card && card.Header == header)
+                return card;
+            if (FindCard(child, header) is { } found)
+                return found;
+        }
+        return null;
+    }
 
     public void ShowAndActivate()
     {

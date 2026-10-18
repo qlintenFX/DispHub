@@ -1997,4 +1997,10 @@ It also supports development of DispHub.</value>
   <data name="Onboarding_Tour" xml:space="preserve">
     <value>Show me around</value>
   </data>
+  <data name="Search_Placeholder" xml:space="preserve">
+    <value>Search settings</value>
+  </data>
+  <data name="Search_Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
 </root>

@@ -6,6 +6,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:l="clr-namespace:DispHub.Localization"
+  xmlns:services="clr-namespace:DispHub.Services"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   Title="DispHub"
@@ -49,10 +50,46 @@
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <ui:TitleBar Title="DispHub" Grid.Row="0">
+    <ui:TitleBar
+      Title="DispHub"
+      Grid.Row="0"
+      HorizontalContentAlignment="Center"
+      VerticalContentAlignment="Center">
       <ui:TitleBar.Icon>
         <ui:ImageIcon RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/DispHub-64.png" />
       </ui:TitleBar.Icon>
+      <!-- Search every page and setting, like Windows Settings. -->
+      <ui:TitleBar.CenterContent>
+        <ui:AutoSuggestBox
+          x:Name="SearchBox"
+          Width="340"
+          VerticalAlignment="Center"
+          ClearButtonEnabled="True"
+          GotKeyboardFocus="OnSearchFocused"
+          PlaceholderText="{l:Tr Search_Placeholder}"
+          QuerySubmitted="OnSearchSubmitted"
+          SuggestionChosen="OnSearchChosen"
+          TextChanged="OnSearchTextChanged"
+          UpdateTextOnSelect="False">
+          <ui:AutoSuggestBox.Icon>
+            <ui:IconSourceElement>
+              <ui:SymbolIconSource Symbol="Search24" />
+            </ui:IconSourceElement>
+          </ui:AutoSuggestBox.Icon>
+          <ui:AutoSuggestBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type services:SearchResult}">
+              <StackPanel Margin="0,2">
+                <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                  FontSize="12"
+                  Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                  Text="{Binding Where}"
+                  TextTrimming="CharacterEllipsis" />
+              </StackPanel>
+            </DataTemplate>
+          </ui:AutoSuggestBox.ItemTemplate>
+        </ui:AutoSuggestBox>
+      </ui:TitleBar.CenterContent>
       <!-- DispHub's power button, on every page: off is the original colours and no effects. -->
       <ui:TitleBar.TrailingContent>
         <ui:Button

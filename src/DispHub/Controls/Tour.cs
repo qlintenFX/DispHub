@@ -64,6 +64,7 @@ public sealed class TourOverlay : Canvas
     private DependencyObject? _root;
     private FrameworkElement? _target;
     private int _index;
+    private bool _highlightOnly;
     private Rect _from;
     private Rect _shown;
     private DateTime _movedAt;
@@ -146,6 +147,11 @@ public sealed class TourOverlay : Canvas
         _steps = steps;
         _root = root;
         _target = null;
+        _highlightOnly = false;
+        _dim.Visibility = Visibility.Visible;
+        _card.Visibility = Visibility.Visible;
+        _ring.BeginAnimation(OpacityProperty, null);
+        _ring.Opacity = 1;
         _shown = Rect.Empty;
         _index = 0;
         if (TryFindResource("SystemAccentColorSecondary") is Color accent)
@@ -155,9 +161,37 @@ public sealed class TourOverlay : Canvas
         Show(0);
     }
 
+    /// <summary>Lights up <paramref name="element"/> for a moment, without dimming anything (a search result).</summary>
+    public void Highlight(FrameworkElement element)
+    {
+        ArgumentNullException.ThrowIfNull(element);
+        if (IsRunning && !_highlightOnly)
+            return;
+        _highlightOnly = true;
+        _target = element;
+        _shown = Rect.Empty;
+        _dim.Visibility = Visibility.Collapsed;
+        _card.Visibility = Visibility.Collapsed;
+        Visibility = Visibility.Visible;
+        if (TryFindResource("SystemAccentColorSecondary") is Color accent)
+            ((DropShadowEffect)_ring.Effect).Color = accent;
+        var fade = new System.Windows.Media.Animation.DoubleAnimationUsingKeyFrames();
+        fade.KeyFrames.Add(new System.Windows.Media.Animation.LinearDoubleKeyFrame(1, TimeSpan.Zero));
+        fade.KeyFrames.Add(new System.Windows.Media.Animation.LinearDoubleKeyFrame(1, TimeSpan.FromSeconds(1.4)));
+        fade.KeyFrames.Add(new System.Windows.Media.Animation.LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(2)));
+        fade.Completed += (_, _) =>
+        {
+            if (!_highlightOnly)
+                return;
+            Visibility = Visibility.Collapsed;
+            _target = null;
+        };
+        _ring.BeginAnimation(OpacityProperty, fade);
+    }
+
     public void Finish()
     {
-        if (!IsRunning)
+        if (!IsRunning || _highlightOnly)
             return;
         Visibility = Visibility.Collapsed;
         _target = null;
@@ -168,6 +202,8 @@ public sealed class TourOverlay : Canvas
     {
         ArgumentNullException.ThrowIfNull(e);
         base.OnKeyDown(e);
+        if (_highlightOnly)
+            return;
         switch (e.Key)
         {
             case Key.Escape:
@@ -251,7 +287,8 @@ public sealed class TourOverlay : Canvas
         SetTop(_ring, _shown.Y);
         _ring.Width = _shown.Width;
         _ring.Height = _shown.Height;
-        PlaceCard(goal);
+        if (!_highlightOnly)
+            PlaceCard(goal);
     }
 
     /// <summary>Puts the card below the part, or above, or beside it, whichever fits; always inside the window.</summary>
