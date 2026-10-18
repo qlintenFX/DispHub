@@ -234,7 +234,7 @@ internal sealed unsafe class EffectRenderer : IDisposable
     /// <summary>Picks this grain frame's block offsets (see <see cref="FrameNoise.GrainBlocks"/>) and uploads them.</summary>
     private void UpdateGrainBlocks(ref ShaderConstants constants, int width, int height)
     {
-        float blockSize = 32 * constants.PixelScale * constants.GrainSize;
+        float blockSize = 32 * constants.PixelScale * Math.Max(constants.GrainSize, 0.5f);
         int columns = (int)(width / blockSize) + 1, rows = (int)(height / blockSize) + 1;
         if (_blocksFor == (columns, rows, (uint)constants.Seed))
             return;
