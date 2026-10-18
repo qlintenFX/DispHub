@@ -10,65 +10,75 @@ namespace DispHub.ViewModels;
 
 /// <summary>
 /// The first-run walkthrough: what DispHub does, where its icon lives and what a left or right click on it does,
-/// the hotkeys, and the power button. Shown once; the choices in it are ordinary settings.
+/// the hotkeys, screen effects, and the power button. Shown once; the choices in it are ordinary settings. It ends
+/// with the offer of a tour of the main window.
 /// </summary>
 public sealed partial class OnboardingViewModel : ObservableObject
 {
-    public const int StepCount = 4;
+    public const int StepCount = 5;
 
     private readonly AppController _app;
     private readonly IAutostart _autostart;
     private bool _loading = true;
+    private bool _finished;
 
     public OnboardingViewModel(AppController app, IAutostart autostart)
     {
         _app = app;
         _autostart = autostart;
         TrayLeftClick = app.Config.Ui.TrayLeftClick;
+        ShowEffects = app.Config.Ui.ShowEffects;
         foreach (Profile profile in app.Config.Profiles.Where(p => p.Hotkey is not null).Take(4))
             Hotkeys.Add(new HotkeyLine(profile.Name, profile.Hotkey!));
         if (app.Config.Hotkeys.TogglePause is { } onOff)
             Hotkeys.Add(new HotkeyLine(Loc.Get("Settings_Pause"), onOff));
-        for (int i = 0; i < StepCount; i++)
-            Dots.Add(new StepDot(i == 0));
         _loading = false;
         _ = LoadAutostartAsync();
     }
 
-    /// <summary>The walkthrough is done (finished or closed).</summary>
-    public event EventHandler? Finished;
+    /// <summary>The walkthrough is done (finished or closed); true when the tour was asked for.</summary>
+    public event EventHandler<bool>? Finished;
 
     public IReadOnlyList<TrayClickAction> TrayActions { get; } = [TrayClickAction.QuickPanel, TrayClickAction.OpenWindow, TrayClickAction.ShowProfileMenu];
 
     public ObservableCollection<HotkeyLine> Hotkeys { get; } = [];
 
-    public ObservableCollection<StepDot> Dots { get; } = [];
-
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsFirst), nameof(IsLast), nameof(IsWelcome), nameof(IsTray), nameof(IsHotkeys), nameof(IsPower))]
+    [NotifyPropertyChangedFor(nameof(IsFirst), nameof(IsLast), nameof(IsWelcome), nameof(IsTray), nameof(IsHotkeys), nameof(IsEffects), nameof(IsReady), nameof(StepText))]
     public partial int Step { get; set; }
 
     [ObservableProperty] public partial TrayClickAction TrayLeftClick { get; set; }
     [ObservableProperty] public partial bool LaunchAtLogin { get; set; }
+
+    /// <summary>Effects in the menu (the Settings switch of the same name).</summary>
+    [ObservableProperty] public partial bool ShowEffects { get; set; }
 
     public bool IsFirst => Step == 0;
     public bool IsLast => Step == StepCount - 1;
     public bool IsWelcome => Step == 0;
     public bool IsTray => Step == 1;
     public bool IsHotkeys => Step == 2;
-    public bool IsPower => Step == 3;
+    public bool IsEffects => Step == 3;
+    public bool IsReady => Step == 4;
 
-    partial void OnStepChanged(int value)
-    {
-        for (int i = 0; i < Dots.Count; i++)
-            Dots[i].IsCurrent = i == value;
-    }
+    public string StepText => Loc.Format("Onboarding_Step", Step + 1, StepCount);
+
+    /// <summary>What switching effects on in the menu means here: Pro, or ready to use.</summary>
+    public string EffectsNote => Loc.Get(_app.Features.ScreenEffects ? "Onboarding_EffectsReady" : "Onboarding_EffectsPro");
 
     partial void OnTrayLeftClickChanged(TrayClickAction value)
     {
         if (_loading)
             return;
         _app.Config.Ui.TrayLeftClick = value;
+        _app.SettingsChanged();
+    }
+
+    partial void OnShowEffectsChanged(bool value)
+    {
+        if (_loading)
+            return;
+        _app.Config.Ui.ShowEffects = value;
         _app.SettingsChanged();
     }
 
@@ -86,11 +96,12 @@ public sealed partial class OnboardingViewModel : ObservableObject
         }
     }
 
+    /// <summary>The next step; on the last one, the tour of the main window.</summary>
     [RelayCommand]
     private void Next()
     {
         if (IsLast)
-            Finish();
+            Complete(tour: true);
         else
             Step++;
     }
@@ -102,15 +113,19 @@ public sealed partial class OnboardingViewModel : ObservableObject
             Step--;
     }
 
-    /// <summary>Marks the walkthrough as seen, whether it was finished or closed.</summary>
+    /// <summary>Marks the walkthrough as seen, without the tour.</summary>
     [RelayCommand]
-    public void Finish()
+    private void Finish() => Complete(tour: false);
+
+    /// <summary>Marks the walkthrough as seen, whether it was finished or closed.</summary>
+    public void Complete(bool tour)
     {
-        if (_app.Config.Ui.OnboardingDone)
+        if (_finished)
             return;
+        _finished = true;
         _app.Config.Ui.OnboardingDone = true;
         _app.SettingsChanged();
-        Finished?.Invoke(this, EventArgs.Empty);
+        Finished?.Invoke(this, tour);
     }
 
     private async Task LoadAutostartAsync()
@@ -132,8 +147,3 @@ public sealed partial class OnboardingViewModel : ObservableObject
 }
 
 public sealed record HotkeyLine(string Name, string Keys);
-
-public sealed partial class StepDot(bool isCurrent) : ObservableObject
-{
-    [ObservableProperty] public partial bool IsCurrent { get; set; } = isCurrent;
-}

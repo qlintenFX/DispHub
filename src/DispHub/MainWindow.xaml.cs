@@ -12,6 +12,8 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
 {
     private readonly AppController _app;
     private readonly ThemeService _theme;
+    private bool _rendered;
+    private bool _tourPending;
 
     /// <summary>Below this width the navigation shows icons only.</summary>
     private const double NarrowWidth = 960;
@@ -23,6 +25,15 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         DataContext = viewModel;
         InitializeComponent();
         SourceInitialized += (_, _) => _theme.Attach(this);
+        ContentRendered += (_, _) =>
+        {
+            _rendered = true;
+            if (_tourPending)
+            {
+                _tourPending = false;
+                Dispatcher.BeginInvoke(BeginTour, System.Windows.Threading.DispatcherPriority.ContextIdle);
+            }
+        };
         SizeChanged += (_, e) => viewModel.SetNarrow(e.NewSize.Width < NarrowWidth);
         viewModel.Home.TourRequested += (_, _) => StartTour();
         Activated += async (_, _) => await review.OnWindowActivatedAsync(this);
@@ -37,18 +48,22 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     public void StartTour()
     {
         ShowAndActivate();
-        var viewModel = (MainViewModel)DataContext;
-        viewModel.Navigate<HomeViewModel>();
-        // After the Home page is laid out.
-        Dispatcher.BeginInvoke(() => TourOverlay.Start(
-        [
-            new("power", Loc.Get("Tour_PowerTitle"), Loc.Get("Tour_PowerText")),
-            new("now", Loc.Get("Tour_NowTitle"), Loc.Get("Tour_NowText")),
-            new("switch", Loc.Get("Tour_SwitchTitle"), Loc.Get("Tour_SwitchText")),
-            new("pages", Loc.Get("Tour_PagesTitle"), Loc.Get("Tour_PagesText")),
-            new("settings", Loc.Get("Tour_SettingsTitle"), Loc.Get("Tour_SettingsText")),
-        ], this), System.Windows.Threading.DispatcherPriority.Loaded);
+        ((MainViewModel)DataContext).Navigate<HomeViewModel>();
+        // Once the window and the Home page are on screen: on a first showing that's after the first render.
+        if (_rendered)
+            Dispatcher.BeginInvoke(BeginTour, System.Windows.Threading.DispatcherPriority.ContextIdle);
+        else
+            _tourPending = true;
     }
+
+    private void BeginTour() => TourOverlay.Start(
+    [
+        new("power", Loc.Get("Tour_PowerTitle"), Loc.Get("Tour_PowerText")),
+        new("now", Loc.Get("Tour_NowTitle"), Loc.Get("Tour_NowText")),
+        new("switch", Loc.Get("Tour_SwitchTitle"), Loc.Get("Tour_SwitchText")),
+        new("pages", Loc.Get("Tour_PagesTitle"), Loc.Get("Tour_PagesText")),
+        new("settings", Loc.Get("Tour_SettingsTitle"), Loc.Get("Tour_SettingsText")),
+    ], this);
 
     public void ShowAndActivate()
     {

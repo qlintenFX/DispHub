@@ -1770,37 +1770,34 @@ It also supports development of DispHub.</value>
     <value>Welcome to DispHub</value>
   </data>
   <data name="Onboarding_WelcomeText" xml:space="preserve">
-    <value>DispHub keeps display profiles: brighter shadows and richer colours for games, warmer and dimmer for the evening, or your screen's own colours. Switch with one click or a hotkey, or let DispHub switch for you per app or by the time of day. Here's how to find everything.</value>
+    <value>Profiles for your displays: brighter shadows and richer colours for games, warmer and dimmer for the evening, or your screen's own colours. Switch with one click or a hotkey, or let DispHub switch for you by app or time of day.</value>
   </data>
   <data name="Onboarding_TrayTitle" xml:space="preserve">
     <value>DispHub lives next to the clock</value>
   </data>
   <data name="Onboarding_TrayText" xml:space="preserve">
-    <value>Its icon sits in the notification area at the right of the taskbar. If you don't see it, it's under the ^ arrow; you can drag it out to keep it in view.</value>
+    <value>Its icon sits in the notification area at the right of the taskbar. If you don't see it, it's under the ^ arrow; drag it out to keep it in view.</value>
   </data>
   <data name="Onboarding_LeftClick" xml:space="preserve">
     <value>Left-click</value>
-  </data>
-  <data name="Onboarding_LeftClickHint" xml:space="preserve">
-    <value>Choose what it opens. You can change this later in Settings.</value>
   </data>
   <data name="Onboarding_RightClick" xml:space="preserve">
     <value>Right-click</value>
   </data>
   <data name="Onboarding_RightClickHint" xml:space="preserve">
-    <value>The menu: your profiles, turn DispHub off or on, open the window and exit.</value>
+    <value>Your profiles, the power button, and DispHub's window.</value>
   </data>
   <data name="Onboarding_HotkeysTitle" xml:space="preserve">
     <value>Switch from anywhere</value>
   </data>
   <data name="Onboarding_HotkeysText" xml:space="preserve">
-    <value>These keyboard shortcuts work in any app, even in full-screen games. A small message shows which profile is on. Change them in Settings.</value>
+    <value>These shortcuts work in any app, even in full-screen games, and a small message shows which profile is on. Change them in Settings.</value>
   </data>
   <data name="Onboarding_PowerTitle" xml:space="preserve">
     <value>One button turns it all off</value>
   </data>
   <data name="Onboarding_PowerText" xml:space="preserve">
-    <value>The power button at the top of DispHub's menu, and in the quick panel, turns DispHub off: your displays show their original colours and screen effects stop. Press it again to carry on where you were.</value>
+    <value>The power button at the top of DispHub, and in the quick panel, turns DispHub off: your displays show their own colours and effects stop. Press it again to carry on where you were.</value>
   </data>
   <data name="Onboarding_Back" xml:space="preserve">
     <value>Back</value>
@@ -1809,7 +1806,7 @@ It also supports development of DispHub.</value>
     <value>Next</value>
   </data>
   <data name="Onboarding_Done" xml:space="preserve">
-    <value>Start using DispHub</value>
+    <value>Not now</value>
   </data>
   <data name="Effects_OffText" xml:space="preserve">
     <value>Screen effects come back when DispHub is turned on with the power button.</value>
@@ -1975,5 +1972,29 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Tour_SettingsText" xml:space="preserve">
     <value>Hotkeys, starting with Windows, the tray icon and how DispHub looks. Take this tour again from Home.</value>
+  </data>
+  <data name="Onboarding_EffectsTitle" xml:space="preserve">
+    <value>Screen effects</value>
+  </data>
+  <data name="Onboarding_EffectsText" xml:space="preserve">
+    <value>Film grain, VHS, CRT scanlines, colour-blind help and more, over everything on screen. In full-screen games they stay out of the way, so the game keeps its frame rate.</value>
+  </data>
+  <data name="Onboarding_ShowEffects" xml:space="preserve">
+    <value>Show Effects in the menu</value>
+  </data>
+  <data name="Onboarding_EffectsReady" xml:space="preserve">
+    <value>Then turn effects on and pick a look on the Effects page.</value>
+  </data>
+  <data name="Onboarding_EffectsPro" xml:space="preserve">
+    <value>Effects are part of DispHub Pro. Try every look on the Effects page first.</value>
+  </data>
+  <data name="Onboarding_Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Onboarding_Step" xml:space="preserve">
+    <value>{0} of {1}</value>
+  </data>
+  <data name="Onboarding_Tour" xml:space="preserve">
+    <value>Show me around</value>
   </data>
 </root>

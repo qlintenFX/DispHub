@@ -219,7 +219,7 @@ public sealed class AppControllerTests : IDisposable
         Assert.Equal("Competitive", saved.Profiles[1].Name);
     }
 
-    private sealed class FakeColors : IColorApplier
+    internal sealed class FakeColors : IColorApplier
     {
         public MonitorTargets? Last { get; private set; }
         public bool Restored { get; private set; }
@@ -260,7 +260,7 @@ public sealed class AppControllerTests : IDisposable
         }
     }
 
-    private sealed class FakeHotkeys : IHotkeyRegistrar
+    internal sealed class FakeHotkeys : IHotkeyRegistrar
     {
         public Dictionary<string, HotkeyGesture> Registered { get; } = [];
         public HashSet<string> Taken { get; } = [];
@@ -292,7 +292,7 @@ public sealed class AppControllerTests : IDisposable
         public void Press(string action) => Pressed?.Invoke(this, action);
     }
 
-    private sealed class FakeForeground : IForegroundWatcher
+    internal sealed class FakeForeground : IForegroundWatcher
     {
         public string? Current { get; private set; }
 

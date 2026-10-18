@@ -225,14 +225,26 @@ public partial class App : Application
         return panel;
     }
 
-    /// <summary>The first-run walkthrough, then (unless DispHub started with Windows) the main window.</summary>
+    /// <summary>
+    /// The first-run walkthrough, then (unless DispHub started with Windows) the main window, with its tour when
+    /// asked for.
+    /// </summary>
     private void ShowOnboarding(bool openWindowAfter)
     {
-        var window = new OnboardingWindow(new OnboardingViewModel(_controller!, _services!.GetRequiredService<IAutostart>()));
+        var viewModel = new OnboardingViewModel(_controller!, _services!.GetRequiredService<IAutostart>());
+        // Before the window listens: it closes when the walkthrough finishes, and this must know the choice by then.
+        bool tour = false;
+        viewModel.Finished += (_, wanted) => tour = wanted;
+        var window = new OnboardingWindow(viewModel);
         ThemeService theme = _services!.GetRequiredService<ThemeService>();
         window.SourceInitialized += (_, _) => theme.Attach(window);
-        if (openWindowAfter)
-            window.Closed += (_, _) => ShowMainWindow();
+        window.Closed += (_, _) =>
+        {
+            if (tour)
+                _services!.GetRequiredService<MainWindow>().StartTour();
+            else if (openWindowAfter)
+                ShowMainWindow();
+        };
         window.Show();
         window.Activate();
     }

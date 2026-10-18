@@ -25,7 +25,8 @@ DispHub's effect shader (`src/DispHub.Platform/Effects/Effects.hlsl`) and `FilmG
 ### Preview photos
 
 The profile previews (`src/DispHub/Assets/Previews`) are strips cropped from public-domain photos by U.S.
-government employees. Thank you to the photographers.
+government employees, and the walkthrough's pictures (`src/DispHub/Assets/Onboarding`) set DispHub's own windows
+on them. Thank you to the photographers.
 
 | Picture | Photo | Credit |
 | --- | --- | --- |
