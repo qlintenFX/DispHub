@@ -36,8 +36,11 @@ public static class Tour
     }
 }
 
-/// <summary>One stop of the tour: the part to point at (see <see cref="Tour.StopProperty"/>) and what to say.</summary>
-public sealed record TourStep(string Stop, string Title, string Text);
+/// <summary>
+/// One stop of the tour: the part to point at (see <see cref="Tour.StopProperty"/>), what to say, and the page it's
+/// on (a view model type the window shows first; null for parts on every page).
+/// </summary>
+public sealed record TourStep(string Stop, string Title, string Text, Type? Page = null);
 
 /// <summary>
 /// A guided tour over a window: everything dims except the part being explained, which glows with the accent colour
@@ -100,9 +103,9 @@ public sealed class TourOverlay : Canvas
         skip.Click += (_, _) => Finish();
         _back.Content = Loc.Get("Tour_Back");
         _back.Margin = new Thickness(0, 0, 8, 0);
-        _back.Click += (_, _) => Show(_index - 1);
+        _back.Click += (_, _) => Show(_index - 1, -1);
         _next.Appearance = ControlAppearance.Primary;
-        _next.Click += (_, _) => Show(_index + 1);
+        _next.Click += (_, _) => Show(_index + 1, 1);
         var buttons = new DockPanel { Margin = new Thickness(0, 16, 0, 0), LastChildFill = false };
         DockPanel.SetDock(skip, Dock.Left);
         DockPanel.SetDock(_next, Dock.Right);
@@ -138,6 +141,9 @@ public sealed class TourOverlay : Canvas
     /// <summary>The tour ended, finished or skipped.</summary>
     public event EventHandler? Finished;
 
+    /// <summary>The next stop is on another page: show it (the view model type).</summary>
+    public event EventHandler<Type>? PageRequested;
+
     public bool IsRunning => Visibility == Visibility.Visible;
 
     /// <summary>Starts the tour over the elements inside <paramref name="root"/>. Steps whose part isn't shown are skipped.</summary>
@@ -158,7 +164,7 @@ public sealed class TourOverlay : Canvas
             ((DropShadowEffect)_ring.Effect).Color = accent;
         Visibility = Visibility.Visible;
         Focus();
-        Show(0);
+        Show(0, 1);
     }
 
     /// <summary>Lights up <paramref name="element"/> for a moment, without dimming anything (a search result).</summary>
@@ -210,10 +216,10 @@ public sealed class TourOverlay : Canvas
                 Finish();
                 break;
             case Key.Right or Key.Enter or Key.Space:
-                Show(_index + 1);
+                Show(_index + 1, 1);
                 break;
             case Key.Left:
-                Show(_index - 1);
+                Show(_index - 1, -1);
                 break;
             default:
                 return;
@@ -221,7 +227,8 @@ public sealed class TourOverlay : Canvas
         e.Handled = true;
     }
 
-    private void Show(int index)
+    /// <summary>Goes to a stop, showing its page first; a stop whose part isn't there is skipped.</summary>
+    private void Show(int index, int direction)
     {
         if (index < 0)
             return;
@@ -230,21 +237,26 @@ public sealed class TourOverlay : Canvas
             Finish();
             return;
         }
-        // Skip parts that aren't on screen, in the direction of travel.
-        int step = index >= _index ? 1 : -1;
-        FrameworkElement? target = null;
-        while (index >= 0 && index < _steps.Count && (target = Tour.Find(_root!, _steps[index].Stop)) is null)
-            index += step;
-        if (target is null)
+        if (_steps[index].Page is { } page)
+            PageRequested?.Invoke(this, page);
+        // Once the page is laid out.
+        Dispatcher.BeginInvoke(() =>
         {
-            if (index >= _steps.Count)
-                Finish();
-            return;
-        }
+            if (!IsRunning || _highlightOnly)
+                return;
+            if (Tour.Find(_root!, _steps[index].Stop) is { } target)
+                PointAt(index, target);
+            else
+                Show(index + direction, direction);
+        }, System.Windows.Threading.DispatcherPriority.ContextIdle);
+    }
 
+    private void PointAt(int index, FrameworkElement target)
+    {
         _index = index;
         _target = target;
-        target.BringIntoView();
+        // With room around it, so it doesn't sit half hidden at the window's edge.
+        target.BringIntoView(new Rect(0, -120, target.ActualWidth, target.ActualHeight + 240));
         _from = _shown;
         _movedAt = DateTime.UtcNow;
 

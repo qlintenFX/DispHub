@@ -129,15 +129,7 @@ public sealed partial class EffectsViewModel : PageViewModel
     [ObservableProperty] public partial string NewLookName { get; set; } = "";
     [ObservableProperty] public partial bool LinkCopied { get; set; }
 
-    /// <summary>What effects do over full-screen games and videos.</summary>
-    public IReadOnlyList<FullScreenChoice> FullScreenChoices { get; } =
-    [
-        new(FullScreenEffects.Smooth, Loc.Get("Effects_GamesSmooth")),
-        new(FullScreenEffects.Full, Loc.Get("Effects_GamesFull")),
-        new(FullScreenEffects.Hide, Loc.Get("Effects_GamesHide")),
-    ];
-
-    [ObservableProperty] public partial FullScreenChoice? InFullScreen { get; set; }
+    [ObservableProperty] public partial bool HideOverFullScreen { get; set; }
     [ObservableProperty] public partial bool MainDisplayOnly { get; set; }
     [ObservableProperty] public partial FrameRateChoice? FrameRate { get; set; }
 
@@ -303,7 +295,7 @@ public sealed partial class EffectsViewModel : PageViewModel
             _ = PreparePreviewsAsync(force: true);
     }
 
-    partial void OnInFullScreenChanged(FullScreenChoice? value) => SaveOptions();
+    partial void OnHideOverFullScreenChanged(bool value) => SaveOptions();
 
     partial void OnMainDisplayOnlyChanged(bool value) => SaveOptions();
 
@@ -416,7 +408,7 @@ public sealed partial class EffectsViewModel : PageViewModel
         if (_loading)
             return;
         EffectsConfig effects = _app.Config.Effects;
-        effects.InFullScreen = InFullScreen?.Mode ?? FullScreenEffects.Smooth;
+        effects.HideOverFullScreen = HideOverFullScreen;
         effects.MainDisplayOnly = MainDisplayOnly;
         effects.MaxFps = FrameRate?.Fps ?? 0;
         Commit();
@@ -431,7 +423,7 @@ public sealed partial class EffectsViewModel : PageViewModel
             IsPro = _app.Features.ScreenEffects;
             Enabled = ShowsEnabled;
             Strength = effects.Strength;
-            InFullScreen = FullScreenChoices.FirstOrDefault(c => c.Mode == effects.InFullScreen) ?? FullScreenChoices[0];
+            HideOverFullScreen = effects.HideOverFullScreen;
             MainDisplayOnly = effects.MainDisplayOnly;
             FrameRate = FrameRates.FirstOrDefault(f => f.Fps == effects.MaxFps) ?? FrameRates[0];
             if (_allTiles.Count(t => t.IsSaved) != effects.SavedLooks.Count)
@@ -940,11 +932,6 @@ public sealed partial class LookTile(EffectsViewModel owner, string id, string n
 }
 
 public sealed record FrameRateChoice(int Fps, string Name)
-{
-    public override string ToString() => Name;
-}
-
-public sealed record FullScreenChoice(FullScreenEffects Mode, string Name)
 {
     public override string ToString() => Name;
 }

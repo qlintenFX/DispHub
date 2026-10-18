@@ -38,6 +38,7 @@ public enum EffectProblem
 internal sealed unsafe class EffectOutput : IDisposable
 {
     private const string ClassName = "DispHubEffect";
+    private const string NonRudeProperty = "NonRudeHWND";
     private const int MaxFailures = 5;
     private static readonly Lazy<bool> ClassRegistered = new(RegisterWindowClass);
 
@@ -87,9 +88,8 @@ internal sealed unsafe class EffectOutput : IDisposable
     }
 
     /// <summary>
-    /// A full-screen game or video is in front. Kept smooth (<see cref="FullScreenEffects.Smooth"/>), it isn't
-    /// copied at all and only the layers are drawn on top of it; with the full effect, every frame the display can
-    /// show is drawn, whatever the frame rate setting, because a capped copy of a game makes it feel capped too.
+    /// A full-screen game or video is in front: show every frame the display can, whatever the frame rate setting,
+    /// because a capped copy of a game makes it feel capped too.
     /// </summary>
     public void SetFullScreen(bool fullScreen)
     {
@@ -104,6 +104,7 @@ internal sealed unsafe class EffectOutput : IDisposable
         PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_HIDE);
         _stop = true;
         _wake.Set();
+        PInvoke.RemoveProp(_window, NonRudeProperty);
         PInvoke.DestroyWindow(_window);
         if (_thread.Join(TimeSpan.FromSeconds(3)))
             _wake.Dispose();
@@ -171,8 +172,7 @@ internal sealed unsafe class EffectOutput : IDisposable
             {
                 Settings settings = _settings;
                 Look look = settings.Look;
-                bool layersOnly = settings.FullScreen && settings.Options.InFullScreen == FullScreenEffects.Smooth;
-                if (settings.Hidden || look.IsEmpty || (layersOnly && !look.HasLayers))
+                if (settings.Hidden || look.IsEmpty)
                 {
                     Hide(ref shown);
                     Release(ref capture);
@@ -181,7 +181,7 @@ internal sealed unsafe class EffectOutput : IDisposable
                     continue;
                 }
 
-                bool processing = look.NeedsCapture && _captureAllowed && !captureUnsupported && !layersOnly;
+                bool processing = look.NeedsCapture && _captureAllowed && !captureUnsupported;
                 if (surface.EnsureSwapChain(opaque: processing))
                     drawn = null;
                 int fps = look.IsAnimated ? look.GrainFps : 0;
@@ -248,9 +248,8 @@ internal sealed unsafe class EffectOutput : IDisposable
                 else
                 {
                     Release(ref capture);
-                    // Only reached with a look that needs capture when this display can't do it (or when a full-screen
-                    // game is kept smooth, which is a choice, not a problem).
-                    SetProblem(look.NeedsCapture && !layersOnly ? EffectProblem.CaptureUnsupported : EffectProblem.None);
+                    // Only reached with a look that needs capture when this display can't do it.
+                    SetProblem(look.NeedsCapture ? EffectProblem.CaptureUnsupported : EffectProblem.None);
                     if (!due)
                     {
                         _wake.WaitOne(untilNextFrame);
@@ -336,6 +335,10 @@ internal sealed unsafe class EffectOutput : IDisposable
         if (window.IsNull)
             throw new InvalidOperationException("Couldn't create the effect window.");
         PInvoke.SetLayeredWindowAttributes(window, default, 255, LAYERED_WINDOW_ATTRIBUTES_FLAGS.LWA_ALPHA);
+        // It covers the whole display, so Windows would take it for a full-screen app and drop the taskbar below
+        // other windows. This property, read whenever the window is shown, says it isn't one.
+        fixed (char* property = NonRudeProperty)
+            PInvoke.SetProp(window, property, (HANDLE)(nint)1);
         return window;
     }
 

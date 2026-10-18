@@ -21,7 +21,7 @@ using Wpf.Ui.Controls;
 namespace DispHub.ViewModels;
 
 /// <summary>
-/// The start page. It answers what is on the screen right now and why, switches profile in one click, shows where
+/// The start page. It answers what is on the screen right now and why, shows the day ahead on the schedule, where
 /// each feature stands with a way into it, and, for free users, what Pro adds.
 /// </summary>
 public sealed partial class HomeViewModel : PageViewModel
@@ -33,7 +33,7 @@ public sealed partial class HomeViewModel : PageViewModel
     private readonly ILicenseService _license;
     private readonly IUpgradeService _upgrade;
     private readonly TimeProvider _time;
-    private bool _loading;
+    private readonly System.Windows.Threading.DispatcherTimer _clock = new() { Interval = TimeSpan.FromSeconds(30) };
 
     public HomeViewModel(AppController app, EffectsService effects, ILicenseService license, IUpgradeService upgrade, TimeProvider time)
         : base(Loc.Get("Nav_Home"), SymbolRegular.Home24)
@@ -50,6 +50,7 @@ public sealed partial class HomeViewModel : PageViewModel
         _app.MonitorsChanged += (_, _) => Refresh();
         _effects.Changed += (_, _) => Refresh();
         _license.Changed += (_, _) => Application.Current?.Dispatcher.BeginInvoke(Refresh);
+        _clock.Tick += (_, _) => TodayNow = MinutesSinceMidnight();
         Refresh();
     }
 
@@ -75,10 +76,14 @@ public sealed partial class HomeViewModel : PageViewModel
     /// <summary>DispHub is on but its profiles are off: the card offers to turn them back on.</summary>
     [ObservableProperty] public partial bool ProfilesOff { get; set; }
 
-    public ObservableCollection<HomeProfile> Profiles { get; } = [];
+    /// <summary>A schedule runs: Home shows today on it.</summary>
+    [ObservableProperty] public partial bool ShowToday { get; set; }
 
-    /// <summary>The profile on now, if any; picking another one switches to it.</summary>
-    [ObservableProperty] public partial HomeProfile? CurrentProfile { get; set; }
+    [ObservableProperty] public partial IReadOnlyList<TimelineSegment> TodaySegments { get; set; } = [];
+
+    [ObservableProperty] public partial double? TodayNow { get; set; }
+
+    [ObservableProperty] public partial string TodayText { get; set; } = "";
 
     public ObservableCollection<HomeFeature> Features { get; } = [];
 
@@ -90,19 +95,19 @@ public sealed partial class HomeViewModel : PageViewModel
 
     public static string Version => Loc.Format("Home_Version", AboutViewModel.Version);
 
-    public override void OnShown() => Refresh();
-
-    partial void OnCurrentProfileChanged(HomeProfile? value)
+    public override void OnShown()
     {
-        if (!_loading && value is not null && (value.Id != _app.Current?.ProfileId || _app.Config.IsOff || _app.Config.IsPaused))
-            _app.ActivateProfile(value.Id, ChangeSource.Editor);
+        Refresh();
+        _clock.Start();
     }
+
+    public override void OnHidden() => _clock.Stop();
 
     [RelayCommand]
     private void Open(HomeFeature feature) => NavigateRequested?.Invoke(this, feature.Page);
 
     [RelayCommand]
-    private void ManageProfiles() => NavigateRequested?.Invoke(this, typeof(ProfilesViewModel));
+    private void OpenSchedule() => NavigateRequested?.Invoke(this, typeof(ScheduleViewModel));
 
     [RelayCommand]
     private void TurnOn() => _app.SetOn(true, ChangeSource.Editor);
@@ -124,52 +129,47 @@ public sealed partial class HomeViewModel : PageViewModel
 
     private void Refresh()
     {
-        _loading = true;
-        try
+        AppConfig config = _app.Config;
+        FeatureGate features = _app.Features;
+        RuleOutput? current = _app.Current;
+        Profile? active = current?.ProfileId is { } id && !config.IsOff && !config.IsPaused ? _app.FindProfile(id) : null;
+        IsOn = !config.IsOff;
+        ProfilesOff = !config.IsOff && config.IsPaused;
+        ShowPro = _license.CanPurchase && !_license.IsPro;
+
+        NowPicture = ColorPreview.Large(active?.Color ?? ColorSettings.Neutral);
+        NowName = active?.Name ?? Loc.Get(config.IsOff ? "Home_Off" : "Home_Original");
+        NowReason = Reason(config, active, current);
+        NowEffect = _effects.Current is not null && _effects.State != EffectsState.Off ? Loc.Format("Home_Effect", _effects.NameOf(_effects.CurrentId)) : null;
+
+        ShowToday = features.Schedules && config.Schedule.Enabled && config.Schedule.Slots.Count > 0;
+        if (ShowToday)
         {
-            AppConfig config = _app.Config;
-            FeatureGate features = _app.Features;
-            RuleOutput? current = _app.Current;
-            Profile? active = current?.ProfileId is { } id && !config.IsOff && !config.IsPaused ? _app.FindProfile(id) : null;
-            IsOn = !config.IsOff;
-            ProfilesOff = !config.IsOff && config.IsPaused;
-            ShowPro = _license.CanPurchase && !_license.IsPro;
-
-            NowPicture = ColorPreview.Large(active?.Color ?? ColorSettings.Neutral);
-            NowName = active?.Name ?? Loc.Get(config.IsOff ? "Home_Off" : "Home_Original");
-            NowReason = Reason(config, active, current);
-            NowEffect = _effects.Current is not null && _effects.State != EffectsState.Off ? Loc.Format("Home_Effect", _effects.NameOf(_effects.CurrentId)) : null;
-
-            Profiles.Clear();
-            foreach (Profile profile in config.Profiles)
-                Profiles.Add(new HomeProfile(profile.Id, profile.Name, ColorPreview.Render(profile.Color), profile.Hotkey));
-            CurrentProfile = Profiles.FirstOrDefault(p => p.Id == active?.Id);
-
-            Features.Clear();
-            Features.Add(new HomeFeature(typeof(ProfilesViewModel), SymbolRegular.Color24, Loc.Get("Nav_Profiles"),
-                Loc.Format(config.Profiles.Count == 1 ? "Home_OneProfile" : "Home_Profiles", config.Profiles.Count), true, false));
-            Features.Add(new HomeFeature(typeof(ScheduleViewModel), SymbolRegular.Clock24, Loc.Get("Nav_Schedule"),
-                ScheduleStatus(config), config.Schedule.Enabled && features.Schedules, !features.Schedules));
-            int rules = config.AppRules.Count(r => r.Enabled);
-            Features.Add(new HomeFeature(typeof(AppsViewModel), SymbolRegular.AppsList24, Loc.Get("Nav_Apps"),
-                rules == 0 ? Loc.Get("Home_NoApps") : Loc.Format(rules == 1 ? "Home_OneApp" : "Home_Apps", rules), rules > 0 && features.AppRules, !features.AppRules));
-            if (config.Ui.ShowEffects)
-            {
-                bool effectsOn = _effects.State is not EffectsState.Off and not EffectsState.NeedsPro;
-                Features.Add(new HomeFeature(typeof(EffectsViewModel), SymbolRegular.Sparkle24, Loc.Get("Nav_Effects"),
-                    effectsOn ? Loc.Format("Home_EffectOn", _effects.NameOf(_effects.CurrentId)) : Loc.Get("Common_Off"), effectsOn, !features.ScreenEffects));
-            }
-            int displays = _app.Monitors.Count;
-            Features.Add(new HomeFeature(typeof(DisplaysViewModel), SymbolRegular.Desktop24, Loc.Get("Nav_Displays"),
-                Loc.Format(displays == 1 ? "Home_OneDisplay" : "Home_Displays", displays), true, false));
-            Features.Add(new HomeFeature(typeof(SettingsViewModel), SymbolRegular.Settings24, Loc.Get("Nav_Settings"),
-                Loc.Get("Home_SettingsStatus"), true, false));
+            TodaySegments = ScheduleViewModel.SegmentsFor(config, DateOnly.FromDateTime(_time.GetLocalNow().DateTime), _time.LocalTimeZone);
+            TodayNow = MinutesSinceMidnight();
+            TodayText = ScheduleStatus(config);
         }
-        finally
+
+        Features.Clear();
+        Features.Add(new HomeFeature(typeof(ProfilesViewModel), SymbolRegular.Color24, Loc.Get("Nav_Profiles"),
+            Loc.Format(config.Profiles.Count == 1 ? "Home_OneProfile" : "Home_Profiles", config.Profiles.Count), true, false));
+        int rules = config.AppRules.Count(r => r.Enabled);
+        Features.Add(new HomeFeature(typeof(AppsViewModel), SymbolRegular.AppsList24, Loc.Get("Nav_Apps"),
+            rules == 0 ? Loc.Get("Home_NoApps") : Loc.Format(rules == 1 ? "Home_OneApp" : "Home_Apps", rules), rules > 0 && features.AppRules, !features.AppRules));
+        if (config.Ui.ShowEffects)
         {
-            _loading = false;
+            bool effectsOn = _effects.State is not EffectsState.Off and not EffectsState.NeedsPro;
+            Features.Add(new HomeFeature(typeof(EffectsViewModel), SymbolRegular.Sparkle24, Loc.Get("Nav_Effects"),
+                effectsOn ? Loc.Format("Home_EffectOn", _effects.NameOf(_effects.CurrentId)) : Loc.Get("Common_Off"), effectsOn, !features.ScreenEffects));
         }
+        int displays = _app.Monitors.Count;
+        Features.Add(new HomeFeature(typeof(DisplaysViewModel), SymbolRegular.Desktop24, Loc.Get("Nav_Displays"),
+            Loc.Format(displays == 1 ? "Home_OneDisplay" : "Home_Displays", displays), true, false));
+        Features.Add(new HomeFeature(typeof(SettingsViewModel), SymbolRegular.Settings24, Loc.Get("Nav_Settings"),
+            Loc.Get("Home_SettingsStatus"), true, false));
     }
+
+    private double MinutesSinceMidnight() => _time.GetLocalNow().DateTime.TimeOfDay.TotalMinutes;
 
     private string Reason(AppConfig config, Profile? active, RuleOutput? current)
     {
@@ -185,9 +185,17 @@ public sealed partial class HomeViewModel : PageViewModel
             TargetReason.AppRule when _app.ForegroundExecutable is { } program =>
                 Loc.Format("Home_ReasonApp", Path.IsPathRooted(program) ? ProgramInfo.DisplayName(program) : Path.GetFileNameWithoutExtension(program)),
             TargetReason.AppRule => Loc.Get("Home_ReasonAppUnknown"),
-            _ => Loc.Get("Home_ReasonPicked"),
+            // Chosen during the schedule: it lasts until the schedule's next change.
+            TargetReason.Manual when NextScheduleChange(config) is { } next => Loc.Format("Home_ReasonManualUntil", DayTimeline.TimeLabel(next.TimeOfDay.TotalMinutes)),
+            _ => Loc.Get("Home_ReasonSelected"),
         };
     }
+
+    private DateTime? NextScheduleChange(AppConfig config) =>
+        _app.Features.Schedules && config.Schedule.Enabled &&
+        ScheduleTimeline.Locate(config.Schedule, _time.GetLocalNow().DateTime, _time.LocalTimeZone, id => _app.FindProfile(id) is not null) is { } position
+            ? position.Next.Start
+            : null;
 
     private string ScheduleStatus(AppConfig config)
     {
@@ -198,15 +206,9 @@ public sealed partial class HomeViewModel : PageViewModel
         if (ScheduleTimeline.Locate(schedule, now, _time.LocalTimeZone, id => _app.FindProfile(id) is not null) is not { } position)
             return Loc.Get("Common_On");
         string next = _app.FindProfile(position.Next.Slot.ProfileId)?.Name ?? "";
-        string when = position.Next.Start.Date == now.Date
-            ? DayTimeline.TimeLabel(position.Next.Start.TimeOfDay.TotalMinutes)
-            : Loc.Format("Schedule_DayAndTime", position.Next.Start.ToString("dddd", CultureInfo.CurrentCulture), DayTimeline.TimeLabel(position.Next.Start.TimeOfDay.TotalMinutes));
-        return Loc.Format("Home_ScheduleNext", next, when);
+        return Loc.Format("Home_ScheduleNext", next, DayTimeline.WhenLabel(position.Next.Start, now));
     }
 }
-
-/// <summary>A profile on the Home page's quick switch.</summary>
-public sealed record HomeProfile(Guid Id, string Name, ImageSource Preview, string? Hotkey);
 
 /// <summary>A feature card on the Home page: where it stands, and the page that sets it up.</summary>
 /// <param name="IsActive">Whether it is doing something now (its status reads brighter).</param>

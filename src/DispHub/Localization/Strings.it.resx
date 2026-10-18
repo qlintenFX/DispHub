@@ -250,18 +250,6 @@ Verrà aggiunta come nuovo profilo e attivata così puoi vederla.</value>
   <data name="Profiles_Share" xml:space="preserve">
     <value>Condividi</value>
   </data>
-  <data name="Profiles_Status" xml:space="preserve">
-    <value>{0} su {1}</value>
-  </data>
-  <data name="Profiles_StatusAppRule" xml:space="preserve">
-    <value>{0} (regola app) su {1}</value>
-  </data>
-  <data name="Profiles_StatusManual" xml:space="preserve">
-    <value>{0} (scelto a mano) su {1}</value>
-  </data>
-  <data name="Profiles_StatusSchedule" xml:space="preserve">
-    <value>{0} (pianificazione) su {1}</value>
-  </data>
   <data name="Profiles_Temperature" xml:space="preserve">
     <value>Temperatura colore</value>
   </data>

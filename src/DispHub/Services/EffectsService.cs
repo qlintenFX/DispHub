@@ -28,7 +28,7 @@ public enum EffectsState
 
 /// <summary>
 /// Shows the right look on screen: the active profile's choice, or the Effects page's. Over full-screen games and
-/// videos it draws only what goes on top, the whole look uncapped, or nothing (see <see cref="FullScreenEffects"/>).
+/// videos it drops the frame rate limit, so a game never feels capped, or steps aside when asked.
 /// UI thread only; the drawing happens on GPU threads in <see cref="EffectsEngine"/>.
 /// </summary>
 public sealed class EffectsService : IDisposable
@@ -98,7 +98,7 @@ public sealed class EffectsService : IDisposable
         }
         else
         {
-            _engine.Apply(look, new EffectOptions(effects.MaxFps, effects.MainDisplayOnly, effects.InFullScreen));
+            _engine.Apply(look, new EffectOptions(effects.MaxFps, effects.MainDisplayOnly));
             _fullScreenCheck.Start();
             UpdateFullScreen();
         }
@@ -172,7 +172,7 @@ public sealed class EffectsService : IDisposable
         if (!_engine.IsRunning)
             return;
         IReadOnlyList<Rectangle> monitors = _engine.Monitors;
-        bool hide = _app.Config.Effects.InFullScreen == FullScreenEffects.Hide;
+        bool hide = _app.Config.Effects.HideOverFullScreen;
         bool everywhere = FullScreenApps.IsGameOrPresentationRunning();
         Rectangle? covered = FullScreenApps.ForegroundFullScreenBounds(monitors);
         foreach (Rectangle monitor in monitors)

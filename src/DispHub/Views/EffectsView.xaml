@@ -135,6 +135,7 @@
     <Border
       x:Name="PreviewCard"
       Padding="16"
+      ctl:Tour.Stop="effects"
       SizeChanged="OnPreviewCardSizeChanged"
       Style="{StaticResource SettingCard}">
       <StackPanel>
@@ -605,13 +606,10 @@
     <!-- Options -->
     <ctl:SectionHeader Text="{l:Tr Effects_Options}" />
     <ctl:SettingsCard
-      Description="{l:Tr Effects_GamesHint}"
-      Header="{l:Tr Effects_Games}"
+      Description="{l:Tr Effects_HideFullScreenHint}"
+      Header="{l:Tr Effects_HideFullScreen}"
       Icon="Games24">
-      <ComboBox
-        MinWidth="170"
-        ItemsSource="{Binding FullScreenChoices}"
-        SelectedItem="{Binding InFullScreen}" />
+      <ui:ToggleSwitch IsChecked="{Binding HideOverFullScreen}" />
     </ctl:SettingsCard>
     <ctl:SettingsCard
       Description="{l:Tr Effects_MainDisplayOnlyHint}"

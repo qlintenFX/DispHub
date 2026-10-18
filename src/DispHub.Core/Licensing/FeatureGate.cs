@@ -19,5 +19,8 @@ public sealed record FeatureGate(bool IsPro)
     /// <summary>Saving looks under a name.</summary>
     public bool SavedLooks => IsPro;
 
+    /// <summary>Choosing how see-through DispHub's windows are.</summary>
+    public bool Transparency => IsPro;
+
     public bool CanAddProfile(int currentCount) => currentCount < MaxProfiles;
 }

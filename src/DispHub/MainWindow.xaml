@@ -131,7 +131,6 @@
         <ListBox
           Background="Transparent"
           BorderThickness="0"
-          ctl:Tour.Stop="settings"
           DockPanel.Dock="Bottom"
           ItemContainerStyle="{StaticResource NavItem}"
           ItemTemplate="{StaticResource NavEntry}"
@@ -165,7 +164,6 @@
           VerticalAlignment="Top"
           Background="Transparent"
           BorderThickness="0"
-          ctl:Tour.Stop="pages"
           ItemContainerStyle="{StaticResource NavItem}"
           ItemTemplate="{StaticResource NavEntry}"
           ItemsSource="{Binding Pages}"

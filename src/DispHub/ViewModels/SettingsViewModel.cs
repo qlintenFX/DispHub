@@ -95,7 +95,31 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     partial void OnQuickPanelHotkeyChanged(string? value) => SetHotkey(AppController.QuickPanelAction, value);
 
-    partial void OnBackdropChanged(WindowBackdrop value) => SaveAppearance(c => c.Ui.Backdrop = value);
+    partial void OnBackdropChanged(WindowBackdrop value)
+    {
+        SaveAppearance(c => c.Ui.Backdrop = value);
+        CanSetTransparency = IsProTransparency && value != WindowBackdrop.Solid;
+    }
+
+    /// <summary>How see-through the windows are, 0 (solid) to 1 (clear); a Pro choice, over Mica or Acrylic.</summary>
+    [ObservableProperty] public partial double Transparency { get; set; }
+
+    [ObservableProperty] public partial string TransparencyText { get; set; } = "";
+
+    [ObservableProperty] public partial bool IsProTransparency { get; set; }
+
+    [ObservableProperty] public partial bool CanSetTransparency { get; set; }
+
+    partial void OnTransparencyChanged(double value)
+    {
+        TransparencyText = string.Create(System.Globalization.CultureInfo.CurrentCulture, $"{value * 100:0} %");
+        if (_loading || !IsProTransparency)
+            return;
+        // Only the window backgrounds change: no need to reload the theme on every step of the slider.
+        _app.Config.Ui.Transparency = value;
+        _theme.RefreshWindows();
+        _app.SettingsChanged();
+    }
 
     partial void OnCompactNavigationChanged(bool value) => Save(c => c.Ui.CompactNavigation = value);
 
@@ -192,6 +216,9 @@ public sealed partial class SettingsViewModel : PageViewModel
             ShowEffects = ui.ShowEffects;
             QuickPanelHotkey = _app.Config.Hotkeys.QuickPanel;
             Backdrop = ui.Backdrop;
+            IsProTransparency = _app.Features.Transparency;
+            CanSetTransparency = IsProTransparency && ui.Backdrop != WindowBackdrop.Solid;
+            Transparency = IsProTransparency ? ui.Transparency : 1;
             CompactNavigation = ui.CompactNavigation;
             TextScale = TextScales.MinBy(s => Math.Abs(s.Scale - ui.TextScale));
             Animations = !ui.ReduceMotion;

@@ -254,7 +254,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>1 display</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
-    <value>Turn profiles off to show your displays' original colours. Screen effects stay as set on the Effects page.</value>
+    <value>Turn off all profiles, including your schedule and app profiles. Screen effects keep following the Effects page.</value>
   </data>
   <data name="Profiles_Reset" xml:space="preserve">
     <value>Reset to original</value>
@@ -263,19 +263,19 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>Share</value>
   </data>
   <data name="Profiles_Status" xml:space="preserve">
-    <value>{0} on {1}</value>
+    <value>{0} is in use on {1}</value>
   </data>
   <data name="Profiles_StatusAppRule" xml:space="preserve">
-    <value>{0} (app rule) on {1}</value>
+    <value>{0} is in use on {1} for the app you're using</value>
   </data>
   <data name="Profiles_StatusManual" xml:space="preserve">
-    <value>{0} (picked by hand) on {1}</value>
+    <value>{0} is in use on {1}, selected manually</value>
   </data>
   <data name="Profiles_StatusPaused" xml:space="preserve">
-    <value>Profiles are off: your displays show their original colours.</value>
+    <value>Profiles are turned off. Your displays show their original colours.</value>
   </data>
   <data name="Profiles_StatusSchedule" xml:space="preserve">
-    <value>{0} (schedule) on {1}</value>
+    <value>{0} is in use on {1}, as scheduled</value>
   </data>
   <data name="Profiles_Temperature" xml:space="preserve">
     <value>Colour temperature</value>
@@ -566,11 +566,8 @@ It also supports development of DispHub.</value>
   <data name="Schedule_StatusPro" xml:space="preserve">
     <value>Preview only: the schedule runs with DispHub Pro.</value>
   </data>
-  <data name="Schedule_DayAndTime" xml:space="preserve">
-    <value>{0} {1}</value>
-  </data>
   <data name="Schedule_StatusRunning" xml:space="preserve">
-    <value>{0} now. {1} from {2}.</value>
+    <value>{0} is on now. {1} starts {2}.</value>
   </data>
   <data name="Apps_Title" xml:space="preserve">
     <value>Apps</value>
@@ -756,13 +753,13 @@ It also supports development of DispHub.</value>
     <value>Show the quick panel</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
-    <value>Off: original colours</value>
+    <value>Profiles are turned off</value>
   </data>
   <data name="Quick_FromSchedule" xml:space="preserve">
-    <value>{0}, from your schedule</value>
+    <value>{0} · Scheduled</value>
   </data>
   <data name="Quick_FromApp" xml:space="preserve">
-    <value>{0}, for the app in front</value>
+    <value>{0} · For this app</value>
   </data>
   <data name="Quick_Active" xml:space="preserve">
     <value>{0}</value>
@@ -885,7 +882,7 @@ It also supports development of DispHub.</value>
     <value>Frame rate</value>
   </data>
   <data name="Effects_FrameRateHint" xml:space="preserve">
-    <value>For looks that change the picture. Lower uses less power; with the full effect, full-screen games always get every frame.</value>
+    <value>For looks that change the picture, outside full-screen games. Lower uses less power.</value>
   </data>
   <data name="Effects_Fps30" xml:space="preserve">
     <value>30 fps</value>
@@ -1299,13 +1296,13 @@ It also supports development of DispHub.</value>
     <value>Screen effect</value>
   </data>
   <data name="Profiles_EffectHint" xml:space="preserve">
-    <value>A look to show while this profile is on, such as greyscale at bedtime.</value>
+    <value>While this profile is on, show the Effects page's look, no effect, or a look of its own, such as greyscale at bedtime.</value>
   </data>
   <data name="Profiles_EffectKeep" xml:space="preserve">
-    <value>No change</value>
+    <value>Same as Effects page</value>
   </data>
   <data name="Profiles_EffectNone" xml:space="preserve">
-    <value>None</value>
+    <value>Off</value>
   </data>
   <data name="Effects_CurrentLook" xml:space="preserve">
     <value>Current look</value>
@@ -1593,7 +1590,7 @@ It also supports development of DispHub.</value>
     <value>On</value>
   </data>
   <data name="Schedule_AtTime" xml:space="preserve">
-    <value>At a time</value>
+    <value>at {0}</value>
   </data>
   <data name="Schedule_Sunrise" xml:space="preserve">
     <value>At sunrise</value>
@@ -1737,19 +1734,19 @@ It also supports development of DispHub.</value>
     <value>More looks</value>
   </data>
   <data name="Power_Name" xml:space="preserve">
-    <value>DispHub on or off</value>
+    <value>Turn DispHub on or off</value>
   </data>
   <data name="Power_Off" xml:space="preserve">
     <value>DispHub is off</value>
   </data>
   <data name="Power_TurnOff" xml:space="preserve">
-    <value>Turn DispHub off: original colours and no effects</value>
+    <value>Turn off DispHub. Your displays show their original colours.</value>
   </data>
   <data name="Power_TurnOn" xml:space="preserve">
-    <value>Turn DispHub on</value>
+    <value>Turn on DispHub</value>
   </data>
   <data name="Quick_Off" xml:space="preserve">
-    <value>Off: original colours, no effects</value>
+    <value>DispHub is off</value>
   </data>
   <data name="Quick_ProfilesTooltip" xml:space="preserve">
     <value>Profiles on or off</value>
@@ -1761,7 +1758,7 @@ It also supports development of DispHub.</value>
     <value>DispHub · Profiles off</value>
   </data>
   <data name="Profiles_StatusOff" xml:space="preserve">
-    <value>DispHub is off: original colours and no effects. Turn it on with the power button.</value>
+    <value>DispHub is off. Turn it on with the power button at the top.</value>
   </data>
   <data name="Displays_ShowingOff" xml:space="preserve">
     <value>Original colours (DispHub is off)</value>
@@ -1770,13 +1767,13 @@ It also supports development of DispHub.</value>
     <value>Welcome to DispHub</value>
   </data>
   <data name="Onboarding_WelcomeText" xml:space="preserve">
-    <value>Profiles for your displays: brighter shadows and richer colours for games, warmer and dimmer for the evening, or your screen's own colours. Switch with one click or a hotkey, or let DispHub switch for you by app or time of day.</value>
+    <value>Create display profiles for every moment: brighter and more vivid for games, warmer for the evening, or your display's original colours. Switch with a click or a keyboard shortcut, or let DispHub switch for you.</value>
   </data>
   <data name="Onboarding_TrayTitle" xml:space="preserve">
-    <value>DispHub lives next to the clock</value>
+    <value>Find DispHub on the taskbar</value>
   </data>
   <data name="Onboarding_TrayText" xml:space="preserve">
-    <value>Its icon sits in the notification area at the right of the taskbar. If you don't see it, it's under the ^ arrow; drag it out to keep it in view.</value>
+    <value>DispHub runs in the notification area. If you don't see its icon, select the arrow next to the clock, then drag the icon onto the taskbar to keep it visible.</value>
   </data>
   <data name="Onboarding_LeftClick" xml:space="preserve">
     <value>Left-click</value>
@@ -1785,19 +1782,19 @@ It also supports development of DispHub.</value>
     <value>Right-click</value>
   </data>
   <data name="Onboarding_RightClickHint" xml:space="preserve">
-    <value>Your profiles, the power button, and DispHub's window.</value>
+    <value>Opens a menu with your profiles and the power button.</value>
   </data>
   <data name="Onboarding_HotkeysTitle" xml:space="preserve">
-    <value>Switch from anywhere</value>
+    <value>Use keyboard shortcuts</value>
   </data>
   <data name="Onboarding_HotkeysText" xml:space="preserve">
-    <value>These shortcuts work in any app, even in full-screen games, and a small message shows which profile is on. Change them in Settings.</value>
+    <value>Switch profiles from any app, including full-screen games. A small message shows which profile you switched to. You can change shortcuts in Settings.</value>
   </data>
   <data name="Onboarding_PowerTitle" xml:space="preserve">
-    <value>One button turns it all off</value>
+    <value>Turn everything off at once</value>
   </data>
   <data name="Onboarding_PowerText" xml:space="preserve">
-    <value>The power button at the top of DispHub, and in the quick panel, turns DispHub off: your displays show their own colours and effects stop. Press it again to carry on where you were.</value>
+    <value>The power button turns DispHub off, restoring your displays' original colours and stopping screen effects. Select it again to pick up where you left off.</value>
   </data>
   <data name="Onboarding_Back" xml:space="preserve">
     <value>Back</value>
@@ -1814,21 +1811,6 @@ It also supports development of DispHub.</value>
   <data name="Schedule_StatusDispHubOff" xml:space="preserve">
     <value>DispHub is off, so the schedule waits. Turn it on with the power button.</value>
   </data>
-  <data name="Effects_Games" xml:space="preserve">
-    <value>Full-screen games and videos</value>
-  </data>
-  <data name="Effects_GamesHint" xml:space="preserve">
-    <value>Keep smooth: the game runs at its own frame rate and only grain, scanlines, vignette, dust and fades go on top. Colour changes come from your profile there.</value>
-  </data>
-  <data name="Effects_GamesSmooth" xml:space="preserve">
-    <value>Keep smooth</value>
-  </data>
-  <data name="Effects_GamesFull" xml:space="preserve">
-    <value>Full effect</value>
-  </data>
-  <data name="Effects_GamesHide" xml:space="preserve">
-    <value>Hide effects</value>
-  </data>
   <data name="Nav_Home" xml:space="preserve">
     <value>Home</value>
   </data>
@@ -1836,43 +1818,34 @@ It also supports development of DispHub.</value>
     <value>Home</value>
   </data>
   <data name="Home_Now" xml:space="preserve">
-    <value>On your screen now</value>
+    <value>Current profile</value>
   </data>
   <data name="Home_Off" xml:space="preserve">
-    <value>Off</value>
+    <value>DispHub is off</value>
   </data>
   <data name="Home_Original" xml:space="preserve">
     <value>Original colours</value>
   </data>
   <data name="Home_Effect" xml:space="preserve">
-    <value>Effect: {0}</value>
+    <value>Screen effect: {0}</value>
   </data>
   <data name="Home_ReasonOff" xml:space="preserve">
-    <value>DispHub is off: your displays show their original colours and no effects.</value>
+    <value>Your displays show their original colours, and screen effects are off.</value>
   </data>
   <data name="Home_ReasonProfilesOff" xml:space="preserve">
-    <value>Profiles are off, so your displays show their original colours.</value>
-  </data>
-  <data name="Home_ReasonPicked" xml:space="preserve">
-    <value>You picked it.</value>
+    <value>Profiles are turned off, so your displays show their original colours.</value>
   </data>
   <data name="Home_ReasonSchedule" xml:space="preserve">
-    <value>From your schedule.</value>
+    <value>Scheduled</value>
   </data>
   <data name="Home_ReasonScheduleUntil" xml:space="preserve">
-    <value>From your schedule, until {0}.</value>
+    <value>Scheduled until {0}</value>
   </data>
   <data name="Home_ReasonApp" xml:space="preserve">
-    <value>Because {0} is in front.</value>
+    <value>While you're using {0}</value>
   </data>
   <data name="Home_ReasonAppUnknown" xml:space="preserve">
-    <value>For the app in front.</value>
-  </data>
-  <data name="Home_Switch" xml:space="preserve">
-    <value>Switch profile</value>
-  </data>
-  <data name="Home_ManageProfiles" xml:space="preserve">
-    <value>Edit profiles</value>
+    <value>While you're using this app</value>
   </data>
   <data name="Home_NoHotkey" xml:space="preserve">
     <value>No hotkey</value>
@@ -1887,10 +1860,10 @@ It also supports development of DispHub.</value>
     <value>1 profile</value>
   </data>
   <data name="Home_ScheduleNext" xml:space="preserve">
-    <value>On: {0} at {1}</value>
+    <value>Next: {0} {1}</value>
   </data>
   <data name="Home_NoApps" xml:space="preserve">
-    <value>No apps yet</value>
+    <value>No apps added</value>
   </data>
   <data name="Home_Apps" xml:space="preserve">
     <value>{0} apps</value>
@@ -1899,7 +1872,7 @@ It also supports development of DispHub.</value>
     <value>1 app</value>
   </data>
   <data name="Home_EffectOn" xml:space="preserve">
-    <value>On: {0}</value>
+    <value>{0}</value>
   </data>
   <data name="Home_Displays" xml:space="preserve">
     <value>{0} displays</value>
@@ -1908,7 +1881,7 @@ It also supports development of DispHub.</value>
     <value>1 display</value>
   </data>
   <data name="Home_SettingsStatus" xml:space="preserve">
-    <value>Hotkeys, start-up and appearance</value>
+    <value>Keyboard shortcuts, startup and appearance</value>
   </data>
   <data name="Home_WhatsNew" xml:space="preserve">
     <value>What's new</value>
@@ -1926,7 +1899,7 @@ It also supports development of DispHub.</value>
     <value>DispHub {0}</value>
   </data>
   <data name="Home_Tour" xml:space="preserve">
-    <value>Show me around</value>
+    <value>Take a tour</value>
   </data>
   <data name="Tour_Skip" xml:space="preserve">
     <value>Skip</value>
@@ -1944,49 +1917,31 @@ It also supports development of DispHub.</value>
     <value>{0} of {1}</value>
   </data>
   <data name="Tour_PowerTitle" xml:space="preserve">
-    <value>The power button</value>
+    <value>Turn DispHub on or off</value>
   </data>
   <data name="Tour_PowerText" xml:space="preserve">
-    <value>Turns DispHub off and on, from any page. Off shows your displays' own colours and stops effects; on carries on where you were.</value>
+    <value>Turning DispHub off restores your displays' original colours and stops screen effects. Turn it back on to pick up where you left off.</value>
   </data>
   <data name="Tour_NowTitle" xml:space="preserve">
-    <value>What's on your screen</value>
+    <value>Current profile</value>
   </data>
   <data name="Tour_NowText" xml:space="preserve">
-    <value>The profile on now, and why: you picked it, your schedule did, or the app in front has its own.</value>
-  </data>
-  <data name="Tour_SwitchTitle" xml:space="preserve">
-    <value>Switch in one click</value>
-  </data>
-  <data name="Tour_SwitchText" xml:space="preserve">
-    <value>Pick a profile here, from the icon next to the clock, or with its hotkey, which works in games too.</value>
-  </data>
-  <data name="Tour_PagesTitle" xml:space="preserve">
-    <value>Set it up your way</value>
-  </data>
-  <data name="Tour_PagesText" xml:space="preserve">
-    <value>Make and edit profiles, switch them by time of day or per app, add screen effects, and set each display.</value>
-  </data>
-  <data name="Tour_SettingsTitle" xml:space="preserve">
-    <value>Hotkeys and more</value>
-  </data>
-  <data name="Tour_SettingsText" xml:space="preserve">
-    <value>Hotkeys, starting with Windows, the tray icon and how DispHub looks. Take this tour again from Home.</value>
+    <value>See which profile is in use and why: you selected it, your schedule did, or an app has its own profile.</value>
   </data>
   <data name="Onboarding_EffectsTitle" xml:space="preserve">
-    <value>Screen effects</value>
+    <value>Add screen effects</value>
   </data>
   <data name="Onboarding_EffectsText" xml:space="preserve">
-    <value>Film grain, VHS, CRT scanlines, colour-blind help and more, over everything on screen. In full-screen games they stay out of the way, so the game keeps its frame rate.</value>
+    <value>Film grain, VHS, CRT scanlines, colour filters and more, on top of everything on your screen.</value>
   </data>
   <data name="Onboarding_ShowEffects" xml:space="preserve">
     <value>Show Effects in the menu</value>
   </data>
   <data name="Onboarding_EffectsReady" xml:space="preserve">
-    <value>Then turn effects on and pick a look on the Effects page.</value>
+    <value>Then turn on effects and choose a look on the Effects page.</value>
   </data>
   <data name="Onboarding_EffectsPro" xml:space="preserve">
-    <value>Effects are part of DispHub Pro. Try every look on the Effects page first.</value>
+    <value>Screen effects are part of DispHub Pro. You can preview every look first.</value>
   </data>
   <data name="Onboarding_Original" xml:space="preserve">
     <value>Original</value>
@@ -1995,7 +1950,7 @@ It also supports development of DispHub.</value>
     <value>{0} of {1}</value>
   </data>
   <data name="Onboarding_Tour" xml:space="preserve">
-    <value>Show me around</value>
+    <value>Take a tour</value>
   </data>
   <data name="Search_Placeholder" xml:space="preserve">
     <value>Search settings</value>
@@ -2004,9 +1959,78 @@ It also supports development of DispHub.</value>
     <value>Page</value>
   </data>
   <data name="Quick_NothingToAdjust" xml:space="preserve">
-    <value>Pick a profile to adjust it</value>
+    <value>Select a profile to adjust it</value>
   </data>
   <data name="Home_TurnProfilesOn" xml:space="preserve">
-    <value>Turn profiles on</value>
+    <value>Turn on profiles</value>
+  </data>
+  <data name="Effects_HideFullScreen" xml:space="preserve">
+    <value>Hide in full-screen games and videos</value>
+  </data>
+  <data name="Effects_HideFullScreenHint" xml:space="preserve">
+    <value>Effects show in games too, at your display's full frame rate, about one frame behind. Turn this on to leave games untouched.</value>
+  </data>
+  <data name="Home_ReasonSelected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="Home_ReasonManualUntil" xml:space="preserve">
+    <value>Selected until {0}, when your schedule changes</value>
+  </data>
+  <data name="Home_Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="Home_EditSchedule" xml:space="preserve">
+    <value>Edit schedule</value>
+  </data>
+  <data name="Home_NoSchedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="Home_NoScheduleHint" xml:space="preserve">
+    <value>Change profiles automatically at sunset and sunrise, or at times you choose.</value>
+  </data>
+  <data name="Home_SetUpSchedule" xml:space="preserve">
+    <value>Set up</value>
+  </data>
+  <data name="Tour_ProfilesTitle" xml:space="preserve">
+    <value>Profiles</value>
+  </data>
+  <data name="Tour_ProfilesText" xml:space="preserve">
+    <value>Select a profile to use it. Its settings appear below, where you can fine-tune it and give it a keyboard shortcut.</value>
+  </data>
+  <data name="Tour_ScheduleTitle" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="Tour_ScheduleText" xml:space="preserve">
+    <value>Change profiles automatically at sunset and sunrise, at set hours, or on your own timetable.</value>
+  </data>
+  <data name="Tour_AppsTitle" xml:space="preserve">
+    <value>Profiles for apps</value>
+  </data>
+  <data name="Tour_AppsText" xml:space="preserve">
+    <value>Give a game or app its own profile. DispHub uses it whenever that app is in front.</value>
+  </data>
+  <data name="Tour_EffectsTitle" xml:space="preserve">
+    <value>Screen effects</value>
+  </data>
+  <data name="Tour_EffectsText" xml:space="preserve">
+    <value>Add film grain, VHS, CRT scanlines and colour filters on top of everything. Select a look to preview it.</value>
+  </data>
+  <data name="Tour_HotkeysTitle" xml:space="preserve">
+    <value>Keyboard shortcuts</value>
+  </data>
+  <data name="Tour_HotkeysText" xml:space="preserve">
+    <value>Turn DispHub on or off and switch profiles from any app, including full-screen games.</value>
+  </data>
+  <data name="Settings_Transparency" xml:space="preserve">
+    <value>Transparency</value>
+  </data>
+  <data name="Settings_TransparencyHint" xml:space="preserve">
+    <value>How much of the background material shows through DispHub's windows. Available with DispHub Pro, with Mica or Acrylic.</value>
+  </data>
+  <data name="Schedule_TomorrowAt" xml:space="preserve">
+    <value>tomorrow at {0}</value>
+  </data>
+  <data name="Schedule_DayAt" xml:space="preserve">
+    <value>on {0} at {1}</value>
   </data>
 </root>

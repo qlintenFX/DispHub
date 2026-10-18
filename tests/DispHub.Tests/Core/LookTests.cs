@@ -13,7 +13,7 @@ public sealed class LookTests
     [InlineData("arcadeCrt", true)]
     [InlineData("greyscale", false)]
     [InlineData("gameBoy", false)]
-    public void HasLayers_SaysWhatCanStayOnTopOfAGame(string id, bool hasLayers)
+    public void HasLayers_SaysWhatDrawsOnTopOfTheScreen(string id, bool hasLayers)
     {
         Assert.Equal(hasLayers, Looks.Find(id)!.Look.HasLayers);
     }

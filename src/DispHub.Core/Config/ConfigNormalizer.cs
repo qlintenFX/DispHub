@@ -110,6 +110,7 @@ public static class ConfigNormalizer
         if (!Enum.IsDefined(config.Ui.Backdrop))
             config.Ui.Backdrop = WindowBackdrop.Mica;
         config.Ui.TextScale = double.IsFinite(config.Ui.TextScale) ? Math.Clamp(config.Ui.TextScale, 0.9, 1.25) : 1.0;
+        config.Ui.Transparency = double.IsFinite(config.Ui.Transparency) ? Math.Clamp(config.Ui.Transparency, 0, 1) : 1;
         // Only the offered colours: an older or hand-edited code becomes the closest one.
         config.Ui.AccentColor = Accents.Nearest(config.Ui.AccentColor)?.Hex;
 
@@ -120,8 +121,6 @@ public static class ConfigNormalizer
     {
         effects.Look = (effects.Look ?? Look.Neutral).Clamp();
         effects.MaxFps = Math.Clamp(effects.MaxFps, 0, 240);
-        if (!Enum.IsDefined(effects.InFullScreen))
-            effects.InFullScreen = FullScreenEffects.Smooth;
         effects.Strength = double.IsFinite(effects.Strength) ? Math.Clamp(effects.Strength, 0, LookParameters.MaxStrength) : 1;
         effects.SavedLooks ??= [];
         effects.SavedLooks.RemoveAll(s => s is null);

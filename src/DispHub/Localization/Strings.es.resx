@@ -250,18 +250,6 @@ Se agregará como un perfil nuevo y se activará para que puedas verlo.</value>
   <data name="Profiles_Share" xml:space="preserve">
     <value>Compartir</value>
   </data>
-  <data name="Profiles_Status" xml:space="preserve">
-    <value>{0} en {1}</value>
-  </data>
-  <data name="Profiles_StatusAppRule" xml:space="preserve">
-    <value>{0} (regla de aplicación) en {1}</value>
-  </data>
-  <data name="Profiles_StatusManual" xml:space="preserve">
-    <value>{0} (elegido manualmente) en {1}</value>
-  </data>
-  <data name="Profiles_StatusSchedule" xml:space="preserve">
-    <value>{0} (programación) en {1}</value>
-  </data>
   <data name="Profiles_Temperature" xml:space="preserve">
     <value>Temperatura de color</value>
   </data>

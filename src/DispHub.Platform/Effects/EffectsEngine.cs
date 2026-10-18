@@ -10,8 +10,7 @@ namespace DispHub.Platform.Effects;
 /// in front ignore it (see <see cref="EffectsEngine.SetFullScreen"/>).
 /// </param>
 /// <param name="MainDisplayOnly">Only the main display; otherwise all of them.</param>
-/// <param name="InFullScreen">What a display with a full-screen app in front shows (see <see cref="EffectsEngine.SetFullScreen"/>).</param>
-public sealed record EffectOptions(int MaxFps = 0, bool MainDisplayOnly = false, FullScreenEffects InFullScreen = FullScreenEffects.Smooth);
+public sealed record EffectOptions(int MaxFps = 0, bool MainDisplayOnly = false);
 
 /// <summary>
 /// Shows a <see cref="Look"/> on the displays, each drawn by its own GPU thread (see <see cref="EffectOutput"/>).
@@ -77,10 +76,7 @@ public sealed class EffectsEngine : IDisposable
             output.SetHidden(hidden);
     }
 
-    /// <summary>
-    /// A full-screen game or video is in front on one display: it gets only the layers on top
-    /// (<see cref="FullScreenEffects.Smooth"/>), or the whole look at every frame, uncapped.
-    /// </summary>
+    /// <summary>A full-screen game or video is in front on one display: it gets every frame, uncapped.</summary>
     public void SetFullScreen(Rectangle monitor, bool fullScreen)
     {
         if (fullScreen ? !_fullScreen.Add(monitor) : !_fullScreen.Remove(monitor))

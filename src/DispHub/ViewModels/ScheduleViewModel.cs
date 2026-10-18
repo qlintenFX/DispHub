@@ -356,7 +356,24 @@ public sealed partial class ScheduleViewModel : PageViewModel
         TimeZoneInfo zone = _time.LocalTimeZone;
         DateOnly day = Today;
         DateTime midnight = day.ToDateTime(TimeOnly.MinValue);
-        bool Valid(Guid id) => RuleEngine.FindProfile(_app.Config, id) is not null;
+        Segments = SegmentsFor(_app.Config, day, zone);
+
+        UsesSun = schedule.Slots.Any(s => s.Anchor != ScheduleAnchor.Time);
+        (DateTime sunrise, DateTime sunset) = ScheduleTimeline.SunOn(day, schedule.Location, zone);
+        Sunrise = UsesSun ? (sunrise - midnight).TotalMinutes : null;
+        Sunset = UsesSun ? (sunset - midnight).TotalMinutes : null;
+        Now = (_time.GetLocalNow().DateTime - midnight).TotalMinutes;
+
+        RefreshSunText(day);
+        RefreshStatus();
+    }
+
+    /// <summary>The schedule's profiles across <paramref name="day"/>, for a <see cref="DayTimeline"/>.</summary>
+    internal static IReadOnlyList<TimelineSegment> SegmentsFor(AppConfig config, DateOnly day, TimeZoneInfo zone)
+    {
+        ScheduleConfig schedule = config.Schedule;
+        DateTime midnight = day.ToDateTime(TimeOnly.MinValue);
+        bool Valid(Guid id) => RuleEngine.FindProfile(config, id) is not null;
 
         var segments = new List<TimelineSegment>();
         IReadOnlyList<ScheduleOccurrence> occurrences = ScheduleTimeline.ForDay(schedule, day, zone, Valid);
@@ -374,20 +391,11 @@ public sealed partial class ScheduleViewModel : PageViewModel
             double fade = previous is { } p && p != slot.ProfileId ? slot.FadeMinutes : 0;
             segments.Add(Segment(slot, slot.Id, start, end, fade));
         }
-        Segments = segments;
-
-        UsesSun = schedule.Slots.Any(s => s.Anchor != ScheduleAnchor.Time);
-        (DateTime sunrise, DateTime sunset) = ScheduleTimeline.SunOn(day, schedule.Location, zone);
-        Sunrise = UsesSun ? (sunrise - midnight).TotalMinutes : null;
-        Sunset = UsesSun ? (sunset - midnight).TotalMinutes : null;
-        Now = (_time.GetLocalNow().DateTime - midnight).TotalMinutes;
-
-        RefreshSunText(day);
-        RefreshStatus();
+        return segments;
 
         TimelineSegment Segment(ScheduleSlot slot, Guid? id, double start, double end, double fade)
         {
-            Profile profile = RuleEngine.FindProfile(_app.Config, slot.ProfileId)!;
+            Profile profile = RuleEngine.FindProfile(config, slot.ProfileId)!;
             return new TimelineSegment(id, profile.Name, ProfileColour(profile.Color), start, end, fade, ColorPreview.Render(profile.Color));
         }
 
@@ -416,10 +424,7 @@ public sealed partial class ScheduleViewModel : PageViewModel
         }
         string current = RuleEngine.FindProfile(_app.Config, position.Current.Slot.ProfileId)?.Name ?? "";
         string next = RuleEngine.FindProfile(_app.Config, position.Next.Slot.ProfileId)?.Name ?? "";
-        string when = position.Next.Start.Date == now.Date
-            ? DayTimeline.TimeLabel(position.Next.Start.TimeOfDay.TotalMinutes)
-            : Loc.Format("Schedule_DayAndTime", position.Next.Start.ToString("dddd", CultureInfo.CurrentCulture), DayTimeline.TimeLabel(position.Next.Start.TimeOfDay.TotalMinutes));
-        StatusText = Loc.Format("Schedule_StatusRunning", current, next, when);
+        StatusText = Loc.Format("Schedule_StatusRunning", current, next, DayTimeline.WhenLabel(position.Next.Start, now));
     }
 
     private void RefreshSunText(DateOnly day)

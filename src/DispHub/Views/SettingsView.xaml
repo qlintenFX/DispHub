@@ -144,6 +144,41 @@
         SelectedItem="{Binding Backdrop}" />
     </ctl:SettingsCard>
     <ctl:SettingsCard
+      Description="{l:Tr Settings_TransparencyHint}"
+      Header="{l:Tr Settings_Transparency}"
+      Icon="Blur24">
+      <StackPanel Orientation="Horizontal">
+        <Border
+          Margin="0,0,12,0"
+          Padding="6,1"
+          VerticalAlignment="Center"
+          Background="{DynamicResource AccentFillColorDefaultBrush}"
+          CornerRadius="4"
+          Visibility="{Binding IsProTransparency, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
+          <TextBlock
+            FontSize="11"
+            Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+            Text="Pro" />
+        </Border>
+        <Slider
+          Width="180"
+          VerticalAlignment="Center"
+          AutomationProperties.Name="{l:Tr Settings_Transparency}"
+          IsEnabled="{Binding CanSetTransparency}"
+          LargeChange="0.1"
+          Maximum="1"
+          Minimum="0"
+          SmallChange="0.05"
+          Value="{Binding Transparency}" />
+        <TextBlock
+          Width="48"
+          Margin="8,0,0,0"
+          VerticalAlignment="Center"
+          Text="{Binding TransparencyText}"
+          TextAlignment="Right" />
+      </StackPanel>
+    </ctl:SettingsCard>
+    <ctl:SettingsCard
       Description="{l:Tr Settings_TextSizeHint}"
       Header="{l:Tr Settings_TextSize}"
       Icon="TextFont24">
@@ -195,6 +230,7 @@
     <!-- Hotkeys -->
     <ctl:SectionHeader Text="{l:Tr Settings_Hotkeys}" />
     <ctl:SettingsCard
+      ctl:Tour.Stop="hotkeys"
       Description="{l:Tr Settings_PauseHint}"
       Header="{l:Tr Settings_Pause}"
       Icon="Power24">

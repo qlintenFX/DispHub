@@ -45,6 +45,12 @@ public static class RuleEngine
 {
     public const string BaseContext = "base";
 
+    private const string AppContextPrefix = "app:";
+
+    /// <summary>True for the context of an app rule (the app in front decides), as opposed to the schedule or none.</summary>
+    public static bool IsAppContext(string contextKey) =>
+        contextKey?.StartsWith(AppContextPrefix, StringComparison.Ordinal) ?? false;
+
     public static RuleOutput Resolve(RuleInput input)
     {
         ArgumentNullException.ThrowIfNull(input);
@@ -61,7 +67,7 @@ public static class RuleEngine
         AppRule? appRule = input.IsPro ? FindAppRule(config, input.ForegroundExecutable) : null;
         ScheduleState? schedule = appRule is null && input.IsPro ? FindScheduleSlot(config, input.LocalNow, input.TimeZone ?? TimeZoneInfo.Local) : null;
 
-        string context = appRule is not null ? $"app:{appRule.Id}"
+        string context = appRule is not null ? AppContextPrefix + appRule.Id
             : schedule is not null ? schedule.ContextKey
             : BaseContext;
 

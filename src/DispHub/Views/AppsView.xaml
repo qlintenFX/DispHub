@@ -24,7 +24,10 @@
       Visibility="{Binding IsPro, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
 
     <!-- What's in front -->
-    <Border Padding="16,14" Style="{StaticResource SettingCard}">
+    <Border
+      Padding="16,14"
+      ctl:Tour.Stop="apps"
+      Style="{StaticResource SettingCard}">
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />

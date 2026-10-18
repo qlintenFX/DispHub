@@ -211,6 +211,18 @@ public sealed class DayTimeline : FrameworkElement
         new TimeOnly(hour % 24, 0).ToString("t", CultureInfo.CurrentCulture);
 
     /// <summary>A time of day in the user's format, e.g. 21:30 or 9:30 PM.</summary>
+    /// <summary>When something next happens, as Windows says it: "at 21:00", "tomorrow at 07:00", "on Monday at 07:00".</summary>
+    public static string WhenLabel(DateTime when, DateTime now)
+    {
+        string time = TimeLabel(when.TimeOfDay.TotalMinutes);
+        return (when.Date - now.Date).Days switch
+        {
+            0 => Localization.Loc.Format("Schedule_AtTime", time),
+            1 => Localization.Loc.Format("Schedule_TomorrowAt", time),
+            _ => Localization.Loc.Format("Schedule_DayAt", when.ToString("dddd", CultureInfo.CurrentCulture), time),
+        };
+    }
+
     public static string TimeLabel(double minutes)
     {
         int m = (int)Math.Round(minutes) % (24 * 60);

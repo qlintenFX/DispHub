@@ -84,12 +84,16 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
 public sealed class ThemeService
 {
     private readonly List<FluentWindow> _windows = [];
+    private readonly ILicenseService _license;
     private UiConfig _ui = new();
 
-    public ThemeService()
+    public ThemeService(ILicenseService license)
     {
+        _license = license;
         // Windows got the new theme colours: match the window material (dark or light Mica).
         ApplicationThemeManager.Changed += (_, _) => UpdateWindows();
+        // Transparency is Pro: buying it (or losing it) changes the windows.
+        _license.Changed += (_, _) => Application.Current?.Dispatcher.BeginInvoke(UpdateWindows);
     }
 
     public void Apply(UiConfig ui)
@@ -110,6 +114,9 @@ public sealed class ThemeService
         ApplyAccent(theme); // Picks the fill shade for the theme that is now on.
         UpdateWindows();
     }
+
+    /// <summary>Redraws the window backgrounds, e.g. after the transparency changed.</summary>
+    public void RefreshWindows() => UpdateWindows();
 
     /// <summary>Windows switched light or dark mode, or its accent colour.</summary>
     public void OnWindowsThemeChanged() => Apply(_ui);
@@ -154,6 +161,21 @@ public sealed class ThemeService
         ApplicationAccentColorManager.Apply(ToColor(hex), ToColor(primary), ToColor(secondary), ToColor(tertiary));
     }
 
+    /// <summary>
+    /// The window background over the material: clear as Windows draws it, or (Pro) the theme's own background
+    /// laid over it, as solid as the Transparency setting says.
+    /// </summary>
+    private System.Windows.Media.SolidColorBrush Tint()
+    {
+        double transparency = new FeatureGate(_license.IsPro).Transparency ? _ui.Transparency : 1;
+        if (transparency >= 1 || Application.Current?.TryFindResource("ApplicationBackgroundColor") is not System.Windows.Media.Color background)
+            return System.Windows.Media.Brushes.Transparent;
+        background.A = (byte)Math.Round((1 - transparency) * 255);
+        var brush = new System.Windows.Media.SolidColorBrush(background);
+        brush.Freeze();
+        return brush;
+    }
+
     private void UpdateWindow(FluentWindow window)
     {
         nint handle = new WindowInteropHelper(window).Handle;
@@ -171,7 +193,7 @@ public sealed class ThemeService
         }
         else
         {
-            window.Background = System.Windows.Media.Brushes.Transparent;
+            window.Background = Tint();
             if (HwndSource.FromHwnd(handle)?.CompositionTarget is { } target)
                 target.BackgroundColor = System.Windows.Media.Colors.Transparent;
         }

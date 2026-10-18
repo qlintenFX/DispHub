@@ -37,6 +37,10 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         };
         SizeChanged += (_, e) => viewModel.SetNarrow(e.NewSize.Width < NarrowWidth);
         viewModel.Home.TourRequested += (_, _) => StartTour();
+        TourOverlay.PageRequested += (_, page) =>
+            viewModel.SelectedPage = viewModel.AllPages.FirstOrDefault(p => p.GetType() == page) ?? viewModel.SelectedPage;
+        // The tour ends where it started.
+        TourOverlay.Finished += (_, _) => viewModel.Navigate<HomeViewModel>();
         Activated += async (_, _) => await review.OnWindowActivatedAsync(this);
         viewModel.PropertyChanged += (_, e) =>
         {
@@ -57,13 +61,16 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
             _tourPending = true;
     }
 
+    /// <summary>The important parts, page by page. Effects is skipped when it isn't in the menu.</summary>
     private void BeginTour() => TourOverlay.Start(
     [
-        new("power", Loc.Get("Tour_PowerTitle"), Loc.Get("Tour_PowerText")),
-        new("now", Loc.Get("Tour_NowTitle"), Loc.Get("Tour_NowText")),
-        new("switch", Loc.Get("Tour_SwitchTitle"), Loc.Get("Tour_SwitchText")),
-        new("pages", Loc.Get("Tour_PagesTitle"), Loc.Get("Tour_PagesText")),
-        new("settings", Loc.Get("Tour_SettingsTitle"), Loc.Get("Tour_SettingsText")),
+        new("power", Loc.Get("Tour_PowerTitle"), Loc.Get("Tour_PowerText"), typeof(HomeViewModel)),
+        new("now", Loc.Get("Tour_NowTitle"), Loc.Get("Tour_NowText"), typeof(HomeViewModel)),
+        new("profiles", Loc.Get("Tour_ProfilesTitle"), Loc.Get("Tour_ProfilesText"), typeof(ProfilesViewModel)),
+        new("schedule", Loc.Get("Tour_ScheduleTitle"), Loc.Get("Tour_ScheduleText"), typeof(ScheduleViewModel)),
+        new("apps", Loc.Get("Tour_AppsTitle"), Loc.Get("Tour_AppsText"), typeof(AppsViewModel)),
+        new("effects", Loc.Get("Tour_EffectsTitle"), Loc.Get("Tour_EffectsText"), typeof(EffectsViewModel)),
+        new("hotkeys", Loc.Get("Tour_HotkeysTitle"), Loc.Get("Tour_HotkeysText"), typeof(SettingsViewModel)),
     ], this);
 
     private void OnSearchFocused(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e) =>

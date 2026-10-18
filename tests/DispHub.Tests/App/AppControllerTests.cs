@@ -2,6 +2,7 @@ using DispHub.Core.Color;
 using DispHub.Core.Config;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
+using DispHub.Core.Rules;
 using DispHub.Platform;
 using DispHub.Platform.Displays;
 using DispHub.Platform.Shell;
@@ -264,6 +265,27 @@ public sealed class AppControllerTests : IDisposable
         _app.SetProfilesOn(false, ChangeSource.Editor);
         _app.SetProfilesOn(true, ChangeSource.Editor);
         Assert.Equal(Night.Id, _app.Current!.ProfileId);
+    }
+
+    [Fact]
+    public async Task APickDuringTheSchedule_ComesBackAfterAnAppWithItsOwnRule()
+    {
+        await _license.PurchaseProAsync(0);
+        _app.Config.Schedule.Enabled = true;
+        _app.Config.Schedule.Slots.Add(new ScheduleSlot { Start = new TimeOnly(0, 0), ProfileId = Night.Id });
+        _app.Config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id });
+        _app.SettingsChanged();
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
+
+        _app.ActivateProfile(Standard.Id, ChangeSource.Editor);
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.OnForegroundChanged();
+        Assert.Equal(Gaming.Id, _app.Current!.ProfileId);
+
+        _foreground.Switch(@"C:\Windows\explorer.exe");
+        _app.OnForegroundChanged();
+        Assert.Equal(Standard.Id, _app.Current!.ProfileId);
+        Assert.Equal(TargetReason.Manual, _app.Current.Reason);
     }
 
     [Fact]

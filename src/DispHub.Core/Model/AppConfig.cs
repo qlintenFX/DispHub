@@ -239,6 +239,12 @@ public sealed class UiConfig
 
     public WindowBackdrop Backdrop { get; set; } = WindowBackdrop.Mica;
 
+    /// <summary>
+    /// How much of the window material (Mica or Acrylic) shows through DispHub's windows, from 0 (solid) to 1 (as
+    /// Windows draws it). Pro; free users always get 1.
+    /// </summary>
+    public double Transparency { get; set; } = 1;
+
     /// <summary>Show the navigation as icons only.</summary>
     public bool CompactNavigation { get; set; }
 

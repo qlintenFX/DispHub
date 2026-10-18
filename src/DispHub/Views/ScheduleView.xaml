@@ -41,7 +41,10 @@
       Visibility="{Binding IsPro, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
 
     <!-- When: like Night light in Windows Settings. -->
-    <Border Padding="18,8,18,10" Style="{StaticResource SettingCard}">
+    <Border
+      Padding="18,8,18,10"
+      ctl:Tour.Stop="schedule"
+      Style="{StaticResource SettingCard}">
       <StackPanel>
         <RadioButton Content="{l:Tr Schedule_SunsetToSunrise}" IsChecked="{Binding IsSunMode}" />
         <StackPanel Margin="28,0,0,4" Visibility="{Binding IsSunMode, Converter={StaticResource BoolToVisibility}}">

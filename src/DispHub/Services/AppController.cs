@@ -434,8 +434,12 @@ public sealed class AppController : IDisposable
     {
         RuleOutput output = Resolve();
 
-        // A manual pick from another context has ended. Being off isn't a context: turned back on, the pick carries on.
-        if (_manual is not null && output.Reason != TargetReason.Paused && _manual.ContextKey != output.ContextKey)
+        // A pick by hand lasts as long as what it was made in: an app's pick until that app leaves the front, a pick
+        // under the schedule until the schedule's next change, like Windows' Night light. A visit to an app with
+        // its own rule doesn't end a schedule pick: back from the app, the pick comes back. Being off isn't a
+        // context either: turned back on, the pick carries on.
+        if (_manual is not null && output.Reason != TargetReason.Paused && _manual.ContextKey != output.ContextKey &&
+            (RuleEngine.IsAppContext(_manual.ContextKey) || !RuleEngine.IsAppContext(output.ContextKey)))
             _manual = null;
 
         // Monitors can appear later (the colour thread enumerates them); send a wildcard for the default.

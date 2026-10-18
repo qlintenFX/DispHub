@@ -159,22 +159,6 @@ public enum ColorVision
     BlueWeak,
 }
 
-/// <summary>What screen effects do while a full-screen game or video is in front.</summary>
-public enum FullScreenEffects
-{
-    /// <summary>
-    /// Only what can be drawn on top (see <see cref="Look.HasLayers"/>): the game itself is never copied, so it
-    /// shows at its own frame rate with no added delay.
-    /// </summary>
-    Smooth,
-
-    /// <summary>The whole look, from a copy of the screen: up to the display's refresh rate, a frame behind.</summary>
-    Full,
-
-    /// <summary>No effects until the game or video leaves the front.</summary>
-    Hide,
-}
-
 public sealed class EffectsConfig
 {
     public bool Enabled { get; set; }
@@ -200,8 +184,11 @@ public sealed class EffectsConfig
     /// </summary>
     public int MaxFps { get; set; }
 
-    /// <summary>What effects do while a full-screen game or video is in front.</summary>
-    public FullScreenEffects InFullScreen { get; set; }
+    /// <summary>
+    /// No effects while a full-screen game or video is in front. Otherwise they show there too, at every frame the
+    /// display can show.
+    /// </summary>
+    public bool HideOverFullScreen { get; set; }
 
     /// <summary>Only the main display; otherwise every display.</summary>
     public bool MainDisplayOnly { get; set; }

@@ -250,18 +250,6 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
   <data name="Profiles_Share" xml:space="preserve">
     <value>Delen</value>
   </data>
-  <data name="Profiles_Status" xml:space="preserve">
-    <value>{0} op {1}</value>
-  </data>
-  <data name="Profiles_StatusAppRule" xml:space="preserve">
-    <value>{0} (app-regel) op {1}</value>
-  </data>
-  <data name="Profiles_StatusManual" xml:space="preserve">
-    <value>{0} (handmatig gekozen) op {1}</value>
-  </data>
-  <data name="Profiles_StatusSchedule" xml:space="preserve">
-    <value>{0} (planning) op {1}</value>
-  </data>
   <data name="Profiles_Temperature" xml:space="preserve">
     <value>Kleurtemperatuur</value>
   </data>
