@@ -77,11 +77,19 @@ vibrance, gamma, screen dimmer, night light, color temperature, display profiles
 
 Use `store/screenshots/*.png` (1920 x 1080) in numbered order. Captions:
 
-1. See what's on your screen now and what your schedule does today
-2. A profile for every moment: games, films and late nights
-3. From sunset to sunrise, like Night light, with a smooth fade (Pro)
-4. Your game gets its own profile while it's in front (Pro)
-5. Switch and adjust from the notification area
+1. Switch profiles with a keyboard shortcut
+2. A profile for every moment
+3. Warmer evenings, automatically (Pro)
+4. Games get their own look (Pro)
+5. Switch and adjust from the quick panel
+
+## Store art and trailer
+
+- 16:9 Super hero art: `store/art/super-hero-1920x1080.png` (no text; the Store puts the title over its left side)
+- 1:1 Box art: `store/art/box-art-2160.png`
+- 9:16 Poster art: `store/art/poster-1440x2160.png`
+- Trailer: 31 s, 1920 x 1080, H.264 MP4, built from the same UI captures; thumbnail `store/art/trailer-thumbnail.png`.
+  The video (11 MB) is uploaded to Partner Center and not kept in git.
 
 ## Store logo
 
