@@ -16,12 +16,6 @@ public sealed record FeatureGate(bool IsPro)
     public bool Schedules => IsPro;
     public bool PerMonitorProfiles => IsPro;
 
-    /// <summary>Showing screen effects. Everyone can try every look in the app's preview.</summary>
-    public bool ScreenEffects => IsPro;
-
-    /// <summary>Saving looks under a name.</summary>
-    public bool SavedLooks => IsPro;
-
     /// <summary>Choosing how see-through the quick panel is.</summary>
     public bool PanelOpacity => IsPro;
 

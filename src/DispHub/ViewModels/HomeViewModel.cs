@@ -32,17 +32,15 @@ public sealed partial class HomeViewModel : PageViewModel
     public const string ChangelogUrl = AboutViewModel.RepositoryUrl + "/blob/main/CHANGELOG.md";
 
     private readonly AppController _app;
-    private readonly EffectsService _effects;
     private readonly ILicenseService _license;
     private readonly IUpgradeService _upgrade;
     private readonly TimeProvider _time;
     private readonly System.Windows.Threading.DispatcherTimer _clock = new() { Interval = TimeSpan.FromSeconds(30) };
 
-    public HomeViewModel(AppController app, EffectsService effects, ILicenseService license, IUpgradeService upgrade, TimeProvider time)
+    public HomeViewModel(AppController app, ILicenseService license, IUpgradeService upgrade, TimeProvider time)
         : base(Loc.Get("Nav_Home"), SymbolRegular.Home24)
     {
         _app = app;
-        _effects = effects;
         _license = license;
         _upgrade = upgrade;
         _time = time;
@@ -51,7 +49,6 @@ public sealed partial class HomeViewModel : PageViewModel
         _app.PowerChanged += (_, _) => Refresh();
         _app.ProfileEdited += (_, _) => Refresh();
         _app.MonitorsChanged += (_, _) => Refresh();
-        _effects.Changed += (_, _) => Refresh();
         _license.Changed += (_, _) => Application.Current?.Dispatcher.BeginInvoke(Refresh);
         _clock.Tick += (_, _) => TodayNow = MinutesSinceMidnight();
         Refresh();
@@ -70,9 +67,6 @@ public sealed partial class HomeViewModel : PageViewModel
 
     /// <summary>Why: picked by hand, the schedule (until when), the app in front, or DispHub is off.</summary>
     [ObservableProperty] public partial string NowReason { get; set; } = "";
-
-    /// <summary>The look on screen, if any.</summary>
-    [ObservableProperty] public partial string? NowEffect { get; set; }
 
     [ObservableProperty] public partial bool IsOn { get; set; }
 
@@ -143,7 +137,6 @@ public sealed partial class HomeViewModel : PageViewModel
         NowPicture = ColorPreview.Large(active?.Color ?? ColorSettings.Neutral);
         NowName = active?.Name ?? Loc.Get(config.IsOff ? "Home_Off" : "Home_Original");
         NowReason = Reason(config, active, current);
-        NowEffect = _effects.Current is not null && _effects.State != EffectsState.Off ? Loc.Format("Home_Effect", _effects.NameOf(_effects.CurrentId)) : null;
 
         ShowToday = features.Schedules && config.Schedule.Enabled && config.Schedule.Slots.Count > 0;
         if (ShowToday)
@@ -159,12 +152,6 @@ public sealed partial class HomeViewModel : PageViewModel
         int rules = config.AppRules.Count(r => r.Enabled);
         Features.Add(new HomeFeature(typeof(AppsViewModel), SymbolRegular.AppsList24, Loc.Get("Nav_Apps"),
             rules == 0 ? Loc.Get("Home_NoApps") : Loc.Format(rules == 1 ? "Home_OneApp" : "Home_Apps", rules), rules > 0 && features.AppRules, !features.AppRules));
-        if (config.Ui.ShowEffects)
-        {
-            bool effectsOn = _effects.State is not EffectsState.Off and not EffectsState.NeedsPro;
-            Features.Add(new HomeFeature(typeof(EffectsViewModel), SymbolRegular.Sparkle24, Loc.Get("Nav_Effects"),
-                effectsOn ? Loc.Format("Home_EffectOn", _effects.NameOf(_effects.CurrentId)) : Loc.Get("Common_Off"), effectsOn, !features.ScreenEffects));
-        }
         int displays = _app.Monitors.Count;
         Features.Add(new HomeFeature(typeof(DisplaysViewModel), SymbolRegular.Desktop24, Loc.Get("Nav_Displays"),
             Loc.Format(displays == 1 ? "Home_OneDisplay" : "Home_Displays", displays), true, false));

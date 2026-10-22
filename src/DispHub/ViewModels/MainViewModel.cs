@@ -33,8 +33,6 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly AppController _app;
     private readonly ILicenseService _license;
     private readonly IUpgradeService _upgrade;
-    private readonly EffectsViewModel _effects;
-    private readonly IReadOnlyList<PageViewModel> _allPages;
     private bool _isNarrow;
 
     public MainViewModel(
@@ -42,7 +40,6 @@ public sealed partial class MainViewModel : ObservableObject
         ProfilesViewModel profiles,
         ScheduleViewModel schedule,
         AppsViewModel apps,
-        EffectsViewModel effects,
         DisplaysViewModel displays,
         SettingsViewModel settings,
         AboutViewModel about,
@@ -54,11 +51,9 @@ public sealed partial class MainViewModel : ObservableObject
         Home = home;
         _license = license;
         _upgrade = upgrade;
-        _effects = effects;
-        _allPages = [home, profiles, schedule, apps, effects, displays];
-        Pages = [.. _allPages];
+        Pages = [home, profiles, schedule, apps, displays];
         FooterPages = [settings, about];
-        settings.SetStartPages(_allPages);
+        settings.SetStartPages(Pages);
         SelectedPage = AllPages.FirstOrDefault(p => p.Key == app.Config.Ui.StartPage) ?? home;
         home.NavigateRequested += (_, page) => SelectedPage = AllPages.FirstOrDefault(p => p.GetType() == page) ?? SelectedPage;
         _license.Changed += (_, _) => System.Windows.Application.Current?.Dispatcher.BeginInvoke(RefreshLicense);
@@ -84,8 +79,8 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial bool ShowUpgradeCard { get; set; }
 
-    /// <summary>The main features, at the top of the navigation. Effects only shows when turned on in Settings.</summary>
-    public System.Collections.ObjectModel.ObservableCollection<PageViewModel> Pages { get; }
+    /// <summary>The main features, at the top of the navigation.</summary>
+    public IReadOnlyList<PageViewModel> Pages { get; }
 
     /// <summary>Settings and About, at the bottom.</summary>
     public IReadOnlyList<PageViewModel> FooterPages { get; }
@@ -164,17 +159,5 @@ public sealed partial class MainViewModel : ObservableObject
         NavWidth = new System.Windows.GridLength(IsNavExpanded ? 220 : 64);
         TextScale = _app.Config.Ui.TextScale;
         ShowUpgradeCard = ShowUpgrade && IsNavExpanded;
-
-        bool showEffects = _app.Config.Ui.ShowEffects;
-        if (showEffects && !Pages.Contains(_effects))
-        {
-            Pages.Insert(_allPages.ToList().IndexOf(_effects), _effects);
-        }
-        else if (!showEffects && Pages.Contains(_effects))
-        {
-            if (SelectedPage == _effects)
-                SelectedPage = Pages[0];
-            Pages.Remove(_effects);
-        }
     }
 }

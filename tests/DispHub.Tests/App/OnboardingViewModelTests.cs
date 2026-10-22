@@ -57,14 +57,6 @@ public sealed class OnboardingViewModelTests : IDisposable
         Assert.True(_app.Config.Ui.OnboardingDone);
     }
 
-    [Fact]
-    public void EffectsSwitch_IsTheSettingsSwitch()
-    {
-        _walkthrough.ShowEffects = !_app.Config.Ui.ShowEffects;
-
-        Assert.Equal(_walkthrough.ShowEffects, _app.Config.Ui.ShowEffects);
-    }
-
     private sealed class FakeAutostart : IAutostart
     {
         public Task<AutostartState> GetStateAsync() => Task.FromResult(AutostartState.Disabled);

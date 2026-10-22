@@ -18,15 +18,12 @@ public sealed class AppConfig
     public Guid? ActiveProfileId { get; set; }
 
     /// <summary>
-    /// The master switch is off: original colours, no screen effects, no automation, until it's turned back on.
+    /// The master switch is off: original colours and no automation, until it's turned back on.
     /// The power button in the window and the quick panel, the tray menu and the on/off hotkey use it.
     /// </summary>
     public bool IsOff { get; set; }
 
-    /// <summary>
-    /// Profiles are off (the switch on the Profiles page): original colours and no automation. Screen effects
-    /// still follow the Effects page.
-    /// </summary>
+    /// <summary>Profiles are off (the switch on the Profiles page): original colours and no automation.</summary>
     public bool IsPaused { get; set; }
 
     /// <summary>Per-monitor options keyed by monitor device path (stable across reboots).</summary>
@@ -37,9 +34,6 @@ public sealed class AppConfig
     public ScheduleConfig Schedule { get; set; } = new();
     public HotkeyConfig Hotkeys { get; set; } = new();
     public UiConfig Ui { get; set; } = new();
-
-    /// <summary>Screen effects: looks drawn over the screen by the GPU.</summary>
-    public Effects.EffectsConfig Effects { get; set; } = new();
 }
 
 public sealed class Profile
@@ -50,12 +44,6 @@ public sealed class Profile
 
     /// <summary>Hotkey in <see cref="Hotkeys.HotkeyGesture"/> string form, e.g. "Ctrl+Alt+1".</summary>
     public string? Hotkey { get; set; }
-
-    /// <summary>
-    /// The screen effect while this profile is on: a look id, <see cref="Effects.LookLibrary.None"/> for none, or null
-    /// to leave effects as set on the Effects page.
-    /// </summary>
-    public string? Effect { get; set; }
 
     /// <summary>Optional per-monitor settings that replace <see cref="Color"/> on that monitor (Pro).</summary>
     [JsonObjectCreationHandling(JsonObjectCreationHandling.Populate)]
@@ -176,7 +164,6 @@ public sealed class HotkeyConfig
     public string? TogglePause { get; set; }
     public string? NextProfile { get; set; }
     public string? PreviousProfile { get; set; }
-    public string? ToggleEffects { get; set; }
     public string? QuickPanel { get; set; }
 }
 
@@ -261,7 +248,4 @@ public sealed class UiConfig
     public bool ReduceMotion { get; set; }
 
     public OsdPosition OsdPosition { get; set; } = OsdPosition.BottomCenter;
-
-    /// <summary>Show screen effects (an extra, off until the user turns it on in Settings).</summary>
-    public bool ShowEffects { get; set; }
 }

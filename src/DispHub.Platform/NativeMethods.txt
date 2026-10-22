@@ -75,22 +75,8 @@ WM_CONTEXTMENU
 WM_LBUTTONDBLCLK
 WM_DPICHANGED
 WM_APP
-// Screen effects: colour matrix
-MagInitialize
-MagUninitialize
-MagSetFullscreenColorEffect
-MAGCOLOREFFECT
 
-// Screen effects: overlay window
-RegisterClassEx
-UnregisterClass
-CreateWindowEx
-DestroyWindow
-DefWindowProc
-SetLayeredWindowAttributes
-SetWindowDisplayAffinity
-GetModuleHandle
-EnumDisplayMonitors
+// Foreground and idle
 GetForegroundWindow
 GetLastInputInfo
 LASTINPUTINFO
@@ -100,28 +86,6 @@ MonitorFromWindow
 SHQueryUserNotificationState
 WINDOW_STYLE
 SHOW_WINDOW_CMD
-
-// Screen effects: Direct3D 11 and DirectComposition
-D3D11CreateDevice
-D3D11_SDK_VERSION
-ID3D11Device
-ID3D11DeviceContext
-ID3D11Texture2D
-ID3D11RenderTargetView
-ID3D11VertexShader
-ID3D11PixelShader
-ID3D11Buffer
-IDXGIDevice
-IDXGIAdapter
-IDXGIFactory2
-IDXGISwapChain1
-DCompositionCreateDevice
-IDCompositionDevice
-IDCompositionTarget
-IDCompositionVisual
-D3DCompile
-ID3DBlob
-DXGI_ERROR_DEVICE_REMOVED
 
 // Apps page: running programs and their icons
 EnumWindows
@@ -138,26 +102,3 @@ WM_DWMCOLORIZATIONCOLORCHANGED
 SHDefExtractIcon
 EnumDisplaySettings
 ENUM_DISPLAY_SETTINGS_MODE
-
-// Screen effects: desktop duplication and the shader pipeline
-CreateDXGIFactory1
-IDXGIFactory1
-IDXGIAdapter1
-IDXGIOutput
-IDXGIOutput1
-IDXGIOutputDuplication
-IDXGIResource
-DXGI_ERROR_WAIT_TIMEOUT
-DXGI_ERROR_ACCESS_LOST
-DXGI_ERROR_NOT_FOUND
-ID3D11ShaderResourceView
-ID3D11SamplerState
-IDXGIDevice1
-DXGI_ERROR_UNSUPPORTED
-GetDpiForMonitor
-ID3D11Query
-ID3D11Query
-WM_NCHITTEST
-WM_MOUSEACTIVATE
-SetProp
-RemoveProp

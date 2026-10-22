@@ -251,26 +251,10 @@
       Icon="WindowArrowUp24">
       <ctl:HotkeyBox Gesture="{Binding QuickPanelHotkey}" />
     </ctl:SettingsCard>
-    <ctl:SettingsCard
-      Description="{l:Tr Settings_EffectsHotkeyHint}"
-      Header="{l:Tr Settings_EffectsHotkey}"
-      Icon="Sparkle24"
-      Visibility="{Binding ShowEffects, Converter={StaticResource BoolToVisibility}}">
-      <ctl:HotkeyBox Gesture="{Binding EffectsHotkey}" />
-    </ctl:SettingsCard>
     <TextBlock
       Margin="2,4,0,0"
       Style="{StaticResource ErrorText}"
       Text="{Binding HotkeyError}"
       Visibility="{Binding HotkeyError, Converter={x:Static ctl:NullToCollapsedConverter.Instance}}" />
-
-    <!-- Extras -->
-    <ctl:SectionHeader Text="{l:Tr Settings_Extras}" />
-    <ctl:SettingsCard
-      Description="{l:Tr Settings_ShowEffectsHint}"
-      Header="{l:Tr Settings_ShowEffects}"
-      Icon="Sparkle24">
-      <ui:ToggleSwitch IsChecked="{Binding ShowEffects}" />
-    </ctl:SettingsCard>
   </StackPanel>
 </UserControl>

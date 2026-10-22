@@ -1,11 +1,4 @@
 # Labels pull requests by the parts of DispHub they change (see .github/workflows/label.yml).
-effects:
-  - changed-files:
-      - any-glob-to-any-file:
-          - 'src/DispHub.Core/Effects/**'
-          - 'src/DispHub.Platform/Effects/**'
-          - 'src/DispHub/**/Effects*'
-
 colour:
   - changed-files:
       - any-glob-to-any-file:

@@ -90,7 +90,7 @@
           </ui:AutoSuggestBox.ItemTemplate>
         </ui:AutoSuggestBox>
       </ui:TitleBar.CenterContent>
-      <!-- DispHub's power button, on every page: off is the original colours and no effects. -->
+      <!-- DispHub's power button, on every page: off is the original colours. -->
       <ui:TitleBar.TrailingContent>
         <ui:Button
           Width="40"

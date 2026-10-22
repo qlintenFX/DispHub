@@ -13,12 +13,12 @@ namespace DispHub.ViewModels;
 
 /// <summary>
 /// The first-run walkthrough: what DispHub does, where its icon lives and what a left or right click on it does,
-/// the hotkeys, screen effects, and the power button. Shown once; the choices in it are ordinary settings. It ends
+/// the hotkeys, and the power button. Shown once; the choices in it are ordinary settings. It ends
 /// with the offer of a tour of the main window.
 /// </summary>
 public sealed partial class OnboardingViewModel : ObservableObject
 {
-    public const int StepCount = 5;
+    public const int StepCount = 4;
 
     private readonly AppController _app;
     private readonly IAutostart _autostart;
@@ -30,7 +30,6 @@ public sealed partial class OnboardingViewModel : ObservableObject
         _app = app;
         _autostart = autostart;
         TrayLeftClick = app.Config.Ui.TrayLeftClick;
-        ShowEffects = app.Config.Ui.ShowEffects;
         foreach (Profile profile in app.Config.Profiles.Where(p => p.Hotkey is not null).Take(4))
             Hotkeys.Add(new HotkeyLine(profile.Name, profile.Hotkey!));
         if (app.Config.Hotkeys.TogglePause is { } onOff)
@@ -47,41 +46,26 @@ public sealed partial class OnboardingViewModel : ObservableObject
     public ObservableCollection<HotkeyLine> Hotkeys { get; } = [];
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsFirst), nameof(IsLast), nameof(IsWelcome), nameof(IsTray), nameof(IsHotkeys), nameof(IsEffects), nameof(IsReady), nameof(StepText))]
+    [NotifyPropertyChangedFor(nameof(IsFirst), nameof(IsLast), nameof(IsWelcome), nameof(IsTray), nameof(IsHotkeys), nameof(IsReady), nameof(StepText))]
     public partial int Step { get; set; }
 
     [ObservableProperty] public partial TrayClickAction TrayLeftClick { get; set; }
     [ObservableProperty] public partial bool LaunchAtLogin { get; set; }
-
-    /// <summary>Effects in the menu (the Settings switch of the same name).</summary>
-    [ObservableProperty] public partial bool ShowEffects { get; set; }
 
     public bool IsFirst => Step == 0;
     public bool IsLast => Step == StepCount - 1;
     public bool IsWelcome => Step == 0;
     public bool IsTray => Step == 1;
     public bool IsHotkeys => Step == 2;
-    public bool IsEffects => Step == 3;
-    public bool IsReady => Step == 4;
+    public bool IsReady => Step == 3;
 
     public string StepText => Loc.Format("Onboarding_Step", Step + 1, StepCount);
-
-    /// <summary>What switching effects on in the menu means here: Pro, or ready to use.</summary>
-    public string EffectsNote => Loc.Get(_app.Features.ScreenEffects ? "Onboarding_EffectsReady" : "Onboarding_EffectsPro");
 
     partial void OnTrayLeftClickChanged(TrayClickAction value)
     {
         if (_loading)
             return;
         _app.Config.Ui.TrayLeftClick = value;
-        _app.SettingsChanged();
-    }
-
-    partial void OnShowEffectsChanged(bool value)
-    {
-        if (_loading)
-            return;
-        _app.Config.Ui.ShowEffects = value;
         _app.SettingsChanged();
     }
 
