@@ -11,7 +11,7 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace DispHub.Platform.Shell;
 
 /// <summary>Small window tricks WPF doesn't expose.</summary>
-public static class WindowHelpers
+public static partial class WindowHelpers
 {
     /// <summary>Makes a window that never takes focus, stays out of Alt+Tab and lets clicks pass through.</summary>
     public static void MakeOverlay(nint handle)
@@ -97,6 +97,32 @@ public static class WindowHelpers
         _ = PInvoke.DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, &type, (uint)sizeof(DWM_SYSTEMBACKDROP_TYPE));
     }
 
+    /// <summary>
+    /// Blurs what's behind a window and lays <paramref name="tint"/> over it, its alpha setting how solid it looks:
+    /// the acrylic Windows' own flyouts use, with a strength of our choosing (the system materials have a fixed one).
+    /// Null turns it off. Turn the system material off first (<see cref="SetMaterial"/> with Solid).
+    /// </summary>
+    public static unsafe void SetAcrylic(nint handle, Color? tint)
+    {
+        // DWM draws the blur under the window's own pixels, so the frame must not reach into the client area: a
+        // frame extended for a system material (as WPF-UI does) covers the blur with black.
+        var noFrame = default(global::Windows.Win32.UI.Controls.MARGINS);
+        _ = PInvoke.DwmExtendFrameIntoClientArea((HWND)handle, in noFrame);
+        var accent = new AccentPolicy
+        {
+            AccentState = tint is null ? AccentDisabled : AccentAcrylicBlurBehind,
+            // ABGR.
+            GradientColor = tint is { } c ? (uint)(c.A << 24 | c.B << 16 | c.G << 8 | c.R) : 0,
+        };
+        var data = new WindowCompositionAttributeData
+        {
+            Attribute = WcaAccentPolicy,
+            Data = &accent,
+            SizeOfData = sizeof(AccentPolicy),
+        };
+        _ = SetWindowCompositionAttribute(handle, &data);
+    }
+
     /// <summary>The size in pixels Windows draws small icons at (notification area, title bars) on this system's DPI.</summary>
     public static int SmallIconSize() =>
         PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXSMICON, PInvoke.GetDpiForSystem());
@@ -112,4 +138,28 @@ public static class WindowHelpers
 
     /// <summary>Lets Windows page out memory this process isn't using right now.</summary>
     public static void TrimWorkingSet() => PInvoke.EmptyWorkingSet(PInvoke.GetCurrentProcess());
+
+    private const int WcaAccentPolicy = 19;
+    private const int AccentDisabled = 0;
+    private const int AccentAcrylicBlurBehind = 4;
+
+    private struct AccentPolicy
+    {
+        public int AccentState;
+        public int AccentFlags;
+        public uint GradientColor;
+        public int AnimationId;
+    }
+
+    private unsafe struct WindowCompositionAttributeData
+    {
+        public int Attribute;
+        public void* Data;
+        public int SizeOfData;
+    }
+
+    // The one hand-written import: SetWindowCompositionAttribute isn't in the Win32 metadata, so CsWin32 can't make
+    // it. Undocumented but unchanged since Windows 10; the shell and apps such as FluentFlyout use it for acrylic.
+    [LibraryImport("user32.dll")]
+    private static unsafe partial int SetWindowCompositionAttribute(nint hwnd, WindowCompositionAttributeData* data);
 }

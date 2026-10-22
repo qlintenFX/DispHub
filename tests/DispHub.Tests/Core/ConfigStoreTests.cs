@@ -192,6 +192,21 @@ public sealed class ConfigNormalizerTests
         Assert.Equal(expected, config.Ui.AccentColor);
     }
 
+    [Theory]
+    [InlineData(0.4, 0.4)]
+    [InlineData(-1, 0)]
+    [InlineData(3, 1)]
+    [InlineData(double.NaN, UiConfig.DefaultPanelOpacity)]
+    public void Normalize_PanelOpacity_StaysBetweenSeeThroughAndSolid(double saved, double expected)
+    {
+        var config = new AppConfig();
+        config.Ui.PanelOpacity = saved;
+
+        ConfigNormalizer.Normalize(config);
+
+        Assert.Equal(expected, config.Ui.PanelOpacity);
+    }
+
     [Fact]
     public void AccentShades_AreLighterOnDarkAndDarkerOnLight()
     {

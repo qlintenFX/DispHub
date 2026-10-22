@@ -131,6 +131,7 @@ IsWindowVisible
 GetWindow
 DwmGetWindowAttribute
 DwmSetWindowAttribute
+DwmExtendFrameIntoClientArea
 DWMWINDOWATTRIBUTE
 DWM_SYSTEMBACKDROP_TYPE
 WM_DWMCOLORIZATIONCOLORCHANGED

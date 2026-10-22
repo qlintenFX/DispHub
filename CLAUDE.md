@@ -24,7 +24,8 @@ pwsh build/package-msix.ps1                   # MSIX for the Store; see the scri
   app rule, schedule), `HotkeyGesture`, `FeatureGate` (free vs Pro limits).
 - `src/DispHub.Platform` (Windows): monitors via DisplayConfig, `GdiGamma`, vendor vibrance (`NvApi`),
   `ColorApplier` (single colour thread, restore journal), hotkeys, foreground watcher, autostart, Store licensing.
-  Win32 calls go through CsWin32: add the API name to `NativeMethods.txt`, never hand-write `DllImport`.
+  Win32 calls go through CsWin32: add the API name to `NativeMethods.txt`, never hand-write `DllImport`. The one
+  exception is `SetWindowCompositionAttribute` (quick panel acrylic), which isn't in the Win32 metadata.
 - `src/DispHub` (WPF + WPF-UI): `AppController` owns state and is the only thing views talk to;
   view models in `ViewModels/`, XAML in `Views/`, `SmoothScrollViewer` for all page scrolling.
 - `tests/DispHub.Tests`: xUnit v3. Fakes for the colour applier, hotkeys and display backend live in the test files.

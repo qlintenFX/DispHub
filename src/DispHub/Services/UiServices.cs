@@ -84,6 +84,7 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
 public sealed class ThemeService
 {
     private readonly List<FluentWindow> _windows = [];
+    private readonly HashSet<FluentWindow> _flyouts = [];
     private readonly ILicenseService _license;
     private UiConfig _ui = new();
 
@@ -92,7 +93,7 @@ public sealed class ThemeService
         _license = license;
         // Windows got the new theme colours: match the window material (dark or light Mica).
         ApplicationThemeManager.Changed += (_, _) => UpdateWindows();
-        // Transparency is Pro: buying it (or losing it) changes the windows.
+        // The quick panel's opacity is Pro: buying it (or losing it) changes the panel.
         _license.Changed += (_, _) => Application.Current?.Dispatcher.BeginInvoke(UpdateWindows);
     }
 
@@ -115,20 +116,29 @@ public sealed class ThemeService
         UpdateWindows();
     }
 
-    /// <summary>Redraws the window backgrounds, e.g. after the transparency changed.</summary>
+    /// <summary>Redraws the window backgrounds, e.g. after the quick panel's opacity changed.</summary>
     public void RefreshWindows() => UpdateWindows();
 
     /// <summary>Windows switched light or dark mode, or its accent colour.</summary>
     public void OnWindowsThemeChanged() => Apply(_ui);
 
-    /// <summary>Call from the window's SourceInitialized, before it first shows.</summary>
-    public void Attach(FluentWindow window)
+    /// <summary>
+    /// Call from the window's SourceInitialized, before it first shows. A flyout (the quick panel) gets acrylic, as
+    /// Windows' own flyouts do; other windows get the Background setting's material.
+    /// </summary>
+    public void Attach(FluentWindow window, bool flyout = false)
     {
         ArgumentNullException.ThrowIfNull(window);
         if (_windows.Contains(window))
             return;
         _windows.Add(window);
-        window.Closed += (_, _) => _windows.Remove(window);
+        if (flyout)
+            _flyouts.Add(window);
+        window.Closed += (_, _) =>
+        {
+            _windows.Remove(window);
+            _flyouts.Remove(window);
+        };
         UpdateWindow(window);
     }
 
@@ -162,18 +172,27 @@ public sealed class ThemeService
     }
 
     /// <summary>
-    /// The window background over the material: clear as Windows draws it, or (Pro) the theme's own background
-    /// laid over it, as solid as the Transparency setting says.
+    /// The flyout acrylic's tint: Windows' flyout grey for the theme, as solid as the quick panel opacity setting
+    /// says (Pro) or the default.
     /// </summary>
-    private System.Windows.Media.SolidColorBrush Tint()
+    private System.Drawing.Color FlyoutTint(bool dark)
     {
-        double transparency = new FeatureGate(_license.IsPro).Transparency ? _ui.Transparency : 1;
-        if (transparency >= 1 || Application.Current?.TryFindResource("ApplicationBackgroundColor") is not System.Windows.Media.Color background)
-            return System.Windows.Media.Brushes.Transparent;
-        background.A = (byte)Math.Round((1 - transparency) * 255);
-        var brush = new System.Windows.Media.SolidColorBrush(background);
-        brush.Freeze();
-        return brush;
+        double opacity = new FeatureGate(_license.IsPro).PanelOpacity ? _ui.PanelOpacity : UiConfig.DefaultPanelOpacity;
+        int alpha = (int)Math.Round(Math.Clamp(opacity, 0, 1) * 255);
+        return dark ? System.Drawing.Color.FromArgb(alpha, 0x20, 0x20, 0x20) : System.Drawing.Color.FromArgb(alpha, 0xF3, 0xF3, 0xF3);
+    }
+
+    /// <summary>Windows' "Transparency effects" switch (Settings > Personalisation > Colours).</summary>
+    private static bool TransparencyEffectsOn()
+    {
+        try
+        {
+            return new global::Windows.UI.ViewManagement.UISettings().AdvancedEffectsEnabled;
+        }
+        catch (System.Runtime.InteropServices.COMException)
+        {
+            return true;
+        }
     }
 
     private void UpdateWindow(FluentWindow window)
@@ -187,17 +206,24 @@ public sealed class ThemeService
         WindowBackdrop backdrop = theme == ApplicationTheme.HighContrast || !OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621)
             ? WindowBackdrop.Solid
             : _ui.Backdrop;
-        if (backdrop == WindowBackdrop.Solid)
+        bool dark = theme == ApplicationTheme.Dark;
+        bool flyout = _flyouts.Contains(window);
+        // Acrylic that blurs the windows behind is only for flyouts: Windows draws it plainly when transparency
+        // effects are off, and so does DispHub.
+        bool acrylic = flyout && backdrop != WindowBackdrop.Solid && TransparencyEffectsOn();
+        if (backdrop == WindowBackdrop.Solid || (flyout && !acrylic))
         {
             window.SetResourceReference(System.Windows.Controls.Control.BackgroundProperty, "ApplicationBackgroundBrush");
         }
         else
         {
-            window.Background = Tint();
+            window.Background = System.Windows.Media.Brushes.Transparent;
             if (HwndSource.FromHwnd(handle)?.CompositionTarget is { } target)
                 target.BackgroundColor = System.Windows.Media.Colors.Transparent;
         }
-        WindowHelpers.SetMaterial(handle, backdrop, dark: theme == ApplicationTheme.Dark);
+        WindowHelpers.SetMaterial(handle, flyout ? WindowBackdrop.Solid : backdrop, dark);
+        if (flyout)
+            WindowHelpers.SetAcrylic(handle, acrylic ? FlyoutTint(dark) : null);
     }
 
     private static System.Windows.Media.Color ToColor(string hex) =>
