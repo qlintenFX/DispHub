@@ -101,25 +101,25 @@ public sealed partial class SettingsViewModel : PageViewModel
     partial void OnBackdropChanged(WindowBackdrop value)
     {
         SaveAppearance(c => c.Ui.Backdrop = value);
-        CanSetTransparency = IsProTransparency && value != WindowBackdrop.Solid;
+        CanSetPanelOpacity = IsProPanelOpacity && value != WindowBackdrop.Solid;
     }
 
-    /// <summary>How see-through the windows are, 0 (solid) to 1 (clear); a Pro choice, over Mica or Acrylic.</summary>
-    [ObservableProperty] public partial double Transparency { get; set; }
+    /// <summary>How solid the quick panel's acrylic is, 0 (see-through) to 1; a Pro choice.</summary>
+    [ObservableProperty] public partial double PanelOpacity { get; set; }
 
-    [ObservableProperty] public partial string TransparencyText { get; set; } = "";
+    [ObservableProperty] public partial string PanelOpacityText { get; set; } = "";
 
-    [ObservableProperty] public partial bool IsProTransparency { get; set; }
+    [ObservableProperty] public partial bool IsProPanelOpacity { get; set; }
 
-    [ObservableProperty] public partial bool CanSetTransparency { get; set; }
+    [ObservableProperty] public partial bool CanSetPanelOpacity { get; set; }
 
-    partial void OnTransparencyChanged(double value)
+    partial void OnPanelOpacityChanged(double value)
     {
-        TransparencyText = string.Create(System.Globalization.CultureInfo.CurrentCulture, $"{value * 100:0} %");
-        if (_loading || !IsProTransparency)
+        PanelOpacityText = string.Create(System.Globalization.CultureInfo.CurrentCulture, $"{value * 100:0} %");
+        if (_loading || !IsProPanelOpacity)
             return;
-        // Only the window backgrounds change: no need to reload the theme on every step of the slider.
-        _app.Config.Ui.Transparency = value;
+        // Only the panel's background changes: no need to reload the theme on every step of the slider.
+        _app.Config.Ui.PanelOpacity = value;
         _theme.RefreshWindows();
         _app.SettingsChanged();
     }
@@ -219,9 +219,9 @@ public sealed partial class SettingsViewModel : PageViewModel
             ShowEffects = ui.ShowEffects;
             QuickPanelHotkey = _app.Config.Hotkeys.QuickPanel;
             Backdrop = ui.Backdrop;
-            IsProTransparency = _app.Features.Transparency;
-            CanSetTransparency = IsProTransparency && ui.Backdrop != WindowBackdrop.Solid;
-            Transparency = IsProTransparency ? ui.Transparency : 1;
+            IsProPanelOpacity = _app.Features.PanelOpacity;
+            CanSetPanelOpacity = IsProPanelOpacity && ui.Backdrop != WindowBackdrop.Solid;
+            PanelOpacity = IsProPanelOpacity ? ui.PanelOpacity : UiConfig.DefaultPanelOpacity;
             CompactNavigation = ui.CompactNavigation;
             TextScale = TextScales.MinBy(s => Math.Abs(s.Scale - ui.TextScale));
             Animations = !ui.ReduceMotion;

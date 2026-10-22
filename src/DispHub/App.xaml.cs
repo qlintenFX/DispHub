@@ -248,7 +248,7 @@ public partial class App : Application
         viewModel.OpenWindow = ShowMainWindow;
         var panel = new QuickPanel(viewModel);
         ThemeService theme = _services!.GetRequiredService<ThemeService>();
-        panel.SourceInitialized += (_, _) => theme.Attach(panel);
+        panel.SourceInitialized += (_, _) => theme.Attach(panel, flyout: true);
         return panel;
     }
 

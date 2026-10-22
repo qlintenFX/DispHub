@@ -660,7 +660,7 @@ It also supports development of DispHub.</value>
     <value>Background</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica tints the window with your wallpaper's colours, acrylic blurs what's behind it. Windows shows a plain colour while energy saver is on.</value>
+    <value>Mica tints the window with your wallpaper's colours, acrylic blurs what's behind it. The quick panel uses acrylic unless you choose Solid. Windows shows a plain colour while energy saver is on or transparency effects are off.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Text size</value>
@@ -2021,16 +2021,16 @@ It also supports development of DispHub.</value>
   <data name="Tour_HotkeysText" xml:space="preserve">
     <value>Turn DispHub on or off and switch profiles from any app, including full-screen games.</value>
   </data>
-  <data name="Settings_Transparency" xml:space="preserve">
-    <value>Transparency</value>
-  </data>
-  <data name="Settings_TransparencyHint" xml:space="preserve">
-    <value>How much of the background material shows through DispHub's windows. Available with DispHub Pro, with Mica or Acrylic.</value>
-  </data>
   <data name="Schedule_TomorrowAt" xml:space="preserve">
     <value>tomorrow at {0}</value>
   </data>
   <data name="Schedule_DayAt" xml:space="preserve">
     <value>on {0} at {1}</value>
+  </data>
+  <data name="Settings_PanelOpacity" xml:space="preserve">
+    <value>Quick panel opacity</value>
+  </data>
+  <data name="Settings_PanelOpacityHint" xml:space="preserve">
+    <value>How solid the quick panel's blurred background is. Lower shows more of what's behind it. Available with DispHub Pro.</value>
   </data>
 </root>

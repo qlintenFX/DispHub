@@ -144,8 +144,8 @@
         SelectedItem="{Binding Backdrop}" />
     </ctl:SettingsCard>
     <ctl:SettingsCard
-      Description="{l:Tr Settings_TransparencyHint}"
-      Header="{l:Tr Settings_Transparency}"
+      Description="{l:Tr Settings_PanelOpacityHint}"
+      Header="{l:Tr Settings_PanelOpacity}"
       Icon="Blur24">
       <StackPanel Orientation="Horizontal">
         <Border
@@ -154,7 +154,7 @@
           VerticalAlignment="Center"
           Background="{DynamicResource AccentFillColorDefaultBrush}"
           CornerRadius="4"
-          Visibility="{Binding IsProTransparency, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
+          Visibility="{Binding IsProPanelOpacity, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
           <TextBlock
             FontSize="11"
             Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
@@ -163,18 +163,21 @@
         <Slider
           Width="180"
           VerticalAlignment="Center"
-          AutomationProperties.Name="{l:Tr Settings_Transparency}"
-          IsEnabled="{Binding CanSetTransparency}"
+          AutomationProperties.Name="{l:Tr Settings_PanelOpacity}"
+          IsEnabled="{Binding CanSetPanelOpacity}"
+          IsMoveToPointEnabled="True"
+          IsSnapToTickEnabled="True"
           LargeChange="0.1"
           Maximum="1"
           Minimum="0"
           SmallChange="0.05"
-          Value="{Binding Transparency}" />
+          TickFrequency="0.05"
+          Value="{Binding PanelOpacity}" />
         <TextBlock
           Width="48"
           Margin="8,0,0,0"
           VerticalAlignment="Center"
-          Text="{Binding TransparencyText}"
+          Text="{Binding PanelOpacityText}"
           TextAlignment="Right" />
       </StackPanel>
     </ctl:SettingsCard>
