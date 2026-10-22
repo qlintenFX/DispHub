@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 namespace DispHub.Core.Color;
 
 /// <summary>Builds gamma ramps from <see cref="ColorSettings"/>. Pure and deterministic.</summary>

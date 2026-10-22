@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DispHub.Core.Color;

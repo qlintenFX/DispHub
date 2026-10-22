@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 namespace DispHub.Core.Color;
 
 /// <summary>A 256-entry-per-channel gamma ramp in the layout SetDeviceGammaRamp expects (R, G, B).</summary>

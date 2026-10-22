@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 namespace DispHub.Platform;
 
 /// <summary>Where DispHub keeps its files: %LocalAppData%\DispHub, or the package's LocalState when installed from the Store.</summary>

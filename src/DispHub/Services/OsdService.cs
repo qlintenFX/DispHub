@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 using DispHub.Core.Config;
 using DispHub.Core.Model;
 using DispHub.Localization;

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 using Microsoft.Win32;
 
 namespace DispHub.Platform.Gamma;
