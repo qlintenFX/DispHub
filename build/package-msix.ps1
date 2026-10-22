@@ -3,8 +3,8 @@
   Builds the MSIX bundle for the Microsoft Store without Visual Studio.
 
 .DESCRIPTION
-  Publishes DispHub self-contained for each architecture, stamps packaging/AppxManifest.xml with the identity from
-  packaging/identity.json, indexes resources with makepri, packs each architecture with makeappx and bundles them.
+  Publishes DispHub self-contained for each architecture, stamps packaging/AppxManifest.xml with the Store identity
+  from packaging/identity.json (the dev identity with -Register), indexes resources with makepri, packs each architecture with makeappx and bundles them.
   The Store signs the package on upload, so the output is unsigned.
 
   -Register skips packing and registers the x64 layout for local testing. It needs Developer Mode
@@ -24,7 +24,9 @@ param(
 $ErrorActionPreference = "Stop"
 $root = Split-Path $PSScriptRoot -Parent
 $artifacts = Join-Path $root "artifacts"
-$identity = Get-Content (Join-Path $root "packaging/identity.json") -Raw | ConvertFrom-Json
+$identities = Get-Content (Join-Path $root "packaging/identity.json") -Raw | ConvertFrom-Json
+# The Store's identity for the upload; a separate one for local test installs.
+$identity = if ($Register) { $identities.dev } else { $identities.store }
 
 if (-not $Version) {
     $props = [xml](Get-Content (Join-Path $root "Directory.Build.props"))
