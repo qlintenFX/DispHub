@@ -1,6 +1,9 @@
 # Microsoft Store listing (English)
 
 Paste these into Partner Center > DispHub > Store listings > English (United States).
+
+Partner Center: app Store ID `9N5183BRLX34` (https://apps.microsoft.com/detail/9N5183BRLX34), package identity in
+`packaging/identity.json`; the `pro` add-on is Store ID `9NMJ1WGTW0B8`.
 Field limits are noted in brackets.
 
 ## Product name
@@ -91,8 +94,8 @@ Use `store/screenshots/*.png` (1920 x 1080) in numbered order. Captions:
 - Support contact: https://github.com/qlintenFX/DispHub/issues
 - Copyright: © 2026 qlintenFX
 - Category: Utilities & tools
-- Additional system requirements: Windows 10 version 2004 or later. Vibrance needs an NVIDIA or Intel GPU driving the
-  display.
+- Additional system requirements: Windows 10 version 2004 or later. Vibrance needs an NVIDIA, Intel or AMD (beta) GPU
+  driving the display.
 
 ## Notes for certification (restricted capability: runFullTrust)
 
