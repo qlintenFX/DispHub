@@ -54,6 +54,18 @@ public sealed class NullToCollapsedConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+/// <summary>Visible only while the value is missing, e.g. a stand-in for a picture that couldn't be loaded.</summary>
+public sealed class NullToVisibleConverter : IValueConverter
+{
+    public static NullToVisibleConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is null ? Visibility.Visible : Visibility.Collapsed;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 public sealed class InverseBoolConverter : IValueConverter
 {
     public static InverseBoolConverter Instance { get; } = new();
