@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 namespace DispHub.Core.Effects;
 
 /// <summary>Colour sets of old computers and screens; a look can limit the picture to one of them.</summary>

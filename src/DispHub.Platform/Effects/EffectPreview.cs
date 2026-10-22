@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 using DispHub.Core.Effects;
 using Windows.Win32.Graphics.Direct3D11;
 using Windows.Win32.Graphics.Dxgi.Common;
