@@ -1,6 +1,13 @@
 {
-  "comment": "Must match Partner Center > Product management > Product identity exactly. The dev values let you build and test locally.",
-  "name": "qlintenFX.DispHub.Dev",
-  "publisher": "CN=DispHub Dev",
-  "publisherDisplayName": "qlintenFX"
+  "comment": "store: Partner Center > Product management > Product identity, used for the Store package. dev: used by -Register for local testing, so a test install never clashes with the Store one.",
+  "store": {
+    "name": "qlintenFX.DispHub",
+    "publisher": "CN=B0A6C37F-8A14-4C5F-920D-E8D9B19D2FDB",
+    "publisherDisplayName": "qlintenFX"
+  },
+  "dev": {
+    "name": "qlintenFX.DispHub.Dev",
+    "publisher": "CN=DispHub Dev",
+    "publisherDisplayName": "qlintenFX"
+  }
 }
