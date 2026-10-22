@@ -45,6 +45,26 @@ public sealed class ConfigStoreTests : IDisposable
     }
 
     [Fact]
+    public void Load_SettingsFromAVersionWithScreenEffects_StillLoad()
+    {
+        var store = new ConfigStore(_dir.Path);
+        File.WriteAllText(store.ConfigPath, """
+            {
+              "version": 1,
+              "profiles": [ { "id": "6f1c1f3e-7a51-4c2e-9d2b-0d4d3c1f5a10", "name": "Gaming", "effect": "film" } ],
+              "hotkeys": { "toggleEffects": "Ctrl+Alt+E" },
+              "ui": { "showEffects": true },
+              "effects": { "enabled": true, "preset": "vhs", "savedLooks": [ { "name": "Mine" } ] }
+            }
+            """);
+
+        ConfigLoadResult result = store.Load();
+
+        Assert.Equal(ConfigLoadStatus.Loaded, result.Status);
+        Assert.Equal("Gaming", Assert.Single(result.Config.Profiles).Name);
+    }
+
+    [Fact]
     public void Save_LeavesNoTempFileAndKeepsBackup()
     {
         var store = new ConfigStore(_dir.Path);
