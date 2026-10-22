@@ -6,12 +6,13 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:l="clr-namespace:DispHub.Localization"
+  xmlns:services="clr-namespace:DispHub.Services"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   Title="DispHub"
-  Width="1060"
-  Height="740"
-  MinWidth="780"
+  Width="1100"
+  Height="760"
+  MinWidth="760"
   MinHeight="520"
   d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
   ExtendsContentIntoTitleBar="True"
@@ -20,34 +21,131 @@
   WindowCornerPreference="Round"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
+  <Window.Resources>
+    <DataTemplate x:Key="NavEntry" DataType="{x:Type vm:PageViewModel}">
+      <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Style.Triggers>
+              <!-- Icons only: centre them, so the compact bar is symmetrical. -->
+              <DataTrigger Binding="{Binding DataContext.IsNavExpanded, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+        <ui:SymbolIcon FontSize="18" Symbol="{Binding Icon}" />
+        <TextBlock
+          Margin="12,0,0,0"
+          VerticalAlignment="Center"
+          Text="{Binding Title}"
+          Visibility="{Binding DataContext.IsNavExpanded, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibility}}" />
+      </StackPanel>
+    </DataTemplate>
+  </Window.Resources>
+
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <ui:TitleBar Title="DispHub" Grid.Row="0">
+    <ui:TitleBar
+      Title="DispHub"
+      Grid.Row="0"
+      HorizontalContentAlignment="Center"
+      VerticalContentAlignment="Center">
       <ui:TitleBar.Icon>
         <ui:ImageIcon RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/DispHub-64.png" />
       </ui:TitleBar.Icon>
+      <!-- Search every page and setting, like Windows Settings. -->
+      <ui:TitleBar.CenterContent>
+        <ui:AutoSuggestBox
+          x:Name="SearchBox"
+          Width="340"
+          VerticalAlignment="Center"
+          ClearButtonEnabled="True"
+          GotKeyboardFocus="OnSearchFocused"
+          PlaceholderText="{l:Tr Search_Placeholder}"
+          QuerySubmitted="OnSearchSubmitted"
+          SuggestionChosen="OnSearchChosen"
+          TextChanged="OnSearchTextChanged"
+          UpdateTextOnSelect="False">
+          <ui:AutoSuggestBox.Icon>
+            <ui:IconSourceElement>
+              <ui:SymbolIconSource Symbol="Search24" />
+            </ui:IconSourceElement>
+          </ui:AutoSuggestBox.Icon>
+          <ui:AutoSuggestBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type services:SearchResult}">
+              <StackPanel Margin="0,2">
+                <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                  FontSize="12"
+                  Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                  Text="{Binding Where}"
+                  TextTrimming="CharacterEllipsis" />
+              </StackPanel>
+            </DataTemplate>
+          </ui:AutoSuggestBox.ItemTemplate>
+        </ui:AutoSuggestBox>
+      </ui:TitleBar.CenterContent>
+      <!-- DispHub's power button, on every page: off is the original colours and no effects. -->
+      <ui:TitleBar.TrailingContent>
+        <ui:Button
+          Width="40"
+          Height="32"
+          Margin="0,0,12,0"
+          Padding="0"
+          VerticalAlignment="Center"
+          ctl:Tour.Stop="power"
+          AutomationProperties.Name="{l:Tr Power_Name}"
+          Command="{Binding TogglePowerCommand}"
+          Icon="{ui:SymbolIcon Power24}">
+          <ui:Button.Style>
+            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
+              <Setter Property="Appearance" Value="Primary" />
+              <Setter Property="ToolTip" Value="{l:Tr Power_TurnOff}" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsOn}" Value="False">
+                  <Setter Property="Appearance" Value="Secondary" />
+                  <Setter Property="ToolTip" Value="{l:Tr Power_TurnOn}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ui:Button.Style>
+        </ui:Button>
+      </ui:TitleBar.TrailingContent>
     </ui:TitleBar>
 
     <Grid Grid.Row="1">
+      <Grid.LayoutTransform>
+        <ScaleTransform ScaleX="{Binding TextScale}" ScaleY="{Binding TextScale}" />
+      </Grid.LayoutTransform>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="210" />
+        <ColumnDefinition Width="{Binding NavWidth}" />
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
 
-      <DockPanel Margin="8,4,8,12">
+      <DockPanel Margin="8,4,8,10">
+        <ListBox
+          Background="Transparent"
+          BorderThickness="0"
+          DockPanel.Dock="Bottom"
+          ItemContainerStyle="{StaticResource NavItem}"
+          ItemTemplate="{StaticResource NavEntry}"
+          ItemsSource="{Binding FooterPages}"
+          SelectedItem="{Binding SelectedFooterPage}" />
+
         <Border
-          Margin="0,8,0,0"
+          Margin="0,8,0,8"
           Padding="12"
           Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
           BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
           BorderThickness="1"
           CornerRadius="8"
           DockPanel.Dock="Bottom"
-          Visibility="{Binding ShowUpgrade, Converter={StaticResource BoolToVisibility}}">
+          Visibility="{Binding ShowUpgradeCard, Converter={StaticResource BoolToVisibility}}">
           <StackPanel>
             <TextBlock FontWeight="SemiBold" Text="DispHub Pro" />
             <TextBlock
@@ -63,23 +161,13 @@
         </Border>
 
         <ListBox
+          VerticalAlignment="Top"
           Background="Transparent"
           BorderThickness="0"
           ItemContainerStyle="{StaticResource NavItem}"
+          ItemTemplate="{StaticResource NavEntry}"
           ItemsSource="{Binding Pages}"
-          SelectedItem="{Binding SelectedPage}">
-          <ListBox.ItemTemplate>
-            <DataTemplate DataType="{x:Type vm:PageViewModel}">
-              <StackPanel Orientation="Horizontal">
-                <ui:SymbolIcon
-                  Margin="0,0,12,0"
-                  FontSize="18"
-                  Symbol="{Binding Icon}" />
-                <TextBlock VerticalAlignment="Center" Text="{Binding Title}" />
-              </StackPanel>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
+          SelectedItem="{Binding SelectedTopPage}" />
       </DockPanel>
 
       <Border
@@ -90,12 +178,14 @@
         CornerRadius="8,0,0,0">
         <ctl:SmoothScrollViewer x:Name="PageScroller">
           <ContentControl
-            MaxWidth="920"
+            MaxWidth="960"
             Margin="36,28,36,36"
             Content="{Binding SelectedPage}"
             Focusable="False" />
         </ctl:SmoothScrollViewer>
       </Border>
     </Grid>
+
+    <ctl:TourOverlay x:Name="TourOverlay" Grid.RowSpan="2" />
   </Grid>
 </ui:FluentWindow>

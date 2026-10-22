@@ -31,6 +31,7 @@ public partial class App : Application
     private ILogger<App>? _logger;
     private bool _exiting;
     private bool _restart;
+    private bool _themeChangePending;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -84,6 +85,7 @@ public partial class App : Application
             return;
         }
 
+        ComboBoxClickFix.Register();
         _services = ConfigureServices(args);
         _logger = _services.GetRequiredService<ILogger<App>>();
         _logger.LogInformation("DispHub {Version} starting (packaged: {Packaged})", AboutViewModel.Version, PackageInfo.IsPackaged);
@@ -94,7 +96,7 @@ public partial class App : Application
         await _services.GetRequiredService<ILicenseService>().InitializeAsync();
 
         _controller = _services.GetRequiredService<AppController>();
-        _services.GetRequiredService<ThemeService>().Apply(_controller.Config.Ui.Theme);
+        _services.GetRequiredService<ThemeService>().Apply(_controller.Config.Ui);
         ColorPreview.Use(_controller.Config.Ui.PreviewPicture);
 
         // The hidden host window owns the tray icon and receives hotkeys and system broadcasts.
@@ -119,6 +121,7 @@ public partial class App : Application
         _router.DisplayChanged += (_, _) => _controller.OnDisplayChanged();
         _router.Resumed += (_, _) => Dispatcher.BeginInvoke(_controller.OnResumed, DispatcherPriority.Background);
         _router.SessionUnlocked += (_, _) => _controller.OnResumed();
+        _router.ThemeChanged += (_, _) => OnWindowsThemeChanged();
         HotkeyBox.RecordingChanged += (_, recording) =>
         {
             if (recording)
@@ -128,10 +131,11 @@ public partial class App : Application
         };
 
         _controller.Start(hotkeys);
-        _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, _services.GetRequiredService<ILogger<TrayService>>());
+        _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, CreateQuickPanel, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
         _services.GetRequiredService<OsdService>().Attach();
         _services.GetRequiredService<ReviewPrompt>().Attach();
+        _services.GetRequiredService<EffectsService>().Apply();
 
         _instance.Activated += (_, forwarded) => Dispatcher.BeginInvoke(() => HandleActivation(forwarded));
         _instance.StartListening();
@@ -145,9 +149,12 @@ public partial class App : Application
             _logger.LogWarning(ex, "Couldn't register disphub:// links");
         }
 
+        bool startup = LaunchInfo.IsStartupLaunch(args);
         if (FindPresetLink(args) is not null)
             HandleActivation(args);
-        else if (!LaunchInfo.IsStartupLaunch(args))
+        else if (!_controller.Config.Ui.OnboardingDone)
+            ShowOnboarding(openWindowAfter: !startup);
+        else if (!startup)
             ShowMainWindow();
         else
             MemoryTrim.Schedule();
@@ -171,10 +178,15 @@ public partial class App : Application
         services.AddSingleton<ReviewPrompt>();
         services.AddSingleton<IUpgradeService>(sp => new UpgradeService(
             sp.GetRequiredService<ILicenseService>(), () => sp.GetRequiredService<MainWindow>()));
+        services.AddSingleton<HomeViewModel>();
         services.AddSingleton<ProfilesViewModel>();
-        services.AddSingleton<GalleryService>();
-        services.AddSingleton<PresetsViewModel>();
-        services.AddSingleton<AutomationViewModel>();
+        services.AddSingleton<ScheduleViewModel>();
+        services.AddSingleton<AppsViewModel>();
+        services.AddSingleton<DisplaysViewModel>();
+        services.AddSingleton<EffectsService>();
+        services.AddSingleton<LookPreviewService>();
+        services.AddSingleton<EffectsViewModel>();
+        services.AddSingleton<QuickPanelViewModel>();
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<AboutViewModel>();
         services.AddSingleton<MainViewModel>();
@@ -192,7 +204,63 @@ public partial class App : Application
             : ServiceDescriptor.Singleton<ILicenseService, UnlockedLicenseService>();
     }
 
-    private void ShowMainWindow() => _services?.GetRequiredService<MainWindow>().ShowAndActivate();
+    private void ShowMainWindow()
+    {
+        if (_services is null)
+            return;
+        MainWindow window = _services.GetRequiredService<MainWindow>();
+        bool wasHidden = !window.IsVisible;
+        window.ShowAndActivate();
+        if (wasHidden)
+            _services.GetRequiredService<MainViewModel>().SelectedPage.OnShown();
+    }
+
+    private QuickPanel CreateQuickPanel()
+    {
+        QuickPanelViewModel viewModel = _services!.GetRequiredService<QuickPanelViewModel>();
+        viewModel.OpenWindow = ShowMainWindow;
+        var panel = new QuickPanel(viewModel);
+        ThemeService theme = _services!.GetRequiredService<ThemeService>();
+        panel.SourceInitialized += (_, _) => theme.Attach(panel);
+        return panel;
+    }
+
+    /// <summary>
+    /// The first-run walkthrough, then (unless DispHub started with Windows) the main window, with its tour when
+    /// asked for.
+    /// </summary>
+    private void ShowOnboarding(bool openWindowAfter)
+    {
+        var viewModel = new OnboardingViewModel(_controller!, _services!.GetRequiredService<IAutostart>());
+        // Before the window listens: it closes when the walkthrough finishes, and this must know the choice by then.
+        bool tour = false;
+        viewModel.Finished += (_, wanted) => tour = wanted;
+        var window = new OnboardingWindow(viewModel);
+        ThemeService theme = _services!.GetRequiredService<ThemeService>();
+        window.SourceInitialized += (_, _) => theme.Attach(window);
+        window.Closed += (_, _) =>
+        {
+            if (tour)
+                _services!.GetRequiredService<MainWindow>().StartTour();
+            else if (openWindowAfter)
+                ShowMainWindow();
+        };
+        window.Show();
+        window.Activate();
+    }
+
+    /// <summary>Windows sends several messages for one theme or accent change; follow them once.</summary>
+    private void OnWindowsThemeChanged()
+    {
+        if (_themeChangePending)
+            return;
+        _themeChangePending = true;
+        Dispatcher.BeginInvoke(() =>
+        {
+            _themeChangePending = false;
+            _services?.GetRequiredService<ThemeService>().OnWindowsThemeChanged();
+        }, DispatcherPriority.Background);
+    }
 
     private void HandleActivation(string[] args)
     {
@@ -205,7 +273,12 @@ public partial class App : Application
             return;
         ShowMainWindow();
         if (FindPresetLink(args) is { } link)
-            _ = OfferPresetAsync(link);
+        {
+            if (SharedLook.TryParse(link, out SharedLook? look))
+                _ = OfferLookAsync(look);
+            else
+                _ = OfferPresetAsync(link);
+        }
     }
 
     private static string? FindPresetLink(string[] args) =>
@@ -237,15 +310,41 @@ public partial class App : Application
             Owner = window,
         };
         if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary &&
-            _services.GetRequiredService<PresetsViewModel>().Add(preset))
+            _services.GetRequiredService<ProfilesViewModel>().AddPreset(preset))
         {
             _services.GetRequiredService<MainViewModel>().Navigate<ProfilesViewModel>();
+        }
+    }
+
+    private async Task OfferLookAsync(SharedLook look)
+    {
+        if (_services is null)
+            return;
+        var box = new Wpf.Ui.Controls.MessageBox
+        {
+            Title = Loc.Get("Look_AddTitle"),
+            Content = Loc.Format("Look_AddText", look.Name),
+            PrimaryButtonText = Loc.Get("Common_Add"),
+            CloseButtonText = Loc.Get("Common_Cancel"),
+            Owner = _services.GetRequiredService<MainWindow>(),
+        };
+        if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary)
+        {
+            _services.GetRequiredService<EffectsViewModel>().Import(look);
+            _services.GetRequiredService<MainViewModel>().Navigate<EffectsViewModel>();
         }
     }
 
     /// <summary>The main window was closed to the notification area.</summary>
     public void OnMainWindowHidden()
     {
+        if (_exiting)
+            return;
+        if (_services is not null)
+        {
+            _services.GetRequiredService<MainViewModel>().SelectedPage.OnHidden();
+            _services.GetRequiredService<EffectsViewModel>().ReleasePreviews();
+        }
         if (_tray is not null && _services is not null)
             _tray.ShowStillRunningHint(_services.GetRequiredService<OsdService>());
         MemoryTrim.Schedule();

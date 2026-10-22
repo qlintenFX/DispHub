@@ -1,12 +1,13 @@
 # Translating DispHub
 
-## On Crowdin (no coding needed)
+## On Weblate (no coding needed)
 
-Translate in your browser at **[crowdin.com/project/disphub](https://crowdin.com/project/disphub)**. Pick your
-language, translate or vote on suggestions, and your work reaches DispHub in the next update. Crowdin shows
-machine suggestions and Microsoft's terminology; please check them against the style notes below.
+Translate in your browser at **[hosted.weblate.org/engage/disphub](https://hosted.weblate.org/engage/disphub/)**.
+Pick your language, translate or vote on suggestions, and your work reaches DispHub in the next update, credited
+to you. Weblate shows machine suggestions; please check them against the style notes below. Before your first
+translation, Weblate asks you to accept the [contributor licence agreement](CLA.md).
 
-Missing your language? Ask for it on the Crowdin project page or in a GitHub issue.
+Missing your language? Start it on Weblate, or ask in a GitHub issue.
 
 ## In the repository
 
@@ -18,7 +19,20 @@ English, and every file present is offered in Settings automatically.
 2. Keep placeholders such as `{0}` and `{1}`, `\n` line breaks, `•` bullets, and `disphub://preset` exactly as they are.
 3. Run `dotnet test --project tests/DispHub.Tests/DispHub.Tests.csproj`; the localisation tests check keys and placeholders.
 
-Crowdin works from the same files (see `crowdin.yml`), so edits in either place end up together.
+Weblate works from the same files and sends its changes as pull requests, so edits in either place end up together.
+
+### Weblate's settings (for the maintainer)
+
+DispHub is on Hosted Weblate's free plan for open-source projects. The component is set up as:
+
+| Setting | Value |
+| --- | --- |
+| File format | RESX file |
+| File mask | `src/DispHub/Localization/Strings.*.resx` |
+| Monolingual base language file | `src/DispHub/Localization/Strings.resx` |
+| Language code style | BCP style using hyphen as a separator (`zh-Hans`, `pt-BR`) |
+| Contributor licence agreement | the text of `docs/CLA.md` |
+| Push | pull requests to `main` from the `weblate` user |
 
 ## Style
 

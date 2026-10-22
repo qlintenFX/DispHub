@@ -5,23 +5,24 @@ using DispHub.Localization;
 
 namespace DispHub.Controls;
 
+/// <summary>Hides (keeping its space, so nothing moves) when true.</summary>
+public sealed class InverseBoolToHiddenConverter : IValueConverter
+{
+    public static InverseBoolToHiddenConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is true ? Visibility.Hidden : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 public sealed class InverseBoolToVisibilityConverter : IValueConverter
 {
     public static InverseBoolToVisibilityConverter Instance { get; } = new();
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
         value is true ? Visibility.Collapsed : Visibility.Visible;
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-        throw new NotSupportedException();
-}
-
-public sealed class ActiveTextConverter : IValueConverter
-{
-    public static ActiveTextConverter Instance { get; } = new();
-
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-        value is true ? Loc.Get("Control_Active") : Loc.Get("Control_Paused");
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         throw new NotSupportedException();
@@ -45,6 +46,39 @@ public sealed class NullToCollapsedConverter : IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
         value is null or "" ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
+public sealed class InverseBoolConverter : IValueConverter
+{
+    public static InverseBoolConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is not true;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value is not true;
+}
+
+/// <summary>"On" or "Off" next to a toggle switch.</summary>
+public sealed class OnOffConverter : IValueConverter
+{
+    public static OnOffConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Loc.Get(value is true ? "Common_On" : "Common_Off");
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
+/// <summary>Visible for a count of zero (an empty state), collapsed otherwise.</summary>
+public sealed class ZeroToVisibleConverter : IValueConverter
+{
+    public static ZeroToVisibleConverter Instance { get; } = new();
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is 0 ? Visibility.Visible : Visibility.Collapsed;
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         throw new NotSupportedException();

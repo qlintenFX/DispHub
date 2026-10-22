@@ -23,7 +23,18 @@ public sealed class OsdService(AppController app)
             return;
         _hintShown = true;
         _window ??= new OsdWindow();
-        _window.Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3));
+        _window.Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3), app.Config.Ui.OsdPosition);
+    }
+
+    /// <summary>Effects were turned on (with the look's name) or off from a hotkey.</summary>
+    public void ShowEffects(string? lookName)
+    {
+        if (!app.Config.Ui.ShowOsd)
+            return;
+        _window ??= new OsdWindow();
+        TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
+        _window.Flash(Loc.Get(lookName is null ? "Osd_EffectsOff" : "Osd_EffectsOn"), lookName ?? Loc.Get("Osd_EffectsOffDetail"),
+            SymbolRegular.Sparkle24, duration, app.Config.Ui.OsdPosition);
     }
 
     private void OnStateChanged(ChangeSource source)
@@ -33,15 +44,15 @@ public sealed class OsdService(AppController app)
 
         _window ??= new OsdWindow();
         TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
-        if (app.Config.IsPaused)
+        if (app.Config.IsOff || app.Config.IsPaused)
         {
-            _window.Flash(Loc.Get("Osd_Paused"), Loc.Get("Summary_Original"), SymbolRegular.Pause24, duration);
+            _window.Flash(Loc.Get(app.Config.IsOff ? "Osd_Paused" : "Osd_ProfilesOff"), Loc.Get("Summary_Original"), SymbolRegular.Power24, duration, app.Config.Ui.OsdPosition);
             return;
         }
 
         Profile? profile = app.Current?.ProfileId is { } id ? app.FindProfile(id) : null;
         if (profile is not null)
-            _window.Flash(profile.Name, ViewModels.ProfileItemViewModel.Describe(profile.Color), SymbolRegular.Color24, duration);
+            _window.Flash(profile.Name, ViewModels.ProfileItemViewModel.Describe(profile.Color), SymbolRegular.Color24, duration, app.Config.Ui.OsdPosition);
     }
 }
 

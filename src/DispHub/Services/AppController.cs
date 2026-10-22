@@ -33,6 +33,8 @@ public sealed class AppController : IDisposable
     public const string PauseAction = "pause";
     public const string NextAction = "next";
     public const string PreviousAction = "previous";
+    public const string EffectsAction = "effects";
+    public const string QuickPanelAction = "panel";
     private const string ProfileActionPrefix = "profile:";
     private static readonly TimeSpan SaveDelay = TimeSpan.FromMilliseconds(500);
 
@@ -95,6 +97,18 @@ public sealed class AppController : IDisposable
 
     public IReadOnlyList<MonitorStatus> Monitors => _colors.Monitors;
 
+    /// <summary>Full path of the program in front, if known.</summary>
+    public string? ForegroundExecutable => _foreground.Current;
+
+    /// <summary>The program in front changed (on the UI thread).</summary>
+    public event EventHandler? ForegroundChanged;
+
+    /// <summary>DispHub, or its profiles, went on or off (<see cref="AppConfig.IsOff"/> or <see cref="AppConfig.IsPaused"/>).</summary>
+    public event EventHandler? PowerChanged;
+
+    /// <summary>Profiles are on screen: DispHub is on and its profiles are on.</summary>
+    public bool ProfilesOn => !Config.IsOff && !Config.IsPaused;
+
     /// <summary>Hotkeys that couldn't be registered, keyed by action ID.</summary>
     public IReadOnlyDictionary<string, string> HotkeyFailures { get; private set; } = new Dictionary<string, string>();
 
@@ -110,6 +124,12 @@ public sealed class AppController : IDisposable
     public event EventHandler<Guid>? ProfileEdited;
 
     public event EventHandler? ExternalResetDetected;
+
+    /// <summary>The effects hotkey was pressed.</summary>
+    public event EventHandler? EffectsToggleRequested;
+
+    /// <summary>The quick panel hotkey was pressed.</summary>
+    public event EventHandler? QuickPanelRequested;
 
     public void Start(IHotkeyRegistrar hotkeys)
     {
@@ -129,10 +149,12 @@ public sealed class AppController : IDisposable
         if (FindProfile(profileId) is null)
             return;
 
-        if (Config.IsPaused)
-            Config.IsPaused = false;
+        // Picking a profile means wanting to see it: DispHub and its profiles come on.
+        bool powerChanged = SetPowerState(off: false, paused: false, source);
 
-        string context = Current?.ContextKey ?? RuleEngine.BaseContext;
+        // The rule in force now, with DispHub on: while it was off, every rule looked like the everyday profile, and
+        // a pick saved there would lose to a schedule or app rule straight away.
+        string context = Resolve().ContextKey;
         if (context == RuleEngine.BaseContext)
         {
             Config.ActiveProfileId = profileId;
@@ -144,13 +166,40 @@ public sealed class AppController : IDisposable
             _manual = new ManualOverride(profileId, context);
         }
         Evaluate(source);
+        if (powerChanged)
+            PowerChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void TogglePause(ChangeSource source)
+    /// <summary>DispHub on or off (the power button): off is original colours, no effects and no automation.</summary>
+    public void SetOn(bool on, ChangeSource source) => SetPower(off: !on, paused: Config.IsPaused, source);
+
+    /// <summary>The power button, the on/off hotkey and the tray menu.</summary>
+    public void ToggleOff(ChangeSource source) => SetOn(Config.IsOff, source);
+
+    /// <summary>
+    /// Profiles on or off (the Profiles switch). Turning them on turns DispHub on too, so the switch always does
+    /// what it shows. Screen effects follow the Effects page either way.
+    /// </summary>
+    public void SetProfilesOn(bool on, ChangeSource source) => SetPower(off: !on && Config.IsOff, paused: !on, source);
+
+    private void SetPower(bool off, bool paused, ChangeSource source)
     {
-        Config.IsPaused = !Config.IsPaused;
-        ScheduleSave();
+        if (!SetPowerState(off, paused, source))
+            return;
         Evaluate(source);
+        PowerChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Changes the on/off state and saves it; returns whether anything changed.</summary>
+    private bool SetPowerState(bool off, bool paused, ChangeSource source)
+    {
+        if (off == Config.IsOff && paused == Config.IsPaused)
+            return false;
+        if (off != Config.IsOff)
+            _logger.LogInformation("Turned {State} from the {Source}", off ? "off" : "on", source);
+        (Config.IsOff, Config.IsPaused) = (off, paused);
+        ScheduleSave();
+        return true;
     }
 
     public void CycleProfile(int direction, ChangeSource source)
@@ -197,6 +246,16 @@ public sealed class AppController : IDisposable
             return;
         ScheduleSave();
         Evaluate(ChangeSource.Editor);
+    }
+
+    /// <summary>Sets the look shown while a profile is on (see <see cref="Profile.Effect"/>).</summary>
+    public void SetProfileEffect(Guid profileId, string? effect)
+    {
+        if (FindProfile(profileId) is not { } profile || profile.Effect == effect)
+            return;
+        profile.Effect = effect;
+        ScheduleSave();
+        ConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void RenameProfile(Guid profileId, string name)
@@ -279,6 +338,12 @@ public sealed class AppController : IDisposable
             case PreviousAction:
                 Config.Hotkeys.PreviousProfile = text;
                 break;
+            case EffectsAction:
+                Config.Hotkeys.ToggleEffects = text;
+                break;
+            case QuickPanelAction:
+                Config.Hotkeys.QuickPanel = text;
+                break;
             default:
                 return null;
         }
@@ -296,6 +361,9 @@ public sealed class AppController : IDisposable
         ConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>Registers hotkeys again after a setting that decides which exist (screen effects) changed.</summary>
+    public void RefreshHotkeys() => SyncHotkeys();
+
     /// <summary>For settings changed directly on <see cref="Config"/> by a view model.</summary>
     public void SettingsChanged()
     {
@@ -304,6 +372,9 @@ public sealed class AppController : IDisposable
         Evaluate(ChangeSource.Editor);
     }
 
+    /// <summary>Saves <see cref="AppConfig.Effects"/>. Effects don't affect profiles, so nothing else is redrawn.</summary>
+    public void EffectsChanged() => ScheduleSave();
+
     public void OnDisplayChanged() => _colors.RefreshDisplays();
 
     internal void OnForegroundChanged()
@@ -311,6 +382,7 @@ public sealed class AppController : IDisposable
         // Only re-evaluate when it can matter, so switching windows costs nothing without app rules.
         if (Config.AppRules.Count > 0 || _manual is not null)
             Evaluate(ChangeSource.Automation);
+        ForegroundChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnMonitorsChanged()
@@ -351,14 +423,23 @@ public sealed class AppController : IDisposable
         return HotkeyFailures.GetValueOrDefault(action);
     }
 
-    private void Evaluate(ChangeSource source)
+    /// <summary>What the rules say right now, without applying it.</summary>
+    private RuleOutput Resolve()
     {
         var monitorKeys = _colors.Monitors.Select(m => m.Monitor.Key).ToList();
-        var input = new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, _license.IsPro);
-        RuleOutput output = RuleEngine.Resolve(input);
+        return RuleEngine.Resolve(new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, _license.IsPro, _time.LocalTimeZone));
+    }
 
-        // A manual pick from another context has ended.
-        if (_manual is not null && _manual.ContextKey != output.ContextKey)
+    private void Evaluate(ChangeSource source)
+    {
+        RuleOutput output = Resolve();
+
+        // A pick by hand lasts as long as what it was made in: an app's pick until that app leaves the front, a pick
+        // under the schedule until the schedule's next change, like Windows' Night light. A visit to an app with
+        // its own rule doesn't end a schedule pick: back from the app, the pick comes back. Being off isn't a
+        // context either: turned back on, the pick carries on.
+        if (_manual is not null && output.Reason != TargetReason.Paused && _manual.ContextKey != output.ContextKey &&
+            (RuleEngine.IsAppContext(_manual.ContextKey) || !RuleEngine.IsAppContext(output.ContextKey)))
             _manual = null;
 
         // Monitors can appear later (the colour thread enumerates them); send a wildcard for the default.
@@ -379,7 +460,7 @@ public sealed class AppController : IDisposable
 
     private ColorSettings? DefaultTarget(RuleOutput output)
     {
-        if (Config.IsPaused || output.ProfileId is not { } id || FindProfile(id) is not { } profile)
+        if (Config.IsPaused || Config.IsOff || output.ProfileId is not { } id || FindProfile(id) is not { } profile)
             return null;
         return profile.Color;
     }
@@ -397,13 +478,19 @@ public sealed class AppController : IDisposable
         switch (action)
         {
             case PauseAction:
-                TogglePause(ChangeSource.Hotkey);
+                ToggleOff(ChangeSource.Hotkey);
                 break;
             case NextAction:
                 CycleProfile(1, ChangeSource.Hotkey);
                 break;
             case PreviousAction:
                 CycleProfile(-1, ChangeSource.Hotkey);
+                break;
+            case EffectsAction:
+                EffectsToggleRequested?.Invoke(this, EventArgs.Empty);
+                break;
+            case QuickPanelAction:
+                QuickPanelRequested?.Invoke(this, EventArgs.Empty);
                 break;
             default:
                 if (action.StartsWith(ProfileActionPrefix, StringComparison.Ordinal) &&
@@ -429,6 +516,9 @@ public sealed class AppController : IDisposable
         AddAction(desired, PauseAction, Config.Hotkeys.TogglePause);
         AddAction(desired, NextAction, Config.Hotkeys.NextProfile);
         AddAction(desired, PreviousAction, Config.Hotkeys.PreviousProfile);
+        if (Config.Ui.ShowEffects)
+            AddAction(desired, EffectsAction, Config.Hotkeys.ToggleEffects);
+        AddAction(desired, QuickPanelAction, Config.Hotkeys.QuickPanel);
 
         HotkeyFailures = _hotkeys.Sync(desired);
         foreach ((string action, string reason) in HotkeyFailures)

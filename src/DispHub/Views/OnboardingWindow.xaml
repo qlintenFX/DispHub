@@ -1,0 +1,344 @@
+<ui:FluentWindow
+  x:Class="DispHub.Views.OnboardingWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ctl="clr-namespace:DispHub.Controls"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:l="clr-namespace:DispHub.Localization"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+  xmlns:vm="clr-namespace:DispHub.ViewModels"
+  Title="DispHub"
+  Width="900"
+  Height="456"
+  d:DataContext="{d:DesignInstance Type=vm:OnboardingViewModel}"
+  ExtendsContentIntoTitleBar="True"
+  Icon="pack://application:,,,/Assets/DispHub.ico"
+  ResizeMode="NoResize"
+  WindowBackdropType="Mica"
+  WindowCornerPreference="Round"
+  WindowStartupLocation="CenterScreen"
+  mc:Ignorable="d">
+  <!--
+    The walkthrough: a picture on the left, what it shows and any choice to make on the right. The pictures are
+    DispHub's own windows, captured and laid on its public-domain preview photos (Assets/Onboarding).
+  -->
+  <ui:FluentWindow.Resources>
+    <Style x:Key="StepTitle" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="26" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+    <Style x:Key="StepText" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="LineHeight" Value="21" />
+    </Style>
+    <!-- The frame every picture sits in. -->
+    <Style x:Key="Picture" TargetType="Border">
+      <Setter Property="Width" Value="430" />
+      <Setter Property="Height" Value="269" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+      <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+    <!-- A small label on a picture. -->
+    <Style x:Key="PictureChip" TargetType="Border">
+      <Setter Property="Margin" Value="12" />
+      <Setter Property="Padding" Value="10,4" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Background" Value="#CC1C1C1C" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+    <Style x:Key="ChipText" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <!-- A row on the tray step; it lights up while its picture shows. -->
+    <Style x:Key="ClickRow" TargetType="Border">
+      <Setter Property="Padding" Value="14,10" />
+      <Setter Property="Margin" Value="0,0,0,6" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+    </Style>
+    <DataTemplate x:Key="EnumItem">
+      <TextBlock Text="{Binding Converter={x:Static ctl:EnumWordsConverter.Instance}}" />
+    </DataTemplate>
+  </ui:FluentWindow.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <ui:TitleBar
+      Title="DispHub"
+      ShowMaximize="False"
+      ShowMinimize="False">
+      <ui:TitleBar.Icon>
+        <ui:ImageIcon Source="pack://application:,,,/Assets/DispHub-64.png" />
+      </ui:TitleBar.Icon>
+    </ui:TitleBar>
+
+    <!-- The step. A snapshot of the previous one slides away over it when moving on. -->
+    <Grid Grid.Row="1" Margin="32,8,32,0">
+      <Grid x:Name="Step">
+        <Grid.RenderTransform>
+          <TranslateTransform />
+        </Grid.RenderTransform>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Pictures -->
+        <Grid Margin="0,4,32,0">
+          <Border Style="{StaticResource Picture}" Visibility="{Binding IsWelcome, Converter={StaticResource BoolToVisibility}}">
+            <Border.Background>
+              <ImageBrush ImageSource="pack://application:,,,/Assets/Onboarding/welcome.jpg" Stretch="UniformToFill" />
+            </Border.Background>
+          </Border>
+
+          <!-- Left-click and right-click take turns. -->
+          <Border Style="{StaticResource Picture}" Visibility="{Binding IsTray, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+              <Image Source="pack://application:,,,/Assets/Onboarding/tray-left.jpg" Stretch="UniformToFill" />
+              <Image
+                x:Name="RightClickPicture"
+                Opacity="0"
+                Source="pack://application:,,,/Assets/Onboarding/tray-right.jpg"
+                Stretch="UniformToFill" />
+              <Border HorizontalAlignment="Left" Style="{StaticResource PictureChip}">
+                <TextBlock x:Name="ClickChip" Style="{StaticResource ChipText}" Text="{l:Tr Onboarding_LeftClick}" />
+              </Border>
+            </Grid>
+          </Border>
+
+          <Border Style="{StaticResource Picture}" Visibility="{Binding IsHotkeys, Converter={StaticResource BoolToVisibility}}">
+            <Border.Background>
+              <ImageBrush ImageSource="pack://application:,,,/Assets/Onboarding/hotkeys.jpg" Stretch="UniformToFill" />
+            </Border.Background>
+          </Border>
+
+          <!-- Before and after, with a line sweeping between them. -->
+          <Border Style="{StaticResource Picture}" Visibility="{Binding IsEffects, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+              <Image Source="pack://application:,,,/Assets/Onboarding/effects-after.jpg" Stretch="UniformToFill" />
+              <Border
+                x:Name="Before"
+                Width="215"
+                HorizontalAlignment="Left"
+                BorderBrush="White"
+                BorderThickness="0,0,2,0"
+                ClipToBounds="True">
+                <Image
+                  Width="430"
+                  HorizontalAlignment="Left"
+                  Source="pack://application:,,,/Assets/Onboarding/effects-before.jpg"
+                  Stretch="UniformToFill" />
+              </Border>
+              <Border HorizontalAlignment="Left" Style="{StaticResource PictureChip}">
+                <TextBlock Style="{StaticResource ChipText}" Text="{l:Tr Onboarding_Original}" />
+              </Border>
+              <Border HorizontalAlignment="Right" Style="{StaticResource PictureChip}">
+                <TextBlock Style="{StaticResource ChipText}" Text="{l:Tr Look_super8}" />
+              </Border>
+            </Grid>
+          </Border>
+
+          <Border Style="{StaticResource Picture}" Visibility="{Binding IsReady, Converter={StaticResource BoolToVisibility}}">
+            <Border.Background>
+              <ImageBrush ImageSource="pack://application:,,,/Assets/Onboarding/power.jpg" Stretch="UniformToFill" />
+            </Border.Background>
+          </Border>
+        </Grid>
+
+        <!-- Words and choices -->
+        <Grid Grid.Column="1">
+          <!-- 1. What DispHub does -->
+          <StackPanel Visibility="{Binding IsWelcome, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock Style="{StaticResource StepTitle}" Text="{l:Tr Onboarding_WelcomeTitle}" />
+            <TextBlock Style="{StaticResource StepText}" Text="{l:Tr Onboarding_WelcomeText}" />
+          </StackPanel>
+
+          <!-- 2. Where DispHub lives, and what a left or right click does -->
+          <StackPanel Visibility="{Binding IsTray, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock Style="{StaticResource StepTitle}" Text="{l:Tr Onboarding_TrayTitle}" />
+            <TextBlock Style="{StaticResource StepText}" Text="{l:Tr Onboarding_TrayText}" />
+            <Border
+              x:Name="LeftClickRow"
+              Margin="0,18,0,6"
+              Style="{StaticResource ClickRow}">
+              <StackPanel>
+                <DockPanel>
+                  <ui:SymbolIcon
+                    Margin="0,0,10,0"
+                    FontSize="18"
+                    Symbol="CursorClick24" />
+                  <TextBlock
+                    VerticalAlignment="Center"
+                    FontWeight="SemiBold"
+                    Text="{l:Tr Onboarding_LeftClick}" />
+                </DockPanel>
+                <ComboBox
+                  Margin="0,8,0,0"
+                  HorizontalAlignment="Stretch"
+                  ItemTemplate="{StaticResource EnumItem}"
+                  ItemsSource="{Binding TrayActions}"
+                  SelectedItem="{Binding TrayLeftClick}" />
+              </StackPanel>
+            </Border>
+            <Border x:Name="RightClickRow" Style="{StaticResource ClickRow}">
+              <StackPanel>
+                <DockPanel>
+                  <ui:SymbolIcon
+                    Margin="0,0,10,0"
+                    FontSize="18"
+                    Symbol="TextBulletListSquare24" />
+                  <TextBlock
+                    VerticalAlignment="Center"
+                    FontWeight="SemiBold"
+                    Text="{l:Tr Onboarding_RightClick}" />
+                </DockPanel>
+                <TextBlock
+                  Margin="28,4,0,0"
+                  Style="{StaticResource Hint}"
+                  Text="{l:Tr Onboarding_RightClickHint}"
+                  TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- 3. Hotkeys -->
+          <StackPanel Visibility="{Binding IsHotkeys, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock Style="{StaticResource StepTitle}" Text="{l:Tr Onboarding_HotkeysTitle}" />
+            <TextBlock Style="{StaticResource StepText}" Text="{l:Tr Onboarding_HotkeysText}" />
+            <ItemsControl Margin="0,18,0,0" ItemsSource="{Binding Hotkeys}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:HotkeyLine}">
+                  <DockPanel Margin="0,0,0,8">
+                    <Border
+                      Padding="8,2"
+                      Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                      BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                      BorderThickness="1"
+                      CornerRadius="4"
+                      DockPanel.Dock="Right">
+                      <TextBlock FontFamily="Cascadia Mono, Consolas" Text="{Binding Keys}" />
+                    </Border>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                  </DockPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- 4. Screen effects -->
+          <StackPanel Visibility="{Binding IsEffects, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock Style="{StaticResource StepTitle}" Text="{l:Tr Onboarding_EffectsTitle}" />
+            <TextBlock Style="{StaticResource StepText}" Text="{l:Tr Onboarding_EffectsText}" />
+            <Border
+              Margin="0,18,0,0"
+              Padding="14,10"
+              Style="{StaticResource ClickRow}">
+              <DockPanel>
+                <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding ShowEffects}" />
+                <StackPanel>
+                  <TextBlock FontWeight="SemiBold" Text="{l:Tr Onboarding_ShowEffects}" />
+                  <TextBlock
+                    Margin="0,2,0,0"
+                    Style="{StaticResource Hint}"
+                    Text="{Binding EffectsNote}"
+                    TextWrapping="Wrap" />
+                </StackPanel>
+              </DockPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- 5. The power button, starting with Windows, and the tour -->
+          <StackPanel Visibility="{Binding IsReady, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock Style="{StaticResource StepTitle}" Text="{l:Tr Onboarding_PowerTitle}" />
+            <TextBlock Style="{StaticResource StepText}" Text="{l:Tr Onboarding_PowerText}" />
+            <Border
+              Margin="0,18,0,0"
+              Padding="14,10"
+              Style="{StaticResource ClickRow}">
+              <DockPanel>
+                <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding LaunchAtLogin}" />
+                <StackPanel>
+                  <TextBlock FontWeight="SemiBold" Text="{l:Tr Settings_StartWithWindows}" />
+                  <TextBlock
+                    Margin="0,2,0,0"
+                    Style="{StaticResource Hint}"
+                    Text="{l:Tr Settings_StartWithWindowsHint}"
+                    TextWrapping="Wrap" />
+                </StackPanel>
+              </DockPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+      </Grid>
+
+      <Image
+        x:Name="Snapshot"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        IsHitTestVisible="False"
+        Stretch="None"
+        Visibility="Collapsed">
+        <Image.RenderTransform>
+          <TranslateTransform />
+        </Image.RenderTransform>
+      </Image>
+    </Grid>
+
+    <!-- Where you are, and the buttons: always in the same place. -->
+    <Grid Grid.Row="2" Margin="32,12,32,24">
+      <TextBlock
+        VerticalAlignment="Center"
+        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+        Text="{Binding StepText}" />
+      <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+        <ui:Button
+          MinWidth="90"
+          Margin="0,0,8,0"
+          Appearance="Transparent"
+          Command="{Binding BackCommand}"
+          Content="{l:Tr Onboarding_Back}"
+          Visibility="{Binding IsFirst, Converter={x:Static ctl:InverseBoolToHiddenConverter.Instance}}" />
+        <ui:Button
+          MinWidth="110"
+          Margin="0,0,8,0"
+          Command="{Binding FinishCommand}"
+          Content="{l:Tr Onboarding_Done}"
+          Visibility="{Binding IsLast, Converter={StaticResource BoolToVisibility}}" />
+        <ui:Button
+          MinWidth="110"
+          Appearance="Primary"
+          Command="{Binding NextCommand}">
+          <ui:Button.Style>
+            <Style BasedOn="{StaticResource {x:Type ui:Button}}" TargetType="ui:Button">
+              <Setter Property="Content" Value="{l:Tr Onboarding_Next}" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsLast}" Value="True">
+                  <Setter Property="Content" Value="{l:Tr Onboarding_Tour}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ui:Button.Style>
+        </ui:Button>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</ui:FluentWindow>

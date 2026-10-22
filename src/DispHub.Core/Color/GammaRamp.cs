@@ -44,6 +44,36 @@ public sealed class GammaRamp
 
     public GammaRamp Clone() => new((ushort[])_values.Clone());
 
+    /// <summary>The same ramp at <paramref name="factor"/> of its brightness, e.g. to dim a profile.</summary>
+    public GammaRamp Scaled(double factor)
+    {
+        var scaled = new ushort[_values.Length];
+        for (int i = 0; i < _values.Length; i++)
+            scaled[i] = (ushort)Math.Clamp(Math.Round(_values[i] * factor), 0, ushort.MaxValue);
+        return new GammaRamp(scaled);
+    }
+
+    /// <summary>
+    /// When this ramp is a plain, uncoloured ramp turned down (what laptop power-saving dimmers write, such as
+    /// Lenovo's OLED dimming), how far down: 0.6 for 60 %. Null for anything else.
+    /// </summary>
+    public double? DimFactor()
+    {
+        double factor = Math.Max(Red[^1], Math.Max(Green[^1], Blue[^1])) / (double)Identity().Red[^1];
+        if (factor is < 0.05 or > 0.97)
+            return null;
+        for (int c = 0; c < 3; c++)
+        {
+            ReadOnlySpan<ushort> channel = Channel(c);
+            for (int i = 0; i < Size; i += 17)
+            {
+                if (Math.Abs(channel[i] - (i * 257 * factor)) > 0.03 * ushort.MaxValue)
+                    return null;
+            }
+        }
+        return factor;
+    }
+
     public bool ApproximatelyEquals(GammaRamp other, int tolerance)
     {
         ArgumentNullException.ThrowIfNull(other);

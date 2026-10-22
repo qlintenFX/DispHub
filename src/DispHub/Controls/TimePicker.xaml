@@ -1,0 +1,110 @@
+<UserControl
+  x:Class="DispHub.Controls.TimePicker"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:l="clr-namespace:DispHub.Localization"
+  Focusable="False">
+  <UserControl.Resources>
+    <!-- One part of the time (hour, minutes, AM or PM), like the parts of Windows' own time picker. -->
+    <Style x:Key="Segment" TargetType="Button">
+      <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border
+              x:Name="Back"
+              Margin="2"
+              Background="Transparent"
+              CornerRadius="3">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Back" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Back" Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </UserControl.Resources>
+
+  <Grid>
+    <Border
+      Height="32"
+      Background="{DynamicResource ControlFillColorDefaultBrush}"
+      BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+      BorderThickness="1"
+      CornerRadius="4">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="56" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="56" />
+          <ColumnDefinition x:Name="PeriodDividerColumn" Width="Auto" />
+          <ColumnDefinition x:Name="PeriodColumn" Width="56" />
+        </Grid.ColumnDefinitions>
+        <Button
+          x:Name="HourButton"
+          AutomationProperties.Name="{l:Tr TimePicker_Hour}"
+          Click="OnHourClick"
+          PreviewKeyDown="OnSegmentKeyDown"
+          Style="{StaticResource Segment}" />
+        <Rectangle
+          Grid.Column="1"
+          Width="1"
+          Fill="{DynamicResource DividerStrokeColorDefaultBrush}" />
+        <Button
+          x:Name="MinuteButton"
+          Grid.Column="2"
+          AutomationProperties.Name="{l:Tr TimePicker_Minute}"
+          Click="OnMinuteClick"
+          PreviewKeyDown="OnSegmentKeyDown"
+          Style="{StaticResource Segment}" />
+        <Rectangle
+          x:Name="PeriodDivider"
+          Grid.Column="3"
+          Width="1"
+          Fill="{DynamicResource DividerStrokeColorDefaultBrush}" />
+        <Button
+          x:Name="PeriodButton"
+          Grid.Column="4"
+          AutomationProperties.Name="{l:Tr TimePicker_Period}"
+          Click="OnPeriodClick"
+          PreviewKeyDown="OnSegmentKeyDown"
+          Style="{StaticResource Segment}" />
+      </Grid>
+    </Border>
+
+    <!-- The choices for one part, all visible at once: nothing to scroll. -->
+    <Popup
+      x:Name="ChoicesPopup"
+      AllowsTransparency="True"
+      Placement="Bottom"
+      PopupAnimation="Fade"
+      StaysOpen="False"
+      VerticalOffset="4">
+      <Border
+        Margin="0,0,8,8"
+        Padding="4"
+        Background="{DynamicResource FlyoutBackground}"
+        BorderBrush="{DynamicResource SurfaceStrokeColorFlyoutBrush}"
+        BorderThickness="1"
+        CornerRadius="8">
+        <Border.Effect>
+          <DropShadowEffect
+            BlurRadius="12"
+            Opacity="0.25"
+            ShadowDepth="3" />
+        </Border.Effect>
+        <UniformGrid x:Name="ChoicesGrid" />
+      </Border>
+    </Popup>
+  </Grid>
+</UserControl>

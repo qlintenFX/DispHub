@@ -22,6 +22,10 @@ namespace DispHub.Controls;
 /// would otherwise swallow wheel events that pass over them and make the page stall mid-scroll. A child only gets
 /// the wheel if it has its own scrollable content that can still move in that direction.
 /// </para>
+/// <para>
+/// While something holds the mouse (an open drop-down, a popup, a slider being dragged) the page stays put, or
+/// the open list would be left floating where the page used to be.
+/// </para>
 /// </remarks>
 public class SmoothScrollViewer : ScrollViewer
 {
@@ -32,6 +36,9 @@ public class SmoothScrollViewer : ScrollViewer
 
     /// <summary>Precision touchpads send many small steps and add their own momentum; light smoothing only.</summary>
     private static readonly TimeSpan TouchpadDuration = TimeSpan.FromMilliseconds(90);
+
+    /// <summary>The user turned off animations in DispHub's settings.</summary>
+    public static bool ReduceMotion { get; set; }
 
     private readonly ScrollMotion _motion = new();
     private readonly FrameClock _clock = new();
@@ -60,7 +67,7 @@ public class SmoothScrollViewer : ScrollViewer
     {
         ArgumentNullException.ThrowIfNull(e);
         base.OnPreviewMouseWheel(e);
-        if (e.Handled || Keyboard.Modifiers.HasFlag(ModifierKeys.Control) || ChildWantsWheel(e))
+        if (e.Handled || Keyboard.Modifiers.HasFlag(ModifierKeys.Control) || SomethingHoldsMouse() || ChildWantsWheel(e))
             return;
 
         if (ScrollBy(e.Delta))
@@ -71,7 +78,7 @@ public class SmoothScrollViewer : ScrollViewer
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e);
-        if (!e.Handled && !Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && ScrollBy(e.Delta))
+        if (!e.Handled && !Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && !SomethingHoldsMouse() && ScrollBy(e.Delta))
             e.Handled = true;
     }
 
@@ -101,7 +108,7 @@ public class SmoothScrollViewer : ScrollViewer
         if (Math.Abs(target - _motion.Target) < 0.01)
             return _animating;
 
-        TimeSpan duration = !SystemParameters.ClientAreaAnimation ? TimeSpan.Zero
+        TimeSpan duration = !SystemParameters.ClientAreaAnimation || ReduceMotion ? TimeSpan.Zero
             : Math.Abs(delta) < Mouse.MouseWheelDeltaForOneLine ? TouchpadDuration
             : WheelDuration;
         _motion.AnimateTo(target, duration);
@@ -130,6 +137,15 @@ public class SmoothScrollViewer : ScrollViewer
             node is Visual or System.Windows.Media.Media3D.Visual3D ? VisualTreeHelper.GetParent(node) : LogicalTreeHelper.GetParent(node);
     }
 
+    /// <summary>An open drop-down, or a popup or menu outside the page, has the mouse.</summary>
+    private bool SomethingHoldsMouse() => Mouse.Captured switch
+    {
+        null => false,
+        ComboBox box => box.IsDropDownOpen,
+        Visual visual => visual != this && !IsAncestorOf(visual),
+        _ => true,
+    };
+
     private void Start()
     {
         if (_animating)
@@ -155,6 +171,13 @@ public class SmoothScrollViewer : ScrollViewer
 
     private void OnRendering(object? sender, EventArgs e)
     {
+        // A drop-down opened while the page was still gliding: stop here so it opens under its box.
+        if (SomethingHoldsMouse())
+        {
+            Stop();
+            return;
+        }
+
         TimeSpan step = _clock.Tick(((RenderingEventArgs)e).RenderingTime);
         if (step == TimeSpan.Zero)
             return;

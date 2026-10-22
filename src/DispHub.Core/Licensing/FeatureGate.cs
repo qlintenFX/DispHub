@@ -6,12 +6,21 @@ namespace DispHub.Core.Licensing;
 /// </summary>
 public sealed record FeatureGate(bool IsPro)
 {
-    public const int FreeProfileLimit = 5;
+    public const int FreeProfileLimit = 3;
 
     public int MaxProfiles => IsPro ? int.MaxValue : FreeProfileLimit;
     public bool AppRules => IsPro;
     public bool Schedules => IsPro;
     public bool PerMonitorProfiles => IsPro;
+
+    /// <summary>Showing screen effects. Everyone can try every look in the app's preview.</summary>
+    public bool ScreenEffects => IsPro;
+
+    /// <summary>Saving looks under a name.</summary>
+    public bool SavedLooks => IsPro;
+
+    /// <summary>Choosing how see-through DispHub's windows are.</summary>
+    public bool Transparency => IsPro;
 
     public bool CanAddProfile(int currentCount) => currentCount < MaxProfiles;
 }

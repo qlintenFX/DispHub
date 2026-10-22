@@ -3,9 +3,11 @@ using System.Windows.Interop;
 using DispHub.Core.Licensing;
 using DispHub.Core.Model;
 using DispHub.Localization;
+using DispHub.Platform.Shell;
 using DispHub.Platform.Store;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using WindowBackdrop = DispHub.Core.Model.WindowBackdrop;
 
 namespace DispHub.Services;
 
@@ -15,6 +17,9 @@ public interface IUpgradeService
     void ShowUpgrade(string feature);
 
     Task PurchaseAsync();
+
+    /// <summary>Shows the Microsoft Store's rating dialog.</summary>
+    Task RateAsync();
 }
 
 public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mainWindow) : IUpgradeService
@@ -53,6 +58,12 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
         }
     }
 
+    public async Task RateAsync()
+    {
+        if (license.CanPurchase)
+            await license.RequestReviewAsync(new WindowInteropHelper(ShowMainWindow()).Handle);
+    }
+
     private MainWindow ShowMainWindow()
     {
         MainWindow window = mainWindow();
@@ -61,45 +72,134 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
     }
 }
 
+/// <summary>
+/// Applies the Appearance settings (theme, accent colour, window material) to DispHub's windows.
+/// </summary>
+/// <remarks>
+/// Kept deliberately small. WPF-UI swaps the light and dark colours; DispHub sets the accent shades and asks
+/// Windows for the material itself. WPF-UI's window helpers only reach Application.MainWindow (DispHub's hidden
+/// host), and changing a FluentWindow's backdrop after it is created rebuilds its window chrome, which can throw
+/// while the window loads and leave the title bar buttons dead.
+/// </remarks>
 public sealed class ThemeService
 {
-    private Window? _window;
-    private bool _watching;
+    private readonly List<FluentWindow> _windows = [];
+    private readonly ILicenseService _license;
+    private UiConfig _ui = new();
 
-    public void Apply(ThemePreference preference)
+    public ThemeService(ILicenseService license)
     {
-        switch (preference)
-        {
-            case ThemePreference.Light:
-                ApplicationThemeManager.Apply(ApplicationTheme.Light, WindowBackdropType.Mica);
-                break;
-            case ThemePreference.Dark:
-                ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Mica);
-                break;
-            default:
-                ApplicationThemeManager.ApplySystemTheme(updateAccent: true);
-                break;
-        }
+        _license = license;
+        // Windows got the new theme colours: match the window material (dark or light Mica).
+        ApplicationThemeManager.Changed += (_, _) => UpdateWindows();
+        // Transparency is Pro: buying it (or losing it) changes the windows.
+        _license.Changed += (_, _) => Application.Current?.Dispatcher.BeginInvoke(UpdateWindows);
+    }
 
-        // Follow live Windows theme changes only when the user chose "System". The watcher needs a loaded window.
-        if (_window is not { IsLoaded: true })
+    public void Apply(UiConfig ui)
+    {
+        ArgumentNullException.ThrowIfNull(ui);
+        _ui = ui;
+        ApplicationTheme theme = ui.Theme switch
+        {
+            ThemePreference.Light => ApplicationTheme.Light,
+            ThemePreference.Dark => ApplicationTheme.Dark,
+            _ => WindowsTheme(),
+        };
+
+        // Accent first, then reload the theme colours: WPF-UI's switch, slider and check box brushes read the accent
+        // only when its theme colours load, so a new accent alone would leave them in the old colour.
+        ApplyAccent(theme);
+        ApplicationThemeManager.Apply(theme, WindowBackdropType.None, updateAccent: false);
+        ApplyAccent(theme); // Picks the fill shade for the theme that is now on.
+        UpdateWindows();
+    }
+
+    /// <summary>Redraws the window backgrounds, e.g. after the transparency changed.</summary>
+    public void RefreshWindows() => UpdateWindows();
+
+    /// <summary>Windows switched light or dark mode, or its accent colour.</summary>
+    public void OnWindowsThemeChanged() => Apply(_ui);
+
+    /// <summary>Call from the window's SourceInitialized, before it first shows.</summary>
+    public void Attach(FluentWindow window)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+        if (_windows.Contains(window))
             return;
-        if (_watching && preference != ThemePreference.System)
-        {
-            SystemThemeWatcher.UnWatch(_window);
-            _watching = false;
-        }
-        else if (!_watching && preference == ThemePreference.System)
-        {
-            SystemThemeWatcher.Watch(_window, WindowBackdropType.Mica, updateAccents: true);
-            _watching = true;
-        }
+        _windows.Add(window);
+        window.Closed += (_, _) => _windows.Remove(window);
+        UpdateWindow(window);
     }
 
-    /// <summary>Call once the window has loaded.</summary>
-    public void Attach(Window window, ThemePreference preference)
+    private static ApplicationTheme WindowsTheme()
     {
-        _window = window;
-        Apply(preference);
+        SystemThemeManager.UpdateSystemThemeCache();
+        return ApplicationThemeManager.GetSystemTheme() switch
+        {
+            SystemTheme.Dark or SystemTheme.Glow or SystemTheme.CapturedMotion => ApplicationTheme.Dark,
+            SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite => ApplicationTheme.HighContrast,
+            _ => ApplicationTheme.Light,
+        };
     }
+
+    private void UpdateWindows()
+    {
+        foreach (FluentWindow window in _windows)
+            UpdateWindow(window);
+    }
+
+    private void ApplyAccent(ApplicationTheme theme)
+    {
+        if (_ui.AccentColor is not { } hex || theme == ApplicationTheme.HighContrast)
+        {
+            // Windows' own shades of its accent, as Settings and File Explorer use them.
+            ApplicationAccentColorManager.Apply(ApplicationAccentColorManager.GetColorizationColor(), theme, systemGlassColor: false, systemAccentColor: true);
+            return;
+        }
+        (string primary, string secondary, string tertiary) = Accents.Shades(hex, dark: theme == ApplicationTheme.Dark);
+        ApplicationAccentColorManager.Apply(ToColor(hex), ToColor(primary), ToColor(secondary), ToColor(tertiary));
+    }
+
+    /// <summary>
+    /// The window background over the material: clear as Windows draws it, or (Pro) the theme's own background
+    /// laid over it, as solid as the Transparency setting says.
+    /// </summary>
+    private System.Windows.Media.SolidColorBrush Tint()
+    {
+        double transparency = new FeatureGate(_license.IsPro).Transparency ? _ui.Transparency : 1;
+        if (transparency >= 1 || Application.Current?.TryFindResource("ApplicationBackgroundColor") is not System.Windows.Media.Color background)
+            return System.Windows.Media.Brushes.Transparent;
+        background.A = (byte)Math.Round((1 - transparency) * 255);
+        var brush = new System.Windows.Media.SolidColorBrush(background);
+        brush.Freeze();
+        return brush;
+    }
+
+    private void UpdateWindow(FluentWindow window)
+    {
+        nint handle = new WindowInteropHelper(window).Handle;
+        if (handle == 0)
+            return;
+        ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
+
+        // Materials need Windows 11 22H2; high contrast always gets a plain background.
+        WindowBackdrop backdrop = theme == ApplicationTheme.HighContrast || !OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621)
+            ? WindowBackdrop.Solid
+            : _ui.Backdrop;
+        if (backdrop == WindowBackdrop.Solid)
+        {
+            window.SetResourceReference(System.Windows.Controls.Control.BackgroundProperty, "ApplicationBackgroundBrush");
+        }
+        else
+        {
+            window.Background = Tint();
+            if (HwndSource.FromHwnd(handle)?.CompositionTarget is { } target)
+                target.BackgroundColor = System.Windows.Media.Colors.Transparent;
+        }
+        WindowHelpers.SetMaterial(handle, backdrop, dark: theme == ApplicationTheme.Dark);
+    }
+
+    private static System.Windows.Media.Color ToColor(string hex) =>
+        (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(hex);
 }

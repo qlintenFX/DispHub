@@ -7,6 +7,7 @@ using DispHub.Core.Color;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
 using DispHub.Core.Rules;
+using DispHub.Core.Sharing;
 using DispHub.Localization;
 using DispHub.Platform;
 using DispHub.Platform.Gamma;
@@ -29,6 +30,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
         Editor = new ProfileEditorViewModel(app, upgrade);
         _app.ConfigChanged += (_, _) => Rebuild();
         _app.StateChanged += (_, _) => Refresh();
+        _app.PowerChanged += (_, _) => Refresh();
         _app.ProfileEdited += (_, id) =>
         {
             if (Profiles.FirstOrDefault(p => p.Id == id) is { } item && _app.FindProfile(id) is { } profile)
@@ -72,10 +74,18 @@ public sealed partial class ProfilesViewModel : PageViewModel
             _app.ActivateProfile(value.Id, ChangeSource.Editor);
     }
 
+    /// <summary>A profile was clicked: it goes on screen if it isn't already (DispHub or profiles off, or another on).</summary>
+    public void Pick(ProfileItemViewModel item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        if (!_app.ProfilesOn || _app.Current?.ProfileId != item.Id)
+            _app.ActivateProfile(item.Id, ChangeSource.Editor);
+    }
+
     partial void OnIsActiveChanged(bool value)
     {
-        if (value == _app.Config.IsPaused)
-            _app.TogglePause(ChangeSource.Editor);
+        if (value != _app.ProfilesOn)
+            _app.SetProfilesOn(value, ChangeSource.Editor);
     }
 
     [RelayCommand]
@@ -85,6 +95,64 @@ public sealed partial class ProfilesViewModel : PageViewModel
             Select(profile.Id);
         else
             _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
+    }
+
+    /// <summary>Starting points for a new profile.</summary>
+    public IReadOnlyList<TemplateChoice> Templates { get; } =
+        [.. ProfileTemplates.All.Select(t => new TemplateChoice(t.Key, Loc.Get($"Template_{t.Key}"), Loc.Get($"Template_{t.Key}Hint")))];
+
+    [ObservableProperty]
+    public partial bool IsImporting { get; set; }
+
+    [ObservableProperty]
+    public partial string ImportText { get; set; } = "";
+
+    [ObservableProperty]
+    public partial string? ImportError { get; set; }
+
+    [RelayCommand]
+    private void AddFromTemplate(string? key)
+    {
+        if (ProfileTemplates.All.FirstOrDefault(t => t.Key == key) is not { } template)
+            return;
+        AddPreset(new SharedPreset(Loc.Get($"Template_{template.Key}"), template.Color));
+    }
+
+    [RelayCommand]
+    private void StartImport()
+    {
+        ImportText = "";
+        ImportError = null;
+        IsImporting = true;
+    }
+
+    [RelayCommand]
+    private void CancelImport() => IsImporting = false;
+
+    [RelayCommand]
+    private void Import()
+    {
+        if (!SharedPreset.TryParse(ImportText, out SharedPreset? preset))
+        {
+            ImportError = Loc.Get("Presets_InvalidLink");
+            return;
+        }
+        if (AddPreset(preset))
+            IsImporting = false;
+    }
+
+    /// <summary>Adds a shared or template profile and shows it. Returns false if the free profile limit was hit.</summary>
+    public bool AddPreset(SharedPreset preset)
+    {
+        ArgumentNullException.ThrowIfNull(preset);
+        if (_app.AddProfile(preset.Color, preset.Name) is not { } profile)
+        {
+            _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
+            return false;
+        }
+        _app.ActivateProfile(profile.Id, ChangeSource.Editor);
+        Select(profile.Id);
+        return true;
     }
 
     [RelayCommand]
@@ -138,7 +206,8 @@ public sealed partial class ProfilesViewModel : PageViewModel
     private void Refresh()
     {
         RuleOutput? current = _app.Current;
-        IsActive = !_app.Config.IsPaused;
+        // Off while DispHub is off, so the switch shows what's on screen; turning it on turns DispHub on.
+        IsActive = _app.ProfilesOn;
         foreach (ProfileItemViewModel item in Profiles)
         {
             if (_app.FindProfile(item.Id) is { } profile)
@@ -177,6 +246,8 @@ public sealed partial class ProfilesViewModel : PageViewModel
 
     private string DescribeStatus(RuleOutput? current)
     {
+        if (_app.Config.IsOff)
+            return Loc.Get("Profiles_StatusOff");
         if (_app.Config.IsPaused)
             return Loc.Get("Profiles_StatusPaused");
         if (current?.ProfileId is not { } id || _app.FindProfile(id) is not { } profile)
@@ -360,6 +431,35 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     [ObservableProperty]
     public partial string? HotkeyError { get; set; }
 
+    /// <summary>Looks this profile can show: none, as on the Effects page, or any built-in or saved look.</summary>
+    public System.Collections.ObjectModel.ObservableCollection<EffectChoice> Effects { get; } = [];
+
+    [ObservableProperty]
+    public partial EffectChoice? Effect { get; set; }
+
+    /// <summary>Screen effects are turned on in Settings.</summary>
+    [ObservableProperty]
+    public partial bool ShowEffects { get; set; }
+
+    partial void OnEffectChanged(EffectChoice? value)
+    {
+        if (!_loading && HasProfile && value is not null)
+            app.SetProfileEffect(_profileId, value.Id);
+    }
+
+    private void RefreshEffects(Profile profile)
+    {
+        Core.Effects.EffectsConfig effects = app.Config.Effects;
+        Effects.Clear();
+        Effects.Add(new EffectChoice(null, Loc.Get("Profiles_EffectKeep")));
+        Effects.Add(new EffectChoice(Core.Effects.LookLibrary.None, Loc.Get("Profiles_EffectNone")));
+        foreach (Core.Effects.LookPreset preset in Core.Effects.Looks.All)
+            Effects.Add(new EffectChoice(preset.Id, Loc.Get($"Look_{preset.Id}")));
+        foreach (Core.Effects.SavedLook saved in effects.SavedLooks)
+            Effects.Add(new EffectChoice(saved.Key, saved.Name));
+        Effect = Effects.FirstOrDefault(e => e.Id == profile.Effect) ?? Effects[0];
+    }
+
     public bool VibranceSupported => app.Monitors.Any(m => m.SupportsVibrance);
 
     public string VibranceHelp => VibranceSupported
@@ -375,7 +475,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             if (profile is null)
                 return;
             if (_profileId != profile.Id)
-                ShareMessage = null;
+                LinkCopied = false;
             _profileId = profile.Id;
             Name = profile.Name;
             RefreshDisplays();
@@ -391,6 +491,8 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             Vibrance = color.Vibrance;
             Hotkey = profile.Hotkey;
             HotkeyError = Localize(app.HotkeyFailure(profile.Id));
+            ShowEffects = app.Config.Ui.ShowEffects;
+            RefreshEffects(profile);
             OnPropertyChanged(nameof(VibranceSupported));
             OnPropertyChanged(nameof(VibranceHelp));
         }
@@ -406,8 +508,9 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             app.RenameProfile(_profileId, value);
     }
 
+    /// <summary>The share link was just copied: the button says so for a moment.</summary>
     [ObservableProperty]
-    public partial string? ShareMessage { get; set; }
+    public partial bool LinkCopied { get; set; }
 
     [RelayCommand]
     private void Share()
@@ -415,16 +518,14 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
         if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
             return;
         System.Windows.Clipboard.SetText(new Core.Sharing.SharedPreset(profile.Name, profile.Color).ToLink());
-        ShareMessage = Loc.Get("Profiles_LinkCopied");
+        _ = FlashLinkCopiedAsync();
     }
 
-    [RelayCommand]
-    private void SubmitToGallery()
+    private async Task FlashLinkCopiedAsync()
     {
-        if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
-            return;
-        Uri form = Core.Sharing.GallerySubmission.For(new Core.Sharing.SharedPreset(profile.Name, profile.Color));
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(form.AbsoluteUri) { UseShellExecute = true });
+        LinkCopied = true;
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        LinkCopied = false;
     }
 
     [RelayCommand]
@@ -495,4 +596,12 @@ public sealed record WarningViewModel(
     System.Windows.Input.ICommand? Action = null)
 {
     public bool HasAction => ActionText is not null;
+}
+
+public sealed record TemplateChoice(string Key, string Name, string Description);
+
+/// <summary>A screen effect a profile can pick; <see cref="Id"/> is null for "as on the Effects page".</summary>
+public sealed record EffectChoice(string? Id, string Name)
+{
+    public override string ToString() => Name;
 }

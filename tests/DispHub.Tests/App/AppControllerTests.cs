@@ -2,6 +2,7 @@ using DispHub.Core.Color;
 using DispHub.Core.Config;
 using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
+using DispHub.Core.Rules;
 using DispHub.Platform;
 using DispHub.Platform.Displays;
 using DispHub.Platform.Shell;
@@ -68,20 +69,88 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
-    public void PauseHotkey_RestoresOriginalAndResumes()
+    public void OnOffHotkey_TurnsDispHubOffAndOn()
     {
         _hotkeys.Press(AppController.PauseAction);
         Assert.Null(_colors.Last!.Default);
-        Assert.True(_app.Config.IsPaused);
+        Assert.True(_app.Config.IsOff);
+        Assert.False(_app.Config.IsPaused); // the Profiles switch is separate
 
         _hotkeys.Press(AppController.PauseAction);
         Assert.Equal(Standard.Color, _colors.Last!.Default);
     }
 
     [Fact]
+    public void PickingAProfile_TurnsDispHubBackOn_AndSaysSo()
+    {
+        _app.ToggleOff(ChangeSource.Editor);
+        int powerChanges = 0;
+        _app.PowerChanged += (_, _) => powerChanges++;
+
+        _app.ActivateProfile(Gaming.Id, ChangeSource.Tray);
+
+        Assert.False(_app.Config.IsOff);
+        Assert.True(_app.ProfilesOn);
+        Assert.Equal(Gaming.Color, _colors.Last!.Default);
+        // Everything that shows the power state (title bar, quick panel, tray) hears about it.
+        Assert.Equal(1, powerChanges);
+    }
+
+    [Fact]
+    public void ProfilesSwitch_TurnedOnWhileOff_TurnsDispHubOn()
+    {
+        _app.SetOn(false, ChangeSource.Editor);
+        Assert.False(_app.ProfilesOn);
+
+        _app.SetProfilesOn(true, ChangeSource.Editor);
+
+        Assert.False(_app.Config.IsOff);
+        Assert.False(_app.Config.IsPaused);
+        Assert.Equal(Standard.Color, _colors.Last!.Default);
+    }
+
+    [Fact]
+    public void ProfilesSwitch_TurnedOff_LeavesDispHubOn_AndPowerRemembersIt()
+    {
+        _app.SetProfilesOn(false, ChangeSource.Editor);
+        Assert.False(_app.Config.IsOff);
+        Assert.Null(_colors.Last!.Default);
+
+        _app.ToggleOff(ChangeSource.Editor);
+        _app.ToggleOff(ChangeSource.Editor);
+
+        // Back on, profiles are still off: the power button restores what was there.
+        Assert.False(_app.Config.IsOff);
+        Assert.True(_app.Config.IsPaused);
+        Assert.Null(_colors.Last!.Default);
+    }
+
+    [Fact]
+    public void SwitchingToWhatIsAlreadySo_ChangesNothing()
+    {
+        int powerChanges = 0;
+        _app.PowerChanged += (_, _) => powerChanges++;
+
+        _app.SetOn(true, ChangeSource.Editor);
+        _app.SetProfilesOn(true, ChangeSource.Editor);
+
+        Assert.Equal(0, powerChanges);
+    }
+
+    [Fact]
+    public void ManyQuickPresses_EndWhereTheCountSays()
+    {
+        for (int i = 0; i < 11; i++)
+            _hotkeys.Press(AppController.PauseAction);
+
+        Assert.True(_app.Config.IsOff);
+        Assert.Null(_colors.Last!.Default);
+    }
+
+    [Fact]
     public void ActivatingWhilePaused_Resumes()
     {
-        _app.TogglePause(ChangeSource.Editor);
+        _app.SetProfilesOn(false, ChangeSource.Editor);
 
         _app.ActivateProfile(Gaming.Id, ChangeSource.Tray);
 
@@ -164,6 +233,62 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public async Task PickingAProfileWhileOff_DuringAnAppRule_ShowsThePick()
+    {
+        // Regression: while off every rule looked like the everyday profile, so the pick lost to the rule.
+        await _license.PurchaseProAsync(0);
+        _app.Config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id });
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.SettingsChanged();
+        _app.SetOn(false, ChangeSource.Editor);
+
+        _app.ActivateProfile(Night.Id, ChangeSource.Editor);
+
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
+        Assert.Equal(Night.Color, _colors.Last!.Default);
+        Assert.Equal(Standard.Id, _app.Config.ActiveProfileId);
+    }
+
+    [Fact]
+    public async Task APickDuringAnAppRule_SurvivesTurningOffAndOn()
+    {
+        await _license.PurchaseProAsync(0);
+        _app.Config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id });
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.SettingsChanged();
+        _app.ActivateProfile(Night.Id, ChangeSource.Editor);
+
+        _app.ToggleOff(ChangeSource.Editor);
+        _app.ToggleOff(ChangeSource.Editor);
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
+
+        _app.SetProfilesOn(false, ChangeSource.Editor);
+        _app.SetProfilesOn(true, ChangeSource.Editor);
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
+    }
+
+    [Fact]
+    public async Task APickDuringTheSchedule_ComesBackAfterAnAppWithItsOwnRule()
+    {
+        await _license.PurchaseProAsync(0);
+        _app.Config.Schedule.Enabled = true;
+        _app.Config.Schedule.Slots.Add(new ScheduleSlot { Start = new TimeOnly(0, 0), ProfileId = Night.Id });
+        _app.Config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id });
+        _app.SettingsChanged();
+        Assert.Equal(Night.Id, _app.Current!.ProfileId);
+
+        _app.ActivateProfile(Standard.Id, ChangeSource.Editor);
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.OnForegroundChanged();
+        Assert.Equal(Gaming.Id, _app.Current!.ProfileId);
+
+        _foreground.Switch(@"C:\Windows\explorer.exe");
+        _app.OnForegroundChanged();
+        Assert.Equal(Standard.Id, _app.Current!.ProfileId);
+        Assert.Equal(TargetReason.Manual, _app.Current.Reason);
+    }
+
+    [Fact]
     public void ConflictingHotkey_IsReported()
     {
         _hotkeys.Taken.Add("Ctrl+Alt+F9");
@@ -207,7 +332,7 @@ public sealed class AppControllerTests : IDisposable
         Assert.Equal("Competitive", saved.Profiles[1].Name);
     }
 
-    private sealed class FakeColors : IColorApplier
+    internal sealed class FakeColors : IColorApplier
     {
         public MonitorTargets? Last { get; private set; }
         public bool Restored { get; private set; }
@@ -248,7 +373,7 @@ public sealed class AppControllerTests : IDisposable
         }
     }
 
-    private sealed class FakeHotkeys : IHotkeyRegistrar
+    internal sealed class FakeHotkeys : IHotkeyRegistrar
     {
         public Dictionary<string, HotkeyGesture> Registered { get; } = [];
         public HashSet<string> Taken { get; } = [];
@@ -280,7 +405,7 @@ public sealed class AppControllerTests : IDisposable
         public void Press(string action) => Pressed?.Invoke(this, action);
     }
 
-    private sealed class FakeForeground : IForegroundWatcher
+    internal sealed class FakeForeground : IForegroundWatcher
     {
         public string? Current { get; private set; }
 

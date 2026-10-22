@@ -19,14 +19,23 @@
       <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ctl:SmoothScrollViewer" />
       <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="ctl:HotkeyBox" />
 
+      <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+        <views:HomeView />
+      </DataTemplate>
       <DataTemplate DataType="{x:Type vm:ProfilesViewModel}">
         <views:ProfilesView />
       </DataTemplate>
-      <DataTemplate DataType="{x:Type vm:PresetsViewModel}">
-        <views:PresetsView />
+      <DataTemplate DataType="{x:Type vm:ScheduleViewModel}">
+        <views:ScheduleView />
       </DataTemplate>
-      <DataTemplate DataType="{x:Type vm:AutomationViewModel}">
-        <views:AutomationView />
+      <DataTemplate DataType="{x:Type vm:AppsViewModel}">
+        <views:AppsView />
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type vm:DisplaysViewModel}">
+        <views:DisplaysView />
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type vm:EffectsViewModel}">
+        <views:EffectsView />
       </DataTemplate>
       <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
         <views:SettingsView />

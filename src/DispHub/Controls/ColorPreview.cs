@@ -30,6 +30,9 @@ public static class ColorPreview
 
     public static BitmapSource Render(ColorSettings settings) => Render(Picture, settings);
 
+    /// <summary>The picture large (960 by 600), for the Home page.</summary>
+    public static BitmapSource Large(ColorSettings settings) => Render(Picture + "-wide", settings);
+
     private static BitmapSource Render(string picture, ColorSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);

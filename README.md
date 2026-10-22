@@ -16,21 +16,24 @@
 
 ## What it does
 
-- **Profiles.** Save as many looks as you like ("Gaming", "Night", "Photo editing") and switch with one click,
+- **Profiles.** Save looks such as "Gaming", "Night" and "Photo editing" and switch with one click,
   a global hotkey or the tray menu. A small on-screen message confirms the switch without stealing focus from games.
 - **Every monitor.** Colours apply to all connected displays, and DispHub can leave chosen displays alone.
 - **Vibrance.** Saturation on NVIDIA, Intel and AMD (beta) graphics, so it also works on the built-in screen of most laptops.
-- **Presets.** Add a ready-made look from the community gallery, or share your own as a `disphub://` link.
+- **Screen effects (Pro).** Make the whole screen look like film, VHS, a CRT, a Game Boy or an amber terminal, dim it below
+  its lowest brightness, turn it greyscale or red at night, or help with colour blindness. Every look is adjustable,
+  shows in a before and after preview, and can be saved, shared as a link or picked by a profile. Drawn on the GPU.
+- **Templates and links.** Start a profile from a template, or share one as a `disphub://` link.
 - **Automation (Pro).** Switch profiles while a specific game or app is in front, and fade to warmer colours
-  at night on a schedule.
-- **Safe.** Your original colours are saved before anything changes and restored when you pause or quit,
+  at night on a schedule, from sunset to sunrise or at set hours.
+- **Safe.** Your original colours are saved before anything changes and restored when you turn DispHub off or quit,
   even after a crash.
 - **Private.** No account, no telemetry. Everything stays on your PC.
 
 ## Get it
 
-DispHub will be available on the Microsoft Store. The Store version is free; a one-time **Pro** upgrade adds
-automation, per-display settings and unlimited profiles, and supports development.
+DispHub will be available on the Microsoft Store. The Store version is free with three profiles; a one-time **Pro** upgrade
+adds screen effects, automation, per-display settings and unlimited profiles, and supports development.
 
 You can also build it yourself (below); builds from source include every feature.
 
@@ -59,8 +62,8 @@ Windows doesn't allow gamma changes while HDR is on. Vibrance still works.
 
 ## Help make it better
 
-- **Translate** DispHub into your language on [Crowdin](https://crowdin.com/project/disphub). No coding needed.
-- **Share a preset**: in DispHub, click **Share** on a profile, then **Submit it to the gallery**.
+- **Translate** DispHub into your language on [Weblate](https://hosted.weblate.org/engage/disphub/). No coding needed.
+- **Share a look**: copy a profile or an effect look as a link and post it anywhere.
 - **Report a bug** with About > Copy diagnostics, or read [CONTRIBUTING.md](CONTRIBUTING.md) to send code.
 
 ## Build from source

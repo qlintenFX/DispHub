@@ -28,11 +28,14 @@ public sealed class TrayService : IDisposable
     private readonly byte[] _normalIcon = LoadResource("Assets/DispHub.ico");
     private readonly byte[] _pausedIcon = LoadResource("Assets/DispHub-paused.ico");
     private readonly DispatcherTimer _retry = new() { Interval = RetryInterval };
+    private readonly Func<Views.QuickPanel> _createPanel;
+    private Views.QuickPanel? _panel;
     private int _retries;
     private bool _paused;
 
-    public TrayService(AppController app, ShellMessageRouter router, nint hostWindow, Action openWindow, Action exit, ILogger logger)
+    public TrayService(AppController app, ShellMessageRouter router, nint hostWindow, Action openWindow, Action exit, Func<Views.QuickPanel> createPanel, ILogger logger)
     {
+        _createPanel = createPanel;
         ArgumentNullException.ThrowIfNull(router);
         _app = app;
         _host = hostWindow;
@@ -48,12 +51,14 @@ public sealed class TrayService : IDisposable
         _retry.Tick += (_, _) => Show();
         _app.StateChanged += (_, _) => Refresh();
         _app.ConfigChanged += (_, _) => Refresh();
+        _app.PowerChanged += (_, _) => Refresh();
+        _app.QuickPanelRequested += (_, _) => (_panel ??= _createPanel()).Toggle();
     }
 
     /// <summary>Adds the icon. Right after sign-in the taskbar may not be ready yet, so it keeps trying for a minute.</summary>
     public void Show()
     {
-        _paused = !_app.Config.IsPaused; // Forces the icon choice below.
+        _paused = !Off; // Forces the icon choice below.
         if (_icon.Show())
         {
             _retry.Stop();
@@ -95,6 +100,9 @@ public sealed class TrayService : IDisposable
     {
         switch (action)
         {
+            case TrayIconAction.Select when _app.Config.Ui.TrayLeftClick == TrayClickAction.QuickPanel:
+                (_panel ??= _createPanel()).Toggle();
+                break;
             case TrayIconAction.Select when _app.Config.Ui.TrayLeftClick == TrayClickAction.ShowProfileMenu:
             case TrayIconAction.ContextMenu:
                 ShowMenu();
@@ -109,13 +117,18 @@ public sealed class TrayService : IDisposable
         }
     }
 
+    /// <summary>The icon shows "off" when DispHub, or all its profiles, are off.</summary>
+    private bool Off => _app.Config.IsOff || _app.Config.IsPaused;
+
     private void Refresh()
     {
         Profile? active = _app.Current?.ProfileId is { } id ? _app.FindProfile(id) : null;
-        _icon.SetTooltip(_app.Config.IsPaused ? Loc.Get("Tray_Paused") : Loc.Format("Tray_Active", active?.Name ?? Loc.Get("Tray_Ready")));
-        if (_paused != _app.Config.IsPaused)
+        _icon.SetTooltip(_app.Config.IsOff ? Loc.Get("Tray_Paused")
+            : _app.Config.IsPaused ? Loc.Get("Tray_ProfilesOff")
+            : Loc.Format("Tray_Active", active?.Name ?? Loc.Get("Tray_Ready")));
+        if (_paused != Off)
         {
-            _paused = _app.Config.IsPaused;
+            _paused = Off;
             _icon.SetIcon(_paused ? _pausedIcon : _normalIcon);
         }
     }
@@ -140,7 +153,7 @@ public sealed class TrayService : IDisposable
             {
                 Header = profile.Name,
                 IsCheckable = true,
-                IsChecked = !_app.Config.IsPaused && active?.Id == id,
+                IsChecked = !Off && active?.Id == id,
                 InputGestureText = profile.Hotkey ?? "",
             };
             item.Click += (_, _) => _app.ActivateProfile(id, ChangeSource.Tray);
@@ -150,9 +163,9 @@ public sealed class TrayService : IDisposable
             menu.Items.Add(Item(Loc.Get("Tray_MoreProfiles"), SymbolRegular.MoreHorizontal24, _openWindow));
 
         menu.Items.Add(new Separator());
-        menu.Items.Add(_app.Config.IsPaused
-            ? Item(Loc.Get("Tray_Resume"), SymbolRegular.Play24, () => _app.TogglePause(ChangeSource.Tray))
-            : Item(Loc.Get("Tray_Pause"), SymbolRegular.Pause24, () => _app.TogglePause(ChangeSource.Tray)));
+        menu.Items.Add(_app.Config.IsOff
+            ? Item(Loc.Get("Tray_Resume"), SymbolRegular.Power24, () => _app.ToggleOff(ChangeSource.Tray))
+            : Item(Loc.Get("Tray_Pause"), SymbolRegular.Power24, () => _app.ToggleOff(ChangeSource.Tray)));
         menu.Items.Add(Item(Loc.Get("Tray_Open"), SymbolRegular.Open24, _openWindow));
         menu.Items.Add(new Separator());
         menu.Items.Add(Item(Loc.Get("Tray_Exit"), SymbolRegular.Dismiss24, _exit));

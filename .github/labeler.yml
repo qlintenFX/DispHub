@@ -1,0 +1,53 @@
+# Labels pull requests by the parts of DispHub they change (see .github/workflows/label.yml).
+effects:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/DispHub.Core/Effects/**'
+          - 'src/DispHub.Platform/Effects/**'
+          - 'src/DispHub/**/Effects*'
+
+colour:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/DispHub.Core/Color/**'
+          - 'src/DispHub.Platform/ColorApplier.cs'
+          - 'src/DispHub.Platform/Displays/**'
+          - 'src/DispHub.Platform/Gamma/**'
+          - 'src/DispHub.Platform/Vibrance/**'
+
+schedule:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/DispHub.Core/Schedule/**'
+          - 'src/DispHub/**/Schedule*'
+
+ui:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/DispHub/Views/**'
+          - 'src/DispHub/Controls/**'
+          - 'src/DispHub/Resources/**'
+          - 'src/DispHub/*.xaml'
+
+presets:
+  - changed-files:
+      - any-glob-to-any-file: 'presets/**'
+
+# Translations, but not the English source text.
+translations:
+  - all:
+      - changed-files:
+          - any-glob-to-any-file: 'src/DispHub/Localization/Strings.*.resx'
+          - all-globs-to-all-files: '!src/DispHub/Localization/Strings.resx'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - 'docs/**'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+          - 'build/**'

@@ -44,10 +44,38 @@ public sealed partial class LocalizationTests
     }
 
     [Fact]
+    public void EveryPartOfTheEffectsPageHasAName()
+    {
+        HashSet<string> english = Keys(Path.Combine(LocalizationDir, "Strings.resx"));
+        foreach (DispHub.Core.Effects.LookPreset preset in DispHub.Core.Effects.Looks.All)
+        {
+            Assert.Contains($"Look_{preset.Id}", english);
+            Assert.Contains($"Look_{preset.Id}Hint", english);
+        }
+        foreach (DispHub.Core.Effects.LookParameter parameter in DispHub.Core.Effects.LookParameters.All)
+            Assert.Contains($"LookParam_{parameter.Key}", english);
+        foreach (DispHub.Core.Effects.LookPart part in DispHub.Core.Effects.LookParts.All)
+        {
+            Assert.Contains($"LookPart_{part.Key}", english);
+            Assert.Contains($"LookPart_{part.Key}Hint", english);
+        }
+        foreach (string value in Enum.GetNames<DispHub.Core.Effects.LookCategory>())
+            Assert.Contains($"LookCategory_{value}", english);
+        foreach (string value in Enum.GetNames<DispHub.Core.Effects.LookGroup>())
+            Assert.Contains($"LookGroup_{value}", english);
+        foreach (string value in Enum.GetNames<DispHub.Core.Effects.RetroPalette>())
+            Assert.Contains($"Palette_{value}", english);
+        foreach (string value in Enum.GetNames<DispHub.Core.Effects.ColorVision>())
+            Assert.Contains($"ColorVision_{value}", english);
+        foreach (string picture in DispHub.Controls.ColorPreview.Pictures)
+            Assert.True(File.Exists(Path.Combine(Root, "src", "DispHub", "Assets", "Previews", picture + "-wide.jpg")), picture);
+    }
+
+    [Fact]
     public void EnumValuesShownInTheUiHaveNames()
     {
         HashSet<string> english = Keys(Path.Combine(LocalizationDir, "Strings.resx"));
-        foreach (Type type in new[] { typeof(DispHub.Core.Model.ThemePreference), typeof(DispHub.Core.Model.TrayClickAction) })
+        foreach (Type type in new[] { typeof(DispHub.Core.Model.ThemePreference), typeof(DispHub.Core.Model.TrayClickAction), typeof(DispHub.Core.Model.WindowBackdrop), typeof(DispHub.Core.Model.OsdPosition) })
         {
             foreach (string value in Enum.GetNames(type))
                 Assert.Contains($"Enum_{type.Name}_{value}", english);

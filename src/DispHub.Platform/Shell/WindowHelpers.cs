@@ -1,8 +1,11 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
+using DispHub.Core.Model;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Dwm;
 using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Input.KeyboardAndMouse;
 using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace DispHub.Platform.Shell;
@@ -19,6 +22,14 @@ public static class WindowHelpers
         _ = PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, style);
     }
 
+    /// <summary>Keeps a window out of Alt+Tab and the taskbar.</summary>
+    public static void MakeToolWindow(nint handle)
+    {
+        var hwnd = (HWND)handle;
+        int style = PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+        _ = PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, style | (int)WINDOW_EX_STYLE.WS_EX_TOOLWINDOW);
+    }
+
     /// <summary>The work area (screen minus taskbar) of the monitor under the mouse, in physical pixels.</summary>
     public static Rectangle WorkAreaUnderCursor()
     {
@@ -30,6 +41,29 @@ public static class WindowHelpers
         RECT work = info.rcWork;
         return Rectangle.FromLTRB(work.left, work.top, work.right, work.bottom);
     }
+
+    /// <summary>The monitor under the mouse and its work area (without the taskbar), in physical pixels.</summary>
+    public static (Rectangle Monitor, Rectangle Work) ScreenUnderCursor()
+    {
+        _ = PInvoke.GetCursorPos(out Point cursor);
+        HMONITOR monitor = PInvoke.MonitorFromPoint(cursor, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        var info = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
+        if (!PInvoke.GetMonitorInfo(monitor, ref info))
+            return (Rectangle.Empty, Rectangle.Empty);
+        RECT m = info.rcMonitor, w = info.rcWork;
+        return (Rectangle.FromLTRB(m.left, m.top, m.right, m.bottom), Rectangle.FromLTRB(w.left, w.top, w.right, w.bottom));
+    }
+
+    /// <summary>Moves and resizes a window in physical pixels and shows it on top, keeping its activation.</summary>
+    public static void PlaceOnTop(nint handle, Rectangle bounds) =>
+        PInvoke.SetWindowPos(
+            (HWND)handle,
+            HWND.HWND_TOPMOST,
+            bounds.X,
+            bounds.Y,
+            bounds.Width,
+            bounds.Height,
+            SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW);
 
     /// <summary>Moves and resizes a window in physical pixels without activating it, and shows it.</summary>
     public static void ShowAt(nint handle, Rectangle bounds) =>
@@ -44,9 +78,37 @@ public static class WindowHelpers
 
     public static void BringToFront(nint handle) => PInvoke.SetForegroundWindow((HWND)handle);
 
+    /// <summary>
+    /// Sets the material Windows 11 draws behind a window's see-through areas, and a dark or light frame to match.
+    /// Solid turns the material off; the window then paints its own background.
+    /// </summary>
+    public static unsafe void SetMaterial(nint handle, WindowBackdrop backdrop, bool dark)
+    {
+        var hwnd = (HWND)handle;
+        BOOL useDark = dark;
+        _ = PInvoke.DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, &useDark, (uint)sizeof(BOOL));
+        DWM_SYSTEMBACKDROP_TYPE type = backdrop switch
+        {
+            WindowBackdrop.Mica => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_MAINWINDOW,
+            WindowBackdrop.MicaAlt => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TABBEDWINDOW,
+            WindowBackdrop.Acrylic => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TRANSIENTWINDOW,
+            _ => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_NONE,
+        };
+        _ = PInvoke.DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, &type, (uint)sizeof(DWM_SYSTEMBACKDROP_TYPE));
+    }
+
     /// <summary>The size in pixels Windows draws small icons at (notification area, title bars) on this system's DPI.</summary>
     public static int SmallIconSize() =>
         PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXSMICON, PInvoke.GetDpiForSystem());
+
+    /// <summary>How long since the last keyboard, mouse or touch input anywhere on this PC.</summary>
+    public static TimeSpan IdleTime()
+    {
+        var info = new LASTINPUTINFO { cbSize = (uint)Marshal.SizeOf<LASTINPUTINFO>() };
+        return PInvoke.GetLastInputInfo(ref info)
+            ? TimeSpan.FromMilliseconds(unchecked((uint)Environment.TickCount - info.dwTime))
+            : TimeSpan.Zero;
+    }
 
     /// <summary>Lets Windows page out memory this process isn't using right now.</summary>
     public static void TrimWorkingSet() => PInvoke.EmptyWorkingSet(PInvoke.GetCurrentProcess());

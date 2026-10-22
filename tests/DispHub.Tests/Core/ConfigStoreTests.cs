@@ -31,6 +31,7 @@ public sealed class ConfigStoreTests : IDisposable
         config.Profiles[1].Color = new ColorSettings(10, -5, 1.25, 4200, 65);
         config.Profiles[1].MonitorOverrides["\\\\?\\display#abc"] = new ColorSettings(Gamma: 1.4);
         config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = config.Profiles[1].Id });
+        config.Schedule.Mode = ScheduleMode.Custom;
         config.Schedule.Slots.Add(new ScheduleSlot { Start = new TimeOnly(21, 30), ProfileId = config.Profiles[2].Id, FadeMinutes = 20 });
         config.Ui.Theme = ThemePreference.Dark;
         store.Save(config);
@@ -173,6 +174,42 @@ public sealed class ConfigNormalizerTests
         Assert.Equal(ColorSettings.GammaMax, profile.Color.Gamma);
         Assert.Null(profile.Hotkey);
         Assert.Equal("Ctrl+Alt+P", config.Hotkeys.TogglePause);
+    }
+
+    [Theory]
+    [InlineData("#E81123", "#E81123")] // offered: kept
+    [InlineData("#7E735F", "#69797E")] // an older choice: the closest offered colour (graphite)
+    [InlineData("#0063B1", "#0078D4")]
+    [InlineData("red", null)]
+    [InlineData(null, null)]
+    public void Normalize_AccentColour_IsOneOfTheOfferedColours(string? saved, string? expected)
+    {
+        var config = new AppConfig();
+        config.Ui.AccentColor = saved;
+
+        ConfigNormalizer.Normalize(config);
+
+        Assert.Equal(expected, config.Ui.AccentColor);
+    }
+
+    [Fact]
+    public void AccentShades_AreLighterOnDarkAndDarkerOnLight()
+    {
+        // Windows' default blue: its own shades are #0093F9, #60CDFF, #98ECFE on dark and #005FB8, #003E92, #001A68 on light.
+        (string p, string s, string t) = Accents.Shades("#0078D4", dark: true);
+        (string lp, _, string lt) = Accents.Shades("#0078D4", dark: false);
+
+        Assert.True(Lightness(p) > Lightness("#0078D4") && Lightness(s) > Lightness(p) && Lightness(t) > Lightness(s));
+        Assert.True(Lightness(lp) < Lightness("#0078D4") && Lightness(lt) < Lightness(lp));
+        Assert.All(new[] { p, s, t, lp, lt }, shade => Assert.Matches("^#[0-9A-F]{6}$", shade));
+        Assert.InRange(Lightness(s), 0.62, 0.75); // about #60CDFF's lightness
+
+        static double Lightness(string hex)
+        {
+            int v = Convert.ToInt32(hex[1..], 16);
+            int r = (v >> 16) & 0xFF, g = (v >> 8) & 0xFF, b = v & 0xFF;
+            return (Math.Max(r, Math.Max(g, b)) + Math.Min(r, Math.Min(g, b))) / 510.0;
+        }
     }
 }
 
