@@ -57,7 +57,6 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     [ObservableProperty] public partial ThemePreference Theme { get; set; }
     [ObservableProperty] public partial AccentChoice? Accent { get; set; }
-    [ObservableProperty] public partial bool ShowEffects { get; set; }
     [ObservableProperty] public partial string? QuickPanelHotkey { get; set; }
     [ObservableProperty] public partial WindowBackdrop Backdrop { get; set; }
     [ObservableProperty] public partial bool CompactNavigation { get; set; }
@@ -77,7 +76,6 @@ public sealed partial class SettingsViewModel : PageViewModel
     [ObservableProperty] public partial string? PauseHotkey { get; set; }
     [ObservableProperty] public partial string? NextHotkey { get; set; }
     [ObservableProperty] public partial string? PreviousHotkey { get; set; }
-    [ObservableProperty] public partial string? EffectsHotkey { get; set; }
     [ObservableProperty] public partial string? HotkeyError { get; set; }
 
     partial void OnThemeChanged(ThemePreference value) => SaveAppearance(c => c.Ui.Theme = value);
@@ -86,14 +84,6 @@ public sealed partial class SettingsViewModel : PageViewModel
     {
         if (value is not null)
             SaveAppearance(c => c.Ui.AccentColor = value.Hex);
-    }
-
-    partial void OnShowEffectsChanged(bool value)
-    {
-        if (_loading)
-            return;
-        Save(c => c.Ui.ShowEffects = value);
-        _app.RefreshHotkeys();
     }
 
     partial void OnQuickPanelHotkeyChanged(string? value) => SetHotkey(AppController.QuickPanelAction, value);
@@ -174,8 +164,6 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     partial void OnPreviousHotkeyChanged(string? value) => SetHotkey(AppController.PreviousAction, value);
 
-    partial void OnEffectsHotkeyChanged(string? value) => SetHotkey(AppController.EffectsAction, value);
-
     async partial void OnLaunchAtLoginChanged(bool value)
     {
         if (_loading)
@@ -216,7 +204,6 @@ public sealed partial class SettingsViewModel : PageViewModel
             UiConfig ui = _app.Config.Ui;
             Theme = ui.Theme;
             Accent = AccentChoices.FirstOrDefault(a => string.Equals(a.Hex, ui.AccentColor, StringComparison.OrdinalIgnoreCase)) ?? AccentChoices[0];
-            ShowEffects = ui.ShowEffects;
             QuickPanelHotkey = _app.Config.Hotkeys.QuickPanel;
             Backdrop = ui.Backdrop;
             IsProTransparency = _app.Features.Transparency;
@@ -236,7 +223,6 @@ public sealed partial class SettingsViewModel : PageViewModel
             PauseHotkey = _app.Config.Hotkeys.TogglePause;
             NextHotkey = _app.Config.Hotkeys.NextProfile;
             PreviousHotkey = _app.Config.Hotkeys.PreviousProfile;
-            EffectsHotkey = _app.Config.Hotkeys.ToggleEffects;
             HotkeyError = DescribeHotkeyFailures();
         }
         finally
@@ -306,7 +292,7 @@ public sealed partial class SettingsViewModel : PageViewModel
     private string? DescribeHotkeyFailures()
     {
         var failures = new List<string>();
-        foreach ((string action, string label) in new[] { (AppController.PauseAction, Loc.Get("Settings_Pause")), (AppController.NextAction, Loc.Get("Settings_Next")), (AppController.PreviousAction, Loc.Get("Settings_Previous")), (AppController.EffectsAction, Loc.Get("Settings_EffectsHotkey")), (AppController.QuickPanelAction, Loc.Get("Settings_QuickPanelHotkey")) })
+        foreach ((string action, string label) in new[] { (AppController.PauseAction, Loc.Get("Settings_Pause")), (AppController.NextAction, Loc.Get("Settings_Next")), (AppController.PreviousAction, Loc.Get("Settings_Previous")), (AppController.QuickPanelAction, Loc.Get("Settings_QuickPanelHotkey")) })
         {
             if (_app.HotkeyFailures.TryGetValue(action, out string? reason))
                 failures.Add(Loc.Format("Settings_HotkeyFailure", label, Loc.Get(reason)));

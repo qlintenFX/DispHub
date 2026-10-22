@@ -64,7 +64,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
             _tourPending = true;
     }
 
-    /// <summary>The important parts, page by page. Effects is skipped when it isn't in the menu.</summary>
+    /// <summary>The important parts, page by page.</summary>
     private void BeginTour() => TourOverlay.Start(
     [
         new("power", Loc.Get("Tour_PowerTitle"), Loc.Get("Tour_PowerText"), typeof(HomeViewModel)),
@@ -72,7 +72,6 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         new("profiles", Loc.Get("Tour_ProfilesTitle"), Loc.Get("Tour_ProfilesText"), typeof(ProfilesViewModel)),
         new("schedule", Loc.Get("Tour_ScheduleTitle"), Loc.Get("Tour_ScheduleText"), typeof(ScheduleViewModel)),
         new("apps", Loc.Get("Tour_AppsTitle"), Loc.Get("Tour_AppsText"), typeof(AppsViewModel)),
-        new("effects", Loc.Get("Tour_EffectsTitle"), Loc.Get("Tour_EffectsText"), typeof(EffectsViewModel)),
         new("hotkeys", Loc.Get("Tour_HotkeysTitle"), Loc.Get("Tour_HotkeysText"), typeof(SettingsViewModel)),
     ], this);
 

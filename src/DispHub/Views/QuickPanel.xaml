@@ -192,32 +192,6 @@
           Text="{Binding Warmth, StringFormat={}{0:0} K}" />
       </Grid>
 
-      <!-- Screen effect -->
-      <Grid Margin="0,14,0,0" Visibility="{Binding ShowEffects, Converter={StaticResource BoolToVisibility}}">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <ui:SymbolIcon
-          Margin="0,0,8,0"
-          VerticalAlignment="Center"
-          FontSize="18"
-          Symbol="Sparkle24" />
-        <TextBlock
-          Grid.Column="1"
-          MinWidth="78"
-          Margin="0,0,8,0"
-          VerticalAlignment="Center"
-          Text="{l:Tr Quick_Effect}" />
-        <ComboBox
-          Grid.Column="2"
-          AutomationProperties.Name="{l:Tr Quick_Effect}"
-          ItemsSource="{Binding Looks}"
-          MaxDropDownHeight="320"
-          SelectedItem="{Binding Look}" />
-      </Grid>
-
       <!-- Footer -->
       <Grid Margin="0,12,0,0">
         <ui:Button

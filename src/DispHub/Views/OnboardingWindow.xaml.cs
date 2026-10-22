@@ -15,7 +15,7 @@ namespace DispHub.Views;
 
 /// <summary>
 /// The walkthrough window. Moving between steps slides the old one out and the new one in; the tray step shows
-/// left-click and right-click in turn, and the effects step sweeps between the photo before and after.
+/// left-click and right-click in turn.
 /// </summary>
 public partial class OnboardingWindow : Wpf.Ui.Controls.FluentWindow
 {
@@ -93,22 +93,6 @@ public partial class OnboardingWindow : Wpf.Ui.Controls.FluentWindow
         else
         {
             _clicks.Stop();
-        }
-
-        if (_viewModel.IsEffects && Animate)
-        {
-            // The line sweeps slowly from one side to the other and back.
-            var sweep = new DoubleAnimation(70, 360, TimeSpan.FromSeconds(2.8))
-            {
-                AutoReverse = true,
-                RepeatBehavior = RepeatBehavior.Forever,
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
-            };
-            Before.BeginAnimation(WidthProperty, sweep);
-        }
-        else
-        {
-            Before.BeginAnimation(WidthProperty, null);
         }
     }
 

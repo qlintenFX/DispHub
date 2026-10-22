@@ -34,9 +34,6 @@
       <DataTemplate DataType="{x:Type vm:DisplaysViewModel}">
         <views:DisplaysView />
       </DataTemplate>
-      <DataTemplate DataType="{x:Type vm:EffectsViewModel}">
-        <views:EffectsView />
-      </DataTemplate>
       <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
         <views:SettingsView />
       </DataTemplate>

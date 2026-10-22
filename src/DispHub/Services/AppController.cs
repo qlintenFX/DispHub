@@ -36,7 +36,6 @@ public sealed class AppController : IDisposable
     public const string PauseAction = "pause";
     public const string NextAction = "next";
     public const string PreviousAction = "previous";
-    public const string EffectsAction = "effects";
     public const string QuickPanelAction = "panel";
     private const string ProfileActionPrefix = "profile:";
     private static readonly TimeSpan SaveDelay = TimeSpan.FromMilliseconds(500);
@@ -128,9 +127,6 @@ public sealed class AppController : IDisposable
 
     public event EventHandler? ExternalResetDetected;
 
-    /// <summary>The effects hotkey was pressed.</summary>
-    public event EventHandler? EffectsToggleRequested;
-
     /// <summary>The quick panel hotkey was pressed.</summary>
     public event EventHandler? QuickPanelRequested;
 
@@ -173,7 +169,7 @@ public sealed class AppController : IDisposable
             PowerChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>DispHub on or off (the power button): off is original colours, no effects and no automation.</summary>
+    /// <summary>DispHub on or off (the power button): off is original colours and no automation.</summary>
     public void SetOn(bool on, ChangeSource source) => SetPower(off: !on, paused: Config.IsPaused, source);
 
     /// <summary>The power button, the on/off hotkey and the tray menu.</summary>
@@ -181,7 +177,7 @@ public sealed class AppController : IDisposable
 
     /// <summary>
     /// Profiles on or off (the Profiles switch). Turning them on turns DispHub on too, so the switch always does
-    /// what it shows. Screen effects follow the Effects page either way.
+    /// what it shows.
     /// </summary>
     public void SetProfilesOn(bool on, ChangeSource source) => SetPower(off: !on && Config.IsOff, paused: !on, source);
 
@@ -249,16 +245,6 @@ public sealed class AppController : IDisposable
             return;
         ScheduleSave();
         Evaluate(ChangeSource.Editor);
-    }
-
-    /// <summary>Sets the look shown while a profile is on (see <see cref="Profile.Effect"/>).</summary>
-    public void SetProfileEffect(Guid profileId, string? effect)
-    {
-        if (FindProfile(profileId) is not { } profile || profile.Effect == effect)
-            return;
-        profile.Effect = effect;
-        ScheduleSave();
-        ConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void RenameProfile(Guid profileId, string name)
@@ -341,9 +327,6 @@ public sealed class AppController : IDisposable
             case PreviousAction:
                 Config.Hotkeys.PreviousProfile = text;
                 break;
-            case EffectsAction:
-                Config.Hotkeys.ToggleEffects = text;
-                break;
             case QuickPanelAction:
                 Config.Hotkeys.QuickPanel = text;
                 break;
@@ -364,9 +347,6 @@ public sealed class AppController : IDisposable
         ConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>Registers hotkeys again after a setting that decides which exist (screen effects) changed.</summary>
-    public void RefreshHotkeys() => SyncHotkeys();
-
     /// <summary>For settings changed directly on <see cref="Config"/> by a view model.</summary>
     public void SettingsChanged()
     {
@@ -374,9 +354,6 @@ public sealed class AppController : IDisposable
         ConfigChanged?.Invoke(this, EventArgs.Empty);
         Evaluate(ChangeSource.Editor);
     }
-
-    /// <summary>Saves <see cref="AppConfig.Effects"/>. Effects don't affect profiles, so nothing else is redrawn.</summary>
-    public void EffectsChanged() => ScheduleSave();
 
     public void OnDisplayChanged() => _colors.RefreshDisplays();
 
@@ -489,9 +466,6 @@ public sealed class AppController : IDisposable
             case PreviousAction:
                 CycleProfile(-1, ChangeSource.Hotkey);
                 break;
-            case EffectsAction:
-                EffectsToggleRequested?.Invoke(this, EventArgs.Empty);
-                break;
             case QuickPanelAction:
                 QuickPanelRequested?.Invoke(this, EventArgs.Empty);
                 break;
@@ -519,8 +493,6 @@ public sealed class AppController : IDisposable
         AddAction(desired, PauseAction, Config.Hotkeys.TogglePause);
         AddAction(desired, NextAction, Config.Hotkeys.NextProfile);
         AddAction(desired, PreviousAction, Config.Hotkeys.PreviousProfile);
-        if (Config.Ui.ShowEffects)
-            AddAction(desired, EffectsAction, Config.Hotkeys.ToggleEffects);
         AddAction(desired, QuickPanelAction, Config.Hotkeys.QuickPanel);
 
         HotkeyFailures = _hotkeys.Sync(desired);

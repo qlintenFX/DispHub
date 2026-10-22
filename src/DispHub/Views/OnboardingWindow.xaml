@@ -131,32 +131,6 @@
             </Border.Background>
           </Border>
 
-          <!-- Before and after, with a line sweeping between them. -->
-          <Border Style="{StaticResource Picture}" Visibility="{Binding IsEffects, Converter={StaticResource BoolToVisibility}}">
-            <Grid>
-              <Image Source="pack://application:,,,/Assets/Onboarding/effects-after.jpg" Stretch="UniformToFill" />
-              <Border
-                x:Name="Before"
-                Width="215"
-                HorizontalAlignment="Left"
-                BorderBrush="White"
-                BorderThickness="0,0,2,0"
-                ClipToBounds="True">
-                <Image
-                  Width="430"
-                  HorizontalAlignment="Left"
-                  Source="pack://application:,,,/Assets/Onboarding/effects-before.jpg"
-                  Stretch="UniformToFill" />
-              </Border>
-              <Border HorizontalAlignment="Left" Style="{StaticResource PictureChip}">
-                <TextBlock Style="{StaticResource ChipText}" Text="{l:Tr Onboarding_Original}" />
-              </Border>
-              <Border HorizontalAlignment="Right" Style="{StaticResource PictureChip}">
-                <TextBlock Style="{StaticResource ChipText}" Text="{l:Tr Look_super8}" />
-              </Border>
-            </Grid>
-          </Border>
-
           <Border Style="{StaticResource Picture}" Visibility="{Binding IsReady, Converter={StaticResource BoolToVisibility}}">
             <Border.Background>
               <ImageBrush ImageSource="pack://application:,,,/Assets/Onboarding/power.jpg" Stretch="UniformToFill" />
@@ -244,29 +218,7 @@
             </ItemsControl>
           </StackPanel>
 
-          <!-- 4. Screen effects -->
-          <StackPanel Visibility="{Binding IsEffects, Converter={StaticResource BoolToVisibility}}">
-            <TextBlock Style="{StaticResource StepTitle}" Text="{l:Tr Onboarding_EffectsTitle}" />
-            <TextBlock Style="{StaticResource StepText}" Text="{l:Tr Onboarding_EffectsText}" />
-            <Border
-              Margin="0,18,0,0"
-              Padding="14,10"
-              Style="{StaticResource ClickRow}">
-              <DockPanel>
-                <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding ShowEffects}" />
-                <StackPanel>
-                  <TextBlock FontWeight="SemiBold" Text="{l:Tr Onboarding_ShowEffects}" />
-                  <TextBlock
-                    Margin="0,2,0,0"
-                    Style="{StaticResource Hint}"
-                    Text="{Binding EffectsNote}"
-                    TextWrapping="Wrap" />
-                </StackPanel>
-              </DockPanel>
-            </Border>
-          </StackPanel>
-
-          <!-- 5. The power button, starting with Windows, and the tour -->
+          <!-- 4. The power button, starting with Windows, and the tour -->
           <StackPanel Visibility="{Binding IsReady, Converter={StaticResource BoolToVisibility}}">
             <TextBlock Style="{StaticResource StepTitle}" Text="{l:Tr Onboarding_PowerTitle}" />
             <TextBlock Style="{StaticResource StepText}" Text="{l:Tr Onboarding_PowerText}" />

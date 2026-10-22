@@ -29,17 +29,6 @@ public sealed class OsdService(AppController app)
         _window.Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3), app.Config.Ui.OsdPosition);
     }
 
-    /// <summary>Effects were turned on (with the look's name) or off from a hotkey.</summary>
-    public void ShowEffects(string? lookName)
-    {
-        if (!app.Config.Ui.ShowOsd)
-            return;
-        _window ??= new OsdWindow();
-        TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
-        _window.Flash(Loc.Get(lookName is null ? "Osd_EffectsOff" : "Osd_EffectsOn"), lookName ?? Loc.Get("Osd_EffectsOffDetail"),
-            SymbolRegular.Sparkle24, duration, app.Config.Ui.OsdPosition);
-    }
-
     private void OnStateChanged(ChangeSource source)
     {
         if (source is not (ChangeSource.Hotkey or ChangeSource.Tray) || !app.Config.Ui.ShowOsd)
