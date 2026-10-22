@@ -19,6 +19,20 @@ public interface IAutostart
     Task<AutostartState> SetEnabledAsync(bool enabled);
 }
 
+/// <summary>Remembers the choice without telling Windows, so a --fresh trial run never changes what starts at sign-in.</summary>
+public sealed class TrialAutostart : IAutostart
+{
+    private bool _enabled;
+
+    public Task<AutostartState> GetStateAsync() => Task.FromResult(_enabled ? AutostartState.Enabled : AutostartState.Disabled);
+
+    public Task<AutostartState> SetEnabledAsync(bool enabled)
+    {
+        _enabled = enabled;
+        return GetStateAsync();
+    }
+}
+
 /// <summary>Packaged builds use the manifest's StartupTask; unpackaged builds use the HKCU Run key.</summary>
 public sealed class Autostart : IAutostart
 {

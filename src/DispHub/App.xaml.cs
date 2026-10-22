@@ -32,10 +32,25 @@ public partial class App : Application
     private bool _exiting;
     private bool _restart;
     private bool _themeChangePending;
+    private bool _fresh;
+
+    /// <summary>A trial run as a brand-new user: empty settings, and nothing about it written to Windows.</summary>
+    private const string FreshArgument = "--fresh";
+
+    /// <summary>Shows the first-run walkthrough again, keeping the settings.</summary>
+    private const string WalkthroughArgument = "--walkthrough";
+
+    /// <summary>Opens DispHub with the guided tour.</summary>
+    private const string TourArgument = "--tour";
 
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // Before anything reads the settings or starts a log.
+        _fresh = Has(e.Args, FreshArgument);
+        if (_fresh)
+            AppPaths.UseDataDirectory(FreshDataDirectory());
 
         // Set the language first and synchronously: WPF builds pages in dispatcher work that inherits the culture
         // that was current when it was queued, so setting it later inside async startup leaves pages in English.
@@ -78,6 +93,9 @@ public partial class App : Application
             RequestExit();
             return;
         }
+        // A fresh run replaces the running DispHub, so the two never fight over the colours.
+        if (_fresh && !_instance.IsFirstInstance)
+            _instance.TakeOver(TimeSpan.FromSeconds(10));
         if (!_instance.IsFirstInstance)
         {
             _instance.SendToFirstInstance(args);
@@ -86,9 +104,9 @@ public partial class App : Application
         }
 
         ComboBoxClickFix.Register();
-        _services = ConfigureServices(args);
+        _services = ConfigureServices(args, _fresh);
         _logger = _services.GetRequiredService<ILogger<App>>();
-        _logger.LogInformation("DispHub {Version} starting (packaged: {Packaged})", AboutViewModel.Version, PackageInfo.IsPackaged);
+        _logger.LogInformation("DispHub {Version} starting (packaged: {Packaged}, fresh: {Fresh})", AboutViewModel.Version, PackageInfo.IsPackaged, _fresh);
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
         SessionEnding += (_, _) => RequestExit();
@@ -142,7 +160,8 @@ public partial class App : Application
 
         try
         {
-            ProtocolRegistration.EnsureRegistered(SharedPreset.Scheme);
+            if (!_fresh)
+                ProtocolRegistration.EnsureRegistered(SharedPreset.Scheme);
         }
         catch (Exception ex) when (ex is UnauthorizedAccessException or System.Security.SecurityException or IOException)
         {
@@ -152,15 +171,17 @@ public partial class App : Application
         bool startup = LaunchInfo.IsStartupLaunch(args);
         if (FindPresetLink(args) is not null)
             HandleActivation(args);
-        else if (!_controller.Config.Ui.OnboardingDone)
+        else if (!_controller.Config.Ui.OnboardingDone || Has(args, WalkthroughArgument))
             ShowOnboarding(openWindowAfter: !startup);
+        else if (Has(args, TourArgument))
+            _services.GetRequiredService<MainWindow>().StartTour();
         else if (!startup)
             ShowMainWindow();
         else
             MemoryTrim.Schedule();
     }
 
-    private static ServiceProvider ConfigureServices(string[] args)
+    private static ServiceProvider ConfigureServices(string[] args, bool fresh)
     {
         var services = new ServiceCollection();
         services.AddLogging(logging => logging.AddProvider(new FileLoggerProvider(AppPaths.LogDirectory)));
@@ -170,7 +191,10 @@ public partial class App : Application
         services.AddSingleton<IColorApplier>(sp => new ColorApplier(
             sp.GetRequiredService<IDisplayBackend>(), AppPaths.JournalPath, sp.GetRequiredService<ILogger<ColorApplier>>()));
         services.AddSingleton<IForegroundWatcher, ForegroundWatcher>();
-        services.AddSingleton<IAutostart, Autostart>();
+        if (fresh)
+            services.AddSingleton<IAutostart, TrialAutostart>();
+        else
+            services.AddSingleton<IAutostart, Autostart>();
         services.Add(CreateLicenseService(args));
         services.AddSingleton<AppController>();
         services.AddSingleton<ThemeService>();
@@ -271,6 +295,16 @@ public partial class App : Application
         }
         if (args.Contains(Autostart.StartupArgument, StringComparer.OrdinalIgnoreCase))
             return;
+        if (Has(args, WalkthroughArgument))
+        {
+            ShowOnboarding(openWindowAfter: true);
+            return;
+        }
+        if (Has(args, TourArgument))
+        {
+            _services?.GetRequiredService<MainWindow>().StartTour();
+            return;
+        }
         ShowMainWindow();
         if (FindPresetLink(args) is { } link)
         {
@@ -279,6 +313,25 @@ public partial class App : Application
             else
                 _ = OfferPresetAsync(link);
         }
+    }
+
+    private static bool Has(IEnumerable<string> args, string argument) => args.Contains(argument, StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>An empty folder for a --fresh run: emptied at every start, so each run is a first run.</summary>
+    private static string FreshDataDirectory()
+    {
+        string path = Path.Combine(Path.GetTempPath(), "DispHub-fresh");
+        try
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path, recursive: true);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // An earlier fresh run still has it open: this run gets a folder of its own.
+            path = Path.Combine(Path.GetTempPath(), $"DispHub-fresh-{Environment.ProcessId}");
+        }
+        return path;
     }
 
     private static string? FindPresetLink(string[] args) =>

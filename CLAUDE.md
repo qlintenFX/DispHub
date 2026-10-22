@@ -11,11 +11,14 @@ dotnet build DispHub.slnx -c Release          # must finish with 0 warnings (war
 dotnet test --project tests/DispHub.Tests/DispHub.Tests.csproj
 dotnet format DispHub.slnx                    # CI runs --verify-no-changes
 dotnet run --project src/DispHub -- --fake-store=free   # try the free tier and upgrade flow
+dotnet run --project src/DispHub -- --fresh             # first run as a new user; your settings stay untouched
 pwsh build/package-msix.ps1                   # MSIX for the Store; see the script header
 ```
 
 `DispHub.exe --diagnose` sweeps gamma ramps on every monitor and writes a hardware report to the logs folder.
-`DispHub.exe --exit` asks the running instance to restore colours and quit.
+`DispHub.exe --exit` asks the running instance to restore colours and quit. `--walkthrough` shows the first-run
+walkthrough again and `--tour` starts the guided tour, both keeping your settings. `--fresh` quits the running DispHub
+and starts with empty settings in `%TEMP%\DispHub-fresh`, without touching autostart or link registration.
 
 ## Layout
 

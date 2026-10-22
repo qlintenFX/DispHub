@@ -11,7 +11,7 @@ public sealed class SingleInstance : IDisposable
 {
     private readonly Mutex _mutex;
     private readonly CancellationTokenSource _cancel = new();
-    private readonly bool _owned;
+    private bool _owned;
 
     public SingleInstance(string name = "DispHub")
     {
@@ -43,6 +43,27 @@ public sealed class SingleInstance : IDisposable
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Asks the running instance to quit (it restores the colours first) and becomes the first instance once it has.
+    /// Returns false if it didn't quit within <paramref name="timeout"/>.
+    /// </summary>
+    public bool TakeOver(TimeSpan timeout)
+    {
+        if (_owned)
+            return true;
+        SendToFirstInstance(["--exit"]);
+        try
+        {
+            _owned = _mutex.WaitOne(timeout);
+        }
+        catch (AbandonedMutexException)
+        {
+            // It ended without letting go: the mutex is ours anyway.
+            _owned = true;
+        }
+        return _owned;
     }
 
     public void Dispose()
