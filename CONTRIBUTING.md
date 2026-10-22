@@ -27,6 +27,7 @@ DispHub's state, which is usually what we need to reproduce a colour problem.
 
    The build treats warnings as errors and CI checks formatting.
 3. If you change the UI, run the app (`dotnet run --project src/DispHub`) and check it in light and dark mode.
+4. Start every new `.cs` file with the two-line licence header used in the existing files; `dotnet format` adds it for you.
 
 Where things live is described in [CLAUDE.md](CLAUDE.md), which doubles as the project guide for AI coding agents.
 

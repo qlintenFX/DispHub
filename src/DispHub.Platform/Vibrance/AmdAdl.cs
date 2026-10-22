@@ -1,3 +1,6 @@
+// Copyright (c) 2026 The DispHub Authors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
