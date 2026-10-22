@@ -230,10 +230,13 @@ public sealed class UiConfig
     public WindowBackdrop Backdrop { get; set; } = WindowBackdrop.Mica;
 
     /// <summary>
-    /// How much of the window material (Mica or Acrylic) shows through DispHub's windows, from 0 (solid) to 1 (as
-    /// Windows draws it). Pro; free users always get 1.
+    /// How solid the quick panel's acrylic is, from 0 (only the blurred background shows) to 1 (no see-through).
+    /// Pro; free users always get <see cref="DefaultPanelOpacity"/>.
     /// </summary>
-    public double Transparency { get; set; } = 1;
+    public double PanelOpacity { get; set; } = DefaultPanelOpacity;
+
+    /// <summary>The acrylic strength Windows' own flyouts are closest to (FluentFlyout's 175 of 255).</summary>
+    public const double DefaultPanelOpacity = 0.7;
 
     /// <summary>Show the navigation as icons only.</summary>
     public bool CompactNavigation { get; set; }
