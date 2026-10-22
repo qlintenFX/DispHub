@@ -14,6 +14,10 @@ indent_size = 2
 trim_trailing_whitespace = false
 
 [*.cs]
+# Licence header
+file_header_template = Copyright (c) 2026 The DispHub Authors\nSPDX-License-Identifier: GPL-3.0-or-later
+dotnet_diagnostic.IDE0073.severity = warning
+
 # Style
 csharp_style_namespace_declarations = file_scoped:warning
 csharp_using_directive_placement = outside_namespace:warning
