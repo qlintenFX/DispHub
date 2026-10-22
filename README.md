@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/profiles.png" width="760" alt="DispHub profiles page">
+  <img src="docs/images/home.png" width="760" alt="DispHub's Home page: the current profile, today's schedule and the main features">
 </p>
 
 ## What it does

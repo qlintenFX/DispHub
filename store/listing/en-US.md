@@ -72,12 +72,13 @@ vibrance, gamma, screen dimmer, night light, color temperature, display profiles
 
 ## Screenshots
 
-Use `store/screenshots/*.png` in numbered order. Captions:
+Use `store/screenshots/*.png` (1920 x 1080) in numbered order. Captions:
 
-1. Switch looks with one click or a hotkey
-2. Start from a template, or share your own profile as a link
-3. Profiles that switch automatically per game and on a schedule (Pro)
-4. Quiet in the background, starts with Windows
+1. See what's on your screen now and what your schedule does today
+2. A profile for every moment: games, films and late nights
+3. From sunset to sunrise, like Night light, with a smooth fade (Pro)
+4. Your game gets its own profile while it's in front (Pro)
+5. Switch and adjust from the notification area
 
 ## Store logo
 
