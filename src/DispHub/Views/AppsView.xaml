@@ -40,11 +40,17 @@
           Margin="0,0,14,0"
           Background="{DynamicResource ControlFillColorSecondaryBrush}"
           CornerRadius="8">
-          <Image
-            Width="32"
-            Height="32"
-            RenderOptions.BitmapScalingMode="HighQuality"
-            Source="{Binding ForegroundIcon}" />
+          <Grid>
+            <ui:SymbolIcon
+              FontSize="24"
+              Symbol="Apps24"
+              Visibility="{Binding ForegroundIcon, Converter={x:Static ctl:NullToVisibleConverter.Instance}}" />
+            <Image
+              Width="32"
+              Height="32"
+              RenderOptions.BitmapScalingMode="HighQuality"
+              Source="{Binding ForegroundIcon}" />
+          </Grid>
         </Border>
         <StackPanel Grid.Column="1" VerticalAlignment="Center">
           <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Apps_LastInFront}" />
@@ -108,12 +114,13 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
-                  <Image
-                    Width="24"
-                    Height="24"
-                    Margin="0,0,12,0"
-                    RenderOptions.BitmapScalingMode="HighQuality"
-                    Source="{Binding Icon}" />
+                  <Grid Width="24" Height="24" Margin="0,0,12,0">
+                    <ui:SymbolIcon
+                      FontSize="20"
+                      Symbol="Apps24"
+                      Visibility="{Binding Icon, Converter={x:Static ctl:NullToVisibleConverter.Instance}}" />
+                    <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
+                  </Grid>
                   <StackPanel Grid.Column="1">
                     <TextBlock Text="{Binding Name}" />
                     <TextBlock
@@ -158,13 +165,17 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
-              <Image
+              <Grid
                 Width="32"
                 Height="32"
                 Margin="0,0,14,0"
-                VerticalAlignment="Center"
-                RenderOptions.BitmapScalingMode="HighQuality"
-                Source="{Binding Icon}" />
+                VerticalAlignment="Center">
+                <ui:SymbolIcon
+                  FontSize="26"
+                  Symbol="Apps24"
+                  Visibility="{Binding Icon, Converter={x:Static ctl:NullToVisibleConverter.Instance}}" />
+                <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Icon}" />
+              </Grid>
               <StackPanel Grid.Column="1" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                   <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
