@@ -230,7 +230,7 @@ public sealed class UiConfig
     public WindowBackdrop Backdrop { get; set; } = WindowBackdrop.Mica;
 
     /// <summary>
-    /// How solid the quick panel's acrylic is, from 0 (only the blurred background shows) to 1 (no see-through).
+    /// How solid the acrylic of the quick panel and on-screen messages is, from 0 (only the blurred background shows) to 1 (no see-through).
     /// Pro; free users always get <see cref="DefaultPanelOpacity"/>.
     /// </summary>
     public double PanelOpacity { get; set; } = DefaultPanelOpacity;

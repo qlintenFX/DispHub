@@ -1,50 +1,52 @@
-<Window
+<ui:FluentWindow
   x:Class="DispHub.Views.OsdWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   Title="DispHub"
-  AllowsTransparency="True"
-  Background="Transparent"
+  ExtendsContentIntoTitleBar="True"
   Focusable="False"
   IsHitTestVisible="False"
+  MinHeight="0"
+  MinWidth="0"
   Opacity="0"
   ResizeMode="NoResize"
   ShowActivated="False"
   ShowInTaskbar="False"
-  SizeToContent="WidthAndHeight"
   Topmost="True"
-  WindowStyle="None">
-  <Border
-    Margin="16"
-    Padding="18,12,24,12"
-    Background="{DynamicResource ApplicationBackgroundBrush}"
-    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-    BorderThickness="1"
-    CornerRadius="10">
-    <Border.Effect>
-      <DropShadowEffect BlurRadius="18" Opacity="0.35" ShadowDepth="2" />
-    </Border.Effect>
-    <StackPanel Orientation="Horizontal">
-      <ui:SymbolIcon
-        x:Name="Glyph"
-        Margin="0,0,14,0"
-        VerticalAlignment="Center"
-        FontSize="26"
-        Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
-        Symbol="Color24" />
-      <StackPanel VerticalAlignment="Center">
-        <TextBlock
-          x:Name="TitleText"
-          FontSize="16"
-          FontWeight="SemiBold"
-          Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-        <TextBlock
-          x:Name="DetailText"
-          Margin="0,2,0,0"
-          FontSize="12"
-          Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-      </StackPanel>
+  WindowBackdropType="None"
+  WindowCornerPreference="Round">
+  <!-- Styled like the quick panel: ThemeService gives it the same acrylic and opacity. -->
+  <StackPanel
+    x:Name="Root"
+    MinWidth="160"
+    Margin="18,12,22,12"
+    Orientation="Horizontal">
+    <StackPanel.RenderTransform>
+      <TranslateTransform x:Name="Slide" />
+    </StackPanel.RenderTransform>
+    <ui:SymbolIcon
+      x:Name="Glyph"
+      Margin="0,0,12,0"
+      VerticalAlignment="Center"
+      FontSize="22"
+      Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+      Symbol="Color24" />
+    <StackPanel VerticalAlignment="Center">
+      <TextBlock
+        x:Name="TitleText"
+        MaxWidth="360"
+        FontSize="15"
+        FontWeight="SemiBold"
+        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+        TextTrimming="CharacterEllipsis" />
+      <TextBlock
+        x:Name="DetailText"
+        MaxWidth="360"
+        Margin="0,2,0,0"
+        FontSize="12"
+        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+        TextWrapping="Wrap" />
     </StackPanel>
-  </Border>
-</Window>
+  </StackPanel>
+</ui:FluentWindow>

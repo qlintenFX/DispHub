@@ -126,8 +126,8 @@ public sealed class ThemeService
     public void OnWindowsThemeChanged() => Apply(_ui);
 
     /// <summary>
-    /// Call from the window's SourceInitialized, before it first shows. A flyout (the quick panel) gets acrylic, as
-    /// Windows' own flyouts do; other windows get the Background setting's material.
+    /// Call from the window's SourceInitialized, before it first shows. A flyout (the quick panel, on-screen messages)
+    /// gets acrylic, as Windows' own flyouts do; other windows get the Background setting's material.
     /// </summary>
     public void Attach(FluentWindow window, bool flyout = false)
     {
@@ -175,8 +175,8 @@ public sealed class ThemeService
     }
 
     /// <summary>
-    /// The flyout acrylic's tint: Windows' flyout grey for the theme, as solid as the quick panel opacity setting
-    /// says (Pro) or the default.
+    /// The flyout acrylic's tint: Windows' flyout grey for the theme, as solid as the opacity setting says (Pro) or
+    /// the default.
     /// </summary>
     private System.Drawing.Color FlyoutTint(bool dark)
     {

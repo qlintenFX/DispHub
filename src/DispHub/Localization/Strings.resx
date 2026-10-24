@@ -332,7 +332,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>Message duration</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Shows the profile name above the taskbar when it changes. Never takes focus from games.</value>
+    <value>Shows the profile's name when it changes, styled like the quick panel. Never takes focus from games.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
     <value>On-screen message</value>
@@ -650,7 +650,7 @@ It also supports development of DispHub.</value>
     <value>Background</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica tints the window with your wallpaper's colours, acrylic blurs what's behind it. The quick panel uses acrylic unless you choose Solid. Windows shows a plain colour while energy saver is on or transparency effects are off.</value>
+    <value>Mica tints the window with your wallpaper's colours, acrylic blurs what's behind it. The quick panel and on-screen messages use acrylic unless you choose Solid. Windows shows a plain colour while energy saver is on or transparency effects are off.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Text size</value>
@@ -1187,9 +1187,9 @@ It also supports development of DispHub.</value>
     <value>on {0} at {1}</value>
   </data>
   <data name="Settings_PanelOpacity" xml:space="preserve">
-    <value>Quick panel opacity</value>
+    <value>Quick panel and message opacity</value>
   </data>
   <data name="Settings_PanelOpacityHint" xml:space="preserve">
-    <value>How solid the quick panel's blurred background is. Lower shows more of what's behind it. Available with DispHub Pro.</value>
+    <value>How solid the blurred background of the quick panel and on-screen messages is. Lower shows more of what's behind them. Available with DispHub Pro.</value>
   </data>
 </root>
