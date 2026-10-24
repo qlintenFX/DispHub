@@ -75,12 +75,13 @@ vibrance, gamma, screen dimmer, night light, color temperature, display profiles
 
 ## Screenshots
 
-Use `store/screenshots/*.png` (1920 x 1080) in numbered order. Captions:
+Use `store/screenshots/*.png` in numbered order (1920 x 1080 copies in git; Partner Center has the same shots at
+3840 x 2160). Captions:
 
 1. Switch profiles with a keyboard shortcut
 2. A profile for every moment
 3. Warmer evenings, automatically (Pro)
-4. Games get their own look (Pro)
+4. Profiles for every app, perfect for games (Pro)
 5. Switch and adjust from the quick panel
 
 ## Store art and trailer
@@ -88,8 +89,12 @@ Use `store/screenshots/*.png` (1920 x 1080) in numbered order. Captions:
 - 16:9 Super hero art: `store/art/super-hero-1920x1080.png` (no text; the Store puts the title over its left side)
 - 1:1 Box art: `store/art/box-art-2160.png`
 - 9:16 Poster art: `store/art/poster-1440x2160.png`
-- Trailer: 31 s, 1920 x 1080, H.264 MP4, built from the same UI captures; thumbnail `store/art/trailer-thumbnail.png`.
-  The video (11 MB) is uploaded to Partner Center and not kept in git.
+- Trailer: 30.5 s, 1920 x 1080, 30 fps, H.264 with AAC stereo, built from the same UI captures; thumbnail
+  `store/art/trailer-thumbnail.png`. The video (96 MB) is uploaded to Partner Center and not kept in git.
+- Credits for the trailer and screenshot 4: the game scene is a screenshot of Veloren (https://veloren.net, art under
+  GPL-3.0) by Antimundo, released under CC0 on Wikimedia Commons. Music "Calm Ambient Dreamscape" by MondaMusic;
+  sound effects "Minimalist Light Whoosh FX" by Chrysalyn, "Soft luxury air whoosh #8" by Sdanezis and "Subtle UI
+  Button Click" by Turning_Pages; all from Pixabay under the Pixabay Content License.
 
 ## Store logo
 
