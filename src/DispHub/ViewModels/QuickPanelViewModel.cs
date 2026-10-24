@@ -50,6 +50,22 @@ public sealed partial class QuickPanelViewModel : ObservableObject
     [ObservableProperty] public partial double Brightness { get; set; }
     [ObservableProperty] public partial double Warmth { get; set; }
 
+    /// <summary>How far the warmth slider goes: from neutral down to this colour temperature.</summary>
+    public const double WarmestK = 2700;
+
+    /// <summary>The warmth slider's range, from neutral (0) to <see cref="WarmestK"/>.</summary>
+    public const double WarmthRange = ColorSettings.NeutralTemperatureK - WarmestK;
+
+    /// <summary>
+    /// The warmth slider's position, from 0 (neutral) to <see cref="WarmthRange"/> (warmest). The slider runs left to
+    /// right and fills as the colour gets warmer; a reversed slider would fill from the right-hand end.
+    /// </summary>
+    public double WarmthLevel
+    {
+        get => ColorSettings.NeutralTemperatureK - Warmth;
+        set => Warmth = ColorSettings.NeutralTemperatureK - value;
+    }
+
     public void Refresh()
     {
         _loading = true;
@@ -95,7 +111,11 @@ public sealed partial class QuickPanelViewModel : ObservableObject
 
     partial void OnBrightnessChanged(double value) => Adjust(c => c with { Brightness = (int)Math.Round(value) });
 
-    partial void OnWarmthChanged(double value) => Adjust(c => c with { TemperatureK = (int)(Math.Round(value / 100) * 100) });
+    partial void OnWarmthChanged(double value)
+    {
+        OnPropertyChanged(nameof(WarmthLevel));
+        Adjust(c => c with { TemperatureK = (int)(Math.Round(value / 100) * 100) });
+    }
 
     internal void Activate(Guid profileId) => _app.ActivateProfile(profileId, ChangeSource.Tray);
 
