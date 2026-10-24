@@ -54,3 +54,14 @@ on them. Thank you to the photographers.
 | Microsoft.Extensions.TimeProvider.Testing | MIT | https://github.com/dotnet/extensions |
 
 The colour-temperature conversion uses the published Kim et al. (2002) approximation of the Planckian locus.
+
+## Store listing art, not shipped
+
+The Microsoft Store screenshots (`store/screenshots`) and trailer use the preview photos above and:
+
+- A screenshot of [Veloren](https://veloren.net), a free and open-source game whose art is under GPL-3.0:
+  [Veloren 0.17 night flight](https://commons.wikimedia.org/wiki/File:Veloren-0.17-screenshot-nightfly.jpg) by
+  Antimundo, released under CC0. It stands in for "a game" in the app-profile scene.
+- In the trailer only, from Pixabay under the Pixabay Content License: the music "Calm Ambient Dreamscape" by
+  MondaMusic and the sound effects "Minimalist Light Whoosh FX" by Chrysalyn, "Soft luxury air whoosh #8" by
+  Sdanezis and "Subtle UI Button Click" by Turning_Pages.
