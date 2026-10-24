@@ -11,8 +11,8 @@ using Wpf.Ui.Controls;
 
 namespace DispHub.Services;
 
-/// <summary>Shows the on-screen display when the profile changes from a hotkey or the tray.</summary>
-public sealed class OsdService(AppController app)
+/// <summary>Shows the on-screen message when the profile changes from a hotkey or the tray.</summary>
+public sealed class OsdService(AppController app, ThemeService theme)
 {
     private OsdWindow? _window;
     private bool _hintShown;
@@ -25,8 +25,7 @@ public sealed class OsdService(AppController app)
         if (_hintShown)
             return;
         _hintShown = true;
-        _window ??= new OsdWindow();
-        _window.Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3), app.Config.Ui.OsdPosition);
+        GetWindow().Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3), app.Config.Ui.OsdPosition);
     }
 
     private void OnStateChanged(ChangeSource source)
@@ -34,17 +33,27 @@ public sealed class OsdService(AppController app)
         if (source is not (ChangeSource.Hotkey or ChangeSource.Tray) || !app.Config.Ui.ShowOsd)
             return;
 
-        _window ??= new OsdWindow();
+        // Just the name: it's read at a glance, often mid-game.
         TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
         if (app.Config.IsOff || app.Config.IsPaused)
         {
-            _window.Flash(Loc.Get(app.Config.IsOff ? "Osd_Paused" : "Osd_ProfilesOff"), Loc.Get("Summary_Original"), SymbolRegular.Power24, duration, app.Config.Ui.OsdPosition);
+            GetWindow().Flash(Loc.Get(app.Config.IsOff ? "Osd_Paused" : "Osd_ProfilesOff"), "", SymbolRegular.Power24, duration, app.Config.Ui.OsdPosition);
             return;
         }
 
         Profile? profile = app.Current?.ProfileId is { } id ? app.FindProfile(id) : null;
         if (profile is not null)
-            _window.Flash(profile.Name, ViewModels.ProfileItemViewModel.Describe(profile.Color), SymbolRegular.Color24, duration, app.Config.Ui.OsdPosition);
+            GetWindow().Flash(profile.Name, "", SymbolRegular.Color24, duration, app.Config.Ui.OsdPosition);
+    }
+
+    private OsdWindow GetWindow()
+    {
+        if (_window is null)
+        {
+            _window = new OsdWindow();
+            _window.SourceInitialized += (_, _) => theme.Attach(_window, flyout: true);
+        }
+        return _window;
     }
 }
 
