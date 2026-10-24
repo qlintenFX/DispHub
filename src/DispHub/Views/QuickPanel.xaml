@@ -176,13 +176,12 @@
           Margin="0,10,0,0"
           VerticalAlignment="Center"
           AutomationProperties.Name="{l:Tr Quick_Warmth}"
-          IsDirectionReversed="True"
           IsMoveToPointEnabled="True"
           IsSnapToTickEnabled="True"
-          Maximum="6500"
-          Minimum="2700"
+          Maximum="{x:Static vm:QuickPanelViewModel.WarmthRange}"
+          Minimum="0"
           TickFrequency="100"
-          Value="{Binding Warmth}" />
+          Value="{Binding WarmthLevel}" />
         <TextBlock
           Grid.Row="1"
           Grid.Column="3"
