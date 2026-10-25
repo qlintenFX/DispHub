@@ -14,6 +14,7 @@
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
+      <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 7.5L4 12l4.5 4.5M15.5 7.5L20 12l-4.5 4.5M13.5 5l-3 14"/></symbol>
       <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     </defs>
   </svg>
@@ -21,23 +22,25 @@
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="header">
-    <div class="wrap">
-      <a class="brand" href="../" aria-label="DispHub home"><img src="../assets/img/icon-96.png" alt="" width="30" height="30"><span>Disp<span class="gradient-text">Hub</span></span></a>
+    <div class="wrap bar">
+      <a class="brand" href="../" aria-label="DispHub home"><img src="../assets/img/icon-96.png" alt="" width="28" height="28"><span>Disp<span class="gradient-text">Hub</span></span></a>
       <nav class="nav" id="nav" aria-label="Main">
-        <a class="navlink" href="../#features">Features</a>
-        <a class="navlink" href="../#pro">Free and Pro</a>
-        <a class="navlink" href="../#faq">Questions</a>
-        <a class="navlink" href="https://github.com/qlintenFX/DispHub">GitHub</a>
-        <a class="btn btn-accent" href="../download/">Download</a>
+        <a href="../#features">Features</a>
+        <a href="../download/">Download</a>
+        <a href="../#faq">FAQ</a>
+        <a class="nav-gh" href="https://github.com/qlintenFX/DispHub">GitHub</a>
       </nav>
-      <button class="btn btn-subtle btn-icon menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg><use href="#i-menu"/></svg></button>
+      <div class="bar-end">
+        <a class="btn btn-subtle btn-icon gh" href="https://github.com/qlintenFX/DispHub" aria-label="DispHub on GitHub"><svg><use href="#i-code"/></svg></a>
+        <button class="btn btn-subtle btn-icon menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg><use href="#i-menu"/></svg></button>
+      </div>
     </div>
   </header>
 
   <main id="main">
     <div class="page-head wrap">
-      <h1 class="display" style="font-size:clamp(40px,5.4vw,64px)">Privacy policy.</h1>
-      <p class="lead">DispHub runs entirely on your PC. It has no account system and collects no telemetry or usage data.</p>
+      <h1>Privacy policy</h1>
+      <p>DispHub runs entirely on your PC. It has no account system and collects no telemetry or usage data.</p>
     </div>
 
     <div class="wrap">
@@ -52,7 +55,7 @@
         <p>DispHub doesn't connect to the internet and doesn't send your data anywhere. Purchases and ratings in the Microsoft Store version, and Windows' location service, are handled by Microsoft under the <a href="https://privacy.microsoft.com/privacystatement">Microsoft Privacy Statement</a>.</p>
 
         <h2>This website</h2>
-        <p>This website uses no cookies, analytics or trackers. It's hosted on GitHub Pages, which may log visits to keep the service secure; see the <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub Privacy Statement</a>. The Microsoft Store button loads its image from Microsoft.</p>
+        <p>This website uses no cookies, analytics or trackers. It's hosted on GitHub Pages, which may log visits to keep the service secure; see the <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub Privacy Statement</a>. The Microsoft Store badge on the download page loads its image from Microsoft.</p>
 
         <h2>Contact</h2>
         <p>Questions about this policy: open an issue at <a href="https://github.com/qlintenFX/DispHub/issues">github.com/qlintenFX/DispHub/issues</a>.</p>
@@ -63,11 +66,16 @@
   </main>
 
   <footer class="footer">
-    <div class="wrap">
-      <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
-        <span>© 2026 qlintenFX. DispHub is free software under the GNU GPL v3.0 or later.</span>
-        <span><a href="../download/">Download</a> · <a href="https://github.com/qlintenFX/DispHub/issues">Report a problem</a> · <a href="https://github.com/qlintenFX/DispHub">GitHub</a></span>
-      </div>
+    <div class="wrap foot">
+      <a class="brand" href="../"><img src="../assets/img/icon-96.png" alt="" width="24" height="24"><span>Disp<span class="gradient-text">Hub</span></span></a>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="../download/">Download</a>
+        <a href="./">Privacy</a>
+        <a href="https://github.com/qlintenFX/DispHub">GitHub</a>
+        <a href="https://hosted.weblate.org/engage/disphub/">Translate</a>
+        <a href="https://github.com/qlintenFX/DispHub/issues">Report a problem</a>
+      </nav>
+      <p class="legal">© 2026 qlintenFX · Free software under the <a href="https://github.com/qlintenFX/DispHub/blob/main/LICENSE">GPL v3.0</a></p>
     </div>
   </footer>
 

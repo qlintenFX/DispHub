@@ -1,4 +1,4 @@
-// DispHub website: the live quick panel, entrance motion, the header material, the menu and the teaser dialog.
+// DispHub website: the live quick panel, entrance motion, the header material, the menu and the WinGet copy button.
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -40,30 +40,32 @@
         }
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
-    reveal.forEach((el, i) => {
-      // cards in a row arrive one after another
-      if (el.classList.contains("card")) el.style.transitionDelay = `${(i % 4) * 60}ms`;
-      io.observe(el);
-    });
+    reveal.forEach((el) => io.observe(el));
   } else {
     reveal.forEach((el) => el.classList.add("in"));
   }
 
-  // teaser dialog
-  const dialog = $("dialog.player");
-  if (dialog) {
-    const video = $("video", dialog);
-    $$("[data-play]").forEach((b) => b.addEventListener("click", () => {
-      dialog.showModal();
-      video.play().catch(() => {});
-    }));
-    const close = () => dialog.close();
-    $("[data-close]", dialog).addEventListener("click", close);
-    dialog.addEventListener("click", (e) => {
-      if (e.target === dialog) close();
-    });
-    dialog.addEventListener("close", () => video.pause());
-  }
+  // WinGet: copy the install command, and say so in a small toast
+  $$("[data-copy]").forEach((btn) => btn.addEventListener("click", async () => {
+    const text = btn.dataset.copy;
+    let toast = $(".toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "toast";
+      toast.setAttribute("role", "status");
+      document.body.append(toast);
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.innerHTML = "Copied. Paste it into Terminal: <code></code>";
+    } catch {
+      toast.innerHTML = "Run this in Terminal: <code></code>";
+    }
+    $("code", toast).textContent = text;
+    toast.classList.add("show");
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => toast.classList.remove("show"), 3200);
+  }));
 
   // the live quick panel: the photo uses the looks the app's colour ramps produce
   const quick = $(".quick");

@@ -21,9 +21,6 @@
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
-      <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="3.75" width="18.5" height="12.5" rx="2.25"/><path d="M8.5 20.25h7M12 16.25v4"/></symbol>
-      <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6.25" y="6.25" width="11.5" height="11.5" rx="1.75"/><rect x="9.75" y="9.75" width="4.5" height="4.5" rx=".75"/><path d="M9.5 3.5v2.75M14.5 3.5v2.75M9.5 17.75v2.75M14.5 17.75v2.75M3.5 9.5h2.75M3.5 14.5h2.75M17.75 9.5h2.75M17.75 14.5h2.75"/></symbol>
-      <symbol id="i-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12a7.5 7.5 0 0 1-13 5.1M4.5 12a7.5 7.5 0 0 1 13-5.1"/><path d="M17.5 3.5v3.4h-3.4M6.5 20.5v-3.4h3.4"/></symbol>
       <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 7.5L4 12l4.5 4.5M15.5 7.5L20 12l-4.5 4.5M13.5 5l-3 14"/></symbol>
       <symbol id="i-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.25l4 4 4-4"/></symbol>
       <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
@@ -33,49 +30,54 @@
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="header">
-    <div class="wrap">
-      <a class="brand" href="../" aria-label="DispHub home"><img src="../assets/img/icon-96.png" alt="" width="30" height="30"><span>Disp<span class="gradient-text">Hub</span></span></a>
+    <div class="wrap bar">
+      <a class="brand" href="../" aria-label="DispHub home"><img src="../assets/img/icon-96.png" alt="" width="28" height="28"><span>Disp<span class="gradient-text">Hub</span></span></a>
       <nav class="nav" id="nav" aria-label="Main">
-        <a class="navlink" href="../#features">Features</a>
-        <a class="navlink" href="../#pro">Free and Pro</a>
-        <a class="navlink" href="../#faq">Questions</a>
-        <a class="navlink" href="https://github.com/qlintenFX/DispHub">GitHub</a>
-        <a class="btn btn-accent" href="./" aria-current="page">Download</a>
+        <a href="../#features">Features</a>
+        <a href="./" aria-current="page">Download</a>
+        <a href="../#faq">FAQ</a>
+        <a class="nav-gh" href="https://github.com/qlintenFX/DispHub">GitHub</a>
       </nav>
-      <button class="btn btn-subtle btn-icon menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg><use href="#i-menu"/></svg></button>
+      <div class="bar-end">
+        <a class="btn btn-subtle btn-icon gh" href="https://github.com/qlintenFX/DispHub" aria-label="DispHub on GitHub"><svg><use href="#i-code"/></svg></a>
+        <button class="btn btn-subtle btn-icon menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg><use href="#i-menu"/></svg></button>
+      </div>
     </div>
   </header>
 
   <main id="main">
     <div class="page-head wrap" data-reveal>
-      <h1 class="display" style="font-size:clamp(40px,5.4vw,64px)">Get DispHub.</h1>
-      <p class="lead">Free on the Microsoft Store. Upgrading to Pro in the app is the best way to support its development.</p>
+      <h1>Get DispHub</h1>
+      <p>Free on the Microsoft Store, with updates built in.</p>
     </div>
 
     <div class="wrap">
       <div class="dl">
-        <div class="dl-card main" data-reveal>
-          <img class="app" src="../assets/img/icon-192.png" alt="" width="72" height="72">
+        <div class="dl-main" data-reveal>
+          <img class="app" src="../assets/img/icon-192.png" alt="" width="64" height="64">
           <div>
             <h2>DispHub <span class="tag">Recommended</span></h2>
-            <p>Free with three profiles. Pro unlocks per-game profiles, schedules, per-display settings and unlimited profiles with one purchase in the app.</p>
-            <div class="reqs">
-              <span><svg><use href="#i-monitor"/></svg>Windows 10 (version 2004) or Windows 11</span>
-              <span><svg><use href="#i-sync"/></svg>Updates itself</span>
-              <span><svg><use href="#i-chip"/></svg>x64 and Arm64</span>
-            </div>
+            <p>Free with three profiles. Pro is a one-time upgrade in the app.</p>
+            <p class="meta">Windows 10 (2004) or Windows 11 · x64 and Arm64</p>
           </div>
-          <a class="store-badge" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Download from the Microsoft Store" width="200" height="72"></a>
+          <a class="store-badge" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Download from the Microsoft Store" width="190" height="68"></a>
         </div>
 
         <details class="expander" data-reveal>
           <summary>More download options<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
           <div class="body">
-            <p><b style="color:var(--text-1)">Build it from source.</b> DispHub is free software under the GPL v3.0 or later. Builds from source include every feature, but they don't update themselves and aren't signed for the Microsoft Store. You need Windows 10 (version 2004) or later and the <a href="https://dotnet.microsoft.com/download/dotnet/10.0">.NET 10 SDK</a>.</p>
-<pre class="code">git clone https://github.com/qlintenFX/DispHub.git
+            <div class="option">
+              <b>WinGet</b>
+              <p>Installs the Microsoft Store version from Terminal.</p>
+              <pre class="code">winget install 9N5183BRLX34 --source msstore</pre>
+            </div>
+            <div class="option">
+              <b>Build from source</b>
+              <p>Every feature included, but no automatic updates. Needs the <a href="https://dotnet.microsoft.com/download/dotnet/10.0">.NET 10 SDK</a>.</p>
+              <pre class="code">git clone https://github.com/qlintenFX/DispHub.git
 cd DispHub
 dotnet run --project src/DispHub</pre>
-            <p style="margin-top:14px"><a class="btn" href="https://github.com/qlintenFX/DispHub"><svg><use href="#i-code"/></svg>Source code on GitHub</a></p>
+            </div>
           </div>
         </details>
       </div>
@@ -83,11 +85,16 @@ dotnet run --project src/DispHub</pre>
   </main>
 
   <footer class="footer">
-    <div class="wrap">
-      <div class="legal" style="margin-top:0;border-top:0;padding-top:0">
-        <span>© 2026 qlintenFX. DispHub is free software under the GNU GPL v3.0 or later.</span>
-        <span><a href="../privacy/">Privacy</a> · <a href="https://github.com/qlintenFX/DispHub/issues">Report a problem</a> · <a href="https://github.com/qlintenFX/DispHub">GitHub</a></span>
-      </div>
+    <div class="wrap foot">
+      <a class="brand" href="../"><img src="../assets/img/icon-96.png" alt="" width="24" height="24"><span>Disp<span class="gradient-text">Hub</span></span></a>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="./">Download</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="https://github.com/qlintenFX/DispHub">GitHub</a>
+        <a href="https://hosted.weblate.org/engage/disphub/">Translate</a>
+        <a href="https://github.com/qlintenFX/DispHub/issues">Report a problem</a>
+      </nav>
+      <p class="legal">© 2026 qlintenFX · Free software under the <a href="https://github.com/qlintenFX/DispHub/blob/main/LICENSE">GPL v3.0</a></p>
     </div>
   </footer>
 

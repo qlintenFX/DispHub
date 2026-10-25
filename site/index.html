@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DispHub: colour profiles for your display</title>
-  <meta name="description" content="Save brightness, contrast, gamma, colour temperature and vibrance as profiles and switch in a click, with a hotkey, per game or on a schedule. Free for Windows 10 and 11.">
+  <meta name="description" content="Save brightness, contrast, gamma, colour temperature and vibrance as profiles and switch in a click, by hotkey, per game or on a schedule. Free for Windows 10 and 11.">
   <meta name="theme-color" content="#070a12">
   <link rel="canonical" href="https://qlintenfx.github.io/DispHub/">
   <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DispHub">
   <meta property="og:title" content="DispHub: colour profiles for your display">
-  <meta property="og:description" content="Brightness, contrast, gamma, colour temperature and vibrance, switched in a click, by hotkey, per game or on a schedule.">
+  <meta property="og:description" content="Switch in a click, by hotkey, per game or on a schedule. Free for Windows 10 and 11.">
   <meta property="og:url" content="https://qlintenfx.github.io/DispHub/">
   <meta property="og:image" content="https://qlintenfx.github.io/DispHub/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
@@ -38,48 +38,32 @@
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
-      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.75v11.5M7.25 10.5L12 15.25l4.75-4.75M4.75 19.75h14.5"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 7.5L4 12l4.5 4.5M15.5 7.5L20 12l-4.5 4.5M13.5 5l-3 14"/></symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="4.25" width="18.5" height="15.5" rx="2.25"/><path d="M7 9.5l3 2.5-3 2.5M12.5 15h4.5"/></symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="3.75" width="18.5" height="12.5" rx="2.25"/><path d="M8.5 20.25h7M12 16.25v4"/></symbol>
       <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.75v2M12 19.25v2M2.75 12h2M19.25 12h2M5.46 5.46l1.41 1.41M17.13 17.13l1.41 1.41M5.46 18.54l1.41-1.41M17.13 6.87l1.41-1.41"/></symbol>
       <symbol id="i-temp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 13.6V5a2 2 0 1 1 4 0v8.6a4 4 0 1 1-4 0z"/><path d="M12 9v7"/></symbol>
-      <symbol id="i-keyboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="5.75" width="18.5" height="12.5" rx="2.25"/><path d="M6.5 9.5h.01M10 9.5h.01M14 9.5h.01M17.5 9.5h.01M6.5 12.5h.01M10 12.5h.01M14 12.5h.01M17.5 12.5h.01M8 15.25h8"/></symbol>
-      <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="3.75" width="18.5" height="12.5" rx="2.25"/><path d="M8.5 20.25h7M12 16.25v4"/></symbol>
-      <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.25s6.25 6.6 6.25 11a6.25 6.25 0 0 1-12.5 0c0-4.4 6.25-11 6.25-11z"/><path d="M9 14.75a3 3 0 0 0 3 3"/></symbol>
-      <symbol id="i-stream" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="6.25" width="13" height="11.5" rx="2.25"/><path d="M15.75 10.5l5.5-3v9l-5.5-3"/></symbol>
-      <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.66 0l3.17-3.17a4 4 0 0 0-5.66-5.66l-1.06 1.06"/><path d="M14 10a4 4 0 0 0-5.66 0l-3.17 3.17a4 4 0 0 0 5.66 5.66l1.06-1.06"/></symbol>
-      <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.75l7.25 3v5.5c0 4.6-3.1 8.4-7.25 10-4.15-1.6-7.25-5.4-7.25-10v-5.5z"/><path d="M8.75 12l2.25 2.25 4.25-4.5"/></symbol>
-      <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.75" y="10.25" width="14.5" height="10" rx="2.25"/><path d="M8 10.25V7.5a4 4 0 0 1 8 0v2.75"/></symbol>
-      <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.75 19.25c0-8 5-13.5 14.5-14.5-.5 9.5-6 14.5-14.5 14.5z"/><path d="M4.75 19.25l7-7"/></symbol>
-      <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.6A8.25 8.25 0 1 1 9.4 4a6.5 6.5 0 0 0 10.6 10.6z"/></symbol>
-      <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.25"/><path d="M12 7v5l3.25 2"/></symbol>
-      <symbol id="i-apps" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="3.75" y="3.75" width="7" height="7" rx="1.5"/><rect x="13.25" y="3.75" width="7" height="7" rx="1.5"/><rect x="3.75" y="13.25" width="7" height="7" rx="1.5"/><rect x="13.25" y="13.25" width="7" height="7" rx="1.5"/></symbol>
-      <symbol id="i-panel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="3.75" width="18.5" height="16.5" rx="2.25"/><rect x="11.75" y="8.25" width="6.5" height="8" rx="1.25"/><path d="M2.75 17.25h18.5"/></symbol>
-      <symbol id="i-power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3v8"/><path d="M7.05 6.05a7.5 7.5 0 1 0 9.9 0"/></symbol>
-      <symbol id="i-translate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 5.75h9M8.25 3.75v2M5.75 5.75c.5 3.5 3 6 6 7.25M11 5.75c-.75 4-3.5 7-7 8.5"/><path d="M12.75 20.25l3.75-9 3.75 9M14 17.25h5"/></symbol>
-      <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 7.5L4 12l4.5 4.5M15.5 7.5L20 12l-4.5 4.5M13.5 5l-3 14"/></symbol>
-      <symbol id="i-bug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7.25" y="7.75" width="9.5" height="12.5" rx="4.75"/><path d="M9.5 7.9a2.5 2.5 0 0 1 5 0M12 11v9M3.75 13h3.5M16.75 13h3.5M4.75 8.75l2.75 1.5M19.25 8.75l-2.75 1.5M4.75 18.75l2.75-1.5M19.25 18.75l-2.75-1.5"/></symbol>
-      <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.6v12.8a1 1 0 0 0 1.52.85l10.24-6.4a1 1 0 0 0 0-1.7L9.52 4.75A1 1 0 0 0 8 5.6z"/></symbol>
-      <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 7.75h16.5v11a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M8.25 7.75V6a3.75 3.75 0 0 1 7.5 0v1.75"/></symbol>
       <symbol id="i-chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.25l4 4 4-4"/></symbol>
-      <symbol id="i-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l5 5-5 5"/></symbol>
       <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
-      <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
-      <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3.5l1.9 5.1a2 2 0 0 0 1.2 1.2l5.1 1.9-5.1 1.9a2 2 0 0 0-1.2 1.2L12 20l-1.9-5.2a2 2 0 0 0-1.2-1.2L3.8 11.7l5.1-1.9a2 2 0 0 0 1.2-1.2z"/></symbol>
     </defs>
   </svg>
 
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="header">
-    <div class="wrap">
-      <a class="brand" href="./" aria-label="DispHub home"><img src="assets/img/icon-96.png" alt="" width="30" height="30"><span>Disp<span class="gradient-text">Hub</span></span></a>
+    <div class="wrap bar">
+      <a class="brand" href="./" aria-label="DispHub home"><img src="assets/img/icon-96.png" alt="" width="28" height="28"><span>Disp<span class="gradient-text">Hub</span></span></a>
       <nav class="nav" id="nav" aria-label="Main">
-        <a class="navlink" href="#features">Features</a>
-        <a class="navlink" href="#pro">Free and Pro</a>
-        <a class="navlink" href="#faq">Questions</a>
-        <a class="navlink" href="https://github.com/qlintenFX/DispHub">GitHub</a>
-        <a class="btn btn-accent" href="download/">Download</a>
+        <a href="#features">Features</a>
+        <a href="download/">Download</a>
+        <a href="#faq">FAQ</a>
+        <a class="nav-gh" href="https://github.com/qlintenFX/DispHub">GitHub</a>
       </nav>
-      <button class="btn btn-subtle btn-icon menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg><use href="#i-menu"/></svg></button>
+      <div class="bar-end">
+        <a class="btn btn-subtle btn-icon gh" href="https://github.com/qlintenFX/DispHub" aria-label="DispHub on GitHub"><svg><use href="#i-code"/></svg></a>
+        <button class="btn btn-subtle btn-icon menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg><use href="#i-menu"/></svg></button>
+      </div>
     </div>
   </header>
 
@@ -87,34 +71,26 @@
     <section class="hero">
       <div class="wrap">
         <div class="hero-copy" data-reveal>
-          <span class="eyebrow">For Windows 10 and 11</span>
-          <h1 class="display">Colour profiles for your display.</h1>
-          <p class="lead">Save the look you want for games, films and late nights, then switch in a click, with a hotkey, per game or on a schedule.</p>
+          <h1 class="display">Disp<span class="gradient-text">Hub</span></h1>
+          <p class="lead">Colour profiles for your display.</p>
+          <p class="sub">Switch in a click, by hotkey, per game or on a schedule.</p>
           <div class="cta">
-            <a class="btn btn-accent btn-lg" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><svg><use href="#i-store"/></svg><span class="btn-two">Get it free<small>Microsoft Store</small></span></a>
-            <button class="btn btn-lg" type="button" data-play><svg><use href="#i-play"/></svg>Watch the teaser</button>
+            <a class="btn btn-accent btn-two" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><svg><use href="#i-download"/></svg><span>Download<small>Free on the Microsoft Store</small></span></a>
+            <a class="btn btn-two" href="https://github.com/qlintenFX/DispHub"><svg><use href="#i-code"/></svg><span>View on GitHub<small>Open source</small></span></a>
+            <button class="btn btn-two" type="button" data-copy="winget install 9N5183BRLX34 --source msstore"><svg><use href="#i-terminal"/></svg><span>WinGet<small data-copy-label>Install from Terminal</small></span></button>
           </div>
-          <ul class="facts" aria-label="At a glance">
-            <li><svg><use href="#i-lock"/></svg>No account, no telemetry</li>
-            <li><svg><use href="#i-shield"/></svg>Restores your colours</li>
-            <li><svg><use href="#i-code"/></svg>Open source</li>
-          </ul>
         </div>
 
         <div class="demo" data-reveal>
           <div class="demo-glow" aria-hidden="true"></div>
-          <div class="stage">
           <div class="screen" aria-label="A photo on screen, shown with the selected profile">
             <img class="look on" data-look="standard" src="assets/img/reef-standard.webp" alt="A coral reef in its original colours" width="960" height="600">
             <img class="look" data-look="gaming" src="assets/img/reef-gaming.webp" alt="" width="960" height="600" loading="lazy">
             <img class="look" data-look="night" src="assets/img/reef-night.webp" alt="" width="960" height="600" loading="lazy">
             <img class="look" data-look="dim" src="assets/img/reef-dim.webp" alt="" width="960" height="600" loading="lazy">
             <div class="tune" data-tune="warm" aria-hidden="true"></div>
-            <div class="tune" data-tune="cool" style="background: rgb(150, 196, 255)" aria-hidden="true"></div>
-            <div class="osd" role="status" aria-live="polite">
-              <svg><use href="#i-monitor"/></svg>
-              <b data-osd-name>Standard</b>
-            </div>
+            <div class="tune" data-tune="cool" aria-hidden="true"></div>
+            <div class="osd" role="status" aria-live="polite"><svg><use href="#i-monitor"/></svg><b data-osd-name>Standard</b></div>
             <div class="taskbar" aria-hidden="true">
               <span class="tray"><img src="assets/img/favicon-32.png" alt=""></span>
               <span class="clock">21:41<br>Friday</span>
@@ -139,261 +115,106 @@
               <label><svg><use href="#i-temp"/></svg>Warmth<input type="range" min="1900" max="6500" step="100" value="6500" data-slider="w"><output data-out="w">6500 K</output></label>
             </div>
           </div>
-          </div>
-          <p class="kbd-hint">Click a profile, or press <span class="keys"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>1</kbd></span> to <kbd>4</kbd>. The looks are the app's own colour maths.</p>
         </div>
       </div>
     </section>
 
-    <section class="section" id="features">
+    <section class="section" id="features" aria-label="Features">
       <div class="wrap">
         <div class="feature">
           <div class="feature-copy" data-reveal>
             <span class="eyebrow">Profiles</span>
-            <h2>A profile for every moment.</h2>
-            <p class="lead">Brighter shadows and stronger colours for competitive games, warm and dim for late-night reading, neutral for photo work. Make one for each and keep them a click away.</p>
-            <ul>
-              <li><svg><use href="#i-check"/></svg>Brightness, contrast, gamma, colour temperature and vibrance</li>
-              <li><svg><use href="#i-check"/></svg>Start from a template for games, films and night reading</li>
-              <li><svg><use href="#i-check"/></svg>Share a profile as a link that adds it in one click</li>
-            </ul>
+            <h2>A look for every moment.</h2>
+            <p>Brightness, contrast, gamma, colour temperature and vibrance, saved as profiles.</p>
           </div>
-          <div class="shot" data-reveal>
-            <img class="win" src="assets/img/window-profiles.webp" alt="DispHub's Profiles page: Standard, Gaming, Night and Film, with Gaming's sliders" width="1400" height="967" loading="lazy">
-          </div>
+          <img class="win" data-reveal src="assets/img/window-profiles.webp" alt="DispHub's Profiles page: Standard, Gaming, Night and Film, with Gaming's sliders" width="1400" height="967" loading="lazy">
         </div>
 
         <div class="feature flip">
           <div class="feature-copy" data-reveal>
             <span class="eyebrow">Hotkeys</span>
-            <h2>Your display, one shortcut away.</h2>
-            <p class="lead">Give each profile a keyboard shortcut and switch without leaving your game. A small message confirms the change and never takes the focus.</p>
-            <ul>
-              <li><svg><use href="#i-check"/></svg>Shortcuts for every profile, plus on or off, next and previous</li>
-              <li><svg><use href="#i-check"/></svg>The quick panel and tray menu are one click from the taskbar</li>
-              <li><svg><use href="#i-check"/></svg>Stream-friendly: OBS and Discord capture your normal colours</li>
-            </ul>
+            <h2>One shortcut away.</h2>
+            <p>Switch without leaving your game. A small message confirms it.</p>
           </div>
-          <div class="shot" data-reveal>
-            <div class="shortcut-card">
-              <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>Alt</kbd><span>+</span><kbd>2</kbd></div>
-              <div class="mini-screen">
-                <img src="assets/img/reef-gaming.webp" alt="" width="960" height="600" loading="lazy">
-                <img class="mini-osd" src="assets/img/osd-gaming.webp" alt="DispHub's on-screen message: Gaming" width="480" height="176" loading="lazy">
-              </div>
+          <div class="shortcut" data-reveal>
+            <div class="keys" aria-label="Ctrl + Alt + 2"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>2</kbd></div>
+            <div class="mini">
+              <img src="assets/img/reef-gaming.webp" alt="A photo with the Gaming profile on" width="960" height="600" loading="lazy">
+              <div class="osd show" aria-hidden="true"><svg><use href="#i-monitor"/></svg><b>Gaming</b></div>
             </div>
           </div>
         </div>
 
-        <div class="feature" id="automation">
+        <div class="feature">
           <div class="feature-copy" data-reveal>
-            <span class="pro-badge">DispHub Pro</span>
-            <h2 style="margin-top:14px">Games get their own look.</h2>
-            <p class="lead">Pick a profile for a game or app. DispHub uses it while that window is in front and goes back to normal when you switch away.</p>
-            <ul>
-              <li><svg><use href="#i-check"/></svg>Add the app in front with one click, or choose any program</li>
-              <li><svg><use href="#i-check"/></svg>Your desktop is never left in game colours</li>
-            </ul>
+            <span class="eyebrow">Per-game profiles</span>
+            <h2>Games get their own look.</h2>
+            <p>Your profile while the game is in front, normal colours when you switch away.</p>
           </div>
-          <div class="shot" data-reveal>
-            <img class="win" src="assets/img/panel-apps.webp" alt="DispHub's Apps page: cs2.exe uses Gaming and vlc.exe uses Film" width="1100" height="503" loading="lazy">
-          </div>
+          <img class="win" data-reveal src="assets/img/window-apps.webp" alt="DispHub's Apps page: cs2.exe uses Gaming and vlc.exe uses Film" width="1400" height="967" loading="lazy">
         </div>
 
         <div class="feature flip">
           <div class="feature-copy" data-reveal>
-            <span class="pro-badge">DispHub Pro</span>
-            <h2 style="margin-top:14px">Warmer evenings, automatically.</h2>
-            <p class="lead">Fade to your night profile at sunset and back at sunrise, like Night light, or at the hours you choose, with a slow fade that's easy on the eyes.</p>
-            <ul>
-              <li><svg><use href="#i-check"/></svg>Sunset to sunrise for where you live, or set hours</li>
-              <li><svg><use href="#i-check"/></svg>See today's plan on a timeline</li>
-            </ul>
+            <span class="eyebrow">Schedules</span>
+            <h2>Warmer evenings, automatically.</h2>
+            <p>Fade to your night profile at sunset and back at sunrise.</p>
           </div>
-          <div class="shot warm" data-reveal>
-            <img class="win" src="assets/img/panel-schedule.webp" alt="DispHub's Schedule page: sunset to sunrise, Night profile at night and Standard by day, with today's timeline" width="1100" height="865" loading="lazy">
-          </div>
+          <img class="win" data-reveal src="assets/img/window-schedule.webp" alt="DispHub's Schedule page: Night from sunset to sunrise, with today's timeline" width="1400" height="967" loading="lazy">
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="all-head" style="padding-top:0">
-      <div class="wrap">
-        <div class="section-head center" data-reveal>
-          <h2 id="all-head">Everything a display needs.</h2>
-          <p class="lead">Small, quiet and careful with your screen.</p>
-        </div>
-        <div class="grid">
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-monitor"/></svg></div><h3>Every display</h3><p>Colours apply to all connected screens, and you can leave chosen displays alone.</p></div>
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-drop"/></svg></div><h3>Vibrance</h3><p>Colour saturation through NVIDIA and Intel graphics, including most laptop screens. AMD is in beta.</p></div>
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-stream"/></svg></div><h3>Stream-friendly</h3><p>Changes happen after Windows draws the screen, so viewers and screenshots see normal colours.</p></div>
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-shield"/></svg></div><h3>Safe</h3><p>Your original colours are saved first and restored when you pause or quit, even after a crash.</p></div>
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-leaf"/></svg></div><h3>Light</h3><p>Waits quietly in the notification area and uses very little memory, so games stay smooth.</p></div>
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-lock"/></svg></div><h3>Private</h3><p>No account, no ads and no telemetry. Everything stays on your PC.</p></div>
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-link"/></svg></div><h3>Shareable</h3><p>Copy a profile as a link. Anyone with DispHub adds it in one click.</p></div>
-          <div class="card" data-reveal><div class="ico"><svg><use href="#i-translate"/></svg></div><h3>In your language</h3><p>Community translations on Weblate. Help add your language, no coding needed.</p></div>
+    <section class="section closing" aria-labelledby="get-head">
+      <div class="wrap" data-reveal>
+        <img class="mark" src="assets/img/icon-192.png" alt="" width="80" height="80" loading="lazy">
+        <h2 id="get-head">Get DispHub</h2>
+        <p>Free on the Microsoft Store. Pro is a one-time upgrade for unlimited profiles, per-game profiles and schedules.</p>
+        <div class="cta">
+          <a class="btn btn-accent btn-two" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><svg><use href="#i-download"/></svg><span>Download<small>Free on the Microsoft Store</small></span></a>
+          <a class="btn btn-two" href="https://github.com/qlintenFX/DispHub"><svg><use href="#i-code"/></svg><span>View on GitHub<small>Open source</small></span></a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="pro" aria-labelledby="pro-head" style="padding-top:0">
+    <section class="section faq" id="faq" aria-labelledby="faq-head">
       <div class="wrap">
-        <div class="section-head center" data-reveal>
-          <h2 id="pro-head">Free, with a one-time Pro.</h2>
-          <p class="lead">Everything you need to tune your display is free. Pro adds the automation and supports development. No subscription.</p>
-        </div>
-        <div class="plans">
-          <div class="plan" data-reveal>
-            <h3>DispHub</h3>
-            <div class="price">Free</div>
-            <ul>
-              <li><svg><use href="#i-check"/></svg>Three profiles</li>
-              <li><svg><use href="#i-check"/></svg>Brightness, contrast, gamma, colour temperature and vibrance</li>
-              <li><svg><use href="#i-check"/></svg>Keyboard shortcuts, quick panel and tray menu</li>
-              <li><svg><use href="#i-check"/></svg>Every connected display</li>
-              <li><svg><use href="#i-check"/></svg>Templates and shareable links</li>
-            </ul>
-            <a class="btn btn-lg" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><svg><use href="#i-store"/></svg>Get it free</a>
-          </div>
-          <div class="plan pro" data-reveal>
-            <h3>DispHub <span class="gradient-text">Pro</span></h3>
-            <div class="price">One-time upgrade in the app</div>
-            <ul>
-              <li class="plus"><svg><use href="#i-sparkle"/></svg>Everything in DispHub, and:</li>
-              <li><svg><use href="#i-check"/></svg>Unlimited profiles</li>
-              <li><svg><use href="#i-check"/></svg>Per-game and per-app profiles</li>
-              <li><svg><use href="#i-check"/></svg>Schedules with smooth fades</li>
-              <li><svg><use href="#i-check"/></svg>Different settings for each display</li>
-              <li><svg><use href="#i-check"/></svg>Choose how see-through the quick panel is</li>
-            </ul>
-            <a class="btn btn-accent btn-lg" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><svg><use href="#i-store"/></svg>Get DispHub</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="faq" aria-labelledby="faq-head" style="padding-top:0">
-      <div class="wrap">
-        <div class="section-head center" data-reveal>
-          <h2 id="faq-head">Questions.</h2>
-        </div>
+        <h2 id="faq-head" data-reveal>FAQ</h2>
         <div class="expanders" data-reveal>
           <details class="expander">
-            <summary>Do people watching my stream see the changed colours?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>No. DispHub changes colours in your graphics card's output, after Windows has drawn the screen, so OBS, Discord, Teams and screenshots capture the original colours. Your viewers see a normal picture while you see your profile.</p></div>
+            <summary>Do viewers on my stream see the colours?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
+            <div class="body">No. OBS, Discord and screenshots capture your normal colours.</div>
           </details>
           <details class="expander">
-            <summary>Will it slow down my games?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>No. DispHub changes colours in your graphics card's output, so games draw exactly as before. DispHub itself waits in the notification area and uses very little memory.</p></div>
-          </details>
-          <details class="expander">
-            <summary>Which graphics cards support vibrance?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>NVIDIA and Intel, including the built-in screen of laptops with Intel graphics. AMD support is in beta, so please tell us how it works for you. Brightness, contrast, gamma and colour temperature work on any graphics card.</p></div>
-          </details>
-          <details class="expander">
-            <summary>My night profile isn't as warm as I set it.<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>Windows limits how far colours can change by default. Turn on Settings &gt; Displays &gt; Full colour range in DispHub. It asks for administrator approval once.</p></div>
+            <summary>Does it slow down games?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
+            <div class="body">No. Colours change in your graphics card's output, and DispHub uses very little memory.</div>
           </details>
           <details class="expander">
             <summary>Does it work with HDR?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>Vibrance does. Windows doesn't allow gamma changes while HDR is on, so brightness, contrast, gamma and colour temperature pause until you turn HDR off.</p></div>
+            <div class="body">Vibrance does. Windows blocks gamma changes while HDR is on.</div>
           </details>
           <details class="expander">
-            <summary>What if DispHub crashes?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>DispHub saves your original colours before it changes anything and puts them back when you pause or quit, even after a crash. Your screen is never left with a profile you can't undo.</p></div>
+            <summary>Does it collect data?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
+            <div class="body">No. No account, no telemetry, and nothing leaves your PC. See the <a href="privacy/">privacy policy</a>.</div>
           </details>
-          <details class="expander">
-            <summary>What does Pro cost, and is it a subscription?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>Pro is a single purchase in the app through the Microsoft Store, in your local currency. There's no subscription and no ads, and the free version has no time limit.</p></div>
-          </details>
-          <details class="expander">
-            <summary>Is DispHub open source?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>Yes. DispHub is free software under the GNU General Public License v3.0 or later, and the code is on <a href="https://github.com/qlintenFX/DispHub">GitHub</a>.</p></div>
-          </details>
-          <details class="expander">
-            <summary>What data does it collect?<span class="chev"><svg><use href="#i-chev"/></svg></span></summary>
-            <div class="body"><p>None. There's no account and no telemetry, and DispHub doesn't connect to the internet. Your profiles and settings stay on your PC. Read the <a href="privacy/">privacy policy</a>.</p></div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="open-head" style="padding-top:0">
-      <div class="wrap">
-        <div class="band" data-reveal>
-          <div>
-            <span class="eyebrow">Community</span>
-            <h2 id="open-head">Made in the open.</h2>
-            <p class="lead">DispHub is built in public. Translate it, suggest a feature or tell us what broke, and it gets better for everyone.</p>
-          </div>
-          <div class="links">
-            <a href="https://github.com/qlintenFX/DispHub"><svg><use href="#i-code"/></svg><div><b>Source code</b><span>github.com/qlintenFX/DispHub</span></div><svg class="go"><use href="#i-arrow"/></svg></a>
-            <a href="https://hosted.weblate.org/engage/disphub/"><svg><use href="#i-translate"/></svg><div><b>Translate</b><span>Add your language on Weblate</span></div><svg class="go"><use href="#i-arrow"/></svg></a>
-            <a href="https://github.com/qlintenFX/DispHub/issues"><svg><use href="#i-bug"/></svg><div><b>Report a problem</b><span>Or ask for a feature</span></div><svg class="go"><use href="#i-arrow"/></svg></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section closing" aria-labelledby="closing-head" style="padding-top:0">
-      <div class="wrap" data-reveal>
-        <img class="mark" src="assets/img/icon-192.png" alt="" width="88" height="88" loading="lazy">
-        <h2 id="closing-head">Make your display yours.</h2>
-        <p class="lead" style="margin-inline:auto">Free on the Microsoft Store for Windows 10 and 11.</p>
-        <div class="cta">
-          <a class="btn btn-accent btn-lg" href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct"><svg><use href="#i-store"/></svg><span class="btn-two">Get it free<small>Microsoft Store</small></span></a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="wrap">
-      <div class="cols">
-        <div>
-          <a class="brand" href="./"><img src="assets/img/icon-96.png" alt="" width="30" height="30"><span>Disp<span class="gradient-text">Hub</span></span></a>
-          <p style="margin:12px 0 0;max-width:22em">Colour profiles for your display, for Windows 10 and 11.</p>
-        </div>
-        <div>
-          <h4>DispHub</h4>
-          <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#pro">Free and Pro</a></li>
-            <li><a href="#faq">Questions</a></li>
-            <li><a href="download/">Download</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Project</h4>
-          <ul>
-            <li><a href="https://github.com/qlintenFX/DispHub">GitHub</a></li>
-            <li><a href="https://hosted.weblate.org/engage/disphub/">Translate</a></li>
-            <li><a href="https://github.com/qlintenFX/DispHub/issues">Report a problem</a></li>
-            <li><a href="https://github.com/qlintenFX/DispHub/blob/main/CHANGELOG.md">What's new</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Legal</h4>
-          <ul>
-            <li><a href="privacy/">Privacy</a></li>
-            <li><a href="https://github.com/qlintenFX/DispHub/blob/main/LICENSE">Licence (GPL-3.0)</a></li>
-            <li><a href="https://github.com/qlintenFX/DispHub/blob/main/THIRD_PARTY_NOTICES.md">Third-party notices</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="legal">
-        <span>© 2026 qlintenFX. DispHub is free software under the GNU GPL v3.0 or later.</span>
-        <span>Photos: U.S. National Park Service (public domain). Teaser music: “GAMECUBE” by yung brownie (prod. brownie.)</span>
-      </div>
+    <div class="wrap foot">
+      <a class="brand" href="./"><img src="assets/img/icon-96.png" alt="" width="24" height="24"><span>Disp<span class="gradient-text">Hub</span></span></a>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="download/">Download</a>
+        <a href="privacy/">Privacy</a>
+        <a href="https://github.com/qlintenFX/DispHub">GitHub</a>
+        <a href="https://hosted.weblate.org/engage/disphub/">Translate</a>
+        <a href="https://github.com/qlintenFX/DispHub/issues">Report a problem</a>
+      </nav>
+      <p class="legal">© 2026 qlintenFX · Free software under the <a href="https://github.com/qlintenFX/DispHub/blob/main/LICENSE">GPL v3.0</a> · Photos: U.S. National Park Service</p>
     </div>
   </footer>
-
-  <dialog class="player" aria-label="DispHub teaser">
-    <video controls playsinline preload="none" poster="assets/img/teaser-poster.webp" width="1280" height="720">
-      <source src="assets/media/teaser.mp4" type="video/mp4">
-    </video>
-    <div class="bar"><span>Music: “GAMECUBE” by yung brownie (prod. brownie.)</span><button class="btn" type="button" data-close>Close</button></div>
-  </dialog>
 
   <script src="assets/js/site.js" defer></script>
 </body>
