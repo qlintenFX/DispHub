@@ -863,31 +863,6 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: var(--shadow-window);
 }
 
-.shortcut {
-  display: grid;
-  gap: 24px;
-  justify-items: center;
-}
-
-.keys {
-  display: flex;
-  gap: 10px;
-}
-
-kbd {
-  display: inline-grid;
-  place-items: center;
-  min-width: 68px;
-  height: 58px;
-  padding: 0 18px;
-  border-radius: var(--r-card);
-  border: 1px solid var(--stroke-2);
-  border-bottom-width: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-1);
-  font: 600 20px/1 var(--font-display);
-}
-
 .mini {
   position: relative;
   width: 100%;
@@ -916,12 +891,6 @@ kbd {
 
   .feature.flip .feature-copy {
     order: 0;
-  }
-
-  kbd {
-    min-width: 56px;
-    height: 50px;
-    font-size: 18px;
   }
 }
 
