@@ -26,14 +26,30 @@ public partial class ProfilesView : UserControl
             profiles.Pick(item);
     }
 
-    private void OnTemplatesClick(object sender, RoutedEventArgs e)
+    /// <summary>The last tile: a menu of ways to add a profile, or the Pro offer once the free ones are used.</summary>
+    private void OnAddTileClick(object sender, RoutedEventArgs e)
     {
-        if (TemplatesButton.ContextMenu is { } menu)
+        if (DataContext is not ViewModels.ProfilesViewModel profiles || sender is not Button { ContextMenu: { } menu } button)
+            return;
+        if (profiles.AddTile.IsLocked)
         {
-            menu.DataContext = DataContext;
-            menu.PlacementTarget = TemplatesButton;
-            menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-            menu.IsOpen = true;
+            profiles.ShowProfileUpgrade();
+            return;
         }
+        OpenMenu(menu, button);
+    }
+
+    private void OnMoreClick(object sender, RoutedEventArgs e)
+    {
+        if (MoreButton.ContextMenu is { } menu)
+            OpenMenu(menu, MoreButton);
+    }
+
+    private void OpenMenu(ContextMenu menu, FrameworkElement target)
+    {
+        menu.DataContext = DataContext;
+        menu.PlacementTarget = target;
+        menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        menu.IsOpen = true;
     }
 }

@@ -50,6 +50,11 @@ public sealed partial class ProfilesViewModel : PageViewModel
 
     public ObservableCollection<ProfileItemViewModel> Profiles { get; } = [];
 
+    /// <summary>What the profile grid shows: the profiles, then the tile that adds one.</summary>
+    public ObservableCollection<object> Tiles { get; } = [];
+
+    public AddTileViewModel AddTile { get; } = new();
+
     public ObservableCollection<WarningViewModel> Warnings { get; } = [];
 
     public ProfileEditorViewModel Editor { get; }
@@ -66,7 +71,8 @@ public sealed partial class ProfilesViewModel : PageViewModel
     [ObservableProperty]
     public partial bool CanAddProfile { get; set; }
 
-    public static string ProfileLimitText => Loc.Format("Profiles_FreeLimit", Core.Licensing.FeatureGate.FreeProfileLimit);
+    /// <summary>The free profiles are used: offer Pro.</summary>
+    public void ShowProfileUpgrade() => _upgrade.ShowUpgrade(Loc.Get("Upgrade_MoreProfiles"));
 
     partial void OnSelectedProfileChanged(ProfileItemViewModel? value)
     {
@@ -196,9 +202,16 @@ public sealed partial class ProfilesViewModel : PageViewModel
     {
         Guid? selected = SelectedProfile?.Id ?? _app.Current?.ProfileId;
         Profiles.Clear();
+        Tiles.Clear();
         foreach (Profile profile in _app.Config.Profiles)
-            Profiles.Add(new ProfileItemViewModel(profile));
+        {
+            var tile = new ProfileItemViewModel(profile);
+            Profiles.Add(tile);
+            Tiles.Add(tile);
+        }
         CanAddProfile = _app.Features.CanAddProfile(_app.Config.Profiles.Count);
+        AddTile.Update(locked: !CanAddProfile);
+        Tiles.Add(AddTile);
         Refresh();
         if (selected is { } id && Profiles.FirstOrDefault(p => p.Id == id) is { } item)
             SetSelectedSilently(item);
@@ -310,6 +323,28 @@ public sealed partial class ProfilesViewModel : PageViewModel
                 Loc.Get("Warning_ResetText"),
                 Wpf.Ui.Controls.InfoBarSeverity.Warning));
         }
+    }
+}
+
+/// <summary>The grid's last tile: adds a profile, or offers Pro once the free profiles are used.</summary>
+public sealed partial class AddTileViewModel : ObservableObject
+{
+    [ObservableProperty]
+    public partial bool IsLocked { get; set; }
+
+    [ObservableProperty]
+    public partial string Title { get; set; } = Loc.Get("Profiles_New");
+
+    [ObservableProperty]
+    public partial string Hint { get; set; } = Loc.Get("Profiles_NewHint");
+
+    public void Update(bool locked)
+    {
+        IsLocked = locked;
+        Title = Loc.Get(locked ? "Profiles_MoreTitle" : "Profiles_New");
+        Hint = locked
+            ? Loc.Format("Profiles_MoreHint", Core.Licensing.FeatureGate.FreeProfileLimit)
+            : Loc.Get("Profiles_NewHint");
     }
 }
 

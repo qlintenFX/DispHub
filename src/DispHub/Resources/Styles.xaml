@@ -178,16 +178,16 @@
   </Style>
 
   <!-- Profile tiles -->
+  <!-- A profile in the profile grid; the grid (TileGrid) sizes and spaces the tiles. -->
   <Style x:Key="ProfileTile" TargetType="ListBoxItem">
-    <Setter Property="Margin" Value="0,0,8,8" />
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ListBoxItem">
           <Border
             x:Name="Card"
-            Width="196"
             Padding="14,12"
             Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
@@ -203,6 +203,53 @@
               <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
               <Setter TargetName="Card" Property="BorderThickness" Value="2" />
               <Setter TargetName="Card" Property="Padding" Value="13,11" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- The grid's last cell holds a button, not a profile: it can't be selected. -->
+  <Style x:Key="AddTile" TargetType="ListBoxItem">
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ListBoxItem">
+          <ContentPresenter />
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- A quiet card that adds something: no fill until pointed at, like Windows' "Add device" tiles. -->
+  <Style x:Key="AddTileButton" TargetType="Button">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border
+            x:Name="Card"
+            Padding="14,12"
+            Background="{DynamicResource SubtleFillColorTransparentBrush}"
+            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Card" Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="Card" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+              <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource FocusStrokeColorOuterBrush}" />
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>

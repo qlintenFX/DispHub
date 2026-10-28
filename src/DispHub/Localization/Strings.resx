@@ -703,6 +703,21 @@ It also supports development of DispHub.</value>
   <data name="Enum_OsdPosition_BottomRight" xml:space="preserve">
     <value>Bottom right</value>
   </data>
+  <data name="Profiles_NewHint" xml:space="preserve">
+    <value>Blank, a template or a link</value>
+  </data>
+  <data name="Profiles_Blank" xml:space="preserve">
+    <value>Blank profile</value>
+  </data>
+  <data name="Profiles_MoreTitle" xml:space="preserve">
+    <value>More profiles</value>
+  </data>
+  <data name="Profiles_MoreHint" xml:space="preserve">
+    <value>Free includes {0}. Pro has no limit.</value>
+  </data>
+  <data name="Profiles_More" xml:space="preserve">
+    <value>More</value>
+  </data>
   <data name="Profiles_FromTemplate" xml:space="preserve">
     <value>From a template</value>
   </data>
