@@ -474,7 +474,7 @@ public sealed class AppController : IDisposable
     {
         if (Config.IsPaused || Config.IsOff || output.ProfileId is not { } id || FindProfile(id) is not { } profile)
             return null;
-        return profile.Color;
+        return Features.Allowed(profile.Color);
     }
 
     private TimeSpan DelayUntil(DateTime? next)

@@ -411,6 +411,8 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
             parts.Add(Loc.Format("Summary_Contrast", c.Contrast.ToString("+0;-0", CultureInfo.CurrentCulture)));
         if (Math.Abs(c.Gamma - 1) > 0.001)
             parts.Add(Loc.Format("Summary_Gamma", c.Gamma.ToString("0.00", CultureInfo.CurrentCulture)));
+        if (c.ShadowBoost != 0)
+            parts.Add(Loc.Format("Summary_Shadows", c.ShadowBoost));
         if (c.Vibrance != ColorSettings.NeutralVibrance)
             parts.Add(Loc.Format("Summary_Vibrance", c.Vibrance));
         return parts.Count == 0 ? Loc.Get("Summary_Original") : string.Join(" · ", parts);
@@ -484,6 +486,16 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     public partial int Vibrance { get; set; } = ColorSettings.NeutralVibrance;
 
     [ObservableProperty]
+    public partial int ShadowBoost { get; set; }
+
+    /// <summary>Shadow boost is Pro: without it the row shows a lock that offers the upgrade.</summary>
+    [ObservableProperty]
+    public partial bool CanUseShadowBoost { get; set; }
+
+    [RelayCommand]
+    private void UnlockShadowBoost() => upgrade.ShowUpgrade(Loc.Get("Upgrade_ShadowBoost"));
+
+    [ObservableProperty]
     public partial string? Hotkey { get; set; }
 
     [ObservableProperty]
@@ -518,6 +530,8 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             Gamma = color.Gamma;
             Temperature = color.TemperatureK;
             Vibrance = color.Vibrance;
+            ShadowBoost = color.ShadowBoost;
+            CanUseShadowBoost = app.Features.ShadowBoost;
             Hotkey = profile.Hotkey;
             HotkeyError = Localize(app.HotkeyFailure(profile.Id));
             OnPropertyChanged(nameof(VibranceSupported));
@@ -574,6 +588,8 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
 
     partial void OnVibranceChanged(int value) => Push();
 
+    partial void OnShadowBoostChanged(int value) => Push();
+
     partial void OnHotkeyChanged(string? value)
     {
         if (_loading || !HasProfile)
@@ -588,7 +604,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     {
         if (_loading || !HasProfile)
             return;
-        var color = new ColorSettings(Brightness, Contrast, Math.Round(Gamma, 2), Temperature, Vibrance);
+        var color = new ColorSettings(Brightness, Contrast, Math.Round(Gamma, 2), Temperature, Vibrance, ShadowBoost);
         if (SelectedDisplay.Key is { } key)
         {
             app.UpdateProfileMonitorColor(_profileId, key, color);

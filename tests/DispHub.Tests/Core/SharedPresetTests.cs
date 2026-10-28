@@ -19,6 +19,16 @@ public sealed class SharedPresetTests
     }
 
     [Fact]
+    public void ShadowBoost_TravelsInTheLink()
+    {
+        string link = new SharedPreset("Night raid", new ColorSettings(Gamma: 1.1, ShadowBoost: 45)).ToLink();
+
+        Assert.Contains("&s=45", link, StringComparison.Ordinal);
+        Assert.True(SharedPreset.TryParse(link, out SharedPreset? parsed));
+        Assert.Equal(45, parsed.Color.ShadowBoost);
+    }
+
+    [Fact]
     public void ToLink_OmitsNeutralValues()
     {
         string link = new SharedPreset("Vivid", new ColorSettings(Vibrance: 70)).ToLink();
