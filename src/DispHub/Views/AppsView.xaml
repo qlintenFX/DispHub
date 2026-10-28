@@ -19,9 +19,9 @@
       Margin="0,0,0,12"
       IsClosable="False"
       IsOpen="True"
-      Message="{l:Tr Apps_ProHint}"
+      Message="{l:Tr Apps_FreeHint}"
       Severity="Informational"
-      Visibility="{Binding IsPro, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+      Visibility="{Binding ShowProHint, Converter={StaticResource BoolToVisibility}}" />
 
     <!-- What's in front -->
     <Border
@@ -156,7 +156,16 @@
     <ItemsControl ItemsSource="{Binding Rules}">
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:AppRuleItem}">
-          <Border Padding="16,12" Style="{StaticResource SettingCard}">
+          <Border Padding="16,12">
+            <Border.Style>
+              <Style BasedOn="{StaticResource SettingCard}" TargetType="Border">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                    <Setter Property="Opacity" Value="0.6" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </Border.Style>
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -179,6 +188,13 @@
               <StackPanel Grid.Column="1" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                   <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
+                  <ui:SymbolIcon
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Symbol="LockClosed24"
+                    ToolTip="{l:Tr Apps_NeedsPro}"
+                    Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisibility}}" />
                   <Border
                     Margin="8,0,0,0"
                     Padding="6,1"

@@ -77,7 +77,7 @@ public sealed partial class QuickPanelViewModel : ObservableObject
             IsOn = !config.IsOff;
 
             Profiles.Clear();
-            foreach (Profile profile in config.Profiles.Take(8))
+            foreach (Profile profile in config.Profiles.Take(Math.Min(8, _app.Features.MaxProfiles)))
                 Profiles.Add(new QuickProfile(this, profile.Id, profile.Name, Controls.ColorPreview.Render(profile.Color), !config.IsPaused && !config.IsOff && current?.ProfileId == profile.Id));
 
             Profile? active = current?.ProfileId is { } id ? _app.FindProfile(id) : null;

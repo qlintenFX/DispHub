@@ -10,9 +10,20 @@ namespace DispHub.Core.Config;
 /// <summary>Usage counters and other non-preference data. Saved as state.json.</summary>
 public sealed class AppStateData
 {
+    /// <summary>When DispHub first ran here; the Pro trial runs for a week from then.</summary>
     public DateTimeOffset? FirstRunUtc { get; set; }
+
     public int ProfileSwitchCount { get; set; }
     public DateTimeOffset? ReviewPromptedUtc { get; set; }
+
+    /// <summary>How often an app rule switched profiles during the trial, to say what Pro did when it ends.</summary>
+    public int TrialAppSwitches { get; set; }
+
+    /// <summary>How often the schedule switched profiles during the trial.</summary>
+    public int TrialScheduleSwitches { get; set; }
+
+    /// <summary>The "trial has ended" message was shown.</summary>
+    public DateTimeOffset? TrialEndShownUtc { get; set; }
 }
 
 /// <summary>

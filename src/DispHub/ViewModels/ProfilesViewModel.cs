@@ -37,7 +37,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
         _app.ProfileEdited += (_, id) =>
         {
             if (Profiles.FirstOrDefault(p => p.Id == id) is { } item && _app.FindProfile(id) is { } profile)
-                item.Update(profile, item.IsActive, _app.HotkeyFailure(id));
+                item.Update(profile, item.IsActive, _app.HotkeyFailure(id), item.IsLocked);
         };
         _app.MonitorsChanged += (_, _) => RefreshWarnings();
         _app.ExternalResetDetected += (_, _) =>
@@ -87,6 +87,11 @@ public sealed partial class ProfilesViewModel : PageViewModel
     public void Pick(ProfileItemViewModel item)
     {
         ArgumentNullException.ThrowIfNull(item);
+        if (item.IsLocked)
+        {
+            ShowProfileUpgrade();
+            return;
+        }
         if (!_app.ProfilesOn || _app.Current?.ProfileId != item.Id)
             _app.ActivateProfile(item.Id, ChangeSource.Editor);
     }
@@ -210,7 +215,7 @@ public sealed partial class ProfilesViewModel : PageViewModel
             Tiles.Add(tile);
         }
         CanAddProfile = _app.Features.CanAddProfile(_app.Config.Profiles.Count);
-        AddTile.Update(locked: !CanAddProfile);
+        AddTile.Update(locked: !CanAddProfile && !_app.Features.HasPro, full: !CanAddProfile && _app.Features.HasPro);
         Tiles.Add(AddTile);
         Refresh();
         if (selected is { } id && Profiles.FirstOrDefault(p => p.Id == id) is { } item)
@@ -227,7 +232,10 @@ public sealed partial class ProfilesViewModel : PageViewModel
         foreach (ProfileItemViewModel item in Profiles)
         {
             if (_app.FindProfile(item.Id) is { } profile)
-                item.Update(profile, isActive: !_app.Config.IsPaused && current?.ProfileId == profile.Id, _app.HotkeyFailure(profile.Id));
+            {
+                item.Update(profile, isActive: !_app.Config.IsPaused && current?.ProfileId == profile.Id, _app.HotkeyFailure(profile.Id),
+                    isLocked: !_app.CanUseProfile(profile.Id));
+            }
         }
 
         // The editor follows what's on screen, e.g. after a hotkey switch.
@@ -332,19 +340,26 @@ public sealed partial class AddTileViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsLocked { get; set; }
 
+    /// <summary>Pro's ceiling is reached: nothing more to add.</summary>
+    [ObservableProperty]
+    public partial bool IsFull { get; set; }
+
     [ObservableProperty]
     public partial string Title { get; set; } = Loc.Get("Profiles_New");
 
     [ObservableProperty]
     public partial string Hint { get; set; } = Loc.Get("Profiles_NewHint");
 
-    public void Update(bool locked)
+    public void Update(bool locked, bool full = false)
     {
         IsLocked = locked;
-        Title = Loc.Get(locked ? "Profiles_MoreTitle" : "Profiles_New");
-        Hint = locked
-            ? Loc.Format("Profiles_MoreHint", Core.Licensing.FeatureGate.FreeProfileLimit)
-            : Loc.Get("Profiles_NewHint");
+        IsFull = full;
+        (Title, Hint) = (locked, full) switch
+        {
+            (true, _) => (Loc.Get("Profiles_MoreTitle"), Loc.Format("Profiles_MoreHint", Core.Licensing.FeatureGate.FreeProfileLimit)),
+            (_, true) => (Loc.Format("Profiles_FullTitle", Core.Licensing.FeatureGate.ProfileCeiling), Loc.Get("Profiles_FullHint")),
+            _ => (Loc.Get("Profiles_New"), Loc.Get("Profiles_NewHint")),
+        };
     }
 }
 
@@ -364,19 +379,24 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
     [ObservableProperty]
     public partial bool IsActive { get; set; }
 
+    /// <summary>Past the free profiles without Pro: kept, but it can't go on screen.</summary>
+    [ObservableProperty]
+    public partial bool IsLocked { get; set; }
+
     [ObservableProperty]
     public partial string Summary { get; set; } = Describe(profile.Color);
 
     [ObservableProperty]
     public partial ImageSource Preview { get; set; } = Controls.ColorPreview.Render(profile.Color);
 
-    public void Update(Profile source, bool isActive, string? hotkeyFailure)
+    public void Update(Profile source, bool isActive, string? hotkeyFailure, bool isLocked)
     {
         Name = source.Name;
         Hotkey = source.Hotkey;
         HasHotkeyProblem = hotkeyFailure is not null;
         IsActive = isActive;
-        Summary = Describe(source.Color);
+        IsLocked = isLocked;
+        Summary = isLocked ? Loc.Get("Profiles_NeedsPro") : Describe(source.Color);
         Preview = Controls.ColorPreview.Render(source.Color);
     }
 

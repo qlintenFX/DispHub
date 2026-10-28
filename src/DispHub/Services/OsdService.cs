@@ -61,28 +61,20 @@ public sealed class OsdService(AppController app, ThemeService theme)
 /// Asks for a Store rating once, after DispHub has proven useful (a week of use and real profile switching).
 /// Only in the Store build, and only while the main window is open so the dialog isn't a surprise.
 /// </summary>
-public sealed class ReviewPrompt(AppController app, ILicenseService license)
+public sealed class ReviewPrompt(AppController app, ILicenseService license, AppState state)
 {
     private static readonly TimeSpan MinimumUse = TimeSpan.FromDays(7);
     private const int MinimumSwitches = 10;
-    private AppStateData _state = new();
 
     public void Attach()
     {
-        _state = JsonFiles.ReadState(AppPaths.StatePath);
-        if (_state.FirstRunUtc is null)
-        {
-            _state.FirstRunUtc = DateTimeOffset.UtcNow;
-            Save();
-        }
-
         app.StateChanged += (_, source) =>
         {
             // Only the first few switches matter for the rating prompt; stop writing the file after that.
-            if (source is ChangeSource.Hotkey or ChangeSource.Tray && _state.ProfileSwitchCount < MinimumSwitches)
+            if (source is ChangeSource.Hotkey or ChangeSource.Tray && state.Data.ProfileSwitchCount < MinimumSwitches)
             {
-                _state.ProfileSwitchCount++;
-                Save();
+                state.Data.ProfileSwitchCount++;
+                state.Save();
             }
         };
     }
@@ -90,24 +82,13 @@ public sealed class ReviewPrompt(AppController app, ILicenseService license)
     /// <summary>Called whenever the main window is activated.</summary>
     public async Task OnWindowActivatedAsync(MainWindow window)
     {
-        if (!license.CanPurchase || _state.ReviewPromptedUtc is not null || _state.FirstRunUtc is not { } first)
+        if (!license.CanPurchase || state.Data.ReviewPromptedUtc is not null || state.Data.FirstRunUtc is not { } first)
             return;
-        if (DateTimeOffset.UtcNow - first < MinimumUse || _state.ProfileSwitchCount < MinimumSwitches)
+        if (DateTimeOffset.UtcNow - first < MinimumUse || state.Data.ProfileSwitchCount < MinimumSwitches)
             return;
 
-        _state.ReviewPromptedUtc = DateTimeOffset.UtcNow;
-        Save();
+        state.Data.ReviewPromptedUtc = DateTimeOffset.UtcNow;
+        state.Save();
         await license.RequestReviewAsync(new System.Windows.Interop.WindowInteropHelper(window).Handle);
-    }
-
-    private void Save()
-    {
-        try
-        {
-            JsonFiles.WriteState(AppPaths.StatePath, _state);
-        }
-        catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException)
-        {
-        }
     }
 }

@@ -3,6 +3,7 @@
 
 using System.Globalization;
 using DispHub.Core.Color;
+using DispHub.Core.Licensing;
 using DispHub.Core.Model;
 using DispHub.Core.Schedule;
 
@@ -11,6 +12,7 @@ namespace DispHub.Core.Rules;
 /// <summary>A profile the user picked by hand while a rule was active. Ends when that rule's context ends.</summary>
 public sealed record ManualOverride(Guid ProfileId, string ContextKey);
 
+/// <param name="IsPro">Pro features are on: Pro was bought, or the trial is running.</param>
 public sealed record RuleInput(
     AppConfig Config,
     IReadOnlyList<string> Monitors,
@@ -43,6 +45,7 @@ public sealed record RuleOutput(
 /// <summary>
 /// Decides which colours each monitor gets. Pure: same input, same output. Precedence:
 /// paused, excluded monitor, manual pick (within its context), app rule, schedule, active profile.
+/// Without Pro only the first app rule and the first <see cref="FeatureGate.FreeProfileLimit"/> profiles count.
 /// </summary>
 public static class RuleEngine
 {
@@ -67,20 +70,21 @@ public static class RuleEngine
             return new RuleOutput(monitors, BaseContext, null, TargetReason.Paused, null);
         }
 
-        AppRule? appRule = input.IsPro ? FindAppRule(config, input.ForegroundExecutable) : null;
-        ScheduleState? schedule = appRule is null && input.IsPro ? FindScheduleSlot(config, input.LocalNow, input.TimeZone ?? TimeZoneInfo.Local) : null;
+        var gate = new FeatureGate(input.IsPro);
+        AppRule? appRule = FindAppRule(config, input.ForegroundExecutable, gate);
+        ScheduleState? schedule = appRule is null && gate.Schedules ? FindScheduleSlot(config, input.LocalNow, input.TimeZone ?? TimeZoneInfo.Local) : null;
 
         string context = appRule is not null ? AppContextPrefix + appRule.Id
             : schedule is not null ? schedule.ContextKey
             : BaseContext;
 
-        Profile active = FindProfile(config, config.ActiveProfileId) ?? config.Profiles[0];
+        Profile active = UsableProfile(config, config.ActiveProfileId, gate) ?? config.Profiles[0];
         Profile? manual = input.Manual is not null && input.Manual.ContextKey == context
-            ? FindProfile(config, input.Manual.ProfileId)
+            ? UsableProfile(config, input.Manual.ProfileId, gate)
             : null;
 
         (Profile profile, TargetReason reason) = manual is not null ? (manual, TargetReason.Manual)
-            : appRule is not null && FindProfile(config, appRule.ProfileId) is { } ruleProfile ? (ruleProfile, TargetReason.AppRule)
+            : appRule is not null && UsableProfile(config, appRule.ProfileId, gate) is { } ruleProfile ? (ruleProfile, TargetReason.AppRule)
             : schedule is not null ? (schedule.Profile, TargetReason.Schedule)
             : (active, TargetReason.Active);
 
@@ -92,9 +96,9 @@ public static class RuleEngine
                 continue;
             }
 
-            ColorSettings settings = profile.SettingsFor(monitor, input.IsPro);
+            ColorSettings settings = profile.SettingsFor(monitor, gate.PerMonitorProfiles);
             if (reason == TargetReason.Schedule && schedule!.FadeFrom is { } from && schedule.FadeProgress < 1)
-                settings = ColorBlend.Lerp(from.SettingsFor(monitor, input.IsPro), settings, schedule.FadeProgress);
+                settings = ColorBlend.Lerp(from.SettingsFor(monitor, gate.PerMonitorProfiles), settings, schedule.FadeProgress);
 
             monitors[monitor] = new MonitorTarget(settings, profile.Id, reason);
         }
@@ -126,8 +130,27 @@ public static class RuleEngine
         static bool HasFolder(string path) => path.Contains('\\', StringComparison.Ordinal) || path.Contains('/', StringComparison.Ordinal);
     }
 
-    private static AppRule? FindAppRule(AppConfig config, string? executable) =>
-        executable is null ? null : config.AppRules.Find(r => r.Enabled && Matches(r, executable));
+    /// <summary>A profile that can go on screen: it exists and isn't past the free ones without Pro.</summary>
+    public static Profile? UsableProfile(AppConfig config, Guid? id, FeatureGate gate)
+    {
+        ArgumentNullException.ThrowIfNull(config);
+        ArgumentNullException.ThrowIfNull(gate);
+        int index = id is null ? -1 : config.Profiles.FindIndex(p => p.Id == id.Value);
+        return gate.CanUseProfile(index) ? config.Profiles[index] : null;
+    }
+
+    private static AppRule? FindAppRule(AppConfig config, string? executable, FeatureGate gate)
+    {
+        if (executable is null)
+            return null;
+        for (int i = 0; i < config.AppRules.Count && gate.CanUseAppRule(i); i++)
+        {
+            AppRule rule = config.AppRules[i];
+            if (rule.Enabled && Matches(rule, executable) && UsableProfile(config, rule.ProfileId, gate) is not null)
+                return rule;
+        }
+        return null;
+    }
 
     private sealed record ScheduleState(
         Profile Profile,

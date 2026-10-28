@@ -149,7 +149,8 @@ public sealed class TrayService : IDisposable
     {
         Profile? active = _app.Current?.ProfileId is { } activeId ? _app.FindProfile(activeId) : null;
         var menu = new ContextMenu();
-        foreach (Profile profile in _app.Config.Profiles.Take(MaxMenuProfiles))
+        int usable = Math.Min(_app.Config.Profiles.Count, _app.Features.MaxProfiles);
+        foreach (Profile profile in _app.Config.Profiles.Take(Math.Min(usable, MaxMenuProfiles)))
         {
             Guid id = profile.Id;
             var item = new MenuItem
@@ -162,7 +163,7 @@ public sealed class TrayService : IDisposable
             item.Click += (_, _) => _app.ActivateProfile(id, ChangeSource.Tray);
             menu.Items.Add(item);
         }
-        if (_app.Config.Profiles.Count > MaxMenuProfiles)
+        if (usable > MaxMenuProfiles)
             menu.Items.Add(Item(Loc.Get("Tray_MoreProfiles"), SymbolRegular.MoreHorizontal24, _openWindow));
 
         menu.Items.Add(new Separator());

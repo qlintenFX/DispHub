@@ -21,6 +21,9 @@ public interface IUpgradeService
 
     Task PurchaseAsync();
 
+    /// <summary>The trial is over: what Pro did this week, and the offer to keep it.</summary>
+    Task ShowTrialEndedAsync(int appSwitches, int scheduleSwitches);
+
     /// <summary>Shows the Microsoft Store's rating dialog.</summary>
     Task RateAsync();
 }
@@ -38,6 +41,27 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
             Content = Loc.Format("Upgrade_Body", feature, FeatureGate.FreeProfileLimit),
             PrimaryButtonText = Loc.Get("Common_GetPro"),
             CloseButtonText = Loc.Get("Upgrade_NotNow"),
+            Owner = ShowMainWindow(),
+        };
+        if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary)
+            await PurchaseAsync();
+    }
+
+    public async Task ShowTrialEndedAsync(int appSwitches, int scheduleSwitches)
+    {
+        if (!license.CanPurchase || license.IsPro)
+            return;
+
+        // Say what Pro actually did for them; people value what they'd lose more than what they could gain.
+        string body = appSwitches + scheduleSwitches > 0
+            ? Loc.Format("Trial_EndedUsage", appSwitches, scheduleSwitches)
+            : Loc.Get("Trial_EndedGeneric");
+        var box = new Wpf.Ui.Controls.MessageBox
+        {
+            Title = Loc.Get("Trial_EndedTitle"),
+            Content = body + Environment.NewLine + Environment.NewLine + Loc.Format("Trial_EndedFree", FeatureGate.FreeProfileLimit),
+            PrimaryButtonText = Loc.Get("Common_GetPro"),
+            CloseButtonText = Loc.Get("Trial_ContinueFree"),
             Owner = ShowMainWindow(),
         };
         if (await box.ShowDialogAsync() == Wpf.Ui.Controls.MessageBoxResult.Primary)

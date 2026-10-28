@@ -3,6 +3,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DispHub.Localization;
 using DispHub.Platform.Store;
 using DispHub.Services;
 using Wpf.Ui.Controls;
@@ -57,6 +58,7 @@ public sealed partial class MainViewModel : ObservableObject
         SelectedPage = AllPages.FirstOrDefault(p => p.Key == app.Config.Ui.StartPage) ?? home;
         home.NavigateRequested += (_, page) => SelectedPage = AllPages.FirstOrDefault(p => p.GetType() == page) ?? SelectedPage;
         _license.Changed += (_, _) => System.Windows.Application.Current?.Dispatcher.BeginInvoke(RefreshLicense);
+        _app.LicenceChanged += (_, _) => RefreshLicense();
         _app.ConfigChanged += (_, _) => RefreshLayout();
         _app.PowerChanged += (_, _) => IsOn = !_app.Config.IsOff;
         _app.ConfigChanged += (_, _) => IsOn = !_app.Config.IsOff;
@@ -123,6 +125,15 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial bool ShowUpgrade { get; set; }
 
+    [ObservableProperty]
+    public partial string UpgradeTitle { get; set; } = "DispHub Pro";
+
+    [ObservableProperty]
+    public partial string UpgradeText { get; set; } = "";
+
+    /// <summary>Called when the window comes back, so the trial's days left stay current.</summary>
+    public void OnActivated() => RefreshLicense();
+
     public void Navigate<T>()
         where T : PageViewModel => SelectedPage = AllPages.OfType<T>().FirstOrDefault() ?? Pages[0];
 
@@ -149,6 +160,14 @@ public sealed partial class MainViewModel : ObservableObject
     private void RefreshLicense()
     {
         ShowUpgrade = _license.CanPurchase && !_license.IsPro;
+        int days = _app.TrialEnds is { } end && _app.InTrial ? Core.Licensing.FeatureGate.TrialDaysLeft(end, DateTimeOffset.UtcNow) : 0;
+        UpgradeTitle = days > 0 ? Loc.Get("Trial_CardTitle") : "DispHub Pro";
+        UpgradeText = days switch
+        {
+            0 => Loc.Get("Pro_ShortPitch"),
+            1 => Loc.Get("Trial_DayLeft"),
+            _ => Loc.Format("Trial_DaysLeft", days),
+        };
         ShowUpgradeCard = ShowUpgrade && IsNavExpanded;
     }
 
