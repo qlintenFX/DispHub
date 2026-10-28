@@ -49,17 +49,18 @@
     </ItemsControl>
 
     <ListBox
-      Margin="-2,0,0,0"
       ctl:Tour.Stop="profiles"
       Background="Transparent"
       BorderThickness="0"
-      ItemContainerStyle="{StaticResource ProfileTile}"
-      ItemsSource="{Binding Profiles}"
+      ItemsSource="{Binding Tiles}"
       KeyUp="OnProfileKeyUp"
       PreviewMouseLeftButtonUp="OnProfileClicked"
       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
       ScrollViewer.VerticalScrollBarVisibility="Disabled"
       SelectedItem="{Binding SelectedProfile}">
+      <ListBox.ItemContainerStyleSelector>
+        <ctl:TileStyleSelector AddStyle="{StaticResource AddTile}" TileStyle="{StaticResource ProfileTile}" />
+      </ListBox.ItemContainerStyleSelector>
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <ItemsPresenter />
@@ -67,10 +68,10 @@
       </ListBox.Template>
       <ListBox.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel />
+          <ctl:TileGrid FillLastRow="True" MaxColumns="4" MinTileWidth="180" />
         </ItemsPanelTemplate>
       </ListBox.ItemsPanel>
-      <ListBox.ItemTemplate>
+      <ListBox.Resources>
         <DataTemplate DataType="{x:Type vm:ProfileItemViewModel}">
           <StackPanel>
             <Border Height="24" Margin="0,0,0,10" CornerRadius="4">
@@ -122,68 +123,49 @@
             </StackPanel>
           </StackPanel>
         </DataTemplate>
-      </ListBox.ItemTemplate>
-    </ListBox>
 
-    <WrapPanel Margin="0,4,0,0">
-      <ui:Button
-        Margin="0,0,8,8"
-        Appearance="Primary"
-        Command="{Binding AddProfileCommand}"
-        Content="{l:Tr Profiles_New}"
-        Icon="{ui:SymbolIcon Add24}" />
-      <ui:Button
-        x:Name="TemplatesButton"
-        Margin="0,0,8,8"
-        Click="OnTemplatesClick"
-        Content="{l:Tr Profiles_FromTemplate}"
-        Icon="{ui:SymbolIcon Sparkle24}">
-        <ui:Button.ContextMenu>
-          <ContextMenu ItemsSource="{Binding Templates}">
-            <ContextMenu.ItemContainerStyle>
-              <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
-                <Setter Property="Header" Value="{Binding Name}" />
-                <Setter Property="ToolTip" Value="{Binding Description}" />
-                <Setter Property="Command" Value="{Binding DataContext.AddFromTemplateCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
-                <Setter Property="CommandParameter" Value="{Binding Key}" />
-              </Style>
-            </ContextMenu.ItemContainerStyle>
-          </ContextMenu>
-        </ui:Button.ContextMenu>
-      </ui:Button>
-      <ui:Button
-        Margin="0,0,8,8"
-        Command="{Binding StartImportCommand}"
-        Content="{l:Tr Profiles_FromLink}"
-        Icon="{ui:SymbolIcon Link24}" />
-      <ui:Button
-        Margin="0,0,8,8"
-        Command="{Binding DuplicateProfileCommand}"
-        Content="{l:Tr Profiles_Duplicate}"
-        Icon="{ui:SymbolIcon Copy24}" />
-      <ui:Button
-        Margin="0,0,8,8"
-        Command="{Binding DeleteProfileCommand}"
-        Content="{l:Tr Profiles_Delete}"
-        Icon="{ui:SymbolIcon Delete24}" />
-      <ui:Button
-        Margin="0,0,4,8"
-        Command="{Binding MoveLeftCommand}"
-        Icon="{ui:SymbolIcon ArrowLeft24}"
-        ToolTip="{l:Tr Profiles_MoveLeft}"
-        AutomationProperties.Name="{l:Tr Profiles_MoveLeft}" />
-      <ui:Button
-        Margin="0,0,8,8"
-        Command="{Binding MoveRightCommand}"
-        Icon="{ui:SymbolIcon ArrowRight24}"
-        ToolTip="{l:Tr Profiles_MoveRight}"
-        AutomationProperties.Name="{l:Tr Profiles_MoveRight}" />
-    </WrapPanel>
-    <TextBlock
-      Margin="0,0,0,4"
-      Style="{StaticResource Hint}"
-      Text="{x:Static vm:ProfilesViewModel.ProfileLimitText}"
-      Visibility="{Binding CanAddProfile, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+        <!-- The last tile: a new profile, or more profiles with Pro once the free ones are used. -->
+        <DataTemplate DataType="{x:Type vm:AddTileViewModel}">
+          <Button
+            AutomationProperties.Name="{Binding Title}"
+            Click="OnAddTileClick"
+            Style="{StaticResource AddTileButton}">
+            <Button.ContextMenu>
+              <ContextMenu>
+                <MenuItem Command="{Binding DataContext.AddProfileCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Header="{l:Tr Profiles_Blank}" Icon="{ui:SymbolIcon Add24}" />
+                <MenuItem Header="{l:Tr Profiles_FromTemplate}" Icon="{ui:SymbolIcon Sparkle24}" ItemsSource="{Binding DataContext.Templates, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                  <MenuItem.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="MenuItem">
+                      <Setter Property="Header" Value="{Binding Name}" />
+                      <Setter Property="ToolTip" Value="{Binding Description}" />
+                      <Setter Property="Command" Value="{Binding DataContext.AddFromTemplateCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                      <Setter Property="CommandParameter" Value="{Binding Key}" />
+                    </Style>
+                  </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Command="{Binding DataContext.StartImportCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Header="{l:Tr Profiles_FromLink}" Icon="{ui:SymbolIcon Link24}" />
+              </ContextMenu>
+            </Button.ContextMenu>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <ui:SymbolIcon Margin="0,0,0,6" HorizontalAlignment="Center" FontSize="20">
+                <ui:SymbolIcon.Style>
+                  <Style TargetType="ui:SymbolIcon">
+                    <Setter Property="Symbol" Value="Add24" />
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                        <Setter Property="Symbol" Value="LockClosed24" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </ui:SymbolIcon.Style>
+              </ui:SymbolIcon>
+              <TextBlock FontWeight="SemiBold" Text="{Binding Title}" TextAlignment="Center" TextWrapping="Wrap" />
+              <TextBlock Style="{StaticResource Hint}" Text="{Binding Hint}" TextAlignment="Center" TextWrapping="Wrap" />
+            </StackPanel>
+          </Button>
+        </DataTemplate>
+      </ListBox.Resources>
+    </ListBox>
 
     <!-- Add a profile someone shared -->
     <Border Style="{StaticResource SettingCard}" Visibility="{Binding IsImporting, Converter={StaticResource BoolToVisibility}}">
@@ -261,9 +243,27 @@
               </ui:Button.Style>
             </ui:Button>
             <ui:Button
+              Margin="0,0,8,0"
               Command="{Binding ResetCommand}"
               Content="{l:Tr Profiles_Reset}"
               Icon="{ui:SymbolIcon ArrowReset24}" />
+            <!-- What can be done with this profile, in one menu rather than a row of buttons. -->
+            <ui:Button
+              x:Name="MoreButton"
+              AutomationProperties.Name="{l:Tr Profiles_More}"
+              Click="OnMoreClick"
+              Icon="{ui:SymbolIcon MoreHorizontal24}"
+              ToolTip="{l:Tr Profiles_More}">
+              <ui:Button.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Command="{Binding DuplicateProfileCommand}" Header="{l:Tr Profiles_Duplicate}" Icon="{ui:SymbolIcon Copy24}" />
+                  <MenuItem Command="{Binding MoveLeftCommand}" Header="{l:Tr Profiles_MoveLeft}" Icon="{ui:SymbolIcon ArrowLeft24}" />
+                  <MenuItem Command="{Binding MoveRightCommand}" Header="{l:Tr Profiles_MoveRight}" Icon="{ui:SymbolIcon ArrowRight24}" />
+                  <Separator />
+                  <MenuItem Command="{Binding DeleteProfileCommand}" Header="{l:Tr Profiles_Delete}" Icon="{ui:SymbolIcon Delete24}" />
+                </ContextMenu>
+              </ui:Button.ContextMenu>
+            </ui:Button>
           </StackPanel>
         </Grid>
 
