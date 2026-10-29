@@ -62,6 +62,9 @@ public partial class QuickPanel : Wpf.Ui.Controls.FluentWindow
         int y = taskbarTop ? work.Top + gap : work.Bottom - height - gap;
         WindowHelpers.PlaceOnTop(new WindowInteropHelper(this).Handle, new Rectangle(x, y, width, height));
         Activate();
+        // Open with nothing focused. WPF would put focus back on the last button used and, after keyboard input,
+        // draw its focus box there, left behind by the slide below. Tab still moves into the panel.
+        Keyboard.Focus(Root);
 
         // Slide in from the taskbar.
         var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
