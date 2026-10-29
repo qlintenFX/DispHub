@@ -70,6 +70,34 @@
                     Content="{l:Tr Settings_AllowFullRange}"
                     Icon="{ui:SymbolIcon Shield24}" />
                 </StackPanel>
+                <!-- The monitor's own backlight, over DDC/CI: what its buttons change. -->
+                <Grid Margin="0,10,0,2" Visibility="{Binding HasLevel, Converter={StaticResource BoolToVisibility}}">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" MaxWidth="360" />
+                    <ColumnDefinition Width="52" />
+                  </Grid.ColumnDefinitions>
+                  <ui:SymbolIcon
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    FontSize="18"
+                    Symbol="BrightnessHigh24"
+                    ToolTip="{l:Tr Displays_MonitorBrightness}" />
+                  <Slider
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="{l:Tr Displays_MonitorBrightness}"
+                    IsSnapToTickEnabled="True"
+                    Maximum="100"
+                    Minimum="0"
+                    TickFrequency="1"
+                    Value="{Binding Level}" />
+                  <TextBlock
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Text="{Binding Level, StringFormat={}{0}%}" />
+                </Grid>
                 <DockPanel Margin="0,8,0,0" Visibility="{Binding NoVibrance, Converter={StaticResource BoolToVisibility}}">
                   <ui:SymbolIcon Margin="0,1,6,0" VerticalAlignment="Top" FontSize="16" Symbol="Info16" />
                   <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Displays_NoVibrance}" />

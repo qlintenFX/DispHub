@@ -55,6 +55,8 @@ public static class ConfigNormalizer
             if (color != profile.Color)
                 fixes.Add($"Adjusted out-of-range values in '{profile.Name}'.");
             profile.Color = color;
+            if (profile.MonitorBrightness is { } level)
+                profile.MonitorBrightness = Math.Clamp(level, 0, 100);
 
             profile.MonitorOverrides = new Dictionary<string, ColorSettings>(
                 (profile.MonitorOverrides ?? []).Where(o => o.Value is not null)

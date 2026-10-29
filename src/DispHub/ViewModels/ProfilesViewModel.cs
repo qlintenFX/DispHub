@@ -495,6 +495,33 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
     [RelayCommand]
     private void UnlockShadowBoost() => upgrade.ShowUpgrade(Loc.Get("Upgrade_ShadowBoost"));
 
+    /// <summary>An external monitor answers over DDC/CI, so profiles can set its own brightness.</summary>
+    [ObservableProperty]
+    public partial bool HasMonitorLevel { get; set; }
+
+    [ObservableProperty]
+    public partial bool CanUseMonitorBrightness { get; set; }
+
+    /// <summary>This profile sets the monitors' own brightness.</summary>
+    [ObservableProperty]
+    public partial bool SetsMonitorBrightness { get; set; }
+
+    [ObservableProperty]
+    public partial int MonitorBrightness { get; set; } = 70;
+
+    [RelayCommand]
+    private void UnlockMonitorBrightness() => upgrade.ShowUpgrade(Loc.Get("Upgrade_MonitorBrightness"));
+
+    partial void OnSetsMonitorBrightnessChanged(bool value) => PushMonitorBrightness();
+
+    partial void OnMonitorBrightnessChanged(int value) => PushMonitorBrightness();
+
+    private void PushMonitorBrightness()
+    {
+        if (!_loading && HasProfile)
+            app.SetProfileMonitorBrightness(_profileId, SetsMonitorBrightness ? MonitorBrightness : null);
+    }
+
     [ObservableProperty]
     public partial string? Hotkey { get; set; }
 
@@ -532,6 +559,11 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             Vibrance = color.Vibrance;
             ShadowBoost = color.ShadowBoost;
             CanUseShadowBoost = app.Features.ShadowBoost;
+            HasMonitorLevel = app.MonitorLevels.Count > 0;
+            CanUseMonitorBrightness = app.Features.MonitorBrightnessInProfiles;
+            SetsMonitorBrightness = profile.MonitorBrightness is not null;
+            // Turned on, the slider starts from where the monitor is now.
+            MonitorBrightness = profile.MonitorBrightness ?? app.MonitorLevels.Values.DefaultIfEmpty(70).First();
             Hotkey = profile.Hotkey;
             HotkeyError = Localize(app.HotkeyFailure(profile.Id));
             OnPropertyChanged(nameof(VibranceSupported));

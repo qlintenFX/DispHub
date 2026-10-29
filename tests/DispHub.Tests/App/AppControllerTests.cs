@@ -355,6 +355,52 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public async Task ProfileMonitorBrightness_IsProAndPutBackOnExit()
+    {
+        using var dir = new TempDirectory();
+        var brightness = new FakeBrightness();
+        using var app = new AppController(new ConfigStore(dir.Path), new FakeColors(), _license, _foreground, NullLogger<AppController>.Instance, brightness: brightness);
+        app.Start(new FakeHotkeys());
+        Profile standard = app.Config.Profiles[0];
+
+        app.SetProfileMonitorBrightness(standard.Id, 40);
+        Assert.Null(standard.MonitorBrightness);
+        Assert.Null(brightness.Last!["m1"]);
+
+        await _license.PurchaseProAsync(0);
+        app.SetProfileMonitorBrightness(standard.Id, 40);
+        Assert.Equal(40, brightness.Last!["m1"]);
+
+        app.SetProfilesOn(false, ChangeSource.Editor);
+        Assert.Null(brightness.Last!["m1"]);
+
+        // On exit m1 is put back; m2 isn't connected, so its level waits for next time.
+        brightness.Report(new Dictionary<string, int> { ["m1"] = 70, ["m2"] = 50 });
+        brightness.LeftAfterRestore = new Dictionary<string, int> { ["m2"] = 50 };
+        app.Shutdown();
+        Assert.True(brightness.Restored);
+        AppConfig saved = new ConfigStore(dir.Path).Load().Config;
+        Assert.Null(saved.Monitors.GetValueOrDefault("m1")?.BrightnessBeforeProfile);
+        Assert.Equal(50, saved.Monitors["m2"].BrightnessBeforeProfile);
+    }
+
+    [Fact]
+    public async Task Duplicate_KeepsEverythingButNameAndHotkey()
+    {
+        await _license.PurchaseProAsync(0);
+        _app.UpdateProfileMonitorColor(Gaming.Id, "m1", new ColorSettings(TemperatureK: 4000));
+        _app.SetProfileMonitorBrightness(Gaming.Id, 80);
+
+        Profile copy = _app.DuplicateProfile(Gaming.Id)!;
+
+        Assert.Equal(Gaming.Color, copy.Color);
+        Assert.Equal(4000, copy.MonitorOverrides["m1"].TemperatureK);
+        Assert.Equal(80, copy.MonitorBrightness);
+        Assert.NotEqual(Gaming.Name, copy.Name);
+        Assert.Null(copy.Hotkey);
+    }
+
+    [Fact]
     public void Shutdown_SavesChangesAndRestoresColours()
     {
         _app.RenameProfile(Gaming.Id, "Competitive");
@@ -401,6 +447,52 @@ public sealed class AppControllerTests : IDisposable
         }
 
         public bool RestoreAll(TimeSpan timeout) => Restored = true;
+
+        public void Dispose()
+        {
+        }
+    }
+
+    internal sealed class FakeBrightness : IMonitorBrightness
+    {
+        public IReadOnlyDictionary<string, int?>? Last { get; private set; }
+        public bool Restored { get; private set; }
+
+        /// <summary>What <see cref="RestoreAll"/> reports is still to put back, like a monitor that isn't connected.</summary>
+        public IReadOnlyDictionary<string, int> LeftAfterRestore { get; set; } = new Dictionary<string, int>();
+
+        public IReadOnlyDictionary<string, int> Levels { get; } = new Dictionary<string, int> { ["m1"] = 60 };
+
+        public event EventHandler<IReadOnlyDictionary<string, int>>? OriginalsChanged;
+
+        /// <summary>Says which levels are waiting to be put back, as the worker does after a change.</summary>
+        public void Report(IReadOnlyDictionary<string, int> originals) => OriginalsChanged?.Invoke(this, originals);
+
+        public event EventHandler? Changed
+        {
+            add { }
+            remove { }
+        }
+
+        public void Start(IReadOnlyDictionary<string, int> originals)
+        {
+        }
+
+        public void Refresh(IReadOnlyList<MonitorInfo> monitors)
+        {
+        }
+
+        public void Apply(IReadOnlyDictionary<string, int?> targets) => Last = targets;
+
+        public void SetLevel(string monitorKey, int percent)
+        {
+        }
+
+        public bool RestoreAll(TimeSpan timeout)
+        {
+            Report(LeftAfterRestore);
+            return Restored = true;
+        }
 
         public void Dispose()
         {

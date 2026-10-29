@@ -40,6 +40,7 @@ You can also build it yourself (below).
 | Feature | Works with |
 | --- | --- |
 | Gamma, contrast, brightness, colour temperature | Any GPU (Windows gamma ramps). Not available while HDR is on. |
+| Monitor brightness (the monitor's own backlight) | External monitors with DDC/CI on, which most have. Laptop screens keep Windows' brightness. |
 | Vibrance | NVIDIA and Intel (including laptop screens on Intel graphics). AMD is in beta: please report how it works for you. |
 
 Windows only allows moderate colour changes by default. For very warm night colours, DispHub can lift that limit

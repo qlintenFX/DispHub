@@ -12,6 +12,7 @@ using DispHub.Core.Model;
 using DispHub.Core.Sharing;
 using DispHub.Localization;
 using DispHub.Platform;
+using DispHub.Platform.Displays;
 using DispHub.Platform.Shell;
 using DispHub.Platform.Store;
 using DispHub.Services;
@@ -194,6 +195,8 @@ public partial class App : Application
         services.AddSingleton<IColorApplier>(sp => new ColorApplier(
             sp.GetRequiredService<IDisplayBackend>(), AppPaths.JournalPath, sp.GetRequiredService<ILogger<ColorApplier>>()));
         services.AddSingleton<IForegroundWatcher, ForegroundWatcher>();
+        services.AddSingleton<IHardwareBrightness, DdcBrightness>();
+        services.AddSingleton<IMonitorBrightness, MonitorBrightness>();
         if (fresh)
             services.AddSingleton<IAutostart, TrialAutostart>();
         else

@@ -474,6 +474,62 @@
           Style="{StaticResource Hint}"
           Text="{Binding VibranceHelp}" />
 
+        <!-- The external monitor's own backlight (DDC/CI, Pro); off leaves it where it is. -->
+        <StackPanel Visibility="{Binding HasMonitorLevel, Converter={StaticResource BoolToVisibility}}">
+          <Separator Margin="0,12" />
+          <Grid Style="{StaticResource SliderRow}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="170" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="64" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Desktop24" />
+              <TextBlock Text="{l:Tr Profiles_MonitorBrightness}" />
+            </StackPanel>
+            <ui:ToggleSwitch
+              Grid.Column="1"
+              Margin="0,0,12,0"
+              VerticalAlignment="Center"
+              AutomationProperties.Name="{l:Tr Profiles_MonitorBrightness}"
+              IsChecked="{Binding SetsMonitorBrightness}"
+              IsEnabled="{Binding CanUseMonitorBrightness}" />
+            <Slider
+              Grid.Column="2"
+              AutomationProperties.Name="{l:Tr Profiles_MonitorBrightness}"
+              IsEnabled="{Binding CanUseMonitorBrightness}"
+              IsSnapToTickEnabled="True"
+              Maximum="100"
+              Minimum="0"
+              TickFrequency="1"
+              Value="{Binding MonitorBrightness}"
+              Visibility="{Binding SetsMonitorBrightness, Converter={StaticResource BoolToVisibility}}" />
+            <TextBlock
+              Grid.Column="2"
+              VerticalAlignment="Center"
+              Style="{StaticResource Hint}"
+              Text="{l:Tr Profiles_MonitorBrightnessOff}"
+              Visibility="{Binding SetsMonitorBrightness, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+            <TextBlock
+              Grid.Column="3"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Text="{Binding MonitorBrightness, StringFormat={}{0}%}"
+              Visibility="{Binding SetsMonitorBrightness, Converter={StaticResource BoolToVisibility}}" />
+            <ui:Button
+              Grid.Column="3"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Appearance="Transparent"
+              AutomationProperties.Name="{l:Tr Profiles_MonitorBrightnessPro}"
+              Command="{Binding UnlockMonitorBrightnessCommand}"
+              Icon="{ui:SymbolIcon LockClosed24}"
+              ToolTip="{l:Tr Profiles_MonitorBrightnessPro}"
+              Visibility="{Binding CanUseMonitorBrightness, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+          </Grid>
+        </StackPanel>
+
         <Separator Margin="0,12" />
 
         <Grid>
