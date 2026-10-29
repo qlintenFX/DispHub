@@ -106,6 +106,8 @@ public sealed class SimulatedBrightness(IHardwareBrightness real, SimulatedMonit
         simulated.Level = percent;
         return true;
     }
+
+    public IDisposable? WatchChanges(Action changed) => real.WatchChanges(changed);
 }
 
 /// <summary>Real refresh rates and HDR, plus the simulated monitor's.</summary>

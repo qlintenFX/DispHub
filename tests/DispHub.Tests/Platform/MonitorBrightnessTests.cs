@@ -109,6 +109,40 @@ public sealed class MonitorBrightnessTests : IDisposable
         Assert.Null(_originals); // nothing to put back: the change was by hand
     }
 
+    [Fact]
+    public void AChangeByHand_StaysUntilTheProfileChanges()
+    {
+        Start();
+        var game = new Dictionary<string, int?> { [External.Key] = 30 };
+        _brightness.Apply(game);
+        WaitFor(() => ExternalLevel == 30);
+
+        // The monitor's own buttons, then DispHub reads it again.
+        _hardware.Levels[External.DeviceName] = 70;
+        _brightness.Reread();
+        WaitFor(() => _brightness.Levels[External.Key] == 70);
+
+        _brightness.Apply(new Dictionary<string, int?>(game));
+        Thread.Sleep(200);
+        Assert.Equal(70, ExternalLevel);
+
+        _brightness.Apply(new Dictionary<string, int?> { [External.Key] = 40 });
+        WaitFor(() => ExternalLevel == 40);
+    }
+
+    [Fact]
+    public void ALaptopScreen_ReportsItsChanges()
+    {
+        Start();
+        WaitFor(() => _hardware.Watching is not null);
+
+        // Its brightness keys.
+        _hardware.Levels[Laptop.DeviceName] = 35;
+        _hardware.Watching!();
+
+        WaitFor(() => _brightness.Levels[Laptop.Key] == 35);
+    }
+
     private static void WaitFor(Func<bool> condition) =>
         Assert.True(SpinWait.SpinUntil(condition, Wait), "timed out waiting for the brightness thread");
 
@@ -119,12 +153,20 @@ public sealed class MonitorBrightnessTests : IDisposable
         public HardwareLevel? ReadLevel(MonitorInfo monitor) =>
             Levels.TryGetValue(monitor.DeviceName, out int level) ? new HardwareLevel(level, 100) : null;
 
+        public volatile Action? Watching;
+
         public bool WriteLevel(MonitorInfo monitor, int percent)
         {
             if (!Levels.ContainsKey(monitor.DeviceName))
                 return false;
             Levels[monitor.DeviceName] = percent;
             return true;
+        }
+
+        public IDisposable? WatchChanges(Action changed)
+        {
+            Watching = changed;
+            return null;
         }
     }
 }

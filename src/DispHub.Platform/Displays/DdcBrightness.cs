@@ -26,6 +26,12 @@ public interface IHardwareBrightness
     HardwareLevel? ReadLevel(MonitorInfo monitor);
 
     bool WriteLevel(MonitorInfo monitor, int percent);
+
+    /// <summary>
+    /// Calls <paramref name="changed"/> whenever a screen's level changes, also outside DispHub (brightness keys,
+    /// Windows' slider), until the result is disposed. Null when the screens can't tell, as DDC/CI monitors can't.
+    /// </summary>
+    IDisposable? WatchChanges(Action changed) => null;
 }
 
 /// <summary>A laptop's own screen through Windows (WMI), other monitors over DDC/CI.</summary>
@@ -39,6 +45,8 @@ public sealed class HardwareBrightness : IHardwareBrightness
 
     public bool WriteLevel(MonitorInfo monitor, int percent) =>
         monitor.IsInternal ? _panel.WriteLevel(monitor, percent) : _monitors.WriteLevel(monitor, percent);
+
+    public IDisposable? WatchChanges(Action changed) => _panel.WatchChanges(changed);
 }
 
 /// <summary>
