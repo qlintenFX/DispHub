@@ -98,7 +98,12 @@ public sealed class AppController : IDisposable
         }
         if (_modes is not null)
         {
-            _modes.Changed += (_, _) => _dispatcher.BeginInvoke(() => ModeAbilitiesChanged?.Invoke(this, EventArgs.Empty));
+            // Raised after a switch too: the colour thread looks at the displays again, as HDR pauses gamma changes.
+            _modes.Changed += (_, _) => _dispatcher.BeginInvoke(() =>
+            {
+                _colors.RefreshDisplays();
+                ModeAbilitiesChanged?.Invoke(this, EventArgs.Empty);
+            });
             _modes.OriginalsChanged += (_, originals) => _dispatcher.BeginInvoke(() => KeepOriginalModes(originals));
         }
         _foreground.Changed += (_, _) => _dispatcher.BeginInvoke(OnForegroundChanged);

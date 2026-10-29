@@ -606,10 +606,18 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
         HasHdrChoice = app.ModeAbilities.Values.Any(a => a.Hdr);
         HasMonitorSection = HasMonitorLevel || HasRefreshChoice || HasHdrChoice;
         CanUseDisplayModes = app.Features.DisplayModes;
-        RefreshOptions.Clear();
-        RefreshOptions.Add(new RefreshOption(RefreshChoice.Unchanged, Loc.Get("Profiles_Unchanged")));
-        RefreshOptions.Add(Option(RefreshChoice.Highest, "Profiles_RefreshHighest", rates));
-        RefreshOptions.Add(Option(RefreshChoice.Lowest, "Profiles_RefreshLowest", rates));
+        RefreshOption[] options =
+        [
+            new(RefreshChoice.Unchanged, Loc.Get("Profiles_Unchanged")),
+            Option(RefreshChoice.Highest, "Profiles_RefreshHighest", rates),
+            Option(RefreshChoice.Lowest, "Profiles_RefreshLowest", rates),
+        ];
+        if (!RefreshOptions.SequenceEqual(options))
+        {
+            RefreshOptions.Clear();
+            foreach (RefreshOption option in options)
+                RefreshOptions.Add(option);
+        }
         SelectedRefresh = RefreshOptions.First(o => o.Choice == profile.RefreshRate);
         SelectedHdr = HdrOptions.First(o => o.On == profile.Hdr);
     }
