@@ -34,7 +34,9 @@
   --r-ctl: 4px;
   --r-card: 8px;
   --shadow-flyout: 0 8px 16px rgba(0, 0, 0, 0.32);
-  --shadow-window: 0 32px 64px rgba(0, 0, 0, 0.42), 0 2px 21px rgba(0, 0, 0, 0.36);
+  /* screenshots: a dark grey edge and a soft shadow under them, as FluentFlyout's site shows its own */
+  --image-border: 1px solid #1e2939;
+  --shadow-image: 0 20px 25px -5px rgba(2, 6, 24, 0.3), 0 8px 10px -6px rgba(2, 6, 24, 0.3);
 
   /* Fluent motion */
   --ease: cubic-bezier(0, 0, 0, 1);
@@ -523,8 +525,8 @@ h2 {
 .win {
   width: 100%;
   border-radius: var(--r-card);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--shadow-window);
+  border: var(--image-border);
+  box-shadow: var(--shadow-image);
 }
 
 .mini {
@@ -533,8 +535,8 @@ h2 {
   aspect-ratio: 16 / 10;
   border-radius: var(--r-card);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--shadow-window);
+  border: var(--image-border);
+  box-shadow: var(--shadow-image);
 }
 
 .mini img {
