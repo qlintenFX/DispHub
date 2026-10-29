@@ -6,6 +6,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:l="clr-namespace:DispHub.Localization"
+  xmlns:store="clr-namespace:DispHub.Platform.Store;assembly=DispHub.Platform"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
   d:DataContext="{d:DesignInstance Type=vm:AboutViewModel}"
@@ -48,6 +49,37 @@
         <TextBlock Margin="0,10,0,0" FontStyle="Italic" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{l:Tr About_NoteSignature}" />
       </StackPanel>
     </Border>
+    <!-- Store consumables at the Store's local prices; a one-off thank you that unlocks nothing. -->
+    <ctl:SettingsCard
+      Description="{l:Tr About_TipHint}"
+      Header="{l:Tr About_Tip}"
+      Icon="Heart24"
+      Visibility="{Binding HasTips, Converter={StaticResource BoolToVisibility}}">
+      <StackPanel Orientation="Horizontal">
+        <TextBlock
+          Margin="0,0,12,0"
+          VerticalAlignment="Center"
+          Style="{StaticResource Hint}"
+          Text="{l:Tr About_TipThanks}"
+          Visibility="{Binding Thanked, Converter={StaticResource BoolToVisibility}}" />
+        <ItemsControl ItemsSource="{Binding Tips}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type store:TipOption}">
+              <ui:Button
+                Margin="8,0,0,0"
+                Command="{Binding DataContext.TipCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                CommandParameter="{Binding}"
+                Content="{Binding Price}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ctl:SettingsCard>
 
     <ctl:SectionHeader Text="{l:Tr About_Credits}" />
     <ctl:SettingsCard Description="{l:Tr About_FluentFlyoutHint}" Header="{l:Tr About_FluentFlyout}">

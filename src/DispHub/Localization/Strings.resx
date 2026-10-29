@@ -85,6 +85,15 @@
   <data name="About_SourceCode" xml:space="preserve">
     <value>Source code</value>
   </data>
+  <data name="About_Tip" xml:space="preserve">
+    <value>Leave a tip</value>
+  </data>
+  <data name="About_TipHint" xml:space="preserve">
+    <value>A one-off thank you that helps keep DispHub going. It doesn't change what's included.</value>
+  </data>
+  <data name="About_TipThanks" xml:space="preserve">
+    <value>Thank you</value>
+  </data>
   <data name="About_Version" xml:space="preserve">
     <value>Version</value>
   </data>
