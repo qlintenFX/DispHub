@@ -22,6 +22,18 @@
   WindowStartupLocation="Manual"
   mc:Ignorable="d">
   <Window.Resources>
+    <!-- Minimise, maximise and close light up as rounded buttons, the size of the power button beside them. -->
+    <Style BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="ui:TitleBarButton">
+      <Setter Property="Height" Value="48" />
+      <Setter Property="Clip">
+        <Setter.Value>
+          <RectangleGeometry
+            RadiusX="4"
+            RadiusY="4"
+            Rect="2,8,40,32" />
+        </Setter.Value>
+      </Setter>
+    </Style>
     <DataTemplate x:Key="NavEntry" DataType="{x:Type vm:PageViewModel}">
       <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
         <StackPanel.Style>
