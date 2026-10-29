@@ -89,11 +89,10 @@
     }, 1600);
   }));
 
-  // the library: a picture the visitor picks, shown through every look with the app's colour maths (RampBuilder,
-  // Blackbody and the preview's vibrance), drawn here in the browser so it never leaves their PC
-  const library = $(".library");
-  const picker = $("[data-picture]");
-  if (library && picker) {
+  // the library: the chosen look drawn on one picture with the app's colour maths (RampBuilder, Blackbody and the
+  // preview's vibrance), in the browser, so a picture the visitor picks never leaves their PC
+  const stage = $("[data-stage]");
+  if (stage) {
     const linear = (t) => {
       const t2 = t * t, t3 = t2 * t;
       const x = t <= 4000
@@ -138,70 +137,73 @@
       }
       return tables;
     };
-    const lookOf = (href) => {
-      const q = new URL(href).searchParams;
+    const lookOf = (li) => {
+      const q = new URL($("a[data-add]", li).href).searchParams;
       const n = (key, fallback) => (q.has(key) ? Number(q.get(key)) : fallback);
       return { b: n("b", 0), c: n("c", 0), g: n("g", 1), t: n("t", 6500), v: n("v", 50) };
     };
 
-    const W = 480, H = 120;
-    const show = (file) => {
-      if (!file || !file.type.startsWith("image/")) return;
-      const url = URL.createObjectURL(file);
+    const rows = $$(".library li");
+    const ctx = stage.getContext("2d");
+    let pixels = null;
+    let chosen = rows.find((li) => li.getAttribute("aria-current") === "true") || rows[0];
+
+    const draw = () => {
+      if (!pixels) return;
+      const look = lookOf(chosen);
+      const [red, green, blue] = ramps(look);
+      const saturation = look.v / 50;
+      const out = ctx.createImageData(stage.width, stage.height);
+      const d = out.data;
+      const clamp = (v) => Math.min(Math.max(Math.round(v), 0), 255);
+      for (let i = 0; i < pixels.length; i += 4) {
+        let r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+        if (saturation !== 1) {
+          const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          r = luma + (r - luma) * saturation;
+          g = luma + (g - luma) * saturation;
+          b = luma + (b - luma) * saturation;
+        }
+        d[i] = red[clamp(r)];
+        d[i + 1] = green[clamp(g)];
+        d[i + 2] = blue[clamp(b)];
+        d[i + 3] = 255;
+      }
+      ctx.putImageData(out, 0, 0);
+    };
+
+    // cover the stage, keeping the middle of the picture
+    const use = (src, revoke) => {
       const img = new Image();
       img.onload = () => {
-        // cover the strip, keeping the middle of the picture
-        const source = document.createElement("canvas");
-        source.width = W;
-        source.height = H;
-        const ctx = source.getContext("2d");
-        const scale = Math.max(W / img.width, H / img.height);
+        const scale = Math.max(stage.width / img.width, stage.height / img.height);
         const w = img.width * scale, h = img.height * scale;
-        ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
-        URL.revokeObjectURL(url);
-        const pixels = ctx.getImageData(0, 0, W, H).data;
-
-        $$("li", library).forEach((li) => {
-          const look = lookOf($("a[data-add]", li).href);
-          const [red, green, blue] = ramps(look);
-          const saturation = look.v / 50;
-          let canvas = $("canvas", li);
-          if (!canvas) {
-            canvas = document.createElement("canvas");
-            canvas.width = W;
-            canvas.height = H;
-            canvas.setAttribute("aria-hidden", "true");
-            li.prepend(canvas);
-          }
-          const out = canvas.getContext("2d").createImageData(W, H);
-          const d = out.data;
-          for (let i = 0; i < pixels.length; i += 4) {
-            let r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
-            if (saturation !== 1) {
-              const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-              r = luma + (r - luma) * saturation;
-              g = luma + (g - luma) * saturation;
-              b = luma + (b - luma) * saturation;
-            }
-            const clamp = (v) => Math.min(Math.max(Math.round(v), 0), 255);
-            d[i] = red[clamp(r)];
-            d[i + 1] = green[clamp(g)];
-            d[i + 2] = blue[clamp(b)];
-            d[i + 3] = 255;
-          }
-          canvas.getContext("2d").putImageData(out, 0, 0);
-        });
-        library.classList.add("has-picture");
+        ctx.drawImage(img, (stage.width - w) / 2, (stage.height - h) / 2, w, h);
+        if (revoke) URL.revokeObjectURL(src);
+        pixels = ctx.getImageData(0, 0, stage.width, stage.height).data;
+        draw();
       };
-      img.src = url;
+      img.src = src;
     };
-    picker.addEventListener("change", () => show(picker.files[0]));
+    const useFile = (file) => {
+      if (file && file.type.startsWith("image/")) use(URL.createObjectURL(file), true);
+    };
+
+    rows.forEach((li) => $(".pick", li).addEventListener("click", () => {
+      rows.forEach((r) => r.removeAttribute("aria-current"));
+      li.setAttribute("aria-current", "true");
+      chosen = li;
+      draw();
+    }));
+    const picker = $("[data-picture]");
+    picker.addEventListener("change", () => useFile(picker.files[0]));
     // a picture dropped anywhere on the page works too
     document.addEventListener("dragover", (e) => e.preventDefault());
     document.addEventListener("drop", (e) => {
       e.preventDefault();
-      show(e.dataTransfer.files[0]);
+      useFile(e.dataTransfer.files[0]);
     });
+    use("../assets/img/look-base.webp", false);
   }
 
   // the live quick panel: the photo uses the looks the app's colour ramps produce

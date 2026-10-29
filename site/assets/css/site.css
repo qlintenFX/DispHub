@@ -1124,9 +1124,50 @@ pre.code {
 
 /* ---------- profiles page ---------- */
 
-.library {
+.looks {
   max-width: 900px;
+}
+
+.stage {
+  margin: 0;
+}
+
+/* short enough that the list shows below it, so a pick and its look are on screen together */
+.stage canvas {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: min(46vh, 450px);
+  aspect-ratio: 2 / 1;
   margin: 0 auto;
+  border-radius: var(--r-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-window);
+  background: var(--card);
+}
+
+.stage figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  justify-content: center;
+  margin-top: 14px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+.stage label {
+  cursor: pointer;
+}
+
+.stage label:focus-within {
+  outline: 2px solid var(--text-1);
+  outline-offset: 2px;
+}
+
+.library {
+  margin: 28px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -1134,9 +1175,9 @@ pre.code {
 .library li {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 20px;
+  gap: 16px;
   align-items: center;
-  padding: 18px 0;
+  padding: 6px 0;
   border-top: 1px solid var(--divider);
 }
 
@@ -1144,82 +1185,86 @@ pre.code {
   border-bottom: 1px solid var(--divider);
 }
 
-/* once the visitor picks a picture, each look shows on it */
-.library.has-picture li {
-  grid-template-columns: 240px 1fr auto;
-}
-
-.library canvas {
+/* the row picks the look; the button beside it adds it */
+.library .pick {
   display: block;
-  width: 240px;
-  height: 60px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px 10px 16px;
+  border: 0;
   border-radius: var(--r-ctl);
-}
-
-.try {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 16px;
-  max-width: 900px;
-  margin: 0 auto 24px;
-  color: var(--text-3);
-  font-size: 14px;
-}
-
-.try label {
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
+  position: relative;
 }
 
-.try label:focus-within {
-  outline: 2px solid var(--text-1);
-  outline-offset: 2px;
+.library .pick:hover {
+  background: var(--ctl);
 }
 
-.library h2 {
-  font-size: 18px;
-  line-height: 24px;
+.library li[aria-current="true"] .pick {
+  background: var(--card);
 }
 
-.library p {
-  margin: 2px 0 0;
+.library li[aria-current="true"] .pick::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: translateY(-50%);
+}
+
+.library .name,
+.library .line,
+.library .values {
+  display: block;
+}
+
+.library .name {
+  font: 600 18px/24px var(--font-display);
+  color: var(--text-1);
+}
+
+.library .line {
+  margin-top: 2px;
   color: var(--text-2);
   font-size: 14px;
 }
 
 .library .values {
+  margin-top: 2px;
   color: var(--text-3);
   font-size: 13px;
 }
 
-.feature-copy .more {
-  display: inline-block;
-  margin-top: 18px;
-  font-weight: 600;
-}
-
 .library-foot {
-  max-width: 900px;
-  margin: 24px auto 0;
+  margin: 24px 0 0;
   color: var(--text-2);
   font-size: 14px;
 }
 
 @media (max-width: 680px) {
-  .library li,
-  .library.has-picture li {
+  .library li {
     grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .library canvas {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 1;
+    gap: 4px;
+    padding-bottom: 14px;
   }
 
   .library .btn {
     justify-self: start;
+    margin-left: 16px;
+  }
+
+  .stage canvas {
+    width: 100%;
+    height: auto;
   }
 }
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Profiles for DispHub</title>
-  <meta name="description" content="Ready-made colour profiles for DispHub: vivid, shadow detail, film, reading, evening, night and more. Add one in a click.">
+  <meta name="description" content="Ready-made colour profiles for DispHub, from night vision for dark games to a warm late-night look. Add one in a click.">
   <meta name="theme-color" content="#070a12">
   <link rel="canonical" href="https://qlintenfx.github.io/DispHub/profiles/">
   <link rel="icon" href="../assets/img/favicon-32.png" sizes="32x32">
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DispHub">
   <meta property="og:title" content="Profiles for DispHub">
-  <meta property="og:description" content="Ready-made looks. Add one to DispHub in a click.">
+  <meta property="og:description" content="A few looks to start from. Add one to DispHub in a click.">
   <meta property="og:url" content="https://qlintenfx.github.io/DispHub/profiles/">
   <meta property="og:image" content="https://qlintenfx.github.io/DispHub/assets/img/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -50,52 +50,44 @@
   <main id="main">
     <div class="page-head wrap" data-reveal>
       <h1>Profiles</h1>
-      <p>Ready-made looks. Add one to DispHub in a click.</p>
+      <p>A few looks to start from. Add one to DispHub in a click.</p>
     </div>
 
-    <!-- Links are the app's share links. A picture the visitor picks is shown through each look with DispHub's own
-         colour maths, in the browser: it never leaves their PC. -->
-    <div class="wrap">
-      <div class="try" data-reveal>
-        <label class="btn btn-accent"><input type="file" accept="image/*" data-picture hidden><svg><use href="#i-image"/></svg>Try them on your picture</label>
-        <span>A screenshot of your game works best. It stays on your PC.</span>
-      </div>
-      <ul class="library" data-reveal>
-        <li>
-          <div><h2>Vivid</h2><p>Richer colour for photos, videos and games.</p><p class="values">Contrast +4 · Vibrance 70%</p></div>
-          <a class="btn" href="disphub://preset?name=Vivid&amp;c=4&amp;v=70" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
+    <!-- One picture, shown through the chosen look with DispHub's own colour maths, in the browser: a picture the
+         visitor picks never leaves their PC. The links are the app's share links. -->
+    <div class="wrap looks" data-reveal>
+      <figure class="stage">
+        <canvas width="960" height="480" data-stage role="img" aria-label="The picture with the chosen look"></canvas>
+        <figcaption>
+          <label class="btn"><input type="file" accept="image/*" data-picture hidden><svg><use href="#i-image"/></svg>Use your own picture</label>
+          <span>A screenshot of your game works best. It stays on your PC.</span>
+        </figcaption>
+      </figure>
+
+      <ul class="library">
+        <li data-look="night-vision" aria-current="true">
+          <button type="button" class="pick"><span class="name">Night vision</span><span class="line">See into dark corners and at night in games.</span><span class="values">Gamma 2.80 · Contrast +20 · Vibrance 65%</span></button>
+          <a class="btn" href="disphub://preset?name=Night%20vision&amp;c=20&amp;g=2.8&amp;v=65" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
         </li>
-        <li>
-          <div><h2>Shadow detail</h2><p>Lifts dark areas so detail in shadows is easier to see.</p><p class="values">Brightness +6 · Gamma 1.20</p></div>
-          <a class="btn" href="disphub://preset?name=Shadow%20detail&amp;b=6&amp;g=1.2" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
+        <li data-look="competitive">
+          <button type="button" class="pick"><span class="name">Competitive</span><span class="line">Brighter shadows and strong colour for fast games.</span><span class="values">Contrast +8 · Gamma 1.40 · Vibrance 80%</span></button>
+          <a class="btn" href="disphub://preset?name=Competitive&amp;c=8&amp;g=1.4&amp;v=80" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
         </li>
-        <li>
-          <div><h2>Competitive</h2><p>Brighter shadows and stronger colour for fast games.</p><p class="values">Brightness +4 · Contrast +4 · Gamma 1.25 · Vibrance 75%</p></div>
-          <a class="btn" href="disphub://preset?name=Competitive&amp;b=4&amp;c=4&amp;g=1.25&amp;v=75" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
+        <li data-look="film">
+          <button type="button" class="pick"><span class="name">Film</span><span class="line">Deeper blacks for films and series.</span><span class="values">Brightness −6 · Contrast +12 · Gamma 0.90 · Vibrance 55%</span></button>
+          <a class="btn" href="disphub://preset?name=Film&amp;b=-6&amp;c=12&amp;g=0.9&amp;v=55" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
         </li>
-        <li>
-          <div><h2>Film</h2><p>Deeper blacks and a little more contrast for films and series.</p><p class="values">Brightness −5 · Contrast +8 · Gamma 0.95 · Vibrance 55%</p></div>
-          <a class="btn" href="disphub://preset?name=Film&amp;b=-5&amp;c=8&amp;g=0.95&amp;v=55" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
+        <li data-look="late-night">
+          <button type="button" class="pick"><span class="name">Late night</span><span class="line">Warm and low, easier on the eyes after dark.</span><span class="values">3600 K · Brightness −12</span></button>
+          <a class="btn" href="disphub://preset?name=Late%20night&amp;b=-12&amp;t=3600" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
         </li>
-        <li>
-          <div><h2>Reading</h2><p>Softer and a little warmer for long reads.</p><p class="values">5400 K · Brightness −6 · Contrast −4</p></div>
-          <a class="btn" href="disphub://preset?name=Reading&amp;b=-6&amp;c=-4&amp;t=5400" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
-        </li>
-        <li>
-          <div><h2>Evening</h2><p>Warmer, gentler light after sunset.</p><p class="values">4200 K · Brightness −8</p></div>
-          <a class="btn" href="disphub://preset?name=Evening&amp;b=-8&amp;t=4200" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
-        </li>
-        <li>
-          <div><h2>Night</h2><p>Warm and low for late at night.</p><p class="values">3600 K · Brightness −12</p></div>
-          <a class="btn" href="disphub://preset?name=Night&amp;b=-12&amp;t=3600" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
-        </li>
-        <li>
-          <div><h2>Dim room</h2><p>Darker than your monitor's lowest brightness setting.</p><p class="values">5000 K · Brightness −30</p></div>
+        <li data-look="dim-room">
+          <button type="button" class="pick"><span class="name">Dim room</span><span class="line">Darker than your monitor's lowest setting.</span><span class="values">5000 K · Brightness −30</span></button>
           <a class="btn" href="disphub://preset?name=Dim%20room&amp;b=-30&amp;t=5000" data-add><svg><use href="#i-add"/></svg>Add to DispHub</a>
         </li>
       </ul>
 
-      <p class="library-foot" data-reveal>Made your own? Share it as a link from DispHub. Don't have DispHub yet? <a href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct">Get it free from the Microsoft Store</a>.</p>
+      <p class="library-foot">Made your own? Share it as a link from DispHub. Don't have DispHub yet? <a href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct">Get it free from the Microsoft Store</a>.</p>
     </div>
   </main>
 
