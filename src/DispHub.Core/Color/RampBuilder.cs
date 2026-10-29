@@ -43,13 +43,12 @@ public static class RampBuilder
     }
 
     /// <summary>
-    /// Brightens dark tones and leaves the rest alone, like a monitor's black equaliser: black stays black, the lift
-    /// peaks a seventh of the way up (by a ninth of full scale at <paramref name="amount"/> 1) and is gone by the
-    /// mid-tones. No part of the curve gets flatter than about 60 % of its slope, so the picture keeps its contrast
-    /// instead of going grey.
+    /// Brightens only the darkest tones, as monitors' black equalisers do: black stays black, the lift peaks 8 % of
+    /// the way up (by 8 % of full scale at <paramref name="amount"/> 1) and is gone by 40 %, so mid-tones and
+    /// highlights keep their contrast. Near black the gain stays under 4 times, so noise and banding stay small.
     /// </summary>
     public static double LiftShadows(double y, double amount) =>
-        amount <= 0 ? y : y + (amount * 2 * y * Math.Pow(1 - y, 6));
+        amount <= 0 ? y : y + (amount * 2.8 * y * Math.Pow(1 - y, 12));
 
     /// <summary>
     /// Returns <paramref name="target"/> if it is within <paramref name="limits"/>, otherwise the closest

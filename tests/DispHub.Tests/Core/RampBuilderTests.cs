@@ -168,19 +168,21 @@ public sealed class RampBuilderTests
         GammaRamp ramp = RampBuilder.Build(new ColorSettings(ShadowBoost: 100));
 
         Assert.Equal(0, ramp.Red[0]); // black stays black
-        Assert.True(ramp.Red[40] > 40 * 257 * 1.5, "dark greys are lifted a lot");
-        Assert.True(ramp.Red[180] < (180 * 257) + 600, "mid-tones and highlights barely move");
+        Assert.True(ramp.Red[13] > 13 * 257 * 2, "near-black is lifted a lot");
+        Assert.True(ramp.Red[102] < (102 * 257) + 700, "from 40 % up, tones barely move");
         Assert.Equal(ushort.MaxValue, ramp.Red[255]);
     }
 
     [Fact]
-    public void ShadowBoost_KeepsContrast_SoThePictureDoesNotGoGrey()
+    public void ShadowBoost_KeepsDetailInTheShadows()
     {
         GammaRamp ramp = RampBuilder.Build(new ColorSettings(ShadowBoost: 100));
 
-        // Over every eight steps the curve rises by at least 60 % of what it does unchanged.
+        // Near black the gain is capped, so noise and banding aren't blown up.
+        Assert.True(ramp.Red[1] - ramp.Red[0] < 4 * 257);
+        // Every eight steps still rise by at least half of what they do unchanged, so dark details stay apart.
         for (int i = 8; i < GammaRamp.Size; i++)
-            Assert.True(ramp.Red[i] - ramp.Red[i - 8] >= 0.6 * 8 * 257, $"flat at step {i}");
+            Assert.True(ramp.Red[i] - ramp.Red[i - 8] >= 0.5 * 8 * 257, $"flat at step {i}");
     }
 
     [Theory]
