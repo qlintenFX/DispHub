@@ -43,6 +43,10 @@ GetDeviceGammaRamp
 
 // Hotkeys and window messages
 RegisterHotKey
+GetKeyboardLayoutList
+MapVirtualKeyEx
+ToUnicodeEx
+VIRTUAL_KEY
 UnregisterHotKey
 RegisterWindowMessage
 WTSRegisterSessionNotification

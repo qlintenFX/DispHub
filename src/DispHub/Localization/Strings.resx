@@ -160,6 +160,9 @@
   <data name="Hotkey_Refused" xml:space="preserve">
     <value>Windows refused this hotkey</value>
   </data>
+  <data name="Hotkey_TypesCharacter" xml:space="preserve">
+    <value>Your keyboard types ‘{0}’ with this (AltGr), so pick another</value>
+  </data>
   <data name="Nav_About" xml:space="preserve">
     <value>About</value>
   </data>

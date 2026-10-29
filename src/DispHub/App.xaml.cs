@@ -69,6 +69,7 @@ public partial class App : Application
             typeof(FrameworkElement),
             new FrameworkPropertyMetadata(System.Windows.Markup.XmlLanguage.GetLanguage(Loc.Culture.IetfLanguageTag)));
         DefaultConfig.Names = (Loc.Get("Default_Standard"), Loc.Get("Default_Gaming"), Loc.Get("Default_Night"));
+        DefaultConfig.TypesCharacter = gesture => KeyboardTyping.Character(gesture) is not null;
 
         try
         {
