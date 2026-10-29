@@ -15,6 +15,11 @@ dotnet run --project src/DispHub -- --fresh             # first run as a new use
 pwsh build/package-msix.ps1                   # MSIX for the Store; see the script header
 ```
 
+To try what this PC doesn't have: `--simulate-windows10` (no window materials, Windows 10's HDR calls),
+`--simulate-monitor` (a second, external monitor with DDC/CI brightness, 60/100/144 Hz and HDR, which only exists in
+DispHub) and `--simulate-battery` (runs as if on battery). They combine with each other and with `--fresh`.
+`.github/workflows/smoke.yml` starts the app on Windows Server 2022 (Windows 10's code base) and keeps screenshots.
+
 `DispHub.exe --diagnose` sweeps gamma ramps on every monitor and writes a hardware report to the logs folder.
 `DispHub.exe --exit` asks the running instance to restore colours and quit. `--walkthrough` shows the first-run
 walkthrough again and `--tour` starts the guided tour, both keeping your settings. `--fresh` quits the running DispHub

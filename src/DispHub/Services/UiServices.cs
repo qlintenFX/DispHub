@@ -133,6 +133,15 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
 /// </remarks>
 public sealed class ThemeService
 {
+    /// <summary>
+    /// Windows can draw materials (Mica, acrylic) behind windows: Windows 11 22H2 and later. Elsewhere windows get a
+    /// plain background, and the settings for materials are hidden.
+    /// </summary>
+    public static bool HasMaterials { get; set; } = OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621);
+
+    /// <summary>For the settings that only matter with materials; read once, when a page is made.</summary>
+    public static Visibility MaterialsVisibility => HasMaterials ? Visibility.Visible : Visibility.Collapsed;
+
     private readonly List<FluentWindow> _windows = [];
     private readonly HashSet<FluentWindow> _flyouts = [];
     private readonly ILicenseService _license;
@@ -252,8 +261,8 @@ public sealed class ThemeService
             return;
         ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
 
-        // Materials need Windows 11 22H2; high contrast always gets a plain background.
-        WindowBackdrop backdrop = theme == ApplicationTheme.HighContrast || !OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621)
+        // High contrast always gets a plain background.
+        WindowBackdrop backdrop = theme == ApplicationTheme.HighContrast || !HasMaterials
             ? WindowBackdrop.Solid
             : _ui.Backdrop;
         bool dark = theme == ApplicationTheme.Dark;

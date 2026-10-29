@@ -5,6 +5,7 @@
   xmlns:ctl="clr-namespace:DispHub.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:svc="clr-namespace:DispHub.Services"
   xmlns:l="clr-namespace:DispHub.Localization"
   xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
   xmlns:vm="clr-namespace:DispHub.ViewModels"
@@ -137,7 +138,8 @@
     <ctl:SettingsCard
       Description="{l:Tr Settings_BackdropHint}"
       Header="{l:Tr Settings_Backdrop}"
-      Icon="WindowApps24">
+      Icon="WindowApps24"
+      Visibility="{x:Static svc:ThemeService.MaterialsVisibility}">
       <ComboBox
         ItemTemplate="{StaticResource EnumItem}"
         ItemsSource="{Binding Backdrops}"
@@ -146,7 +148,8 @@
     <ctl:SettingsCard
       Description="{l:Tr Settings_PanelOpacityHint}"
       Header="{l:Tr Settings_PanelOpacity}"
-      Icon="Blur24">
+      Icon="Blur24"
+      Visibility="{x:Static svc:ThemeService.MaterialsVisibility}">
       <StackPanel Orientation="Horizontal">
         <Border
           Margin="0,0,12,0"

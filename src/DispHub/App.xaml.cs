@@ -47,6 +47,12 @@ public partial class App : Application
     /// <summary>Opens DispHub with the guided tour.</summary>
     private const string TourArgument = "--tour";
 
+    // For trying what this PC doesn't have: Windows 10, a second monitor with DDC/CI, refresh rates and HDR, a battery.
+    private const string SimulateWindows10Argument = "--simulate-windows10";
+    private const string SimulateMonitorArgument = "--simulate-monitor";
+    private const string SimulateBatteryArgument = "--simulate-battery";
+    private bool _simulateBattery;
+
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -108,6 +114,12 @@ public partial class App : Application
         }
 
         ComboBoxClickFix.Register();
+        if (Has(args, SimulateWindows10Argument))
+        {
+            ThemeService.HasMaterials = false;
+            DisplayModes.OlderWindows = true;
+        }
+        _simulateBattery = Has(args, SimulateBatteryArgument);
         _services = ConfigureServices(args, _fresh);
         _logger = _services.GetRequiredService<ILogger<App>>();
         _logger.LogInformation("DispHub {Version} starting (packaged: {Packaged}, fresh: {Fresh})", AboutViewModel.Version, PackageInfo.IsPackaged, _fresh);
@@ -143,7 +155,7 @@ public partial class App : Application
         _router.DisplayChanged += (_, _) => _controller.OnDisplayChanged();
         _router.Resumed += (_, _) => Dispatcher.BeginInvoke(_controller.OnResumed, DispatcherPriority.Background);
         _router.SessionUnlocked += (_, _) => _controller.OnResumed();
-        _router.PowerSourceChanged += (_, _) => _controller.OnPowerSourceChanged(PowerSource.OnBattery());
+        _router.PowerSourceChanged += (_, _) => _controller.OnPowerSourceChanged(_simulateBattery || PowerSource.OnBattery());
         _router.ThemeChanged += (_, _) => OnWindowsThemeChanged();
         HotkeyBox.RecordingChanged += (_, recording) =>
         {
@@ -154,7 +166,7 @@ public partial class App : Application
         };
 
         _services.GetRequiredService<ProTrial>().Attach(FakeStoreMode(args));
-        _controller.OnPowerSourceChanged(PowerSource.OnBattery());
+        _controller.OnPowerSourceChanged(_simulateBattery || PowerSource.OnBattery());
         _controller.Start(hotkeys);
         _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, CreateQuickPanel, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
@@ -193,13 +205,23 @@ public partial class App : Application
         services.AddLogging(logging => logging.AddProvider(new FileLoggerProvider(AppPaths.LogDirectory)));
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(new ConfigStore(AppPaths.DataDirectory));
-        services.AddSingleton<IDisplayBackend, WindowsDisplayBackend>();
+        if (Has(args, SimulateMonitorArgument))
+        {
+            var simulated = new SimulatedMonitor();
+            services.AddSingleton<IDisplayBackend>(new SimulatedDisplayBackend(new WindowsDisplayBackend(), simulated));
+            services.AddSingleton<IHardwareBrightness>(new SimulatedBrightness(new DdcBrightness(), simulated));
+            services.AddSingleton<IDisplayModeBackend>(new SimulatedModes(new DisplayModes(), simulated));
+        }
+        else
+        {
+            services.AddSingleton<IDisplayBackend, WindowsDisplayBackend>();
+            services.AddSingleton<IHardwareBrightness, DdcBrightness>();
+            services.AddSingleton<IDisplayModeBackend, DisplayModes>();
+        }
         services.AddSingleton<IColorApplier>(sp => new ColorApplier(
             sp.GetRequiredService<IDisplayBackend>(), AppPaths.JournalPath, sp.GetRequiredService<ILogger<ColorApplier>>()));
         services.AddSingleton<IForegroundWatcher, ForegroundWatcher>();
-        services.AddSingleton<IHardwareBrightness, DdcBrightness>();
         services.AddSingleton<IMonitorBrightness, MonitorBrightness>();
-        services.AddSingleton<IDisplayModeBackend, DisplayModes>();
         services.AddSingleton<IMonitorModes, MonitorModes>();
         if (fresh)
             services.AddSingleton<IAutostart, TrialAutostart>();
