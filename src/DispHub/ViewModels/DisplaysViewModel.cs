@@ -39,7 +39,12 @@ public sealed partial class DisplaysViewModel : PageViewModel
 
     public ObservableCollection<DisplayItem> Displays { get; } = [];
 
-    public override void OnShown() => Load();
+    public override void OnShown()
+    {
+        Load();
+        // A monitor's own buttons may have changed its brightness; the sliders follow once it has been read.
+        _app.RereadMonitorLevels();
+    }
 
     private void Load()
     {

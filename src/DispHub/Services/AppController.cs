@@ -183,6 +183,9 @@ public sealed class AppController : IDisposable
     /// <summary>Sets a monitor's own brightness now, as its buttons would.</summary>
     public void SetMonitorLevel(string monitorKey, int percent) => _brightness?.SetLevel(monitorKey, percent);
 
+    /// <summary>Reads screens' brightness again, as a monitor's own buttons may have changed it.</summary>
+    public void RereadMonitorLevels() => _brightness?.Reread();
+
     /// <summary>Displays that can switch refresh rate or HDR became known (on the UI thread).</summary>
     public event EventHandler? ModeAbilitiesChanged;
 

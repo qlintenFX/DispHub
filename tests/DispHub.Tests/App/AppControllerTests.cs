@@ -561,6 +561,10 @@ public sealed class AppControllerTests : IDisposable
         {
         }
 
+        public void Reread()
+        {
+        }
+
         public bool RestoreAll(TimeSpan timeout)
         {
             Report(LeftAfterRestore);

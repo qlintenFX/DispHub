@@ -33,6 +33,12 @@ public interface IMonitorBrightness : IDisposable
     /// <summary>Sets a monitor's brightness by hand, as its own buttons would (the Displays page).</summary>
     void SetLevel(string monitorKey, int percent);
 
+    /// <summary>
+    /// Reads every screen's level again, for changes made outside DispHub that the screen can't report (a monitor's
+    /// own buttons). Laptop screens report theirs as they happen.
+    /// </summary>
+    void Reread();
+
     /// <summary>Puts back every level a profile changed. Blocks up to <paramref name="timeout"/>.</summary>
     bool RestoreAll(TimeSpan timeout);
 }
@@ -50,6 +56,7 @@ public sealed class MonitorBrightness : IMonitorBrightness
     private IReadOnlyDictionary<string, int?>? _pendingTargets;
     private readonly Dictionary<string, int> _pendingManual = new(StringComparer.OrdinalIgnoreCase);
     private TaskCompletionSource<bool>? _pendingRestore;
+    private bool _pendingReread;
     private bool _stopping;
 
     // Worker thread only.
@@ -57,6 +64,10 @@ public sealed class MonitorBrightness : IMonitorBrightness
     private readonly Dictionary<string, int> _levels = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, int> _originals = new(StringComparer.OrdinalIgnoreCase);
     private IReadOnlyDictionary<string, int?> _targets = new Dictionary<string, int?>();
+
+    // The level a profile last set per screen: set once, so a change by hand afterwards stays until the profile changes.
+    private readonly Dictionary<string, int> _applied = new(StringComparer.OrdinalIgnoreCase);
+    private IDisposable? _watch;
 
     private volatile IReadOnlyDictionary<string, int> _published = new Dictionary<string, int>();
 
@@ -101,6 +112,13 @@ public sealed class MonitorBrightness : IMonitorBrightness
         _wake.Set();
     }
 
+    public void Reread()
+    {
+        lock (_gate)
+            _pendingReread = true;
+        _wake.Set();
+    }
+
     public bool RestoreAll(TimeSpan timeout)
     {
         TaskCompletionSource<bool> done;
@@ -125,6 +143,7 @@ public sealed class MonitorBrightness : IMonitorBrightness
         _wake.Set();
         if (_thread.IsAlive)
             _thread.Join(TimeSpan.FromSeconds(3));
+        _watch?.Dispose();
         _wake.Dispose();
     }
 
@@ -137,14 +156,15 @@ public sealed class MonitorBrightness : IMonitorBrightness
             IReadOnlyDictionary<string, int?>? targets;
             Dictionary<string, int> manual;
             TaskCompletionSource<bool>? restore;
-            bool stopping;
+            bool stopping, reread;
             lock (_gate)
             {
-                (monitors, targets, restore, stopping) = (_pendingMonitors, _pendingTargets, _pendingRestore, _stopping);
+                (monitors, targets, restore, stopping, reread) = (_pendingMonitors, _pendingTargets, _pendingRestore, _stopping, _pendingReread);
                 manual = new Dictionary<string, int>(_pendingManual, StringComparer.OrdinalIgnoreCase);
                 _pendingMonitors = null;
                 _pendingTargets = null;
                 _pendingRestore = null;
+                _pendingReread = false;
                 _pendingManual.Clear();
             }
 
@@ -161,6 +181,8 @@ public sealed class MonitorBrightness : IMonitorBrightness
                 bool changed = false;
                 if (monitors is not null)
                     changed |= Probe(monitors);
+                else if (reread)
+                    changed |= ReadAgain();
                 if (targets is not null)
                     _targets = targets;
                 if (monitors is not null || targets is not null)
@@ -191,7 +213,26 @@ public sealed class MonitorBrightness : IMonitorBrightness
         }
         if (_devices.Count > 0)
             _logger.LogInformation("Screen brightness: {Monitors}", string.Join(", ", monitors.Where(m => _devices.ContainsKey(m.Key)).Select(m => m.Name)));
+        // Screens may have come back with other levels: profiles set theirs again.
+        _applied.Clear();
+        // A laptop screen reports its changes, from its keys or Windows' slider, so DispHub shows them as they happen.
+        if (_watch is null && _devices.Values.Any(m => m.IsInternal))
+            _watch = _hardware.WatchChanges(Reread);
         return true;
+    }
+
+    private bool ReadAgain()
+    {
+        bool changed = false;
+        foreach ((string key, MonitorInfo monitor) in _devices)
+        {
+            if (_hardware.ReadLevel(monitor) is { } level && _levels.GetValueOrDefault(key, -1) != level.Percent)
+            {
+                _levels[key] = level.Percent;
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     private bool ApplyTargets()
@@ -209,12 +250,20 @@ public sealed class MonitorBrightness : IMonitorBrightness
                     _originals[key] = current;
                     originalsChanged = true;
                 }
+                if (_applied.GetValueOrDefault(key, -1) == percent)
+                    continue;
                 changed |= Write(key, percent);
+                if (_levels.GetValueOrDefault(key, -1) == percent)
+                    _applied[key] = percent;
             }
-            else if (_originals.Remove(key, out int original))
+            else
             {
-                originalsChanged = true;
-                changed |= Write(key, original);
+                _applied.Remove(key);
+                if (_originals.Remove(key, out int original))
+                {
+                    originalsChanged = true;
+                    changed |= Write(key, original);
+                }
             }
         }
         if (originalsChanged)
@@ -243,6 +292,7 @@ public sealed class MonitorBrightness : IMonitorBrightness
             if (_devices.ContainsKey(key) && _levels.GetValueOrDefault(key, -1) != original && !Write(key, original))
                 ok = false;
         }
+        _applied.Clear();
         if (_originals.Count > 0)
         {
             _originals.Clear();

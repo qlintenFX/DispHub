@@ -78,6 +78,83 @@ internal sealed unsafe class PanelBrightness : IHardwareBrightness
         return classGuid <= 0 ? null : path[..classGuid].Replace('#', '\\');
     }
 
+    /// <summary>
+    /// Calls <paramref name="changed"/> whenever a laptop screen's brightness changes (its keys, Windows' slider or
+    /// DispHub), as WMI reports it, until disposed. Waits on a thread of its own, a second at a time so it stops soon.
+    /// </summary>
+    public IDisposable WatchChanges(Action changed)
+    {
+        var watch = new Watch(changed);
+        watch.Start();
+        return watch;
+    }
+
+    private sealed class Watch(Action changed) : IDisposable
+    {
+        private const int WaitMilliseconds = 1000;
+        private volatile bool _stopped;
+
+        public void Start() => new Thread(Listen) { IsBackground = true, Name = "DispHub screen brightness changes" }.Start();
+
+        public void Dispose() => _stopped = true;
+
+        private void Listen()
+        {
+            _ = PInvoke.CoInitializeEx(null, COINIT.COINIT_MULTITHREADED);
+            IWbemLocator* locator = null;
+            IWbemServices* services = null;
+            IEnumWbemClassObject* events = null;
+            try
+            {
+                if (!Connect(&locator, &services))
+                    return;
+                using (var language = new Bstr("WQL"))
+                using (var query = new Bstr("SELECT * FROM WmiMonitorBrightnessEvent"))
+                {
+                    services->ExecNotificationQuery(
+                        language, query,
+                        WBEM_GENERIC_FLAG_TYPE.WBEM_FLAG_FORWARD_ONLY | WBEM_GENERIC_FLAG_TYPE.WBEM_FLAG_RETURN_IMMEDIATELY,
+                        null, &events);
+                }
+                while (!_stopped)
+                {
+                    IWbemClassObject* happened = null;
+                    uint count = 0;
+                    if (events->Next(WaitMilliseconds, 1, &happened, &count).Failed)
+                        return;
+                    if (count == 0)
+                        continue;
+                    happened->Release();
+                    if (!_stopped)
+                        changed();
+                }
+            }
+            catch (COMException)
+            {
+                // No brightness events here; levels are then read again when the Displays page opens.
+            }
+            finally
+            {
+                Release(events);
+                Release(services);
+                Release(locator);
+            }
+        }
+    }
+
+    /// <summary>Connects to WMI's ROOT\WMI namespace with the security a local query needs.</summary>
+    private static bool Connect(IWbemLocator** locator, IWbemServices** services)
+    {
+        if (WbemLocator.CreateInstance(out *locator).Failed)
+            return false;
+        using (var space = new Bstr(@"ROOT\WMI"))
+            (*locator)->ConnectServer(space, default, default, default, 0, default, null, services);
+        PInvoke.CoSetProxyBlanket(
+            (IUnknown*)*services, AuthnWinNT, AuthzNone, default, RPC_C_AUTHN_LEVEL.RPC_C_AUTHN_LEVEL_CALL,
+            RPC_C_IMP_LEVEL.RPC_C_IMP_LEVEL_IMPERSONATE, null, EOLE_AUTHENTICATION_CAPABILITIES.EOAC_NONE).ThrowOnFailure();
+        return true;
+    }
+
     private delegate T InstanceAction<T>(IWbemServices* services, IWbemClassObject* instance);
 
     /// <summary>Runs <paramref name="action"/> on the active instance of a WMI class that belongs to this screen.</summary>
@@ -91,13 +168,8 @@ internal sealed unsafe class PanelBrightness : IHardwareBrightness
         IEnumWbemClassObject* found = null;
         try
         {
-            if (WbemLocator.CreateInstance(out locator).Failed)
+            if (!Connect(&locator, &services))
                 return fallback;
-            using (var space = new Bstr(@"ROOT\WMI"))
-                locator->ConnectServer(space, default, default, default, 0, default, null, &services);
-            PInvoke.CoSetProxyBlanket(
-                (IUnknown*)services, AuthnWinNT, AuthzNone, default, RPC_C_AUTHN_LEVEL.RPC_C_AUTHN_LEVEL_CALL,
-                RPC_C_IMP_LEVEL.RPC_C_IMP_LEVEL_IMPERSONATE, null, EOLE_AUTHENTICATION_CAPABILITIES.EOAC_NONE).ThrowOnFailure();
             using (var language = new Bstr("WQL"))
             using (var query = new Bstr($"SELECT * FROM {className} WHERE Active = TRUE"))
             {
