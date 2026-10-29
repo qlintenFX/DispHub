@@ -50,8 +50,9 @@ for you (Settings > Displays > Full colour range; needs administrator approval o
 ## Questions
 
 **Do people watching my stream or screen share see the changed colours?**
-No. DispHub changes colours in your graphics card's output, after Windows has drawn the screen, so OBS, Discord,
-Teams and screenshots capture the original colours. Your viewers see a normal picture while you see your profile.
+Not with OBS, Discord, Teams or screenshots. DispHub changes colours in your graphics card's output, after Windows has
+drawn the screen, so they capture the original colours and your viewers see a normal picture. A capture card is
+different: it records the signal going to your monitor, so it shows your profile too.
 
 **My night profile isn't as warm as I set it.**
 Windows limits how far colours can change by default. Turn on Settings > Displays > Full colour range (asks for
