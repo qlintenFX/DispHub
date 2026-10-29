@@ -20,12 +20,12 @@ public sealed class OsdService(AppController app, ThemeService theme)
     public void Attach() => app.StateChanged += (_, source) => OnStateChanged(source);
 
     /// <summary>A one-off message, shown at most once per session.</summary>
-    public void ShowHint(string title, string detail)
+    public void ShowHint(string title)
     {
         if (_hintShown)
             return;
         _hintShown = true;
-        GetWindow().Flash(title, detail, SymbolRegular.Info24, TimeSpan.FromSeconds(3), app.Config.Ui.OsdPosition);
+        GetWindow().Flash(title, SymbolRegular.Info24, TimeSpan.FromSeconds(3), app.Config.Ui.OsdPosition);
     }
 
     private void OnStateChanged(ChangeSource source)
@@ -37,13 +37,13 @@ public sealed class OsdService(AppController app, ThemeService theme)
         TimeSpan duration = TimeSpan.FromMilliseconds(app.Config.Ui.OsdDurationMs);
         if (app.Config.IsOff || app.Config.IsPaused)
         {
-            GetWindow().Flash(Loc.Get(app.Config.IsOff ? "Osd_Paused" : "Osd_ProfilesOff"), "", SymbolRegular.Power24, duration, app.Config.Ui.OsdPosition);
+            GetWindow().Flash(Loc.Get(app.Config.IsOff ? "Osd_Paused" : "Osd_ProfilesOff"), SymbolRegular.Power24, duration, app.Config.Ui.OsdPosition);
             return;
         }
 
         Profile? profile = app.Current?.ProfileId is { } id ? app.FindProfile(id) : null;
         if (profile is not null)
-            GetWindow().Flash(profile.Name, "", SymbolRegular.Color24, duration, app.Config.Ui.OsdPosition);
+            GetWindow().Flash(profile.Name, SymbolRegular.Color24, duration, app.Config.Ui.OsdPosition);
     }
 
     private OsdWindow GetWindow()

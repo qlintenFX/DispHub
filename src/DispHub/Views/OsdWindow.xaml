@@ -32,21 +32,13 @@
       FontSize="22"
       Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
       Symbol="Color24" />
-    <StackPanel VerticalAlignment="Center">
-      <TextBlock
-        x:Name="TitleText"
-        MaxWidth="360"
-        FontSize="15"
-        FontWeight="SemiBold"
-        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-        TextTrimming="CharacterEllipsis" />
-      <TextBlock
-        x:Name="DetailText"
-        MaxWidth="360"
-        Margin="0,2,0,0"
-        FontSize="12"
-        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-        TextWrapping="Wrap" />
-    </StackPanel>
+    <TextBlock
+      x:Name="TitleText"
+      MaxWidth="360"
+      VerticalAlignment="Center"
+      FontSize="15"
+      FontWeight="SemiBold"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+      TextTrimming="CharacterEllipsis" />
   </StackPanel>
 </ui:FluentWindow>
