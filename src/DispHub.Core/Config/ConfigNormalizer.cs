@@ -57,6 +57,8 @@ public static class ConfigNormalizer
             profile.Color = color;
             if (profile.MonitorBrightness is { } level)
                 profile.MonitorBrightness = Math.Clamp(level, 0, 100);
+            if (!Enum.IsDefined(profile.RefreshRate))
+                profile.RefreshRate = RefreshChoice.Unchanged;
 
             profile.MonitorOverrides = new Dictionary<string, ColorSettings>(
                 (profile.MonitorOverrides ?? []).Where(o => o.Value is not null)

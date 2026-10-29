@@ -40,7 +40,8 @@ AUTOMATION (DISPHUB PRO, FREE FOR THE FIRST WEEK)
   you switch away (one app is included free)
 • Schedules like Windows' Night light: from sunset to sunrise or set hours, with a smooth fade
 • Different settings for each display
-• Profiles that set your monitor's own brightness
+• Profiles that set your monitor's brightness, refresh rate and HDR
+• A lower refresh rate on battery for laptop screens
 • Unlimited profiles
 
 SAFE AND LIGHT

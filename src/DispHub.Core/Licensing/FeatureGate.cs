@@ -35,6 +35,9 @@ public sealed record FeatureGate(bool IsPro, bool InTrial = false)
     /// <summary>Profiles that set external monitors' own brightness. Setting it by hand is free.</summary>
     public bool MonitorBrightnessInProfiles => HasPro;
 
+    /// <summary>Profiles that switch refresh rate or HDR, and the lower refresh rate on battery.</summary>
+    public bool DisplayModes => HasPro;
+
     /// <summary>Lifting dark tones (<see cref="ColorSettings.ShadowBoost"/>).</summary>
     public bool ShadowBoost => HasPro;
 

@@ -443,7 +443,8 @@ Logs: {1}</value>
 Pro is a one-time purchase that unlocks:
 • Profiles that switch for every app, not just one
 • Shadow boost, to see into dark areas
-• Profiles that set your monitor's own brightness
+• Profiles that set monitor brightness, refresh rate and HDR
+• A lower refresh rate on battery
 • Schedules with smooth fades
 • Different settings per display
 • More than {1} profiles
@@ -776,6 +777,42 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Summary_Shadows" xml:space="preserve">
     <value>Shadows +{0}</value>
+  </data>
+  <data name="Profiles_RefreshRate" xml:space="preserve">
+    <value>Refresh rate</value>
+  </data>
+  <data name="Profiles_RefreshHighest" xml:space="preserve">
+    <value>Highest</value>
+  </data>
+  <data name="Profiles_RefreshLowest" xml:space="preserve">
+    <value>Lowest</value>
+  </data>
+  <data name="Profiles_RefreshRateHz" xml:space="preserve">
+    <value>{0} ({1} Hz)</value>
+  </data>
+  <data name="Profiles_Unchanged" xml:space="preserve">
+    <value>Don't change</value>
+  </data>
+  <data name="Profiles_Hdr" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="Profiles_HdrOn" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Profiles_HdrOff" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Profiles_DisplayModesPro" xml:space="preserve">
+    <value>Profiles that switch refresh rate or HDR are part of DispHub Pro</value>
+  </data>
+  <data name="Upgrade_DisplayModes" xml:space="preserve">
+    <value>Switching refresh rate and HDR</value>
+  </data>
+  <data name="Displays_LowRefreshOnBattery" xml:space="preserve">
+    <value>Lower refresh rate on battery ({0} Hz)</value>
+  </data>
+  <data name="Displays_LowRefreshPro" xml:space="preserve">
+    <value>A lower refresh rate on battery is part of DispHub Pro</value>
   </data>
   <data name="Profiles_MonitorBrightness" xml:space="preserve">
     <value>Monitor brightness</value>

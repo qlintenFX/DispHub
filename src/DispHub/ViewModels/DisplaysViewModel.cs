@@ -18,12 +18,15 @@ namespace DispHub.ViewModels;
 public sealed partial class DisplaysViewModel : PageViewModel
 {
     private readonly AppController _app;
+    private readonly IUpgradeService _upgrade;
 
-    public DisplaysViewModel(AppController app)
+    public DisplaysViewModel(AppController app, IUpgradeService upgrade)
         : base(Loc.Get("Nav_Displays"), Wpf.Ui.Controls.SymbolRegular.Desktop24)
     {
         _app = app;
+        _upgrade = upgrade;
         _app.MonitorsChanged += (_, _) => Load();
+        _app.ModeAbilitiesChanged += (_, _) => Load();
         _app.StateChanged += (_, _) => Load();
         _app.PowerChanged += (_, _) => Load();
         _app.MonitorLevelsChanged += (_, _) =>
@@ -42,19 +45,21 @@ public sealed partial class DisplaysViewModel : PageViewModel
     {
         Displays.Clear();
         foreach (MonitorStatus status in _app.Monitors)
-            Displays.Add(new DisplayItem(_app, status));
+            Displays.Add(new DisplayItem(_app, status, _upgrade));
     }
 }
 
 public sealed partial class DisplayItem : ObservableObject
 {
     private readonly AppController _app;
+    private readonly IUpgradeService _upgrade;
     private readonly string _key;
     private readonly string _mode;
 
-    public DisplayItem(AppController app, MonitorStatus status)
+    public DisplayItem(AppController app, MonitorStatus status, IUpgradeService upgrade)
     {
         _app = app;
+        _upgrade = upgrade;
         _key = status.Monitor.Key;
         MonitorInfo monitor = status.Monitor;
         Name = monitor.Name;
@@ -67,7 +72,39 @@ public sealed partial class DisplayItem : ObservableObject
         Included = !(app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config) && config.Excluded);
         UpdateSummary();
         UpdateLevel();
+
+        // Laptop screens, as laptop makers' own apps do: desktops are on mains power.
+        IReadOnlyList<int> rates = monitor.IsInternal && app.ModeAbilities.TryGetValue(_key, out ModeAbilities? abilities)
+            ? abilities.RefreshRates
+            : [];
+        int? low = RefreshRates.Pick(rates, RefreshChoice.Lowest);
+        HasBatteryRefresh = low is not null && low != RefreshRates.Pick(rates, RefreshChoice.Highest);
+        BatteryRefreshText = low is { } hz ? Loc.Format("Displays_LowRefreshOnBattery", hz) : "";
+        CanUseDisplayModes = app.Features.DisplayModes;
+        _lowRefreshOnBattery = config?.LowRefreshOnBattery == true;
     }
+
+    /// <summary>A laptop screen with a lower refresh rate to save battery.</summary>
+    public bool HasBatteryRefresh { get; }
+
+    public string BatteryRefreshText { get; }
+
+    public bool CanUseDisplayModes { get; }
+
+    private bool _lowRefreshOnBattery;
+
+    public bool LowRefreshOnBattery
+    {
+        get => _lowRefreshOnBattery;
+        set
+        {
+            if (SetProperty(ref _lowRefreshOnBattery, value))
+                _app.SetLowRefreshOnBattery(_key, value);
+        }
+    }
+
+    [RelayCommand]
+    private void UnlockBatteryRefresh() => _upgrade.ShowUpgrade(Loc.Get("Upgrade_DisplayModes"));
 
     /// <summary>The monitor's own brightness can be set over DDC/CI: the card shows its slider.</summary>
     [ObservableProperty] public partial bool HasLevel { get; set; }
