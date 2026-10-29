@@ -100,7 +100,7 @@ public static class RuleEngine
             if (reason == TargetReason.Schedule && schedule!.FadeFrom is { } from && schedule.FadeProgress < 1)
                 settings = ColorBlend.Lerp(from.SettingsFor(monitor, gate.PerMonitorProfiles), settings, schedule.FadeProgress);
 
-            monitors[monitor] = new MonitorTarget(settings, profile.Id, reason);
+            monitors[monitor] = new MonitorTarget(gate.Allowed(settings), profile.Id, reason);
         }
 
         DateTime? next = schedule?.NextEvaluation;

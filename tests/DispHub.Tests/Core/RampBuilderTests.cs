@@ -162,6 +162,50 @@ public sealed class RampBuilderTests
         Assert.True(ramp.ApproximatelyEquals(restored, 0));
     }
 
+    [Fact]
+    public void ShadowBoost_LiftsDarkTonesAndLeavesTheRest()
+    {
+        GammaRamp ramp = RampBuilder.Build(new ColorSettings(ShadowBoost: 100));
+
+        Assert.Equal(0, ramp.Red[0]); // black stays black
+        Assert.True(ramp.Red[40] > 40 * 257 * 1.5, "dark greys are lifted a lot");
+        Assert.True(ramp.Red[230] < (230 * 257) + 600, "highlights barely move");
+        Assert.Equal(ushort.MaxValue, ramp.Red[255]);
+    }
+
+    [Theory]
+    [InlineData(25)]
+    [InlineData(60)]
+    [InlineData(100)]
+    public void ShadowBoost_StaysRisingAndWithinWindowsDefaultLimits(int amount)
+    {
+        GammaRamp ramp = RampBuilder.Build(new ColorSettings(ShadowBoost: amount));
+
+        Assert.True(RampLimits.Default.Accepts(ramp));
+        for (int i = 1; i < GammaRamp.Size; i++)
+            Assert.True(ramp.Red[i] > ramp.Red[i - 1], $"step {i}");
+    }
+
+    [Fact]
+    public void ShadowBoost_IsPartOfTheNeutralCheck()
+    {
+        Assert.False(new ColorSettings(ShadowBoost: 1).HasNeutralRamp);
+        Assert.Equal(100, new ColorSettings(ShadowBoost: 500).Clamp().ShadowBoost);
+    }
+
+    [Fact]
+    public void ShadowBoost_FadesWithTheSchedule() =>
+        Assert.Equal(30, ColorBlend.Lerp(new ColorSettings(), new ColorSettings(ShadowBoost: 60), 0.5).ShadowBoost);
+
+    [Fact]
+    public void ShadowBoost_IsOffWithoutPro()
+    {
+        var settings = new ColorSettings(Gamma: 1.1, ShadowBoost: 40);
+        Assert.Equal(0, new DispHub.Core.Licensing.FeatureGate(IsPro: false).Allowed(settings).ShadowBoost);
+        Assert.Equal(40, new DispHub.Core.Licensing.FeatureGate(IsPro: false, InTrial: true).Allowed(settings).ShadowBoost);
+        Assert.Equal(1.1, new DispHub.Core.Licensing.FeatureGate(IsPro: false).Allowed(settings).Gamma);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]

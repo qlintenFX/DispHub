@@ -1,6 +1,8 @@
 // Copyright (c) 2026 The DispHub Authors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+using DispHub.Core.Color;
+
 namespace DispHub.Core.Licensing;
 
 /// <summary>
@@ -29,6 +31,16 @@ public sealed record FeatureGate(bool IsPro, bool InTrial = false)
 
     /// <summary>Choosing how see-through the quick panel and on-screen messages are.</summary>
     public bool PanelOpacity => HasPro;
+
+    /// <summary>Lifting dark tones (<see cref="ColorSettings.ShadowBoost"/>).</summary>
+    public bool ShadowBoost => HasPro;
+
+    /// <summary>The settings as they can go on screen: without Pro, shadow boost stays off.</summary>
+    public ColorSettings Allowed(ColorSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        return ShadowBoost || settings.ShadowBoost == 0 ? settings : settings with { ShadowBoost = 0 };
+    }
 
     public bool CanAddProfile(int currentCount) => currentCount < MaxProfiles;
 

@@ -10,7 +10,7 @@ using DispHub.Core.Config;
 namespace DispHub.Core.Sharing;
 
 /// <summary>
-/// A profile shared as a link, e.g. <c>disphub://preset?name=CS2%20Vivid&amp;b=5&amp;c=5&amp;g=1.15&amp;t=6500&amp;v=70</c>.
+/// A profile shared as a link, e.g. <c>disphub://preset?name=CS2%20Vivid&amp;b=5&amp;c=5&amp;g=1.15&amp;t=6500&amp;v=70&amp;s=30</c>.
 /// Readable on purpose, so people can see what a link does before clicking it. Unknown parameters are ignored and
 /// values are clamped, so links from newer versions still import.
 /// </summary>
@@ -34,6 +34,8 @@ public sealed record SharedPreset(string Name, ColorSettings Color)
             link.Append(CultureInfo.InvariantCulture, $"&t={c.TemperatureK}");
         if (c.Vibrance != ColorSettings.NeutralVibrance)
             link.Append(CultureInfo.InvariantCulture, $"&v={c.Vibrance}");
+        if (c.ShadowBoost != 0)
+            link.Append(CultureInfo.InvariantCulture, $"&s={c.ShadowBoost}");
         return link.ToString();
     }
 
@@ -68,7 +70,8 @@ public sealed record SharedPreset(string Name, ColorSettings Color)
             Int(query, "c", 0),
             Double(query, "g", 1.0),
             Int(query, "t", ColorSettings.NeutralTemperatureK),
-            Int(query, "v", ColorSettings.NeutralVibrance));
+            Int(query, "v", ColorSettings.NeutralVibrance),
+            Int(query, "s", 0));
         preset = new SharedPreset(name, color.Clamp());
         return true;
     }

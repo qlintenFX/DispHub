@@ -441,7 +441,8 @@ Logs: {1}</value>
     <value>{0} is part of DispHub Pro.
 
 Pro is a one-time purchase that unlocks:
-• Per-app profiles that switch automatically
+• Profiles that switch for every app, not just one
+• Shadow boost, to see into dark areas
 • Schedules with smooth fades
 • Different settings per display
 • More than {1} profiles
@@ -759,6 +760,21 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Trial_ContinueFree" xml:space="preserve">
     <value>Continue free</value>
+  </data>
+  <data name="Profiles_ShadowBoost" xml:space="preserve">
+    <value>Shadow boost</value>
+  </data>
+  <data name="Profiles_ShadowBoostHint" xml:space="preserve">
+    <value>Makes dark areas easier to see without greying the picture.</value>
+  </data>
+  <data name="Profiles_ShadowBoostPro" xml:space="preserve">
+    <value>Shadow boost is part of DispHub Pro</value>
+  </data>
+  <data name="Upgrade_ShadowBoost" xml:space="preserve">
+    <value>Shadow boost</value>
+  </data>
+  <data name="Summary_Shadows" xml:space="preserve">
+    <value>Shadows +{0}</value>
   </data>
   <data name="Profiles_FromTemplate" xml:space="preserve">
     <value>From a template</value>

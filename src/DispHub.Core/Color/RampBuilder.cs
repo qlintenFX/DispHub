@@ -7,7 +7,7 @@ namespace DispHub.Core.Color;
 public static class RampBuilder
 {
     /// <summary>
-    /// Order: gamma, contrast around mid-grey, brightness, clamp, then colour temperature last so the
+    /// Order: gamma, shadow boost, contrast around mid-grey, brightness, clamp, then colour temperature last so the
     /// white point is exactly the temperature multipliers. Every channel is non-decreasing.
     /// </summary>
     public static GammaRamp Build(ColorSettings settings)
@@ -20,6 +20,7 @@ public static class RampBuilder
         double inverseGamma = 1.0 / s.Gamma;
         double contrast = 1.0 + (s.Contrast / 100.0);
         double brightness = s.Brightness / 100.0;
+        double shadows = s.ShadowBoost / (double)ColorSettings.ShadowBoostMax;
         (double r, double g, double b) = Blackbody.Multipliers(s.TemperatureK);
         double[] multipliers = [r, g, b];
 
@@ -27,6 +28,7 @@ public static class RampBuilder
         for (int i = 0; i < GammaRamp.Size; i++)
         {
             double y = Math.Pow(i / 255.0, inverseGamma);
+            y = LiftShadows(y, shadows);
             y = 0.5 + ((y - 0.5) * contrast);
             // Positive brightness lifts shadows by up to 25 %; negative dims everything by up to 50 %.
             y = brightness >= 0 ? y + (brightness * 0.5 * (1 - y)) : y * (1 + brightness);
@@ -39,6 +41,14 @@ public static class RampBuilder
         MakeMonotonic(ramp);
         return ramp;
     }
+
+    /// <summary>
+    /// Brightens dark tones and leaves light ones almost alone: black stays black, the lift peaks around a fifth of
+    /// the way up (by up to a third of full scale at <paramref name="amount"/> 1) and fades out before the highlights,
+    /// so dark corners of a game become readable without the picture going grey. Rising for any amount up to 1.
+    /// </summary>
+    public static double LiftShadows(double y, double amount) =>
+        amount <= 0 ? y : y + (amount * 4 * y * Math.Pow(1 - y, 4));
 
     /// <summary>
     /// Returns <paramref name="target"/> if it is within <paramref name="limits"/>, otherwise the closest

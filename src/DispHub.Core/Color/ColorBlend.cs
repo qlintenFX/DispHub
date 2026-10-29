@@ -26,6 +26,7 @@ public static class ColorBlend
             (int)Math.Round(from.Contrast + ((to.Contrast - from.Contrast) * t)),
             Math.Round(from.Gamma + ((to.Gamma - from.Gamma) * t), 3),
             kelvin,
-            (int)Math.Round(from.Vibrance + ((to.Vibrance - from.Vibrance) * t)));
+            (int)Math.Round(from.Vibrance + ((to.Vibrance - from.Vibrance) * t)),
+            (int)Math.Round(from.ShadowBoost + ((to.ShadowBoost - from.ShadowBoost) * t)));
     }
 }
