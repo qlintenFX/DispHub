@@ -38,7 +38,7 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
         var box = new Wpf.Ui.Controls.MessageBox
         {
             Title = "DispHub Pro",
-            Content = Loc.Format("Upgrade_Body", feature, FeatureGate.FreeProfileLimit),
+            Content = Body(Loc.Format("Upgrade_Body", feature, FeatureGate.FreeProfileLimit)),
             PrimaryButtonText = Loc.Get("Common_GetPro"),
             CloseButtonText = Loc.Get("Upgrade_NotNow"),
             Owner = ShowMainWindow(),
@@ -59,7 +59,7 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
         var box = new Wpf.Ui.Controls.MessageBox
         {
             Title = Loc.Get("Trial_EndedTitle"),
-            Content = body + Environment.NewLine + Environment.NewLine + Loc.Format("Trial_EndedFree", FeatureGate.FreeProfileLimit),
+            Content = Body(body + Environment.NewLine + Environment.NewLine + Loc.Format("Trial_EndedFree", FeatureGate.FreeProfileLimit)),
             PrimaryButtonText = Loc.Get("Common_GetPro"),
             CloseButtonText = Loc.Get("Trial_ContinueFree"),
             Owner = ShowMainWindow(),
@@ -77,7 +77,7 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
             var box = new Wpf.Ui.Controls.MessageBox
             {
                 Title = Loc.Get("Upgrade_FailedTitle"),
-                Content = Loc.Get("Upgrade_FailedText"),
+                Content = Body(Loc.Get("Upgrade_FailedText")),
                 CloseButtonText = Loc.Get("Common_OK"),
                 Owner = window,
             };
@@ -90,6 +90,14 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
         if (license.CanPurchase)
             await license.RequestReviewAsync(new WindowInteropHelper(ShowMainWindow()).Handle);
     }
+
+    /// <summary>A message's text, left-aligned: the message box would justify it, with gaps between words.</summary>
+    private static System.Windows.Controls.TextBlock Body(string text) => new()
+    {
+        Text = text,
+        TextAlignment = TextAlignment.Left,
+        TextWrapping = TextWrapping.Wrap,
+    };
 
     private MainWindow ShowMainWindow()
     {

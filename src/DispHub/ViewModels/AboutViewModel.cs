@@ -27,7 +27,7 @@ public sealed partial class AboutViewModel : PageViewModel
         _app = app;
         _license = license;
         _upgrade = upgrade;
-        _license.Changed += (_, _) => Application.Current?.Dispatcher.BeginInvoke(RefreshLicense);
+        _app.LicenceChanged += (_, _) => RefreshLicense();
         RefreshLicense();
     }
 
@@ -75,7 +75,7 @@ public sealed partial class AboutViewModel : PageViewModel
     {
         Edition = _license.IsPro
             ? Loc.Get(_license.CanPurchase ? "About_EditionPro" : "About_EditionAll")
-            : Loc.Get("About_EditionFree");
+            : Loc.Get(_app.InTrial ? "About_EditionTrial" : "About_EditionFree");
         CanUpgrade = _license.CanPurchase && !_license.IsPro;
     }
 }

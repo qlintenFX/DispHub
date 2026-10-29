@@ -31,6 +31,9 @@
   <data name="About_EditionFree" xml:space="preserve">
     <value>DispHub Free</value>
   </data>
+  <data name="About_EditionTrial" xml:space="preserve">
+    <value>DispHub Pro trial</value>
+  </data>
   <data name="About_EditionPro" xml:space="preserve">
     <value>DispHub Pro</value>
   </data>
