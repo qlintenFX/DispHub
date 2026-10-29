@@ -772,9 +772,6 @@ It also supports development of DispHub.</value>
   <data name="Profiles_ShadowBoost" xml:space="preserve">
     <value>Shadow boost</value>
   </data>
-  <data name="Profiles_ShadowBoostHint" xml:space="preserve">
-    <value>Makes dark areas easier to see without greying the picture.</value>
-  </data>
   <data name="Profiles_ShadowBoostPro" xml:space="preserve">
     <value>Shadow boost is part of DispHub Pro</value>
   </data>

@@ -416,11 +416,6 @@
             ToolTip="{l:Tr Profiles_ShadowBoostPro}"
             Visibility="{Binding CanUseShadowBoost, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
         </Grid>
-        <TextBlock
-          Margin="180,0,64,8"
-          Style="{StaticResource Hint}"
-          Text="{l:Tr Profiles_ShadowBoostHint}" />
-
         <Grid Style="{StaticResource SliderRow}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="170" />
