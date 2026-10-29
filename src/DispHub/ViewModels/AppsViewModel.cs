@@ -217,7 +217,10 @@ public sealed partial class AppRuleItem : ObservableObject
         IsLocked = isLocked;
         Profiles = profiles;
         string? path = rule.Path ?? (Path.IsPathRooted(rule.Executable) ? rule.Executable : null);
-        Icon = AppIcons.For(path);
+        // A rule that only knows the name, or a folder the program has moved from: find it for its name and icon.
+        if (path is null || !File.Exists(path))
+            path = ProgramInfo.Find(rule.Executable) ?? path;
+        Icon = AppIcons.For(path ?? rule.Executable);
         Name = path is not null ? ProgramInfo.DisplayName(path) : Path.GetFileNameWithoutExtension(rule.Executable);
         Executable = Path.GetFileName(rule.Executable);
         Enabled = rule.Enabled;

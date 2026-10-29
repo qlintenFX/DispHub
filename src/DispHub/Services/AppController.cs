@@ -495,10 +495,30 @@ public sealed class AppController : IDisposable
 
     internal void OnForegroundChanged()
     {
+        LearnRulePath();
         // Only re-evaluate when it can matter, so switching windows costs nothing without app rules.
         if (Config.AppRules.Count > 0 || _manual is not null)
             Evaluate(ChangeSource.Automation);
         ForegroundChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// A rule that knows only its program's name, or a folder the program has moved from, takes the program's real
+    /// path the first time it's in front, so the Apps page shows its icon and name from then on.
+    /// </summary>
+    private void LearnRulePath()
+    {
+        if (ForegroundExecutable is not { } path || !Path.IsPathRooted(path))
+            return;
+        AppRule? rule = Config.AppRules.Find(r => RuleEngine.Matches(r, path));
+        if (rule is null || string.Equals(rule.Path, path, StringComparison.OrdinalIgnoreCase) ||
+            (rule.Path is { } known && Path.IsPathRooted(known) && File.Exists(known)))
+        {
+            return;
+        }
+        rule.Path = path;
+        ScheduleSave();
+        ConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnMonitorsChanged()
