@@ -474,6 +474,15 @@ public sealed class AppController : IDisposable
         ConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>Keeps where the main window is, so it opens there next time.</summary>
+    public void RememberWindow(WindowBounds window)
+    {
+        if (Config.Ui.Window == window)
+            return;
+        Config.Ui.Window = window;
+        ScheduleSave();
+    }
+
     /// <summary>For settings changed directly on <see cref="Config"/> by a view model.</summary>
     public void SettingsChanged()
     {

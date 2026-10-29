@@ -19,7 +19,7 @@
   Icon="pack://application:,,,/Assets/DispHub.ico"
   WindowBackdropType="Mica"
   WindowCornerPreference="Round"
-  WindowStartupLocation="CenterScreen"
+  WindowStartupLocation="Manual"
   mc:Ignorable="d">
   <Window.Resources>
     <DataTemplate x:Key="NavEntry" DataType="{x:Type vm:PageViewModel}">

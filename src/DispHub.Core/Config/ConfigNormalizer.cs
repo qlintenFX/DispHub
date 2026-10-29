@@ -107,6 +107,9 @@ public static class ConfigNormalizer
         if (!Enum.IsDefined(config.Ui.Backdrop))
             config.Ui.Backdrop = WindowBackdrop.Mica;
         config.Ui.TextScale = double.IsFinite(config.Ui.TextScale) ? Math.Clamp(config.Ui.TextScale, 0.9, 1.25) : 1.0;
+        // A window position from a damaged file: open as the first time instead.
+        if (config.Ui.Window is { } window && (window.Width is < 100 or > 32768 || window.Height is < 100 or > 32768))
+            config.Ui.Window = null;
         config.Ui.PanelOpacity = double.IsFinite(config.Ui.PanelOpacity) ? Math.Clamp(config.Ui.PanelOpacity, 0, 1) : UiConfig.DefaultPanelOpacity;
         // Only the offered colours: an older or hand-edited code becomes the closest one.
         config.Ui.AccentColor = Accents.Nearest(config.Ui.AccentColor)?.Hex;

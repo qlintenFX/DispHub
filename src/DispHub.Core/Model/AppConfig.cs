@@ -280,4 +280,10 @@ public sealed class UiConfig
     public bool ReduceMotion { get; set; }
 
     public OsdPosition OsdPosition { get; set; } = OsdPosition.BottomCenter;
+
+    /// <summary>Where the main window was, to open it there again; null the first time.</summary>
+    public WindowBounds? Window { get; set; }
 }
+
+/// <summary>The main window's normal (not maximised) bounds in screen pixels, and whether it was maximised.</summary>
+public sealed record WindowBounds(int Left, int Top, int Width, int Height, bool Maximized);

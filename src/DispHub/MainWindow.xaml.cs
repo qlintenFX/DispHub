@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Interop;
+using DispHub.Core.Model;
 using DispHub.Localization;
 using DispHub.Platform.Shell;
 using DispHub.Services;
@@ -16,6 +18,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     private readonly AppController _app;
     private readonly ThemeService _theme;
     private bool _rendered;
+    private bool _placed;
     private bool _tourPending;
     private IReadOnlyList<SearchResult>? _searchIndex;
 
@@ -28,7 +31,13 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         _theme = theme;
         DataContext = viewModel;
         InitializeComponent();
-        SourceInitialized += (_, _) => _theme.Attach(this);
+        SourceInitialized += (_, _) =>
+        {
+            _theme.Attach(this);
+            Place();
+        };
+        LocationChanged += (_, _) => Remember();
+        StateChanged += (_, _) => Remember();
         ContentRendered += (_, _) =>
         {
             _rendered = true;
@@ -38,7 +47,11 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
                 Dispatcher.BeginInvoke(BeginTour, System.Windows.Threading.DispatcherPriority.ContextIdle);
             }
         };
-        SizeChanged += (_, e) => viewModel.SetNarrow(e.NewSize.Width < NarrowWidth);
+        SizeChanged += (_, e) =>
+        {
+            viewModel.SetNarrow(e.NewSize.Width < NarrowWidth);
+            Remember();
+        };
         viewModel.Home.TourRequested += (_, _) => StartTour();
         TourOverlay.PageRequested += (_, page) =>
             viewModel.SelectedPage = viewModel.AllPages.FirstOrDefault(p => p.GetType() == page) ?? viewModel.SelectedPage;
@@ -137,6 +150,51 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
                 return found;
         }
         return null;
+    }
+
+    /// <summary>
+    /// Opens where it was last time, made to fit if the screen changed; the first time, at its own size if that
+    /// fits the monitor (at most <see cref="WindowFit.MaxShare"/> of it), centred, as Windows' own apps open.
+    /// </summary>
+    private void Place()
+    {
+        nint handle = new WindowInteropHelper(this).Handle;
+        WindowBounds? saved = _app.Config.Ui.Window;
+        Rectangle? last = saved is null ? null : new Rectangle(saved.Left, saved.Top, saved.Width, saved.Height);
+        (Rectangle work, double scale) = WindowHelpers.WorkAreaFor(last);
+        if (work.IsEmpty)
+            return;
+
+        // On a small screen the window still has to fit, below its usual minimum if need be.
+        MinWidth = Math.Min(MinWidth, work.Width / scale);
+        MinHeight = Math.Min(MinHeight, work.Height / scale);
+        var minimum = new System.Drawing.Size((int)Math.Ceiling(MinWidth * scale), (int)Math.Ceiling(MinHeight * scale));
+        Rectangle bounds = last is { } r
+            ? WindowFit.Restore(r, work, minimum)
+            : WindowFit.FirstOpen(work, new System.Drawing.Size((int)(Width * scale), (int)(Height * scale)), minimum);
+        WindowHelpers.Move(handle, bounds);
+        if (saved?.Maximized == true)
+            WindowState = WindowState.Maximized;
+        _placed = true;
+    }
+
+    /// <summary>Keeps the normal bounds and whether it's maximised, for next time.</summary>
+    private void Remember()
+    {
+        if (!_placed || !IsVisible || WindowState == WindowState.Minimized)
+            return;
+        bool maximized = WindowState == WindowState.Maximized;
+        WindowBounds? saved = _app.Config.Ui.Window;
+        if (maximized)
+        {
+            // While maximised the window covers the screen; its normal bounds are the ones from before.
+            if (saved is not null)
+                _app.RememberWindow(saved with { Maximized = true });
+            return;
+        }
+        Rectangle bounds = WindowHelpers.Bounds(new WindowInteropHelper(this).Handle);
+        if (!bounds.IsEmpty)
+            _app.RememberWindow(new WindowBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height, Maximized: false));
     }
 
     public void ShowAndActivate()
