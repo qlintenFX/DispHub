@@ -42,9 +42,9 @@ The cropped copies keep their licences.
 
 | Picture | Source | Credit and licence |
 | --- | --- | --- |
-| night-1 | [Statistics on a laptop](https://commons.wikimedia.org/wiki/File:Statistics_on_a_laptop_(Unsplash).jpg) | Carlos Muza, CC0 |
-| night-2 | [Laptop coding programs](https://commons.wikimedia.org/wiki/File:Laptop_coding_programs_(Unsplash).jpg) | Tirza van Dijk, CC0 |
-| night-3 | [Woman typing at a computer](https://commons.wikimedia.org/wiki/File:Woman_typing_at_a_computer_(Unsplash).png) | William Iven, CC0 |
+| night-1 | [LibreOffice Writer, Lorem ipsum](https://commons.wikimedia.org/wiki/File:LibreOffice_Writer-Lorem_ipsum.png) | LoMit, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
+| night-2 | [Edubuntu 24.10, LibreOffice Writer](https://commons.wikimedia.org/wiki/File:Edubuntu_24.10_LibreOffice_Writer_24.8.2.1_-_English.png) | Canonical Ltd. and community contributors, GPL |
+| night-3 | [BigLinux, LibreOffice Calc](https://commons.wikimedia.org/wiki/File:BigLinux_KDE_Next-G_2025-01-25_LibreOffice_Calc_24.8.3.2_-_English.png) | Bruno Gonçalves Araujo, GPL |
 | film-1 | [Tears of Steel frame 01 2a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_01_2a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | film-2 | [Tears of Steel frame 03 1a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_03_1a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | film-3 | [Tears of Steel frame 09 1a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_09_1a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
