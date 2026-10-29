@@ -16,7 +16,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Pages is turned on in Settings > Pages (Source: GitHub Actions); until then there's nothing to publish to.
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.pages.outputs.enabled }}
+    steps:
+      - id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${{ github.repository }}/pages" --silent; then echo "enabled=true" >> "$GITHUB_OUTPUT"; else echo "enabled=false" >> "$GITHUB_OUTPUT"; fi
+
   deploy:
+    needs: check
+    if: needs.check.outputs.enabled == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
