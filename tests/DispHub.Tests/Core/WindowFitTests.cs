@@ -21,8 +21,8 @@ public sealed class WindowFitTests
 
         Rectangle window = WindowFit.FirstOpen(work, Preferred(2), Minimum(2));
 
-        Assert.Equal(2200, window.Width);
-        Assert.Equal((int)(1504 * WindowFit.MaxShare), window.Height);
+        // 1100 by 760 points is 2200 by 1520 pixels: too tall, so 85 % of the work area each way.
+        Assert.Equal(new Size(2176, 1278), window.Size);
         Assert.True(work.Contains(window));
         // centred, give or take the odd pixel
         Assert.InRange(window.Left - (work.Width - window.Right), -1, 1);
