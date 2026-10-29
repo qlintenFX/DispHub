@@ -234,6 +234,47 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public void AppRule_ByNameOnly_TakesTheProgramsPathWhenItIsInFront()
+    {
+        var rule = new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id };
+        _app.Config.AppRules.Add(rule);
+        int changes = 0;
+        _app.ConfigChanged += (_, _) => changes++;
+
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.OnForegroundChanged();
+
+        Assert.Equal(@"C:\Games\cs2.exe", rule.Path);
+        Assert.Equal(1, changes);
+    }
+
+    [Fact]
+    public void AppRule_KeepsAPathThatStillExists()
+    {
+        string program = Path.Combine(_dir.Path, "cs2.exe");
+        File.WriteAllText(program, "");
+        var rule = new AppRule { Executable = "cs2.exe", Path = program, ProfileId = Gaming.Id };
+        _app.Config.AppRules.Add(rule);
+
+        _foreground.Switch(@"D:\Other\cs2.exe");
+        _app.OnForegroundChanged();
+
+        Assert.Equal(program, rule.Path);
+    }
+
+    [Fact]
+    public void AppRule_WithAPathThatIsGone_TakesTheNewOne()
+    {
+        var rule = new AppRule { Executable = "cs2.exe", Path = Path.Combine(_dir.Path, "moved", "cs2.exe"), ProfileId = Gaming.Id };
+        _app.Config.AppRules.Add(rule);
+
+        _foreground.Switch(@"D:\Games\cs2.exe");
+        _app.OnForegroundChanged();
+
+        Assert.Equal(@"D:\Games\cs2.exe", rule.Path);
+    }
+
+    [Fact]
     public async Task AppRule_AppliesWhileAppIsInFrontAndRevertsAfter()
     {
         await _license.PurchaseProAsync(0);
