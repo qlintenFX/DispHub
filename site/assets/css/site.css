@@ -1122,6 +1122,107 @@ pre.code {
   }
 }
 
+/* ---------- profiles page ---------- */
+
+.library {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.library li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--divider);
+}
+
+.library li:last-child {
+  border-bottom: 1px solid var(--divider);
+}
+
+/* once the visitor picks a picture, each look shows on it */
+.library.has-picture li {
+  grid-template-columns: 240px 1fr auto;
+}
+
+.library canvas {
+  display: block;
+  width: 240px;
+  height: 60px;
+  border-radius: var(--r-ctl);
+}
+
+.try {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  max-width: 900px;
+  margin: 0 auto 24px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+.try label {
+  cursor: pointer;
+}
+
+.try label:focus-within {
+  outline: 2px solid var(--text-1);
+  outline-offset: 2px;
+}
+
+.library h2 {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.library p {
+  margin: 2px 0 0;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+.library .values {
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+.feature-copy .more {
+  display: inline-block;
+  margin-top: 18px;
+  font-weight: 600;
+}
+
+.library-foot {
+  max-width: 900px;
+  margin: 24px auto 0;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+@media (max-width: 680px) {
+  .library li,
+  .library.has-picture li {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .library canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 1;
+  }
+
+  .library .btn {
+    justify-self: start;
+  }
+}
+
 /* ---------- privacy page ---------- */
 
 .prose {
@@ -1230,6 +1331,7 @@ pre.code {
 .toast.show {
   opacity: 1;
   transform: translate(-50%, 0);
+  pointer-events: auto;
 }
 
 .toast code {

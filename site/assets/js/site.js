@@ -1,4 +1,5 @@
-// DispHub website: the live quick panel, entrance motion, the header material, the menu and the WinGet copy button.
+// DispHub website: the live quick panel, entrance motion, the header material, the menu, the WinGet copy button and
+// the profile links.
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -45,27 +46,163 @@
     reveal.forEach((el) => el.classList.add("in"));
   }
 
-  // WinGet: copy the install command, and say so in a small toast
+  // a small message at the bottom of the page
+  let toastTimer = 0;
+  const toast = (html, ms = 3200) => {
+    let el = $(".toast");
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "toast";
+      el.setAttribute("role", "status");
+      document.body.append(el);
+    }
+    el.innerHTML = html;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), ms);
+    return el;
+  };
+
+  // WinGet: copy the install command, and say so
   $$("[data-copy]").forEach((btn) => btn.addEventListener("click", async () => {
     const text = btn.dataset.copy;
-    let toast = $(".toast");
-    if (!toast) {
-      toast = document.createElement("div");
-      toast.className = "toast";
-      toast.setAttribute("role", "status");
-      document.body.append(toast);
-    }
+    let copied = true;
     try {
       await navigator.clipboard.writeText(text);
-      toast.innerHTML = "Copied. Paste it into Terminal: <code></code>";
     } catch {
-      toast.innerHTML = "Run this in Terminal: <code></code>";
+      copied = false;
     }
-    $("code", toast).textContent = text;
-    toast.classList.add("show");
-    clearTimeout(btn._t);
-    btn._t = setTimeout(() => toast.classList.remove("show"), 3200);
+    const el = toast(copied ? "Copied. Paste it into Terminal: <code></code>" : "Run this in Terminal: <code></code>");
+    $("code", el).textContent = text;
   }));
+
+  // profile links open DispHub; when nothing takes the page's focus, DispHub probably isn't installed
+  $$("a[data-add]").forEach((a) => a.addEventListener("click", () => {
+    let opened = false;
+    const onBlur = () => { opened = true; };
+    window.addEventListener("blur", onBlur, { once: true });
+    setTimeout(() => {
+      window.removeEventListener("blur", onBlur);
+      if (!opened && document.hasFocus()) {
+        toast('Nothing opened? <a href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct">Get DispHub from the Microsoft Store</a>', 6000);
+      }
+    }, 1600);
+  }));
+
+  // the library: a picture the visitor picks, shown through every look with the app's colour maths (RampBuilder,
+  // Blackbody and the preview's vibrance), drawn here in the browser so it never leaves their PC
+  const library = $(".library");
+  const picker = $("[data-picture]");
+  if (library && picker) {
+    const linear = (t) => {
+      const t2 = t * t, t3 = t2 * t;
+      const x = t <= 4000
+        ? -0.2661239e9 / t3 - 0.2343589e6 / t2 + 0.8776956e3 / t + 0.17991
+        : -3.0258469e9 / t3 + 2.1070379e6 / t2 + 0.2226347e3 / t + 0.24039;
+      const x2 = x * x, x3 = x2 * x;
+      const y = t <= 2222
+        ? -1.1063814 * x3 - 1.3481102 * x2 + 2.18555832 * x - 0.20219683
+        : t <= 4000
+          ? -0.9549476 * x3 - 1.37418593 * x2 + 2.09137015 * x - 0.16748867
+          : 3.081758 * x3 - 5.8733867 * x2 + 3.75112997 * x - 0.37001483;
+      const X = x / y, Z = (1 - x - y) / y;
+      return [
+        Math.max(3.2404542 * X - 1.5371385 - 0.4985314 * Z, 0),
+        Math.max(-0.969266 * X + 1.8760108 + 0.041556 * Z, 0),
+        Math.max(0.0556434 * X - 0.2040259 + 1.0572252 * Z, 0),
+      ];
+    };
+    const reference = linear(6500);
+    const encode = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
+    const whitePoint = (k) => {
+      if (k === 6500) return [1, 1, 1];
+      const rgb = linear(Math.min(Math.max(k, 2000), 10000)).map((v, i) => v / reference[i]);
+      const max = Math.max(...rgb);
+      return rgb.map((v) => encode(v / max));
+    };
+    // one 256-entry table per channel, as Windows gets it, already in 8 bits
+    const ramps = ({ b, c, g, t }) => {
+      const white = whitePoint(t);
+      const tables = [new Uint8Array(256), new Uint8Array(256), new Uint8Array(256)];
+      const last = [0, 0, 0];
+      for (let i = 0; i < 256; i++) {
+        let y = Math.pow(i / 255, 1 / g);
+        y = 0.5 + (y - 0.5) * (1 + c / 100);
+        y = b >= 0 ? y + (b / 100) * 0.5 * (1 - y) : y * (1 + b / 100);
+        y = Math.min(Math.max(y, 0), 1);
+        for (let ch = 0; ch < 3; ch++) {
+          const value = Math.max(Math.round(Math.min(Math.max(y * white[ch], 0), 1) * 65535), last[ch]);
+          last[ch] = value;
+          tables[ch][i] = value >> 8;
+        }
+      }
+      return tables;
+    };
+    const lookOf = (href) => {
+      const q = new URL(href).searchParams;
+      const n = (key, fallback) => (q.has(key) ? Number(q.get(key)) : fallback);
+      return { b: n("b", 0), c: n("c", 0), g: n("g", 1), t: n("t", 6500), v: n("v", 50) };
+    };
+
+    const W = 480, H = 120;
+    const show = (file) => {
+      if (!file || !file.type.startsWith("image/")) return;
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        // cover the strip, keeping the middle of the picture
+        const source = document.createElement("canvas");
+        source.width = W;
+        source.height = H;
+        const ctx = source.getContext("2d");
+        const scale = Math.max(W / img.width, H / img.height);
+        const w = img.width * scale, h = img.height * scale;
+        ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+        URL.revokeObjectURL(url);
+        const pixels = ctx.getImageData(0, 0, W, H).data;
+
+        $$("li", library).forEach((li) => {
+          const look = lookOf($("a[data-add]", li).href);
+          const [red, green, blue] = ramps(look);
+          const saturation = look.v / 50;
+          let canvas = $("canvas", li);
+          if (!canvas) {
+            canvas = document.createElement("canvas");
+            canvas.width = W;
+            canvas.height = H;
+            canvas.setAttribute("aria-hidden", "true");
+            li.prepend(canvas);
+          }
+          const out = canvas.getContext("2d").createImageData(W, H);
+          const d = out.data;
+          for (let i = 0; i < pixels.length; i += 4) {
+            let r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+            if (saturation !== 1) {
+              const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+              r = luma + (r - luma) * saturation;
+              g = luma + (g - luma) * saturation;
+              b = luma + (b - luma) * saturation;
+            }
+            const clamp = (v) => Math.min(Math.max(Math.round(v), 0), 255);
+            d[i] = red[clamp(r)];
+            d[i + 1] = green[clamp(g)];
+            d[i + 2] = blue[clamp(b)];
+            d[i + 3] = 255;
+          }
+          canvas.getContext("2d").putImageData(out, 0, 0);
+        });
+        library.classList.add("has-picture");
+      };
+      img.src = url;
+    };
+    picker.addEventListener("change", () => show(picker.files[0]));
+    // a picture dropped anywhere on the page works too
+    document.addEventListener("dragover", (e) => e.preventDefault());
+    document.addEventListener("drop", (e) => {
+      e.preventDefault();
+      show(e.dataTransfer.files[0]);
+    });
+  }
 
   // the live quick panel: the photo uses the looks the app's colour ramps produce
   const quick = $(".quick");

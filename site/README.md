@@ -14,6 +14,9 @@ python -m http.server 8765 --directory site
   GitHub, WinGet), a working quick panel, four short feature sections with real app windows, a closing call to action
   and a short FAQ. The demo's photos (`assets/img/reef-*.webp`) are the app's preview photo with the looks DispHub's own
   colour ramps produce.
+- `profiles/`: ready-made profiles as `disphub://` share links. Visitors can pick a picture of their own (a game
+  screenshot, say) to see it through every look; `site.js` draws it with a copy of DispHub's colour maths, in the
+  browser, so it never leaves their PC. When a link opens nothing, the page offers the Store.
 - `download/`: the Microsoft Store first; WinGet and building from source sit under "More download options".
 - `privacy/`: the privacy policy from `PRIVACY.md`, plus a note about the website itself. Keep the two in step.
 - `assets/img`: the app's windows at 200 % (square; the page rounds them), the icon and the social card.
