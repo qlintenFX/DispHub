@@ -335,8 +335,16 @@ public sealed class AppController : IDisposable
         return profile;
     }
 
-    public Profile? DuplicateProfile(Guid profileId) =>
-        FindProfile(profileId) is { } source ? AddProfile(source.Color, Loc.Format("Profiles_CopyName", source.Name)) : null;
+    /// <summary>A copy with everything but the name and hotkey, which must stay unique.</summary>
+    public Profile? DuplicateProfile(Guid profileId)
+    {
+        if (FindProfile(profileId) is not { } source || AddProfile(source.Color, Loc.Format("Profiles_CopyName", source.Name)) is not { } copy)
+            return null;
+        copy.MonitorBrightness = source.MonitorBrightness;
+        foreach ((string key, ColorSettings color) in source.MonitorOverrides)
+            copy.MonitorOverrides[key] = color;
+        return copy;
+    }
 
     public bool DeleteProfile(Guid profileId)
     {

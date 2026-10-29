@@ -379,6 +379,22 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public async Task Duplicate_KeepsEverythingButNameAndHotkey()
+    {
+        await _license.PurchaseProAsync(0);
+        _app.UpdateProfileMonitorColor(Gaming.Id, "m1", new ColorSettings(TemperatureK: 4000));
+        _app.SetProfileMonitorBrightness(Gaming.Id, 80);
+
+        Profile copy = _app.DuplicateProfile(Gaming.Id)!;
+
+        Assert.Equal(Gaming.Color, copy.Color);
+        Assert.Equal(4000, copy.MonitorOverrides["m1"].TemperatureK);
+        Assert.Equal(80, copy.MonitorBrightness);
+        Assert.NotEqual(Gaming.Name, copy.Name);
+        Assert.Null(copy.Hotkey);
+    }
+
+    [Fact]
     public void Shutdown_SavesChangesAndRestoresColours()
     {
         _app.RenameProfile(Gaming.Id, "Competitive");
