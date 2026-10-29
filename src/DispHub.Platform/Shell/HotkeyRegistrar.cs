@@ -16,7 +16,8 @@ public interface IHotkeyRegistrar
 
     /// <summary>
     /// Makes the registered hotkeys match <paramref name="desired"/> (action ID to gesture) and returns, per action
-    /// that couldn't be registered, a reason as a localisation key (Hotkey_InUseElsewhere, Hotkey_Duplicate, Hotkey_Refused).
+    /// that couldn't be registered, a reason as a localisation key (Hotkey_InUseElsewhere, Hotkey_Duplicate,
+    /// Hotkey_Refused), or Hotkey_TypesCharacter with the character after a colon.
     /// </summary>
     IReadOnlyDictionary<string, string> Sync(IReadOnlyDictionary<string, HotkeyGesture> desired);
 
@@ -89,6 +90,13 @@ public sealed class HotkeyRegistrar(nint windowHandle) : IHotkeyRegistrar
             if (claimed.ContainsKey(gesture))
             {
                 failures[action] = "Hotkey_Duplicate";
+                continue;
+            }
+
+            // Taking it would stop AltGr typing that character, in every app.
+            if (KeyboardTyping.Character(gesture) is { } typed)
+            {
+                failures[action] = "Hotkey_TypesCharacter:" + typed;
                 continue;
             }
 

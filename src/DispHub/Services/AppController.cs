@@ -465,6 +465,14 @@ public sealed class AppController : IDisposable
 
     public string? HotkeyFailure(Guid profileId) => HotkeyFailures.GetValueOrDefault(ProfileActionPrefix + profileId);
 
+    /// <summary>A reason from <see cref="HotkeyFailures"/> in words; one about a typed character carries it after a colon.</summary>
+    public static string DescribeHotkeyFailure(string reason)
+    {
+        ArgumentNullException.ThrowIfNull(reason);
+        int colon = reason.IndexOf(':', StringComparison.Ordinal);
+        return colon < 0 ? Loc.Get(reason) : Loc.Format(reason[..colon], reason[(colon + 1)..]);
+    }
+
     public void SuspendHotkeys() => _hotkeys?.SuspendAll();
 
     public void ResumeHotkeys()

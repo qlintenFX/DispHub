@@ -289,13 +289,16 @@ public sealed partial class SettingsViewModel : PageViewModel
         HotkeyError = DescribeHotkeyFailures();
     }
 
+    // Hotkeys are registered after this page is made, so their problems are read again whenever it's shown.
+    public override void OnShown() => HotkeyError = DescribeHotkeyFailures();
+
     private string? DescribeHotkeyFailures()
     {
         var failures = new List<string>();
         foreach ((string action, string label) in new[] { (AppController.PauseAction, Loc.Get("Settings_Pause")), (AppController.NextAction, Loc.Get("Settings_Next")), (AppController.PreviousAction, Loc.Get("Settings_Previous")), (AppController.QuickPanelAction, Loc.Get("Settings_QuickPanelHotkey")) })
         {
             if (_app.HotkeyFailures.TryGetValue(action, out string? reason))
-                failures.Add(Loc.Format("Settings_HotkeyFailure", label, Loc.Get(reason)));
+                failures.Add(Loc.Format("Settings_HotkeyFailure", label, AppController.DescribeHotkeyFailure(reason)));
         }
         return failures.Count == 0 ? null : string.Join(Environment.NewLine, failures);
     }

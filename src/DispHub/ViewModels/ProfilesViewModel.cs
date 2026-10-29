@@ -734,7 +734,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
         HotkeyError = Localize(app.SetProfileHotkey(_profileId, gesture));
     }
 
-    private static string? Localize(string? reason) => reason is null ? null : Loc.Get(reason);
+    private static string? Localize(string? reason) => reason is null ? null : AppController.DescribeHotkeyFailure(reason);
 
     private void Push()
     {
