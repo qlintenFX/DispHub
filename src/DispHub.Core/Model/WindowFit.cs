@@ -8,8 +8,8 @@ namespace DispHub.Core.Model;
 /// <summary>Where the main window opens, in screen pixels, worked out from the work area of its monitor.</summary>
 public static class WindowFit
 {
-    /// <summary>The most of the work area a window takes the first time, so some desktop shows around it.</summary>
-    public const double MaxShare = 0.9;
+    /// <summary>The most of the work area a window takes the first time, so desktop shows all around it.</summary>
+    public const double MaxShare = 0.85;
 
     /// <summary>
     /// The first time: <paramref name="preferred"/> when it fits in <see cref="MaxShare"/> of the work area, smaller
