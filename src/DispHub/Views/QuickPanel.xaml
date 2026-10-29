@@ -20,7 +20,11 @@
   WindowBackdropType="None"
   WindowCornerPreference="Round"
   mc:Ignorable="d">
-  <Grid x:Name="Root" Margin="16,14,16,14">
+  <Grid
+    x:Name="Root"
+    Margin="16,14,16,14"
+    FocusVisualStyle="{x:Null}"
+    Focusable="True">
     <Grid.RenderTransform>
       <TranslateTransform x:Name="Slide" />
     </Grid.RenderTransform>
