@@ -26,6 +26,9 @@ public interface IUpgradeService
 
     /// <summary>Shows the Microsoft Store's rating dialog.</summary>
     Task RateAsync();
+
+    /// <summary>Leaves a tip through the Store. True once it went through.</summary>
+    Task<bool> TipAsync(string offerToken);
 }
 
 public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mainWindow) : IUpgradeService
@@ -73,16 +76,28 @@ public sealed class UpgradeService(ILicenseService license, Func<MainWindow> mai
         MainWindow window = ShowMainWindow();
         PurchaseResult result = await license.PurchaseProAsync(new WindowInteropHelper(window).Handle);
         if (result == PurchaseResult.Failed)
+            await ShowFailedAsync(window);
+    }
+
+    public async Task<bool> TipAsync(string offerToken)
+    {
+        MainWindow window = ShowMainWindow();
+        PurchaseResult result = await license.TipAsync(offerToken, new WindowInteropHelper(window).Handle);
+        if (result == PurchaseResult.Failed)
+            await ShowFailedAsync(window);
+        return result == PurchaseResult.Purchased;
+    }
+
+    private static async Task ShowFailedAsync(MainWindow window)
+    {
+        var box = new Wpf.Ui.Controls.MessageBox
         {
-            var box = new Wpf.Ui.Controls.MessageBox
-            {
-                Title = Loc.Get("Upgrade_FailedTitle"),
-                Content = Body(Loc.Get("Upgrade_FailedText")),
-                CloseButtonText = Loc.Get("Common_OK"),
-                Owner = window,
-            };
-            await box.ShowDialogAsync();
-        }
+            Title = Loc.Get("Upgrade_FailedTitle"),
+            Content = Body(Loc.Get("Upgrade_FailedText")),
+            CloseButtonText = Loc.Get("Common_OK"),
+            Owner = window,
+        };
+        await box.ShowDialogAsync();
     }
 
     public async Task RateAsync()

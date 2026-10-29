@@ -1,6 +1,7 @@
 // Copyright (c) 2026 The DispHub Authors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
@@ -39,6 +40,38 @@ public sealed partial class AboutViewModel : PageViewModel
 
     [ObservableProperty]
     public partial bool CanUpgrade { get; set; }
+
+    /// <summary>The tips the Store offers, with their local prices; empty outside the Store build.</summary>
+    public ObservableCollection<TipOption> Tips { get; } = [];
+
+    [ObservableProperty]
+    public partial bool HasTips { get; set; }
+
+    /// <summary>A tip just went through.</summary>
+    [ObservableProperty]
+    public partial bool Thanked { get; set; }
+
+    public override void OnShown()
+    {
+        if (Tips.Count == 0)
+            _ = LoadTipsAsync();
+    }
+
+    private async Task LoadTipsAsync()
+    {
+        IReadOnlyList<TipOption> tips = await _license.GetTipsAsync();
+        Tips.Clear();
+        foreach (TipOption tip in tips)
+            Tips.Add(tip);
+        HasTips = Tips.Count > 0;
+    }
+
+    [RelayCommand]
+    private async Task Tip(TipOption tip)
+    {
+        if (await _upgrade.TipAsync(tip.OfferToken))
+            Thanked = true;
+    }
 
     /// <summary>Diagnostics were just copied: the button says so for a moment.</summary>
     [ObservableProperty]
