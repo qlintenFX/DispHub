@@ -40,6 +40,8 @@ and starts with empty settings in `%TEMP%\DispHub-fresh`, without touching autos
   view models in `ViewModels/`, XAML in `Views/`, `SmoothScrollViewer` for all page scrolling.
 - `tests/DispHub.Tests`: xUnit v3. Fakes for the colour applier, hotkeys and display backend live in the test files.
 - `packaging/`, `build/`, `store/`: MSIX manifest and assets, scripts, Store listing text.
+- `site/`: the website (static HTML, CSS and JS in Fluent 2 style, no build step), published to GitHub Pages by
+  `.github/workflows/pages.yml`. Its privacy page mirrors `PRIVACY.md`; change both together.
 
 ## Rules
 
