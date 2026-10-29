@@ -24,6 +24,17 @@ DestroyPhysicalMonitors
 GetVCPFeatureAndVCPFeatureReply
 SetVCPFeature
 
+// Laptop screen brightness over WMI
+CoInitializeEx
+CoCreateInstance
+CoSetProxyBlanket
+WbemLocator
+IWbemLocator
+IWbemServices
+IEnumWbemClassObject
+IWbemClassObject
+VariantClear
+
 // Gamma
 CreateDC
 DeleteDC

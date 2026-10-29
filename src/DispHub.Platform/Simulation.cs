@@ -93,17 +93,17 @@ public sealed class SimulatedDisplayBackend(IDisplayBackend real, SimulatedMonit
     public void Dispose() => real.Dispose();
 }
 
-/// <summary>Real DDC/CI, plus the simulated monitor's brightness.</summary>
-public sealed class SimulatedBrightness(IHardwareBrightness real, SimulatedMonitor monitor) : IHardwareBrightness
+/// <summary>Real screens' brightness, plus the simulated monitor's.</summary>
+public sealed class SimulatedBrightness(IHardwareBrightness real, SimulatedMonitor simulated) : IHardwareBrightness
 {
-    public HardwareLevel? ReadLevel(string deviceName) =>
-        SimulatedMonitor.Is(deviceName) ? new HardwareLevel(monitor.Level, 100) : real.ReadLevel(deviceName);
+    public HardwareLevel? ReadLevel(MonitorInfo monitor) =>
+        SimulatedMonitor.Is(monitor.DeviceName) ? new HardwareLevel(simulated.Level, 100) : real.ReadLevel(monitor);
 
-    public bool WriteLevel(string deviceName, int percent)
+    public bool WriteLevel(MonitorInfo monitor, int percent)
     {
-        if (!SimulatedMonitor.Is(deviceName))
-            return real.WriteLevel(deviceName, percent);
-        monitor.Level = percent;
+        if (!SimulatedMonitor.Is(monitor.DeviceName))
+            return real.WriteLevel(monitor, percent);
+        simulated.Level = percent;
         return true;
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DispHub.Platform;
 
-/// <summary>External monitors' own brightness, set over DDC/CI on a thread of its own.</summary>
+/// <summary>Screens' own brightness (a laptop's through Windows, monitors over DDC/CI), set on a thread of its own.</summary>
 public interface IMonitorBrightness : IDisposable
 {
     /// <summary>Monitors whose own brightness can be set, by monitor key, with the level last read or set (percent).</summary>
@@ -24,7 +24,7 @@ public interface IMonitorBrightness : IDisposable
     /// <summary>Starts the worker, knowing the levels to put back that an earlier session left changed.</summary>
     void Start(IReadOnlyDictionary<string, int> originals);
 
-    /// <summary>Finds which of these monitors answer; laptop screens are left to Windows' own brightness.</summary>
+    /// <summary>Finds which of these screens answer.</summary>
     void Refresh(IReadOnlyList<MonitorInfo> monitors);
 
     /// <summary>What profiles want, by monitor key: a percentage, or null to put back the level from before. Latest call wins.</summary>
@@ -53,7 +53,7 @@ public sealed class MonitorBrightness : IMonitorBrightness
     private bool _stopping;
 
     // Worker thread only.
-    private readonly Dictionary<string, string> _devices = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, MonitorInfo> _devices = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, int> _levels = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, int> _originals = new(StringComparer.OrdinalIgnoreCase);
     private IReadOnlyDictionary<string, int?> _targets = new Dictionary<string, int?>();
@@ -182,15 +182,15 @@ public sealed class MonitorBrightness : IMonitorBrightness
     {
         _devices.Clear();
         _levels.Clear();
-        foreach (MonitorInfo monitor in monitors.Where(m => !m.IsInternal))
+        foreach (MonitorInfo monitor in monitors)
         {
-            if (_hardware.ReadLevel(monitor.DeviceName) is not { } level)
+            if (_hardware.ReadLevel(monitor) is not { } level)
                 continue;
-            _devices[monitor.Key] = monitor.DeviceName;
+            _devices[monitor.Key] = monitor;
             _levels[monitor.Key] = level.Percent;
         }
         if (_devices.Count > 0)
-            _logger.LogInformation("Monitor brightness over DDC/CI: {Monitors}", string.Join(", ", monitors.Where(m => _devices.ContainsKey(m.Key)).Select(m => m.Name)));
+            _logger.LogInformation("Screen brightness: {Monitors}", string.Join(", ", monitors.Where(m => _devices.ContainsKey(m.Key)).Select(m => m.Name)));
         return true;
     }
 
@@ -224,11 +224,11 @@ public sealed class MonitorBrightness : IMonitorBrightness
 
     private bool Write(string key, int percent)
     {
-        if (!_devices.TryGetValue(key, out string? device) || _levels.GetValueOrDefault(key, -1) == percent)
+        if (!_devices.TryGetValue(key, out MonitorInfo? device) || _levels.GetValueOrDefault(key, -1) == percent)
             return false;
         if (!_hardware.WriteLevel(device, percent))
         {
-            _logger.LogWarning("Could not set the brightness of {Device} over DDC/CI", device);
+            _logger.LogWarning("Could not set the brightness of {Device}", device.DeviceName);
             return false;
         }
         _levels[key] = percent;

@@ -31,7 +31,7 @@ and starts with empty settings in `%TEMP%\DispHub-fresh`, without touching autos
   `VibranceMapping`), config model and `ConfigStore`, `RuleEngine` (pure: who wins between pause, manual pick,
   app rule, schedule), `HotkeyGesture`, `FeatureGate` (free vs Pro limits).
 - `src/DispHub.Platform` (Windows): monitors via DisplayConfig, `GdiGamma`, vendor vibrance (`NvApi`),
-  `ColorApplier` (single colour thread, restore journal), `MonitorBrightness` (DDC/CI) and `MonitorModes` (refresh
+  `ColorApplier` (single colour thread, restore journal), `MonitorBrightness` (laptop screens over WMI, monitors over DDC/CI) and `MonitorModes` (refresh
   rate, HDR), each on its own thread and putting back what it changed, hotkeys, foreground watcher, autostart,
   Store licensing.
   Win32 calls go through CsWin32: add the API name to `NativeMethods.txt`, never hand-write `DllImport`. The one

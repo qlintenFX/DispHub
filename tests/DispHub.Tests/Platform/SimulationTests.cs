@@ -45,10 +45,10 @@ public sealed class SimulationTests
     {
         var brightness = new SimulatedBrightness(new NoDdcCi(), _simulated);
 
-        Assert.Equal(new HardwareLevel(70, 100), brightness.ReadLevel(SimulatedMonitor.DeviceName));
-        Assert.True(brightness.WriteLevel(SimulatedMonitor.DeviceName, 30));
-        Assert.Equal(30, brightness.ReadLevel(SimulatedMonitor.DeviceName)?.Current);
-        Assert.Null(brightness.ReadLevel(Real.DeviceName));
+        Assert.Equal(new HardwareLevel(70, 100), brightness.ReadLevel(_simulated.Info));
+        Assert.True(brightness.WriteLevel(_simulated.Info, 30));
+        Assert.Equal(30, brightness.ReadLevel(_simulated.Info)?.Current);
+        Assert.Null(brightness.ReadLevel(Real));
     }
 
     [Fact]
@@ -99,9 +99,9 @@ public sealed class SimulationTests
 
     private sealed class NoDdcCi : IHardwareBrightness
     {
-        public HardwareLevel? ReadLevel(string deviceName) => null;
+        public HardwareLevel? ReadLevel(MonitorInfo monitor) => null;
 
-        public bool WriteLevel(string deviceName, int percent) => false;
+        public bool WriteLevel(MonitorInfo monitor, int percent) => false;
     }
 
     private sealed class FixedModes : IDisplayModeBackend

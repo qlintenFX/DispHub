@@ -38,12 +38,22 @@ public sealed class MonitorBrightnessTests : IDisposable
     }
 
     [Fact]
-    public void Refresh_FindsExternalMonitorsThatAnswer()
+    public void Refresh_FindsEveryScreenThatAnswers_LaptopScreensToo()
     {
         Start();
 
-        Assert.Equal(60, Assert.Single(_brightness.Levels, l => l.Key == External.Key).Value);
-        Assert.False(_brightness.Levels.ContainsKey(Laptop.Key)); // laptop screens are Windows' own brightness
+        Assert.Equal(60, _brightness.Levels[External.Key]);
+        Assert.Equal(80, _brightness.Levels[Laptop.Key]);
+    }
+
+    [Fact]
+    public void Refresh_LeavesOutScreensThatDoNotAnswer()
+    {
+        _hardware.Levels.TryRemove(Laptop.DeviceName, out _);
+
+        Start();
+
+        Assert.False(_brightness.Levels.ContainsKey(Laptop.Key));
     }
 
     [Fact]
@@ -106,14 +116,14 @@ public sealed class MonitorBrightnessTests : IDisposable
     {
         public ConcurrentDictionary<string, int> Levels { get; } = new();
 
-        public HardwareLevel? ReadLevel(string deviceName) =>
-            Levels.TryGetValue(deviceName, out int level) ? new HardwareLevel(level, 100) : null;
+        public HardwareLevel? ReadLevel(MonitorInfo monitor) =>
+            Levels.TryGetValue(monitor.DeviceName, out int level) ? new HardwareLevel(level, 100) : null;
 
-        public bool WriteLevel(string deviceName, int percent)
+        public bool WriteLevel(MonitorInfo monitor, int percent)
         {
-            if (!Levels.ContainsKey(deviceName))
+            if (!Levels.ContainsKey(monitor.DeviceName))
                 return false;
-            Levels[deviceName] = percent;
+            Levels[monitor.DeviceName] = percent;
             return true;
         }
     }
