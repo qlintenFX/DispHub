@@ -35,7 +35,8 @@ public static class SettingsSearch
                 continue;
             foreach (SettingsCard card in Cards(view))
             {
-                if (!string.IsNullOrWhiteSpace(card.Header))
+                // Settings this PC doesn't have (such as materials on Windows 10) aren't found either.
+                if (!string.IsNullOrWhiteSpace(card.Header) && card.Visibility == Visibility.Visible)
                     results.Add(new SearchResult(card.Header, page.Title, card.Description, page, card.Header));
             }
         }

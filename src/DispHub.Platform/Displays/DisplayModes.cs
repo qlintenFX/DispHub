@@ -30,6 +30,9 @@ public interface IDisplayModeBackend
 
 public sealed class DisplayModes : IDisplayModeBackend
 {
+    /// <summary>Only the calls Windows 10 has, for trying DispHub as it runs there (--simulate-windows10).</summary>
+    public static bool OlderWindows { get; set; }
+
     public static DisplayMode? Current(string deviceName)
     {
         DEVMODEW mode = NewMode();
@@ -78,7 +81,7 @@ public sealed class DisplayModes : IDisplayModeBackend
         {
             header = Header<DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2>(monitor, DISPLAYCONFIG_DEVICE_INFO_TYPE.DISPLAYCONFIG_DEVICE_INFO_GET_ADVANCED_COLOR_INFO_2),
         };
-        if (PInvoke.DisplayConfigGetDeviceInfo(ref info2.header) == 0)
+        if (!OlderWindows && PInvoke.DisplayConfigGetDeviceInfo(ref info2.header) == 0)
             return info2.highDynamicRangeSupported ? info2.highDynamicRangeUserEnabled : null;
 
         var info = new DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO
@@ -100,7 +103,7 @@ public sealed class DisplayModes : IDisplayModeBackend
             header = Header<DISPLAYCONFIG_SET_HDR_STATE>(monitor, DISPLAYCONFIG_DEVICE_INFO_TYPE.DISPLAYCONFIG_DEVICE_INFO_SET_HDR_STATE),
             enableHdr = enable,
         };
-        if (PInvoke.DisplayConfigSetDeviceInfo(in hdr.header) == 0)
+        if (!OlderWindows && PInvoke.DisplayConfigSetDeviceInfo(in hdr.header) == 0)
             return true;
 
         var state = new DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE

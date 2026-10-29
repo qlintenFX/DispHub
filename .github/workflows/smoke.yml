@@ -1,0 +1,30 @@
+name: Smoke test
+
+# Starts the app on Windows Server 2022, which has Windows 10's code base, and keeps a screenshot of every page.
+on:
+  pull_request:
+    paths: ["src/**", "build/smoke-test.ps1", ".github/workflows/smoke.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-10:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - run: dotnet build src/DispHub/DispHub.csproj -c Release
+      - run: pwsh build/smoke-test.ps1 -Exe src/DispHub/bin/Release/net10.0-windows10.0.19041.0/DispHub.exe -Out smoke
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: smoke-windows-10
+          path: smoke
