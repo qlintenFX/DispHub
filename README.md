@@ -40,7 +40,7 @@ You can also build it yourself (below).
 | Feature | Works with |
 | --- | --- |
 | Gamma, contrast, brightness, colour temperature | Any GPU (Windows gamma ramps). Not available while HDR is on. |
-| Monitor brightness (the monitor's own backlight) | External monitors with DDC/CI on, which most have. Laptop screens keep Windows' brightness. |
+| Screen brightness (the screen's own backlight) | Laptop screens, and external monitors with DDC/CI on, which most have. |
 | Refresh rate and HDR per profile | Any display with more than one refresh rate; HDR needs an HDR display. The screen goes dark for a moment while it switches. |
 | Vibrance | NVIDIA and Intel (including laptop screens on Intel graphics). AMD is in beta: please report how it works for you. |
 

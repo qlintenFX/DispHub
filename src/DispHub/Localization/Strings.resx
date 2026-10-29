@@ -821,19 +821,19 @@ It also supports development of DispHub.</value>
     <value>A lower refresh rate on battery is part of DispHub Pro</value>
   </data>
   <data name="Profiles_MonitorBrightness" xml:space="preserve">
-    <value>Monitor brightness</value>
+    <value>Screen brightness</value>
   </data>
   <data name="Profiles_MonitorBrightnessOff" xml:space="preserve">
     <value>Left as it is</value>
   </data>
   <data name="Profiles_MonitorBrightnessPro" xml:space="preserve">
-    <value>Profiles that set the monitor's own brightness are part of DispHub Pro</value>
+    <value>Profiles that set the screen's own brightness are part of DispHub Pro</value>
   </data>
   <data name="Upgrade_MonitorBrightness" xml:space="preserve">
-    <value>Setting the monitor's own brightness</value>
+    <value>Setting the screen's own brightness</value>
   </data>
   <data name="Displays_MonitorBrightness" xml:space="preserve">
-    <value>Monitor brightness</value>
+    <value>Screen brightness</value>
   </data>
   <data name="Profiles_FromTemplate" xml:space="preserve">
     <value>From a template</value>

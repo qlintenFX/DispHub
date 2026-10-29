@@ -16,13 +16,29 @@ public readonly record struct HardwareLevel(int Current, int Maximum)
     public int Percent => Maximum <= 0 ? 0 : (int)Math.Round(Current * 100.0 / Maximum);
 }
 
-/// <summary>The monitor's own brightness (what its buttons change). Exists so the logic around it can be tested.</summary>
+/// <summary>
+/// A screen's own brightness (what its buttons or brightness keys change). Exists so the logic around it can be
+/// tested.
+/// </summary>
 public interface IHardwareBrightness
 {
-    /// <summary>Null when the monitor doesn't answer: DDC/CI off in its menu, a laptop screen, some docks and adapters.</summary>
-    HardwareLevel? ReadLevel(string deviceName);
+    /// <summary>Null when the screen doesn't answer: DDC/CI off in its menu, some docks and adapters, older laptops.</summary>
+    HardwareLevel? ReadLevel(MonitorInfo monitor);
 
-    bool WriteLevel(string deviceName, int percent);
+    bool WriteLevel(MonitorInfo monitor, int percent);
+}
+
+/// <summary>A laptop's own screen through Windows (WMI), other monitors over DDC/CI.</summary>
+public sealed class HardwareBrightness : IHardwareBrightness
+{
+    private readonly DdcBrightness _monitors = new();
+    private readonly PanelBrightness _panel = new();
+
+    public HardwareLevel? ReadLevel(MonitorInfo monitor) =>
+        monitor.IsInternal ? _panel.ReadLevel(monitor) : _monitors.ReadLevel(monitor);
+
+    public bool WriteLevel(MonitorInfo monitor, int percent) =>
+        monitor.IsInternal ? _panel.WriteLevel(monitor, percent) : _monitors.WriteLevel(monitor, percent);
 }
 
 /// <summary>
@@ -33,9 +49,9 @@ public sealed class DdcBrightness : IHardwareBrightness
 {
     private const byte Luminance = 0x10;
 
-    public HardwareLevel? ReadLevel(string deviceName) => WithMonitor<HardwareLevel?>(deviceName, null, Read);
+    public HardwareLevel? ReadLevel(MonitorInfo monitor) => WithMonitor<HardwareLevel?>(monitor.DeviceName, null, Read);
 
-    public bool WriteLevel(string deviceName, int percent) => WithMonitor(deviceName, false, handle =>
+    public bool WriteLevel(MonitorInfo monitor, int percent) => WithMonitor(monitor.DeviceName, false, handle =>
     {
         if (Read(handle) is not { } level)
             return false;

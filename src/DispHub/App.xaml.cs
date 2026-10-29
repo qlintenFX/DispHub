@@ -209,13 +209,13 @@ public partial class App : Application
         {
             var simulated = new SimulatedMonitor();
             services.AddSingleton<IDisplayBackend>(new SimulatedDisplayBackend(new WindowsDisplayBackend(), simulated));
-            services.AddSingleton<IHardwareBrightness>(new SimulatedBrightness(new DdcBrightness(), simulated));
+            services.AddSingleton<IHardwareBrightness>(new SimulatedBrightness(new HardwareBrightness(), simulated));
             services.AddSingleton<IDisplayModeBackend>(new SimulatedModes(new DisplayModes(), simulated));
         }
         else
         {
             services.AddSingleton<IDisplayBackend, WindowsDisplayBackend>();
-            services.AddSingleton<IHardwareBrightness, DdcBrightness>();
+            services.AddSingleton<IHardwareBrightness, HardwareBrightness>();
             services.AddSingleton<IDisplayModeBackend, DisplayModes>();
         }
         services.AddSingleton<IColorApplier>(sp => new ColorApplier(

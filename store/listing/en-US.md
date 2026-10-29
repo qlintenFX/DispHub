@@ -25,7 +25,7 @@ the change without stealing focus from your game.
 
 PROFILES THAT FIT HOW YOU USE YOUR PC
 • Brightness, contrast, gamma and colour temperature for every connected display
-• Your monitor's own brightness, without reaching for its buttons
+• Your screen's own brightness, on laptops and most monitors, without reaching for its buttons
 • Vibrance (colour saturation) on NVIDIA, Intel and AMD graphics, including the built-in screen of most laptops
 • Stream-friendly: OBS, Discord and screenshots capture your normal colours (a capture card shows your profile)
 • Global hotkeys for each profile, plus on or off, next and previous
