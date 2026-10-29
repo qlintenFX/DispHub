@@ -35,6 +35,23 @@ on them. Thank you to the photographers.
 | Autumn forest | [Fall Trail Panorama](https://commons.wikimedia.org/wiki/File:Fall_Trail_Panorama_(50671767778).jpg) | Shenandoah National Park, NPS |
 | Hot spring | [Grand Prismatic Spring Panorama](https://commons.wikimedia.org/wiki/File:Grand_Prismatic_Spring_Panorama_(37109293945).jpg) | Jacob W. Frank, Yellowstone National Park, NPS |
 
+### Website pictures
+
+The website's profiles page (`site/assets/img/show`) shows DispHub's profiles on these pictures, cropped to 16:9.
+The cropped copies keep their licences.
+
+| Picture | Source | Credit and licence |
+| --- | --- | --- |
+| night-1 | [Statistics on a laptop](https://commons.wikimedia.org/wiki/File:Statistics_on_a_laptop_(Unsplash).jpg) | Carlos Muza, CC0 |
+| night-2 | [Laptop coding programs](https://commons.wikimedia.org/wiki/File:Laptop_coding_programs_(Unsplash).jpg) | Tirza van Dijk, CC0 |
+| night-3 | [Woman typing at a computer](https://commons.wikimedia.org/wiki/File:Woman_typing_at_a_computer_(Unsplash).png) | William Iven, CC0 |
+| film-1 | [Tears of Steel frame 01 2a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_01_2a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| film-2 | [Tears of Steel frame 03 1a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_03_1a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| film-3 | [Tears of Steel frame 09 1a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_09_1a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| vision-1 | [Nuclear Dawn, Silo](https://commons.wikimedia.org/wiki/File:Nuclear_Dawn_-_Silo_Environment_02.png) | Interwave Studios, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
+| vision-2 | [Nuclear Dawn, Downtown](https://commons.wikimedia.org/wiki/File:Nuclear_Dawn_-_Downtown_Environment_03.png) | Interwave Studios, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
+| vision-3 | [Nuclear Dawn, Coast](https://commons.wikimedia.org/wiki/File:Nuclear_Dawn_-_Coast_Environment_02.jpg) | Interwave Studios, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
+
 ## Used at runtime, not shipped
 
 - **NVIDIA NVAPI** (`nvapi64.dll`) is installed with NVIDIA's graphics driver. DispHub calls it to read and set

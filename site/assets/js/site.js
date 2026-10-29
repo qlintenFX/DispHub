@@ -1,5 +1,5 @@
 // DispHub website: the live quick panel, entrance motion, the header material, the menu, the WinGet copy button and
-// the profile links.
+// the profiles' before and after.
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -76,23 +76,11 @@
     $("code", el).textContent = text;
   }));
 
-  // profile links open DispHub; when nothing takes the page's focus, DispHub probably isn't installed
-  $$("a[data-add]").forEach((a) => a.addEventListener("click", () => {
-    let opened = false;
-    const onBlur = () => { opened = true; };
-    window.addEventListener("blur", onBlur, { once: true });
-    setTimeout(() => {
-      window.removeEventListener("blur", onBlur);
-      if (!opened && document.hasFocus()) {
-        toast('Nothing opened? <a href="https://apps.microsoft.com/detail/9n5183brlx34?mode=direct">Get DispHub from the Microsoft Store</a>', 6000);
-      }
-    }, 1600);
-  }));
-
-  // the library: the chosen look drawn on one picture with the app's colour maths (RampBuilder, Blackbody and the
-  // preview's vibrance), in the browser, so a picture the visitor picks never leaves their PC
-  const stage = $("[data-stage]");
-  if (stage) {
+  // the profiles page: each profile before and after on a few pictures, drawn with the app's colour maths
+  // (RampBuilder, Blackbody and the preview's vibrance), in the browser, so a picture of the visitor's own never
+  // leaves their PC
+  const compare = $("[data-compare]");
+  if (compare) {
     const linear = (t) => {
       const t2 = t * t, t3 = t2 * t;
       const x = t <= 4000
@@ -137,27 +125,55 @@
       }
       return tables;
     };
-    const lookOf = (li) => {
-      const q = new URL($("a[data-add]", li).href).searchParams;
+    const lookOf = (tab) => {
+      const q = new URLSearchParams(tab.dataset.look);
       const n = (key, fallback) => (q.has(key) ? Number(q.get(key)) : fallback);
       return { b: n("b", 0), c: n("c", 0), g: n("g", 1), t: n("t", 6500), v: n("v", 50) };
     };
 
-    const rows = $$(".library li");
-    const ctx = stage.getContext("2d");
-    let pixels = null;
-    let chosen = rows.find((li) => li.getAttribute("aria-current") === "true") || rows[0];
+    const before = $("[data-before]", compare);
+    const after = $("[data-after]", compare);
+    const W = before.width, H = before.height;
+    const bctx = before.getContext("2d");
+    const actx = after.getContext("2d");
+    const tabs = $$(".segmented [role=tab]");
+    const examples = $("[data-examples]");
+    const own = $(".example.own", examples);
+    const cache = new Map();
+    let tab = tabs[0];
+    let picture = null; // a site picture's name, or "own"
+    let ownPixels = null;
 
-    const draw = () => {
-      if (!pixels) return;
-      const look = lookOf(chosen);
+    // cover the frame, keeping the middle of the picture
+    const pixelsOf = (img) => {
+      bctx.clearRect(0, 0, W, H);
+      const scale = Math.max(W / img.width, H / img.height);
+      const w = img.width * scale, h = img.height * scale;
+      bctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+      return bctx.getImageData(0, 0, W, H);
+    };
+    const load = (name) => {
+      if (!cache.has(name)) {
+        cache.set(name, new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = `../assets/img/show/${name}.webp`;
+        }));
+      }
+      return cache.get(name);
+    };
+
+    const render = (source) => {
+      bctx.putImageData(source, 0, 0);
+      const look = lookOf(tab);
       const [red, green, blue] = ramps(look);
       const saturation = look.v / 50;
-      const out = ctx.createImageData(stage.width, stage.height);
-      const d = out.data;
+      const out = actx.createImageData(W, H);
+      const s = source.data, d = out.data;
       const clamp = (v) => Math.min(Math.max(Math.round(v), 0), 255);
-      for (let i = 0; i < pixels.length; i += 4) {
-        let r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+      for (let i = 0; i < s.length; i += 4) {
+        let r = s[i], g = s[i + 1], b = s[i + 2];
         if (saturation !== 1) {
           const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
           r = luma + (r - luma) * saturation;
@@ -169,33 +185,77 @@
         d[i + 2] = blue[clamp(b)];
         d[i + 3] = 255;
       }
-      ctx.putImageData(out, 0, 0);
+      actx.putImageData(out, 0, 0);
+    };
+    let drawn = 0;
+    const show = async (name) => {
+      picture = name;
+      $$(".example", examples).forEach((ex) => ex.setAttribute("aria-checked", String(ex.dataset.picture === name)));
+      const ticket = ++drawn;
+      const source = name === "own" ? ownPixels : pixelsOf(await load(name));
+      if (ticket === drawn && source) render(source);
     };
 
-    // cover the stage, keeping the middle of the picture
-    const use = (src, revoke) => {
+    // the three pictures that fit the chosen profile, then the visitor's own
+    const fill = () => {
+      $$(".example:not(.own)", examples).forEach((ex) => ex.remove());
+      const alts = tab.dataset.alts.split("|");
+      tab.dataset.pictures.split(" ").forEach((name, i) => {
+        const ex = document.createElement("button");
+        ex.type = "button";
+        ex.className = "example";
+        ex.dataset.picture = name;
+        ex.setAttribute("role", "radio");
+        ex.setAttribute("aria-label", alts[i]);
+        ex.innerHTML = `<img src="../assets/img/show/${name}-thumb.webp" alt="" width="320" height="180">`;
+        ex.addEventListener("click", () => show(name));
+        examples.insertBefore(ex, own);
+      });
+    };
+    const choose = (next) => {
+      tab = next;
+      tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+      $("[data-show-line]").textContent = tab.dataset.line;
+      $("[data-show-values]").textContent = tab.dataset.values;
+      $("[data-after-name]", compare).textContent = tab.textContent;
+      fill();
+      show(picture === "own" ? "own" : tab.dataset.pictures.split(" ")[0]);
+    };
+    tabs.forEach((t) => t.addEventListener("click", () => choose(t)));
+    // arrow keys move between the tabs, as in Windows
+    $(".segmented").addEventListener("keydown", (e) => {
+      const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!step) return;
+      const next = tabs[(tabs.indexOf(tab) + step + tabs.length) % tabs.length];
+      choose(next);
+      next.focus();
+    });
+
+    const split = $("[data-split]", compare);
+    const move = () => compare.style.setProperty("--split", `${split.value}%`);
+    split.addEventListener("input", move);
+    move();
+
+    const useFile = (file) => {
+      if (!file || !file.type.startsWith("image/")) return;
+      const url = URL.createObjectURL(file);
       const img = new Image();
       img.onload = () => {
-        const scale = Math.max(stage.width / img.width, stage.height / img.height);
-        const w = img.width * scale, h = img.height * scale;
-        ctx.drawImage(img, (stage.width - w) / 2, (stage.height - h) / 2, w, h);
-        if (revoke) URL.revokeObjectURL(src);
-        pixels = ctx.getImageData(0, 0, stage.width, stage.height).data;
-        draw();
+        ownPixels = pixelsOf(img);
+        // the tile shows the picture, small
+        const thumb = document.createElement("canvas");
+        thumb.width = 256;
+        thumb.height = 144;
+        thumb.getContext("2d").drawImage(before, 0, 0, W, H, 0, 0, 256, 144);
+        own.style.backgroundImage = `url(${thumb.toDataURL("image/jpeg", 0.8)})`;
+        own.classList.add("has-picture");
+        URL.revokeObjectURL(url);
+        own.dataset.picture = "own";
+        show("own");
       };
-      img.src = src;
+      img.src = url;
     };
-    const useFile = (file) => {
-      if (file && file.type.startsWith("image/")) use(URL.createObjectURL(file), true);
-    };
-
-    rows.forEach((li) => $(".pick", li).addEventListener("click", () => {
-      rows.forEach((r) => r.removeAttribute("aria-current"));
-      li.setAttribute("aria-current", "true");
-      chosen = li;
-      draw();
-    }));
-    const picker = $("[data-picture]");
+    const picker = $("[data-picture]", examples);
     picker.addEventListener("change", () => useFile(picker.files[0]));
     // a picture dropped anywhere on the page works too
     document.addEventListener("dragover", (e) => e.preventDefault());
@@ -203,7 +263,8 @@
       e.preventDefault();
       useFile(e.dataTransfer.files[0]);
     });
-    use("../assets/img/look-base.webp", false);
+
+    choose(tab);
   }
 
   // the live quick panel: the photo uses the looks the app's colour ramps produce
