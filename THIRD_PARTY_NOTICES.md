@@ -42,9 +42,9 @@ The cropped copies keep their licences.
 
 | Picture | Source | Credit and licence |
 | --- | --- | --- |
-| night-1 | [LibreOffice Writer, Lorem ipsum](https://commons.wikimedia.org/wiki/File:LibreOffice_Writer-Lorem_ipsum.png) | LoMit, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
-| night-2 | [Edubuntu 24.10, LibreOffice Writer](https://commons.wikimedia.org/wiki/File:Edubuntu_24.10_LibreOffice_Writer_24.8.2.1_-_English.png) | Canonical Ltd. and community contributors, GPL |
-| night-3 | [BigLinux, LibreOffice Calc](https://commons.wikimedia.org/wiki/File:BigLinux_KDE_Next-G_2025-01-25_LibreOffice_Calc_24.8.3.2_-_English.png) | Bruno Gonçalves Araujo, GPL |
+| evening-1 | [LibreOffice Writer, Lorem ipsum](https://commons.wikimedia.org/wiki/File:LibreOffice_Writer-Lorem_ipsum.png) | LoMit, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
+| evening-2 | [Thunderbird 115](https://commons.wikimedia.org/wiki/File:Thunderbird_115.png) | MZLA Technologies Corporation, [MPL 2.0](https://www.mozilla.org/MPL/2.0/) |
+| evening-3 | [Platypus article on Vector 2022](https://commons.wikimedia.org/wiki/File:Platypus_article_on_Vector_2022.png) | Screenshot by AHollender (WMF), text by Wikipedia authors, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); cropped below the site's header |
 | film-1 | [Tears of Steel frame 01 2a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_01_2a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | film-2 | [Tears of Steel frame 03 1a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_03_1a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
 | film-3 | [Tears of Steel frame 09 1a](https://commons.wikimedia.org/wiki/File:Tears_of_Steel_frame_09_1a.jpg) | Blender Foundation, [mango.blender.org](https://mango.blender.org/), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
