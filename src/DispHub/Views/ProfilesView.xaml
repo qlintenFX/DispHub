@@ -474,10 +474,11 @@
           Style="{StaticResource Hint}"
           Text="{Binding VibranceHelp}" />
 
-        <!-- The external monitor's own backlight (DDC/CI, Pro); off leaves it where it is. -->
-        <StackPanel Visibility="{Binding HasMonitorLevel, Converter={StaticResource BoolToVisibility}}">
+        <!-- The monitor itself rather than its colours, each only when a display can do it (Pro). -->
+        <StackPanel Visibility="{Binding HasMonitorSection, Converter={StaticResource BoolToVisibility}}">
           <Separator Margin="0,12" />
-          <Grid Style="{StaticResource SliderRow}">
+          <!-- The external monitor's own backlight (DDC/CI); off leaves it where it is. -->
+          <Grid Style="{StaticResource SliderRow}" Visibility="{Binding HasMonitorLevel, Converter={StaticResource BoolToVisibility}}">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="170" />
               <ColumnDefinition Width="Auto" />
@@ -527,6 +528,66 @@
               Icon="{ui:SymbolIcon LockClosed24}"
               ToolTip="{l:Tr Profiles_MonitorBrightnessPro}"
               Visibility="{Binding CanUseMonitorBrightness, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+          </Grid>
+
+          <Grid Style="{StaticResource SliderRow}" Visibility="{Binding HasRefreshChoice, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="170" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="64" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="TopSpeed24" />
+              <TextBlock Text="{l:Tr Profiles_RefreshRate}" />
+            </StackPanel>
+            <ComboBox
+              Grid.Column="1"
+              MinWidth="220"
+              HorizontalAlignment="Left"
+              AutomationProperties.Name="{l:Tr Profiles_RefreshRate}"
+              IsEnabled="{Binding CanUseDisplayModes}"
+              ItemsSource="{Binding RefreshOptions}"
+              SelectedItem="{Binding SelectedRefresh}" />
+            <ui:Button
+              Grid.Column="2"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Appearance="Transparent"
+              AutomationProperties.Name="{l:Tr Profiles_DisplayModesPro}"
+              Command="{Binding UnlockDisplayModesCommand}"
+              Icon="{ui:SymbolIcon LockClosed24}"
+              ToolTip="{l:Tr Profiles_DisplayModesPro}"
+              Visibility="{Binding CanUseDisplayModes, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+          </Grid>
+
+          <Grid Style="{StaticResource SliderRow}" Visibility="{Binding HasHdrChoice, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="170" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="64" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Hdr24" />
+              <TextBlock Text="{l:Tr Profiles_Hdr}" />
+            </StackPanel>
+            <ComboBox
+              Grid.Column="1"
+              MinWidth="220"
+              HorizontalAlignment="Left"
+              AutomationProperties.Name="{l:Tr Profiles_Hdr}"
+              IsEnabled="{Binding CanUseDisplayModes}"
+              ItemsSource="{Binding HdrOptions}"
+              SelectedItem="{Binding SelectedHdr}" />
+            <ui:Button
+              Grid.Column="2"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Appearance="Transparent"
+              AutomationProperties.Name="{l:Tr Profiles_DisplayModesPro}"
+              Command="{Binding UnlockDisplayModesCommand}"
+              Icon="{ui:SymbolIcon LockClosed24}"
+              ToolTip="{l:Tr Profiles_DisplayModesPro}"
+              Visibility="{Binding CanUseDisplayModes, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
           </Grid>
         </StackPanel>
 

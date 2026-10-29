@@ -98,6 +98,24 @@
                     VerticalAlignment="Center"
                     Text="{Binding Level, StringFormat={}{0}%}" />
                 </Grid>
+                <StackPanel
+                  Margin="0,8,0,0"
+                  Orientation="Horizontal"
+                  Visibility="{Binding HasBatteryRefresh, Converter={StaticResource BoolToVisibility}}">
+                  <CheckBox
+                    Content="{Binding BatteryRefreshText}"
+                    IsChecked="{Binding LowRefreshOnBattery}"
+                    IsEnabled="{Binding CanUseDisplayModes}" />
+                  <ui:Button
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Appearance="Transparent"
+                    AutomationProperties.Name="{l:Tr Displays_LowRefreshPro}"
+                    Command="{Binding UnlockBatteryRefreshCommand}"
+                    Icon="{ui:SymbolIcon LockClosed24}"
+                    ToolTip="{l:Tr Displays_LowRefreshPro}"
+                    Visibility="{Binding CanUseDisplayModes, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+                </StackPanel>
                 <DockPanel Margin="0,8,0,0" Visibility="{Binding NoVibrance, Converter={StaticResource BoolToVisibility}}">
                   <ui:SymbolIcon Margin="0,1,6,0" VerticalAlignment="Top" FontSize="16" Symbol="Info16" />
                   <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Displays_NoVibrance}" />

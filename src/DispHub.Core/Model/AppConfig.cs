@@ -51,6 +51,12 @@ public sealed class Profile
     /// </summary>
     public int? MonitorBrightness { get; set; }
 
+    /// <summary>The refresh rate displays switch to while this profile is on (Pro).</summary>
+    public RefreshChoice RefreshRate { get; set; }
+
+    /// <summary>Windows HDR on or off while this profile is on (Pro); null leaves it as it is.</summary>
+    public bool? Hdr { get; set; }
+
     /// <summary>Optional per-monitor settings that replace <see cref="Color"/> on that monitor (Pro).</summary>
     [JsonObjectCreationHandling(JsonObjectCreationHandling.Populate)]
     public Dictionary<string, ColorSettings> MonitorOverrides { get; set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -69,6 +75,23 @@ public sealed class MonitorConfig
 
     /// <summary>The monitor's own brightness before a profile changed it, to put back (also after a crash).</summary>
     public int? BrightnessBeforeProfile { get; set; }
+
+    /// <summary>The refresh rate (Hz) before a profile changed it, to put back (also after a crash).</summary>
+    public int? RefreshBeforeProfile { get; set; }
+
+    /// <summary>Whether HDR was on before a profile changed it, to put back (also after a crash).</summary>
+    public bool? HdrBeforeProfile { get; set; }
+
+    /// <summary>Use a lower refresh rate while the PC runs on battery (Pro), as laptop makers' own apps do.</summary>
+    public bool LowRefreshOnBattery { get; set; }
+}
+
+/// <summary>What a profile does with each display's refresh rate.</summary>
+public enum RefreshChoice
+{
+    Unchanged,
+    Highest,
+    Lowest,
 }
 
 /// <summary>Switches to a profile while a given program is in the foreground (Pro).</summary>

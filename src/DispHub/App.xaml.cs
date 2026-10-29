@@ -143,6 +143,7 @@ public partial class App : Application
         _router.DisplayChanged += (_, _) => _controller.OnDisplayChanged();
         _router.Resumed += (_, _) => Dispatcher.BeginInvoke(_controller.OnResumed, DispatcherPriority.Background);
         _router.SessionUnlocked += (_, _) => _controller.OnResumed();
+        _router.PowerSourceChanged += (_, _) => _controller.OnPowerSourceChanged(PowerSource.OnBattery());
         _router.ThemeChanged += (_, _) => OnWindowsThemeChanged();
         HotkeyBox.RecordingChanged += (_, recording) =>
         {
@@ -153,6 +154,7 @@ public partial class App : Application
         };
 
         _services.GetRequiredService<ProTrial>().Attach(FakeStoreMode(args));
+        _controller.OnPowerSourceChanged(PowerSource.OnBattery());
         _controller.Start(hotkeys);
         _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, CreateQuickPanel, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
@@ -197,6 +199,8 @@ public partial class App : Application
         services.AddSingleton<IForegroundWatcher, ForegroundWatcher>();
         services.AddSingleton<IHardwareBrightness, DdcBrightness>();
         services.AddSingleton<IMonitorBrightness, MonitorBrightness>();
+        services.AddSingleton<IDisplayModeBackend, DisplayModes>();
+        services.AddSingleton<IMonitorModes, MonitorModes>();
         if (fresh)
             services.AddSingleton<IAutostart, TrialAutostart>();
         else

@@ -45,6 +45,7 @@ public sealed class AppController : IDisposable
     private readonly ILicenseService _license;
     private readonly IForegroundWatcher _foreground;
     private readonly IMonitorBrightness? _brightness;
+    private readonly IMonitorModes? _modes;
     private readonly TimeProvider _time;
     private readonly ILogger<AppController> _logger;
     private readonly ITimer _saveTimer;
@@ -55,6 +56,7 @@ public sealed class AppController : IDisposable
     private HashSet<string> _probedMonitors = new(StringComparer.OrdinalIgnoreCase);
     private IHotkeyRegistrar? _hotkeys;
     private ManualOverride? _manual;
+    private bool _onBattery;
     private bool _savePending;
     private bool _disposed;
 
@@ -65,13 +67,15 @@ public sealed class AppController : IDisposable
         IForegroundWatcher foreground,
         ILogger<AppController> logger,
         TimeProvider? time = null,
-        IMonitorBrightness? brightness = null)
+        IMonitorBrightness? brightness = null,
+        IMonitorModes? modes = null)
     {
         _store = store;
         _colors = colors;
         _license = license;
         _foreground = foreground;
         _brightness = brightness;
+        _modes = modes;
         _logger = logger;
         _time = time ?? TimeProvider.System;
         _dispatcher = Dispatcher.CurrentDispatcher;
@@ -91,6 +95,16 @@ public sealed class AppController : IDisposable
         {
             _brightness.Changed += (_, _) => _dispatcher.BeginInvoke(() => MonitorLevelsChanged?.Invoke(this, EventArgs.Empty));
             _brightness.OriginalsChanged += (_, originals) => _dispatcher.BeginInvoke(() => KeepOriginalLevels(originals));
+        }
+        if (_modes is not null)
+        {
+            // Raised after a switch too: the colour thread looks at the displays again, as HDR pauses gamma changes.
+            _modes.Changed += (_, _) => _dispatcher.BeginInvoke(() =>
+            {
+                _colors.RefreshDisplays();
+                ModeAbilitiesChanged?.Invoke(this, EventArgs.Empty);
+            });
+            _modes.OriginalsChanged += (_, originals) => _dispatcher.BeginInvoke(() => KeepOriginalModes(originals));
         }
         _foreground.Changed += (_, _) => _dispatcher.BeginInvoke(OnForegroundChanged);
         _license.Changed += (_, _) => _dispatcher.BeginInvoke(OnLicenceChanged);
@@ -169,6 +183,12 @@ public sealed class AppController : IDisposable
     /// <summary>Sets a monitor's own brightness now, as its buttons would.</summary>
     public void SetMonitorLevel(string monitorKey, int percent) => _brightness?.SetLevel(monitorKey, percent);
 
+    /// <summary>Displays that can switch refresh rate or HDR became known (on the UI thread).</summary>
+    public event EventHandler? ModeAbilitiesChanged;
+
+    /// <summary>Displays with more than one refresh rate, or with HDR, by monitor key.</summary>
+    public IReadOnlyDictionary<string, ModeAbilities> ModeAbilities => _modes?.Abilities ?? new Dictionary<string, ModeAbilities>();
+
     /// <summary>A profile's colours changed in the editor.</summary>
     public event EventHandler<Guid>? ProfileEdited;
 
@@ -185,6 +205,9 @@ public sealed class AppController : IDisposable
         _brightness?.Start(Config.Monitors
             .Where(m => m.Value.BrightnessBeforeProfile is not null)
             .ToDictionary(m => m.Key, m => m.Value.BrightnessBeforeProfile!.Value, StringComparer.OrdinalIgnoreCase));
+        _modes?.Start(Config.Monitors
+            .Where(m => m.Value.RefreshBeforeProfile is not null || m.Value.HdrBeforeProfile is not null)
+            .ToDictionary(m => m.Key, m => new SavedMode(m.Value.RefreshBeforeProfile, m.Value.HdrBeforeProfile), StringComparer.OrdinalIgnoreCase));
         _foreground.Start();
         SyncHotkeys();
         Evaluate(ChangeSource.Startup);
@@ -304,6 +327,34 @@ public sealed class AppController : IDisposable
             Evaluate(ChangeSource.Editor);
     }
 
+    /// <summary>The refresh rate and HDR displays switch to while the profile is on (Pro).</summary>
+    public void SetProfileDisplayMode(Guid profileId, RefreshChoice refresh, bool? hdr)
+    {
+        bool changes = refresh != RefreshChoice.Unchanged || hdr is not null;
+        if (FindProfile(profileId) is not { } profile || (changes && !Features.DisplayModes))
+            return;
+        profile.RefreshRate = refresh;
+        profile.Hdr = hdr;
+        ScheduleSave();
+        ProfileEdited?.Invoke(this, profileId);
+        if (Current?.ProfileId != profileId || Config.IsPaused)
+            ActivateProfile(profileId, ChangeSource.Editor);
+        else
+            Evaluate(ChangeSource.Editor);
+    }
+
+    /// <summary>Whether a display drops to a lower refresh rate on battery (Pro).</summary>
+    public void SetLowRefreshOnBattery(string monitorKey, bool on)
+    {
+        if (on && !Features.DisplayModes)
+            return;
+        if (!Config.Monitors.TryGetValue(monitorKey, out MonitorConfig? monitor))
+            Config.Monitors[monitorKey] = monitor = new MonitorConfig();
+        monitor.LowRefreshOnBattery = on;
+        ScheduleSave();
+        Evaluate(ChangeSource.Editor);
+    }
+
     /// <summary>Makes a display use the profile's main settings again.</summary>
     public void ClearMonitorOverride(Guid profileId, string monitorKey)
     {
@@ -341,6 +392,8 @@ public sealed class AppController : IDisposable
         if (FindProfile(profileId) is not { } source || AddProfile(source.Color, Loc.Format("Profiles_CopyName", source.Name)) is not { } copy)
             return null;
         copy.MonitorBrightness = source.MonitorBrightness;
+        copy.RefreshRate = source.RefreshRate;
+        copy.Hdr = source.Hdr;
         foreach ((string key, ColorSettings color) in source.MonitorOverrides)
             copy.MonitorOverrides[key] = color;
         return copy;
@@ -443,10 +496,12 @@ public sealed class AppController : IDisposable
     {
         // The colour thread finds monitors after startup and after display changes; rules may differ per monitor.
         var keys = _colors.Monitors.Select(m => m.Monitor.Key).ToHashSet(StringComparer.OrdinalIgnoreCase);
-        if (_brightness is not null && !keys.SetEquals(_probedMonitors))
+        if (!keys.SetEquals(_probedMonitors))
         {
             _probedMonitors = keys;
-            _brightness.Refresh(_colors.Monitors.Select(m => m.Monitor).ToList());
+            var monitors = _colors.Monitors.Select(m => m.Monitor).ToList();
+            _brightness?.Refresh(monitors);
+            _modes?.Refresh(monitors);
         }
         if (Current is null || !keys.SetEquals(Current.Monitors.Keys))
             Evaluate(ChangeSource.Automation);
@@ -460,8 +515,10 @@ public sealed class AppController : IDisposable
     {
         if (_brightness is not null && !_brightness.RestoreAll(TimeSpan.FromSeconds(3)))
             _logger.LogWarning("Not every monitor's brightness could be put back on exit");
-        // The worker reports what is left to put back through the dispatcher: let that land before the last save,
-        // or the next start would put back levels that are already back.
+        if (_modes is not null && !_modes.RestoreAll(TimeSpan.FromSeconds(5)))
+            _logger.LogWarning("Not every display's refresh rate or HDR could be put back on exit");
+        // The workers report what is left to put back through the dispatcher: let that land before the last save,
+        // or the next start would put back levels and modes that are already back.
         _dispatcher.Invoke(() => { }, DispatcherPriority.Background);
         FlushSave();
         if (!_colors.RestoreAll(TimeSpan.FromSeconds(3)))
@@ -481,6 +538,32 @@ public sealed class AppController : IDisposable
         ScheduleSave();
     }
 
+    /// <summary>The worker changed or put back display modes: keep what to put back, so a crash can be undone.</summary>
+    private void KeepOriginalModes(IReadOnlyDictionary<string, SavedMode> originals)
+    {
+        foreach ((string key, MonitorConfig monitor) in Config.Monitors)
+        {
+            SavedMode saved = originals.GetValueOrDefault(key);
+            (monitor.RefreshBeforeProfile, monitor.HdrBeforeProfile) = (saved.RefreshHz, saved.Hdr);
+        }
+        foreach ((string key, SavedMode saved) in originals)
+        {
+            if (!Config.Monitors.ContainsKey(key))
+                Config.Monitors[key] = new MonitorConfig { RefreshBeforeProfile = saved.RefreshHz, HdrBeforeProfile = saved.Hdr };
+        }
+        ScheduleSave();
+    }
+
+    /// <summary>The PC switched between battery and the charger.</summary>
+    public void OnPowerSourceChanged(bool onBattery)
+    {
+        if (_onBattery == onBattery)
+            return;
+        _onBattery = onBattery;
+        if (Current is not null && Config.Monitors.Values.Any(m => m.LowRefreshOnBattery))
+            Evaluate(ChangeSource.Automation);
+    }
+
     public void Dispose()
     {
         if (_disposed)
@@ -491,6 +574,7 @@ public sealed class AppController : IDisposable
         _trialTimer.Dispose();
         _foreground.Dispose();
         _brightness?.Dispose();
+        _modes?.Dispose();
         _colors.Dispose();
     }
 
@@ -527,6 +611,7 @@ public sealed class AppController : IDisposable
             targets[key] = target.Settings;
         _colors.Apply(new MonitorTargets(targets, DefaultTarget(output)));
         _brightness?.Apply(MonitorLevelTargets(output));
+        _modes?.Apply(ModeTargets(output), byHand: source != ChangeSource.Automation);
 
         bool profileChanged = Current?.ProfileId != output.ProfileId || Current?.Reason != output.Reason;
         Current = output;
@@ -550,6 +635,28 @@ public sealed class AppController : IDisposable
                 : null;
         }
         return levels;
+    }
+
+    /// <summary>
+    /// The refresh rate and HDR each display's profile asks for (Pro). Without one, a laptop screen can drop to a
+    /// lower refresh rate on battery.
+    /// </summary>
+    private Dictionary<string, ModeTarget> ModeTargets(RuleOutput output)
+    {
+        var modes = new Dictionary<string, ModeTarget>(StringComparer.OrdinalIgnoreCase);
+        if (!Features.DisplayModes || Config.IsOff)
+            return modes;
+        foreach ((string key, MonitorTarget target) in output.Monitors)
+        {
+            if (target.Reason == TargetReason.Excluded)
+                continue;
+            Profile? profile = target.Settings is not null && target.ProfileId is { } id ? FindProfile(id) : null;
+            RefreshChoice refresh = profile?.RefreshRate ?? RefreshChoice.Unchanged;
+            if (refresh == RefreshChoice.Unchanged && _onBattery && Config.Monitors.GetValueOrDefault(key)?.LowRefreshOnBattery == true)
+                refresh = RefreshChoice.Lowest;
+            modes[key] = new ModeTarget(refresh, profile?.Hdr);
+        }
+        return modes;
     }
 
     private ColorSettings? DefaultTarget(RuleOutput output)

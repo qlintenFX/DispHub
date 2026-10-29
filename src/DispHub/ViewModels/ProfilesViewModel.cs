@@ -40,6 +40,8 @@ public sealed partial class ProfilesViewModel : PageViewModel
                 item.Update(profile, item.IsActive, _app.HotkeyFailure(id), item.IsLocked);
         };
         _app.MonitorsChanged += (_, _) => RefreshWarnings();
+        _app.MonitorLevelsChanged += (_, _) => Editor.RefreshHardware();
+        _app.ModeAbilitiesChanged += (_, _) => Editor.RefreshHardware();
         _app.ExternalResetDetected += (_, _) =>
         {
             _externalReset = true;
@@ -424,6 +426,16 @@ public sealed record DisplayChoice(string? Key, string Name)
     public override string ToString() => Name;
 }
 
+public sealed record RefreshOption(RefreshChoice Choice, string Name)
+{
+    public override string ToString() => Name;
+}
+
+public sealed record HdrOption(bool? On, string Name)
+{
+    public override string ToString() => Name;
+}
+
 public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeService upgrade) : ObservableObject
 {
     private static readonly DisplayChoice AllDisplays = new(null, Loc.Get("Profiles_AllDisplays"));
@@ -522,6 +534,102 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             app.SetProfileMonitorBrightness(_profileId, SetsMonitorBrightness ? MonitorBrightness : null);
     }
 
+    /// <summary>Some display has more than one refresh rate.</summary>
+    [ObservableProperty]
+    public partial bool HasRefreshChoice { get; set; }
+
+    /// <summary>Some display can do HDR.</summary>
+    [ObservableProperty]
+    public partial bool HasHdrChoice { get; set; }
+
+    /// <summary>The section about the monitor itself (its brightness, refresh rate and HDR) has something to show.</summary>
+    [ObservableProperty]
+    public partial bool HasMonitorSection { get; set; }
+
+    [ObservableProperty]
+    public partial bool CanUseDisplayModes { get; set; }
+
+    public ObservableCollection<RefreshOption> RefreshOptions { get; } = [];
+
+    public IReadOnlyList<HdrOption> HdrOptions { get; } =
+    [
+        new(null, Loc.Get("Profiles_Unchanged")),
+        new(true, Loc.Get("Profiles_HdrOn")),
+        new(false, Loc.Get("Profiles_HdrOff")),
+    ];
+
+    [ObservableProperty]
+    public partial RefreshOption? SelectedRefresh { get; set; }
+
+    [ObservableProperty]
+    public partial HdrOption? SelectedHdr { get; set; }
+
+    [RelayCommand]
+    private void UnlockDisplayModes() => upgrade.ShowUpgrade(Loc.Get("Upgrade_DisplayModes"));
+
+    partial void OnSelectedRefreshChanged(RefreshOption? value) => PushDisplayMode();
+
+    partial void OnSelectedHdrChanged(HdrOption? value) => PushDisplayMode();
+
+    private void PushDisplayMode()
+    {
+        if (!_loading && HasProfile)
+            app.SetProfileDisplayMode(_profileId, SelectedRefresh?.Choice ?? RefreshChoice.Unchanged, SelectedHdr?.On);
+    }
+
+    /// <summary>Updates the section about the monitor itself once displays have been looked at, or changed.</summary>
+    public void RefreshHardware()
+    {
+        if (!HasProfile || app.FindProfile(_profileId) is not { } profile)
+            return;
+        _loading = true;
+        try
+        {
+            LoadHardware(profile);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void LoadHardware(Profile profile)
+    {
+        HasMonitorLevel = app.MonitorLevels.Count > 0;
+        CanUseMonitorBrightness = app.Features.MonitorBrightnessInProfiles;
+        SetsMonitorBrightness = profile.MonitorBrightness is not null;
+        // Turned on, the slider starts from where the monitor is now.
+        MonitorBrightness = profile.MonitorBrightness ?? app.MonitorLevels.Values.DefaultIfEmpty(70).First();
+
+        var rates = app.ModeAbilities.Values.Select(a => a.RefreshRates).Where(r => r.Count > 1).ToList();
+        HasRefreshChoice = rates.Count > 0;
+        HasHdrChoice = app.ModeAbilities.Values.Any(a => a.Hdr);
+        HasMonitorSection = HasMonitorLevel || HasRefreshChoice || HasHdrChoice;
+        CanUseDisplayModes = app.Features.DisplayModes;
+        RefreshOption[] options =
+        [
+            new(RefreshChoice.Unchanged, Loc.Get("Profiles_Unchanged")),
+            Option(RefreshChoice.Highest, "Profiles_RefreshHighest", rates),
+            Option(RefreshChoice.Lowest, "Profiles_RefreshLowest", rates),
+        ];
+        if (!RefreshOptions.SequenceEqual(options))
+        {
+            RefreshOptions.Clear();
+            foreach (RefreshOption option in options)
+                RefreshOptions.Add(option);
+        }
+        SelectedRefresh = RefreshOptions.First(o => o.Choice == profile.RefreshRate);
+        SelectedHdr = HdrOptions.First(o => o.On == profile.Hdr);
+    }
+
+    /// <summary>"Highest (165 Hz)" when every display agrees on the rate, otherwise just "Highest".</summary>
+    private static RefreshOption Option(RefreshChoice choice, string key, List<IReadOnlyList<int>> rates)
+    {
+        var picks = rates.Select(r => RefreshRates.Pick(r, choice)).Distinct().ToList();
+        string name = Loc.Get(key);
+        return new RefreshOption(choice, picks is [int hz] ? Loc.Format("Profiles_RefreshRateHz", name, hz) : name);
+    }
+
     [ObservableProperty]
     public partial string? Hotkey { get; set; }
 
@@ -559,11 +667,7 @@ public sealed partial class ProfileEditorViewModel(AppController app, IUpgradeSe
             Vibrance = color.Vibrance;
             ShadowBoost = color.ShadowBoost;
             CanUseShadowBoost = app.Features.ShadowBoost;
-            HasMonitorLevel = app.MonitorLevels.Count > 0;
-            CanUseMonitorBrightness = app.Features.MonitorBrightnessInProfiles;
-            SetsMonitorBrightness = profile.MonitorBrightness is not null;
-            // Turned on, the slider starts from where the monitor is now.
-            MonitorBrightness = profile.MonitorBrightness ?? app.MonitorLevels.Values.DefaultIfEmpty(70).First();
+            LoadHardware(profile);
             Hotkey = profile.Hotkey;
             HotkeyError = Localize(app.HotkeyFailure(profile.Id));
             OnPropertyChanged(nameof(VibranceSupported));

@@ -32,6 +32,9 @@ public sealed class ShellMessageRouter : IDisposable
 
     public event EventHandler? DisplayChanged;
     public event EventHandler? Resumed;
+
+    /// <summary>The PC switched between battery and the charger (or the battery level changed).</summary>
+    public event EventHandler? PowerSourceChanged;
     public event EventHandler? SessionUnlocked;
     public event EventHandler? TaskbarCreated;
     public event EventHandler? DpiChanged;
@@ -51,6 +54,8 @@ public sealed class ShellMessageRouter : IDisposable
             DisplayChanged?.Invoke(this, EventArgs.Empty);
         else if (message == PInvoke.WM_POWERBROADCAST && wParam == PInvoke.PBT_APMRESUMEAUTOMATIC)
             Resumed?.Invoke(this, EventArgs.Empty);
+        else if (message == PInvoke.WM_POWERBROADCAST && wParam == PInvoke.PBT_APMPOWERSTATUSCHANGE)
+            PowerSourceChanged?.Invoke(this, EventArgs.Empty);
         else if (message == PInvoke.WM_WTSSESSION_CHANGE && wParam == PInvoke.WTS_SESSION_UNLOCK)
             SessionUnlocked?.Invoke(this, EventArgs.Empty);
         else if (message == _taskbarCreated && _taskbarCreated != 0)

@@ -385,6 +385,38 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public async Task ProfileDisplayModes_ArePro_AndBatteryLowersTheRateOtherwise()
+    {
+        using var dir = new TempDirectory();
+        var modes = new FakeModes();
+        using var app = new AppController(new ConfigStore(dir.Path), new FakeColors(), _license, _foreground, NullLogger<AppController>.Instance, modes: modes);
+        app.Start(new FakeHotkeys());
+        Profile standard = app.Config.Profiles[0];
+
+        app.SetProfileDisplayMode(standard.Id, RefreshChoice.Highest, hdr: true);
+        Assert.Equal(RefreshChoice.Unchanged, standard.RefreshRate);
+        Assert.Empty(modes.Last!);
+
+        await _license.PurchaseProAsync(0);
+        app.SetProfileDisplayMode(standard.Id, RefreshChoice.Highest, hdr: true);
+        Assert.Equal(new ModeTarget(RefreshChoice.Highest, true), modes.Last!["m1"]);
+        Assert.True(modes.LastByHand);
+
+        app.SetProfileDisplayMode(standard.Id, RefreshChoice.Unchanged, hdr: null);
+        app.SetLowRefreshOnBattery("m1", on: true);
+        Assert.Equal(default, modes.Last!["m1"]);
+        app.OnPowerSourceChanged(onBattery: true);
+        Assert.Equal(RefreshChoice.Lowest, modes.Last!["m1"].Refresh);
+        Assert.False(modes.LastByHand); // waits a moment, like any automatic change
+
+        app.SetOn(false, ChangeSource.Tray);
+        Assert.Empty(modes.Last!);
+
+        app.Shutdown();
+        Assert.True(modes.Restored);
+    }
+
+    [Fact]
     public async Task Duplicate_KeepsEverythingButNameAndHotkey()
     {
         await _license.PurchaseProAsync(0);
@@ -493,6 +525,44 @@ public sealed class AppControllerTests : IDisposable
             Report(LeftAfterRestore);
             return Restored = true;
         }
+
+        public void Dispose()
+        {
+        }
+    }
+
+    internal sealed class FakeModes : IMonitorModes
+    {
+        public IReadOnlyDictionary<string, ModeTarget>? Last { get; private set; }
+        public bool LastByHand { get; private set; }
+        public bool Restored { get; private set; }
+
+        public IReadOnlyDictionary<string, ModeAbilities> Abilities { get; } =
+            new Dictionary<string, ModeAbilities> { ["m1"] = new([60, 120], true) };
+
+        public event EventHandler<IReadOnlyDictionary<string, SavedMode>>? OriginalsChanged
+        {
+            add { }
+            remove { }
+        }
+
+        public event EventHandler? Changed
+        {
+            add { }
+            remove { }
+        }
+
+        public void Start(IReadOnlyDictionary<string, SavedMode> originals)
+        {
+        }
+
+        public void Refresh(IReadOnlyList<MonitorInfo> monitors)
+        {
+        }
+
+        public void Apply(IReadOnlyDictionary<string, ModeTarget> targets, bool byHand) => (Last, LastByHand) = (targets, byHand);
+
+        public bool RestoreAll(TimeSpan timeout) => Restored = true;
 
         public void Dispose()
         {
