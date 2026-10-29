@@ -443,6 +443,7 @@ Logs: {1}</value>
 Pro is a one-time purchase that unlocks:
 • Profiles that switch for every app, not just one
 • Shadow boost, to see into dark areas
+• Profiles that set your monitor's own brightness
 • Schedules with smooth fades
 • Different settings per display
 • More than {1} profiles
@@ -775,6 +776,21 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Summary_Shadows" xml:space="preserve">
     <value>Shadows +{0}</value>
+  </data>
+  <data name="Profiles_MonitorBrightness" xml:space="preserve">
+    <value>Monitor brightness</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessOff" xml:space="preserve">
+    <value>Left as it is</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessPro" xml:space="preserve">
+    <value>Profiles that set the monitor's own brightness are part of DispHub Pro</value>
+  </data>
+  <data name="Upgrade_MonitorBrightness" xml:space="preserve">
+    <value>Setting the monitor's own brightness</value>
+  </data>
+  <data name="Displays_MonitorBrightness" xml:space="preserve">
+    <value>Monitor brightness</value>
   </data>
   <data name="Profiles_FromTemplate" xml:space="preserve">
     <value>From a template</value>

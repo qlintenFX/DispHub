@@ -44,6 +44,7 @@ public sealed class AppController : IDisposable
     private readonly IColorApplier _colors;
     private readonly ILicenseService _license;
     private readonly IForegroundWatcher _foreground;
+    private readonly IMonitorBrightness? _brightness;
     private readonly TimeProvider _time;
     private readonly ILogger<AppController> _logger;
     private readonly ITimer _saveTimer;
@@ -51,6 +52,7 @@ public sealed class AppController : IDisposable
     private readonly ITimer _trialTimer;
     private readonly Dispatcher _dispatcher;
     private DateTimeOffset? _trialEnds;
+    private HashSet<string> _probedMonitors = new(StringComparer.OrdinalIgnoreCase);
     private IHotkeyRegistrar? _hotkeys;
     private ManualOverride? _manual;
     private bool _savePending;
@@ -62,12 +64,14 @@ public sealed class AppController : IDisposable
         ILicenseService license,
         IForegroundWatcher foreground,
         ILogger<AppController> logger,
-        TimeProvider? time = null)
+        TimeProvider? time = null,
+        IMonitorBrightness? brightness = null)
     {
         _store = store;
         _colors = colors;
         _license = license;
         _foreground = foreground;
+        _brightness = brightness;
         _logger = logger;
         _time = time ?? TimeProvider.System;
         _dispatcher = Dispatcher.CurrentDispatcher;
@@ -83,6 +87,11 @@ public sealed class AppController : IDisposable
 
         _colors.StatusChanged += (_, _) => _dispatcher.BeginInvoke(OnMonitorsChanged);
         _colors.ExternalResetDetected += (_, _) => _dispatcher.BeginInvoke(() => ExternalResetDetected?.Invoke(this, EventArgs.Empty));
+        if (_brightness is not null)
+        {
+            _brightness.Changed += (_, _) => _dispatcher.BeginInvoke(() => MonitorLevelsChanged?.Invoke(this, EventArgs.Empty));
+            _brightness.OriginalsChanged += (_, originals) => _dispatcher.BeginInvoke(() => KeepOriginalLevels(originals));
+        }
         _foreground.Changed += (_, _) => _dispatcher.BeginInvoke(OnForegroundChanged);
         _license.Changed += (_, _) => _dispatcher.BeginInvoke(OnLicenceChanged);
     }
@@ -151,6 +160,15 @@ public sealed class AppController : IDisposable
 
     public event EventHandler? MonitorsChanged;
 
+    /// <summary>External monitors' own brightness changed or became known (on the UI thread).</summary>
+    public event EventHandler? MonitorLevelsChanged;
+
+    /// <summary>External monitors whose own brightness can be set (DDC/CI), by monitor key, in percent.</summary>
+    public IReadOnlyDictionary<string, int> MonitorLevels => _brightness?.Levels ?? new Dictionary<string, int>();
+
+    /// <summary>Sets a monitor's own brightness now, as its buttons would.</summary>
+    public void SetMonitorLevel(string monitorKey, int percent) => _brightness?.SetLevel(monitorKey, percent);
+
     /// <summary>A profile's colours changed in the editor.</summary>
     public event EventHandler<Guid>? ProfileEdited;
 
@@ -164,6 +182,9 @@ public sealed class AppController : IDisposable
         _hotkeys = hotkeys;
         _hotkeys.Pressed += (_, action) => OnHotkey(action);
         _colors.Start();
+        _brightness?.Start(Config.Monitors
+            .Where(m => m.Value.BrightnessBeforeProfile is not null)
+            .ToDictionary(m => m.Key, m => m.Value.BrightnessBeforeProfile!.Value, StringComparer.OrdinalIgnoreCase));
         _foreground.Start();
         SyncHotkeys();
         Evaluate(ChangeSource.Startup);
@@ -261,6 +282,20 @@ public sealed class AppController : IDisposable
         if (!Features.PerMonitorProfiles || FindProfile(profileId) is not { } profile)
             return;
         profile.MonitorOverrides[monitorKey] = color.Clamp();
+        ScheduleSave();
+        ProfileEdited?.Invoke(this, profileId);
+        if (Current?.ProfileId != profileId || Config.IsPaused)
+            ActivateProfile(profileId, ChangeSource.Editor);
+        else
+            Evaluate(ChangeSource.Editor);
+    }
+
+    /// <summary>The own brightness external monitors get while the profile is on (Pro); null leaves it alone.</summary>
+    public void SetProfileMonitorBrightness(Guid profileId, int? percent)
+    {
+        if (FindProfile(profileId) is not { } profile || (percent is not null && !Features.MonitorBrightnessInProfiles))
+            return;
+        profile.MonitorBrightness = percent is { } p ? Math.Clamp(p, 0, 100) : null;
         ScheduleSave();
         ProfileEdited?.Invoke(this, profileId);
         if (Current?.ProfileId != profileId || Config.IsPaused)
@@ -400,6 +435,11 @@ public sealed class AppController : IDisposable
     {
         // The colour thread finds monitors after startup and after display changes; rules may differ per monitor.
         var keys = _colors.Monitors.Select(m => m.Monitor.Key).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (_brightness is not null && !keys.SetEquals(_probedMonitors))
+        {
+            _probedMonitors = keys;
+            _brightness.Refresh(_colors.Monitors.Select(m => m.Monitor).ToList());
+        }
         if (Current is null || !keys.SetEquals(Current.Monitors.Keys))
             Evaluate(ChangeSource.Automation);
         MonitorsChanged?.Invoke(this, EventArgs.Empty);
@@ -407,12 +447,27 @@ public sealed class AppController : IDisposable
 
     public void OnResumed() => _colors.Reapply();
 
-    /// <summary>Restores original colours and saves. Call before exiting.</summary>
+    /// <summary>Restores original colours and monitor brightness, and saves. Call before exiting.</summary>
     public void Shutdown()
     {
+        if (_brightness is not null && !_brightness.RestoreAll(TimeSpan.FromSeconds(3)))
+            _logger.LogWarning("Not every monitor's brightness could be put back on exit");
         FlushSave();
         if (!_colors.RestoreAll(TimeSpan.FromSeconds(3)))
             _logger.LogWarning("Not every monitor could be restored on exit");
+    }
+
+    /// <summary>The worker found or put back levels from before a profile: keep them, so a crash can be undone.</summary>
+    private void KeepOriginalLevels(IReadOnlyDictionary<string, int> originals)
+    {
+        foreach ((string key, MonitorConfig monitor) in Config.Monitors)
+            monitor.BrightnessBeforeProfile = originals.TryGetValue(key, out int level) ? level : null;
+        foreach ((string key, int level) in originals)
+        {
+            if (!Config.Monitors.ContainsKey(key))
+                Config.Monitors[key] = new MonitorConfig { BrightnessBeforeProfile = level };
+        }
+        ScheduleSave();
     }
 
     public void Dispose()
@@ -424,6 +479,7 @@ public sealed class AppController : IDisposable
         _ruleTimer.Dispose();
         _trialTimer.Dispose();
         _foreground.Dispose();
+        _brightness?.Dispose();
         _colors.Dispose();
     }
 
@@ -459,6 +515,7 @@ public sealed class AppController : IDisposable
         foreach ((string key, MonitorTarget target) in output.Monitors)
             targets[key] = target.Settings;
         _colors.Apply(new MonitorTargets(targets, DefaultTarget(output)));
+        _brightness?.Apply(MonitorLevelTargets(output));
 
         bool profileChanged = Current?.ProfileId != output.ProfileId || Current?.Reason != output.Reason;
         Current = output;
@@ -468,6 +525,20 @@ public sealed class AppController : IDisposable
         // so dragging a slider doesn't rebuild the tray menu and every page.
         if (profileChanged || source is ChangeSource.Startup or ChangeSource.Hotkey or ChangeSource.Tray)
             StateChanged?.Invoke(this, source);
+    }
+
+    /// <summary>The own brightness each monitor's profile asks for (Pro), or null to leave or put back the usual level.</summary>
+    private Dictionary<string, int?> MonitorLevelTargets(RuleOutput output)
+    {
+        var levels = new Dictionary<string, int?>(StringComparer.OrdinalIgnoreCase);
+        bool allowed = Features.MonitorBrightnessInProfiles;
+        foreach ((string key, MonitorTarget target) in output.Monitors)
+        {
+            levels[key] = allowed && target.Settings is not null && target.ProfileId is { } id
+                ? FindProfile(id)?.MonitorBrightness
+                : null;
+        }
+        return levels;
     }
 
     private ColorSettings? DefaultTarget(RuleOutput output)

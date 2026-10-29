@@ -355,6 +355,30 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public async Task ProfileMonitorBrightness_IsProAndPutBackOnExit()
+    {
+        using var dir = new TempDirectory();
+        var brightness = new FakeBrightness();
+        using var app = new AppController(new ConfigStore(dir.Path), new FakeColors(), _license, _foreground, NullLogger<AppController>.Instance, brightness: brightness);
+        app.Start(new FakeHotkeys());
+        Profile standard = app.Config.Profiles[0];
+
+        app.SetProfileMonitorBrightness(standard.Id, 40);
+        Assert.Null(standard.MonitorBrightness);
+        Assert.Null(brightness.Last!["m1"]);
+
+        await _license.PurchaseProAsync(0);
+        app.SetProfileMonitorBrightness(standard.Id, 40);
+        Assert.Equal(40, brightness.Last!["m1"]);
+
+        app.SetProfilesOn(false, ChangeSource.Editor);
+        Assert.Null(brightness.Last!["m1"]);
+
+        app.Shutdown();
+        Assert.True(brightness.Restored);
+    }
+
+    [Fact]
     public void Shutdown_SavesChangesAndRestoresColours()
     {
         _app.RenameProfile(Gaming.Id, "Competitive");
@@ -397,6 +421,46 @@ public sealed class AppControllerTests : IDisposable
         }
 
         public void Reapply()
+        {
+        }
+
+        public bool RestoreAll(TimeSpan timeout) => Restored = true;
+
+        public void Dispose()
+        {
+        }
+    }
+
+    internal sealed class FakeBrightness : IMonitorBrightness
+    {
+        public IReadOnlyDictionary<string, int?>? Last { get; private set; }
+        public bool Restored { get; private set; }
+
+        public IReadOnlyDictionary<string, int> Levels { get; } = new Dictionary<string, int> { ["m1"] = 60 };
+
+        public event EventHandler<IReadOnlyDictionary<string, int>>? OriginalsChanged
+        {
+            add { }
+            remove { }
+        }
+
+        public event EventHandler? Changed
+        {
+            add { }
+            remove { }
+        }
+
+        public void Start(IReadOnlyDictionary<string, int> originals)
+        {
+        }
+
+        public void Refresh(IReadOnlyList<MonitorInfo> monitors)
+        {
+        }
+
+        public void Apply(IReadOnlyDictionary<string, int?> targets) => Last = targets;
+
+        public void SetLevel(string monitorKey, int percent)
         {
         }
 

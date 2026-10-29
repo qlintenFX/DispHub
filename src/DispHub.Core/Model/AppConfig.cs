@@ -45,6 +45,12 @@ public sealed class Profile
     /// <summary>Hotkey in <see cref="Hotkeys.HotkeyGesture"/> string form, e.g. "Ctrl+Alt+1".</summary>
     public string? Hotkey { get; set; }
 
+    /// <summary>
+    /// The brightness external monitors' own backlight is set to while this profile is on (DDC/CI, Pro), in percent;
+    /// null leaves it as it is.
+    /// </summary>
+    public int? MonitorBrightness { get; set; }
+
     /// <summary>Optional per-monitor settings that replace <see cref="Color"/> on that monitor (Pro).</summary>
     [JsonObjectCreationHandling(JsonObjectCreationHandling.Populate)]
     public Dictionary<string, ColorSettings> MonitorOverrides { get; set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -60,6 +66,9 @@ public sealed class MonitorConfig
 
     /// <summary>When true DispHub leaves this monitor untouched.</summary>
     public bool Excluded { get; set; }
+
+    /// <summary>The monitor's own brightness before a profile changed it, to put back (also after a crash).</summary>
+    public int? BrightnessBeforeProfile { get; set; }
 }
 
 /// <summary>Switches to a profile while a given program is in the foreground (Pro).</summary>

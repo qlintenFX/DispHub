@@ -26,6 +26,11 @@ public sealed partial class DisplaysViewModel : PageViewModel
         _app.MonitorsChanged += (_, _) => Load();
         _app.StateChanged += (_, _) => Load();
         _app.PowerChanged += (_, _) => Load();
+        _app.MonitorLevelsChanged += (_, _) =>
+        {
+            foreach (DisplayItem item in Displays)
+                item.UpdateLevel();
+        };
         Load();
     }
 
@@ -61,6 +66,36 @@ public sealed partial class DisplayItem : ObservableObject
         NoVibrance = !status.SupportsVibrance;
         Included = !(app.Config.Monitors.TryGetValue(_key, out MonitorConfig? config) && config.Excluded);
         UpdateSummary();
+        UpdateLevel();
+    }
+
+    /// <summary>The monitor's own brightness can be set over DDC/CI: the card shows its slider.</summary>
+    [ObservableProperty] public partial bool HasLevel { get; set; }
+
+    [ObservableProperty] public partial int Level { get; set; }
+
+    private bool _readingLevel;
+
+    /// <summary>Shows the level the monitor reports (or was last set to), without sending it back.</summary>
+    public void UpdateLevel()
+    {
+        _readingLevel = true;
+        try
+        {
+            HasLevel = _app.MonitorLevels.TryGetValue(_key, out int level);
+            if (HasLevel)
+                Level = level;
+        }
+        finally
+        {
+            _readingLevel = false;
+        }
+    }
+
+    partial void OnLevelChanged(int value)
+    {
+        if (!_readingLevel)
+            _app.SetMonitorLevel(_key, value);
     }
 
     public string Name { get; }

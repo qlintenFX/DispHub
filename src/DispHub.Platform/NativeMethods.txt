@@ -7,6 +7,14 @@ DISPLAYCONFIG_TARGET_DEVICE_NAME
 DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO
 WIN32_ERROR
 
+// Monitor brightness over DDC/CI
+EnumDisplayMonitors
+GetNumberOfPhysicalMonitorsFromHMONITOR
+GetPhysicalMonitorsFromHMONITOR
+DestroyPhysicalMonitors
+GetVCPFeatureAndVCPFeatureReply
+SetVCPFeature
+
 // Gamma
 CreateDC
 DeleteDC

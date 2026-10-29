@@ -25,6 +25,7 @@ the change without stealing focus from your game.
 
 PROFILES THAT FIT HOW YOU USE YOUR PC
 • Brightness, contrast, gamma and colour temperature for every connected display
+• Your monitor's own brightness, without reaching for its buttons
 • Vibrance (colour saturation) on NVIDIA, Intel and AMD graphics, including the built-in screen of most laptops
 • Stream-friendly: OBS, Discord and screenshots capture your normal colours, so viewers see a regular picture
 • Global hotkeys for each profile, plus on or off, next and previous
@@ -39,6 +40,7 @@ AUTOMATION (DISPHUB PRO, FREE FOR THE FIRST WEEK)
   you switch away (one app is included free)
 • Schedules like Windows' Night light: from sunset to sunrise or set hours, with a smooth fade
 • Different settings for each display
+• Profiles that set your monitor's own brightness
 • Unlimited profiles
 
 SAFE AND LIGHT
