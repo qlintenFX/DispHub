@@ -8,6 +8,7 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Dwm;
 using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.HiDpi;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 using Windows.Win32.UI.WindowsAndMessaging;
 
@@ -55,6 +56,49 @@ public static partial class WindowHelpers
             return (Rectangle.Empty, Rectangle.Empty);
         RECT m = info.rcMonitor, w = info.rcWork;
         return (Rectangle.FromLTRB(m.left, m.top, m.right, m.bottom), Rectangle.FromLTRB(w.left, w.top, w.right, w.bottom));
+    }
+
+    /// <summary>
+    /// The work area of the monitor nearest to <paramref name="bounds"/> (the one under the mouse when null), in
+    /// physical pixels, and that monitor's scale (1 at 100 %, 2 at 200 %).
+    /// </summary>
+    public static (Rectangle Work, double Scale) WorkAreaFor(Rectangle? bounds)
+    {
+        HMONITOR monitor;
+        if (bounds is { } b)
+        {
+            var rect = new RECT { left = b.Left, top = b.Top, right = b.Right, bottom = b.Bottom };
+            monitor = PInvoke.MonitorFromRect(rect, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        }
+        else
+        {
+            _ = PInvoke.GetCursorPos(out Point cursor);
+            monitor = PInvoke.MonitorFromPoint(cursor, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        }
+        var info = new MONITORINFO { cbSize = (uint)Marshal.SizeOf<MONITORINFO>() };
+        if (!PInvoke.GetMonitorInfo(monitor, ref info))
+            return (Rectangle.Empty, 1);
+        RECT work = info.rcWork;
+        double scale = PInvoke.GetDpiForMonitor(monitor, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out uint dpi, out _).Succeeded
+            ? dpi / 96.0
+            : 1;
+        return (Rectangle.FromLTRB(work.left, work.top, work.right, work.bottom), scale);
+    }
+
+    /// <summary>A window's bounds on screen, in physical pixels.</summary>
+    public static Rectangle Bounds(nint handle) =>
+        PInvoke.GetWindowRect((HWND)handle, out RECT r) ? Rectangle.FromLTRB(r.left, r.top, r.right, r.bottom) : Rectangle.Empty;
+
+    /// <summary>
+    /// Moves and resizes a window in physical pixels, without activating it. It moves onto the monitor first, so a
+    /// different scale there is applied before the size is set, not to it.
+    /// </summary>
+    public static void Move(nint handle, Rectangle bounds)
+    {
+        var hwnd = (HWND)handle;
+        const SET_WINDOW_POS_FLAGS Flags = SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE;
+        _ = PInvoke.SetWindowPos(hwnd, HWND.Null, bounds.X, bounds.Y, 0, 0, Flags | SET_WINDOW_POS_FLAGS.SWP_NOSIZE);
+        _ = PInvoke.SetWindowPos(hwnd, HWND.Null, bounds.X, bounds.Y, bounds.Width, bounds.Height, Flags);
     }
 
     /// <summary>Moves and resizes a window in physical pixels and shows it on top, keeping its activation.</summary>

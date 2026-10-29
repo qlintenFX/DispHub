@@ -59,6 +59,8 @@ WINEVENT_SKIPOWNPROCESS
 // Windows
 GetCursorPos
 MonitorFromPoint
+MonitorFromRect
+GetDpiForMonitor
 GetMonitorInfo
 MONITORINFOEXW
 SetWindowPos
