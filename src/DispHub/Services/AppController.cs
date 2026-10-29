@@ -460,6 +460,9 @@ public sealed class AppController : IDisposable
     {
         if (_brightness is not null && !_brightness.RestoreAll(TimeSpan.FromSeconds(3)))
             _logger.LogWarning("Not every monitor's brightness could be put back on exit");
+        // The worker reports what is left to put back through the dispatcher: let that land before the last save,
+        // or the next start would put back levels that are already back.
+        _dispatcher.Invoke(() => { }, DispatcherPriority.Background);
         FlushSave();
         if (!_colors.RestoreAll(TimeSpan.FromSeconds(3)))
             _logger.LogWarning("Not every monitor could be restored on exit");
