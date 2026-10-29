@@ -63,7 +63,7 @@ public sealed partial class ScheduleViewModel : PageViewModel
 
     public IReadOnlyList<WhenChoice> Whens { get; } =
     [
-        new(ScheduleAnchor.Time, Loc.Get("Schedule_AtTime")),
+        new(ScheduleAnchor.Time, Loc.Get("Schedule_AtClockTime")),
         new(ScheduleAnchor.Sunset, Loc.Get("Schedule_Sunset")),
         new(ScheduleAnchor.Sunrise, Loc.Get("Schedule_Sunrise")),
     ];

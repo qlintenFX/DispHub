@@ -970,6 +970,9 @@ It also supports development of DispHub.</value>
   <data name="Schedule_AtTime" xml:space="preserve">
     <value>at {0}</value>
   </data>
+  <data name="Schedule_AtClockTime" xml:space="preserve">
+    <value>At a set time</value>
+  </data>
   <data name="Schedule_Sunrise" xml:space="preserve">
     <value>At sunrise</value>
   </data>
