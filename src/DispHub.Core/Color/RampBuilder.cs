@@ -43,12 +43,13 @@ public static class RampBuilder
     }
 
     /// <summary>
-    /// Brightens dark tones and leaves light ones almost alone: black stays black, the lift peaks around a fifth of
-    /// the way up (by up to a third of full scale at <paramref name="amount"/> 1) and fades out before the highlights,
-    /// so dark corners of a game become readable without the picture going grey. Rising for any amount up to 1.
+    /// Brightens dark tones and leaves the rest alone, like a monitor's black equaliser: black stays black, the lift
+    /// peaks a seventh of the way up (by a ninth of full scale at <paramref name="amount"/> 1) and is gone by the
+    /// mid-tones. No part of the curve gets flatter than about 60 % of its slope, so the picture keeps its contrast
+    /// instead of going grey.
     /// </summary>
     public static double LiftShadows(double y, double amount) =>
-        amount <= 0 ? y : y + (amount * 4 * y * Math.Pow(1 - y, 4));
+        amount <= 0 ? y : y + (amount * 2 * y * Math.Pow(1 - y, 6));
 
     /// <summary>
     /// Returns <paramref name="target"/> if it is within <paramref name="limits"/>, otherwise the closest
