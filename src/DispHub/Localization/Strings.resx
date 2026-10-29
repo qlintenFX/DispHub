@@ -191,10 +191,10 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>That doesn't look like a DispHub preset link. It should start with disphub://preset</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
-    <value>Per-app profiles, schedules with fades, per-display settings and unlimited profiles. One-time purchase.</value>
+    <value>Per-app profiles, schedules, shadow boost, refresh rate and HDR with your profiles, and unlimited profiles. One-time purchase.</value>
   </data>
   <data name="Pro_ShortPitch" xml:space="preserve">
-    <value>Per-app profiles, schedules and unlimited profiles. One-time purchase.</value>
+    <value>Per-app profiles, schedules, shadow boost, HDR and more. One-time purchase.</value>
   </data>
   <data name="Profiles_AllDisplays" xml:space="preserve">
     <value>All displays</value>
