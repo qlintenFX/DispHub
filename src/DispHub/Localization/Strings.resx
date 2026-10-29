@@ -175,9 +175,6 @@
   <data name="Osd_StillRunning" xml:space="preserve">
     <value>DispHub is still running</value>
   </data>
-  <data name="Osd_StillRunningHint" xml:space="preserve">
-    <value>Its icon is under ^ in the notification area</value>
-  </data>
   <data name="Preset_AddText" xml:space="preserve">
     <value>{0}
 {1}

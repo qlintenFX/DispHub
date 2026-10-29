@@ -32,11 +32,9 @@ public partial class OsdWindow : FluentWindow
         };
     }
 
-    public void Flash(string title, string detail, SymbolRegular symbol, TimeSpan duration, Core.Model.OsdPosition position)
+    public void Flash(string title, SymbolRegular symbol, TimeSpan duration, Core.Model.OsdPosition position)
     {
         TitleText.Text = title;
-        DetailText.Text = detail;
-        DetailText.Visibility = string.IsNullOrEmpty(detail) ? Visibility.Collapsed : Visibility.Visible;
         Glyph.Symbol = symbol;
 
         // Show first (still fully transparent), then size and move it with real pixel coordinates. The size comes

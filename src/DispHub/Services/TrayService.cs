@@ -90,7 +90,7 @@ public sealed class TrayService : IDisposable
         }
         // Notifications don't show during Do not disturb, so also say it on screen while the icon is hidden.
         if (TrayIcon.IsOnTaskbar() != true)
-            osd.ShowHint(Loc.Get("Osd_StillRunning"), Loc.Get("Osd_StillRunningHint"));
+            osd.ShowHint(Loc.Get("Osd_StillRunning"));
     }
 
     public void Dispose()
