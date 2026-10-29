@@ -22,7 +22,7 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
     /// <summary>Below this width the navigation shows icons only.</summary>
     private const double NarrowWidth = 960;
 
-    public MainWindow(MainViewModel viewModel, AppController app, ThemeService theme, ReviewPrompt review)
+    public MainWindow(MainViewModel viewModel, AppController app, ThemeService theme, ReviewPrompt review, ProTrial trial)
     {
         _app = app;
         _theme = theme;
@@ -44,7 +44,12 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
             viewModel.SelectedPage = viewModel.AllPages.FirstOrDefault(p => p.GetType() == page) ?? viewModel.SelectedPage;
         // The tour ends where it started.
         TourOverlay.Finished += (_, _) => viewModel.Navigate<HomeViewModel>();
-        Activated += async (_, _) => await review.OnWindowActivatedAsync(this);
+        Activated += async (_, _) =>
+        {
+            viewModel.OnActivated();
+            await trial.OnWindowActivatedAsync();
+            await review.OnWindowActivatedAsync(this);
+        };
         viewModel.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(MainViewModel.SelectedPage))

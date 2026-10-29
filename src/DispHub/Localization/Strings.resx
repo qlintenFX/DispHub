@@ -31,6 +31,9 @@
   <data name="About_EditionFree" xml:space="preserve">
     <value>DispHub Free</value>
   </data>
+  <data name="About_EditionTrial" xml:space="preserve">
+    <value>DispHub Pro trial</value>
+  </data>
   <data name="About_EditionPro" xml:space="preserve">
     <value>DispHub Pro</value>
   </data>
@@ -717,6 +720,45 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Profiles_More" xml:space="preserve">
     <value>More</value>
+  </data>
+  <data name="Profiles_FullTitle" xml:space="preserve">
+    <value>{0} profiles</value>
+  </data>
+  <data name="Profiles_FullHint" xml:space="preserve">
+    <value>The most DispHub keeps</value>
+  </data>
+  <data name="Profiles_NeedsPro" xml:space="preserve">
+    <value>Kept for DispHub Pro</value>
+  </data>
+  <data name="Apps_FreeHint" xml:space="preserve">
+    <value>The free version switches profiles for one app. Pro does it for every app.</value>
+  </data>
+  <data name="Apps_NeedsPro" xml:space="preserve">
+    <value>Switches with DispHub Pro</value>
+  </data>
+  <data name="Trial_CardTitle" xml:space="preserve">
+    <value>Pro trial</value>
+  </data>
+  <data name="Trial_DaysLeft" xml:space="preserve">
+    <value>{0} days left with every Pro feature.</value>
+  </data>
+  <data name="Trial_DayLeft" xml:space="preserve">
+    <value>Last day with every Pro feature.</value>
+  </data>
+  <data name="Trial_EndedTitle" xml:space="preserve">
+    <value>Your Pro trial has ended</value>
+  </data>
+  <data name="Trial_EndedUsage" xml:space="preserve">
+    <value>This week DispHub switched profiles for your apps {0} times and followed your schedule {1} times. Keep all of it with Pro, a one-time purchase.</value>
+  </data>
+  <data name="Trial_EndedGeneric" xml:space="preserve">
+    <value>Profiles for every app, schedules, settings for each display and unlimited profiles stay with Pro, a one-time purchase.</value>
+  </data>
+  <data name="Trial_EndedFree" xml:space="preserve">
+    <value>The free version keeps your first {0} profiles and one app rule. The rest are kept for when you upgrade.</value>
+  </data>
+  <data name="Trial_ContinueFree" xml:space="preserve">
+    <value>Continue free</value>
   </data>
   <data name="Profiles_FromTemplate" xml:space="preserve">
     <value>From a template</value>

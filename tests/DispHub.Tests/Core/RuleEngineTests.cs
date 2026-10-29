@@ -74,13 +74,29 @@ public sealed class RuleEngineTests
     }
 
     [Fact]
-    public void Resolve_AppRuleWithoutPro_IsIgnored()
+    public void Resolve_WithoutPro_OnlyTheFirstAppRuleWorks()
     {
+        _config.AppRules.Add(new AppRule { Executable = "vlc.exe", ProfileId = _night.Id });
         _config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = _gaming.Id });
 
-        RuleOutput output = Resolve(@"C:\Games\cs2.exe", isPro: false);
+        Assert.Equal(_night.Id, Resolve(@"C:\Apps\vlc.exe", isPro: false).ProfileId);
+        Assert.Equal(_standard.Id, Resolve(@"C:\Games\cs2.exe", isPro: false).ProfileId);
+        Assert.Equal(_gaming.Id, Resolve(@"C:\Games\cs2.exe").ProfileId);
+    }
 
-        Assert.Equal(_standard.Id, output.ProfileId);
+    [Fact]
+    public void Resolve_WithoutPro_ProfilesPastTheFreeOnesStayOff()
+    {
+        var extra = new Profile { Name = "Made in the trial", Color = new ColorSettings(Brightness: 10) };
+        _config.Profiles.Add(extra);
+        _config.ActiveProfileId = extra.Id;
+        _config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = extra.Id });
+
+        Assert.Equal(_standard.Id, Resolve(isPro: false).ProfileId);
+        Assert.Equal(_standard.Id, Resolve(@"C:\Games\cs2.exe", isPro: false).ProfileId);
+        Assert.Equal(RuleEngine.BaseContext, Resolve(@"C:\Games\cs2.exe", isPro: false).ContextKey);
+        Assert.Equal(_standard.Id, Resolve(manual: new ManualOverride(extra.Id, RuleEngine.BaseContext), isPro: false).ProfileId);
+        Assert.Equal(extra.Id, Resolve().ProfileId);
     }
 
     [Fact]

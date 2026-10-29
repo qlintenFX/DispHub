@@ -32,11 +32,9 @@ public partial class ProfilesView : UserControl
         if (DataContext is not ViewModels.ProfilesViewModel profiles || sender is not Button { ContextMenu: { } menu } button)
             return;
         if (profiles.AddTile.IsLocked)
-        {
             profiles.ShowProfileUpgrade();
-            return;
-        }
-        OpenMenu(menu, button);
+        else if (!profiles.AddTile.IsFull)
+            OpenMenu(menu, button);
     }
 
     private void OnMoreClick(object sender, RoutedEventArgs e)

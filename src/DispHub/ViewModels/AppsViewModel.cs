@@ -43,7 +43,11 @@ public sealed partial class AppsViewModel : PageViewModel
     public ObservableCollection<ProfileChoice> ProfileChoices { get; } = [];
     public ObservableCollection<RunningAppItem> RunningApps { get; } = [];
 
-    [ObservableProperty] public partial bool IsPro { get; set; }
+    /// <summary>Another app rule can be added (the free tier has one).</summary>
+    [ObservableProperty] public partial bool CanAddRule { get; set; }
+
+    /// <summary>The free tier: say that one app is included and Pro does every app.</summary>
+    [ObservableProperty] public partial bool ShowProHint { get; set; }
     [ObservableProperty] public partial bool HasRules { get; set; }
     [ObservableProperty] public partial bool IsPicking { get; set; }
     [ObservableProperty] public partial string PickerQuery { get; set; } = "";
@@ -61,7 +65,7 @@ public sealed partial class AppsViewModel : PageViewModel
     [RelayCommand]
     private void OpenPicker()
     {
-        if (!IsPro)
+        if (!CanAddRule)
         {
             _upgrade.ShowUpgrade(Loc.Get("Upgrade_AppRules"));
             return;
@@ -85,7 +89,7 @@ public sealed partial class AppsViewModel : PageViewModel
     [RelayCommand]
     private void AddForeground()
     {
-        if (!IsPro)
+        if (!CanAddRule)
         {
             _upgrade.ShowUpgrade(Loc.Get("Upgrade_AppRules"));
             return;
@@ -157,13 +161,14 @@ public sealed partial class AppsViewModel : PageViewModel
 
     private void Load()
     {
-        IsPro = _app.Features.AppRules;
+        CanAddRule = _app.Features.CanAddAppRule(_app.Config.AppRules.Count);
+        ShowProHint = !_app.Features.HasPro;
         ProfileChoices.Clear();
         foreach (Profile profile in _app.Config.Profiles)
             ProfileChoices.Add(ProfileChoice.From(profile));
         Rules.Clear();
-        foreach (AppRule rule in _app.Config.AppRules)
-            Rules.Add(new AppRuleItem(this, rule, ProfileChoices));
+        for (int i = 0; i < _app.Config.AppRules.Count; i++)
+            Rules.Add(new AppRuleItem(this, _app.Config.AppRules[i], ProfileChoices, isLocked: !_app.Features.CanUseAppRule(i)));
         HasRules = Rules.Count > 0;
         RefreshForeground();
     }
@@ -171,9 +176,11 @@ public sealed partial class AppsViewModel : PageViewModel
     private void RefreshForeground()
     {
         string? path = _app.ForegroundExecutable;
-        AppRule? match = path is null ? null : _app.Config.AppRules.Find(r => r.Enabled && RuleEngine.Matches(r, path));
+        int index = path is null ? -1 : _app.Config.AppRules.FindIndex(r => r.Enabled && RuleEngine.Matches(r, path));
+        AppRule? match = index < 0 ? null : _app.Config.AppRules[index];
+        bool works = _app.Features.CanUseAppRule(index);
         foreach (AppRuleItem item in Rules)
-            item.IsActiveNow = match is not null && item.Is(match);
+            item.IsActiveNow = match is not null && works && item.Is(match);
         if (path is null)
         {
             ForegroundIcon = null;
@@ -186,7 +193,7 @@ public sealed partial class AppsViewModel : PageViewModel
         ForegroundName = ProgramInfo.DisplayName(path);
         Profile? profile = match is null ? null : RuleEngine.FindProfile(_app.Config, match.ProfileId);
         ForegroundStatus = profile is not null
-            ? Loc.Format(IsPro ? "Apps_ForegroundRule" : "Apps_ForegroundRulePro", profile.Name)
+            ? Loc.Format(works ? "Apps_ForegroundRule" : "Apps_ForegroundRulePro", profile.Name)
             : Loc.Get("Apps_ForegroundNoRule");
         CanAddForeground = match is null && !_app.Config.AppRules.Exists(r => RuleEngine.Matches(r, path));
     }
@@ -203,10 +210,11 @@ public sealed partial class AppRuleItem : ObservableObject
     private readonly AppRule _rule;
     private readonly bool _ready;
 
-    public AppRuleItem(AppsViewModel owner, AppRule rule, IReadOnlyList<ProfileChoice> profiles)
+    public AppRuleItem(AppsViewModel owner, AppRule rule, IReadOnlyList<ProfileChoice> profiles, bool isLocked = false)
     {
         _owner = owner;
         _rule = rule;
+        IsLocked = isLocked;
         Profiles = profiles;
         string? path = rule.Path ?? (Path.IsPathRooted(rule.Executable) ? rule.Executable : null);
         Icon = AppIcons.For(path);
@@ -219,6 +227,9 @@ public sealed partial class AppRuleItem : ObservableObject
 
     public IReadOnlyList<ProfileChoice> Profiles { get; }
     public ImageSource? Icon { get; }
+
+    /// <summary>Past the free tier's one rule: kept, but it waits for Pro.</summary>
+    public bool IsLocked { get; }
     public string Name { get; }
     public string Executable { get; }
 

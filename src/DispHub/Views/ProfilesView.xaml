@@ -74,6 +74,15 @@
       <ListBox.Resources>
         <DataTemplate DataType="{x:Type vm:ProfileItemViewModel}">
           <StackPanel>
+            <StackPanel.Style>
+              <Style TargetType="StackPanel">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                    <Setter Property="Opacity" Value="0.6" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </StackPanel.Style>
             <Border Height="24" Margin="0,0,0,10" CornerRadius="4">
               <Border.Background>
                 <ImageBrush ImageSource="{Binding Preview}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
@@ -96,6 +105,12 @@
                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                   Text="{l:Tr Common_On}" />
               </Border>
+              <ui:SymbolIcon
+                HorizontalAlignment="Right"
+                FontSize="16"
+                Symbol="LockClosed24"
+                ToolTip="{l:Tr Profiles_NeedsPro}"
+                Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisibility}}" />
             </Grid>
             <TextBlock
               Margin="0,4,0,0"

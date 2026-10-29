@@ -48,7 +48,9 @@ public sealed class AppController : IDisposable
     private readonly ILogger<AppController> _logger;
     private readonly ITimer _saveTimer;
     private readonly ITimer _ruleTimer;
+    private readonly ITimer _trialTimer;
     private readonly Dispatcher _dispatcher;
+    private DateTimeOffset? _trialEnds;
     private IHotkeyRegistrar? _hotkeys;
     private ManualOverride? _manual;
     private bool _savePending;
@@ -71,6 +73,7 @@ public sealed class AppController : IDisposable
         _dispatcher = Dispatcher.CurrentDispatcher;
         _saveTimer = _time.CreateTimer(_ => _dispatcher.BeginInvoke(FlushSave), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         _ruleTimer = _time.CreateTimer(_ => _dispatcher.BeginInvoke(() => Evaluate(ChangeSource.Automation)), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _trialTimer = _time.CreateTimer(_ => _dispatcher.BeginInvoke(OnLicenceChanged), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
 
         ConfigLoadResult loaded = store.Load();
         Config = loaded.Config;
@@ -81,19 +84,45 @@ public sealed class AppController : IDisposable
         _colors.StatusChanged += (_, _) => _dispatcher.BeginInvoke(OnMonitorsChanged);
         _colors.ExternalResetDetected += (_, _) => _dispatcher.BeginInvoke(() => ExternalResetDetected?.Invoke(this, EventArgs.Empty));
         _foreground.Changed += (_, _) => _dispatcher.BeginInvoke(OnForegroundChanged);
-        _license.Changed += (_, _) => _dispatcher.BeginInvoke(() =>
-        {
-            ConfigChanged?.Invoke(this, EventArgs.Empty);
-            SyncHotkeys();
-            Evaluate(ChangeSource.Automation);
-        });
+        _license.Changed += (_, _) => _dispatcher.BeginInvoke(OnLicenceChanged);
     }
 
     public AppConfig Config { get; }
 
     public ConfigLoadResult LoadResult { get; }
 
-    public FeatureGate Features => new(_license.IsPro);
+    public FeatureGate Features => new(_license.IsPro, InTrial);
+
+    /// <summary>When the Pro trial ends; null when there is none (Pro bought, or a build that isn't from the Store).</summary>
+    public DateTimeOffset? TrialEnds => _license.CanPurchase && !_license.IsPro ? _trialEnds : null;
+
+    /// <summary>The Pro trial is running: every Pro feature is on until <see cref="TrialEnds"/>.</summary>
+    public bool InTrial => TrialEnds is { } end && _time.GetUtcNow() < end;
+
+    /// <summary>The trial ended, or Pro was bought or lost: what's allowed changed (on the UI thread).</summary>
+    public event EventHandler? LicenceChanged;
+
+    /// <summary>Starts or clears the Pro trial. Everything is checked again the moment it ends.</summary>
+    public void SetTrial(DateTimeOffset? endsUtc)
+    {
+        bool before = InTrial;
+        _trialEnds = endsUtc;
+        TimeSpan left = endsUtc is { } end ? end - _time.GetUtcNow() : Timeout.InfiniteTimeSpan;
+        _trialTimer.Change(left > TimeSpan.Zero ? left : Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        if (_hotkeys is not null && before != InTrial)
+            OnLicenceChanged();
+    }
+
+    /// <summary>Whether a profile can go on screen now; profiles past the free ones wait for Pro.</summary>
+    public bool CanUseProfile(Guid profileId) => Features.CanUseProfile(Config.Profiles.FindIndex(p => p.Id == profileId));
+
+    private void OnLicenceChanged()
+    {
+        ConfigChanged?.Invoke(this, EventArgs.Empty);
+        SyncHotkeys();
+        Evaluate(ChangeSource.Automation);
+        LicenceChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public RuleOutput? Current { get; private set; }
 
@@ -145,7 +174,7 @@ public sealed class AppController : IDisposable
     /// <summary>Switches to a profile by hand. While a rule is active this lasts until that rule ends.</summary>
     public void ActivateProfile(Guid profileId, ChangeSource source)
     {
-        if (FindProfile(profileId) is null)
+        if (FindProfile(profileId) is null || !CanUseProfile(profileId))
             return;
 
         // Picking a profile means wanting to see it: DispHub and its profiles come on.
@@ -203,10 +232,12 @@ public sealed class AppController : IDisposable
 
     public void CycleProfile(int direction, ChangeSource source)
     {
-        if (Config.Profiles.Count == 0)
+        // Only the profiles that can go on screen take part.
+        int count = Math.Min(Config.Profiles.Count, Features.MaxProfiles);
+        if (count == 0)
             return;
         int index = Config.Profiles.FindIndex(p => p.Id == Current?.ProfileId);
-        int next = ((index < 0 ? 0 : index + direction) % Config.Profiles.Count + Config.Profiles.Count) % Config.Profiles.Count;
+        int next = ((index < 0 || index >= count ? 0 : index + direction) % count + count) % count;
         ActivateProfile(Config.Profiles[next].Id, source);
     }
 
@@ -391,6 +422,7 @@ public sealed class AppController : IDisposable
         _disposed = true;
         _saveTimer.Dispose();
         _ruleTimer.Dispose();
+        _trialTimer.Dispose();
         _foreground.Dispose();
         _colors.Dispose();
     }
@@ -407,7 +439,7 @@ public sealed class AppController : IDisposable
     private RuleOutput Resolve()
     {
         var monitorKeys = _colors.Monitors.Select(m => m.Monitor.Key).ToList();
-        return RuleEngine.Resolve(new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, _license.IsPro, _time.LocalTimeZone));
+        return RuleEngine.Resolve(new RuleInput(Config, monitorKeys, _time.GetLocalNow().DateTime, _foreground.Current, _manual, Features.HasPro, _time.LocalTimeZone));
     }
 
     private void Evaluate(ChangeSource source)
@@ -484,8 +516,9 @@ public sealed class AppController : IDisposable
         if (_hotkeys is null)
             return;
 
+        // Profiles waiting for Pro keep their shortcuts but don't take the keys.
         var desired = new Dictionary<string, HotkeyGesture>(StringComparer.Ordinal);
-        foreach (Profile profile in Config.Profiles)
+        foreach (Profile profile in Config.Profiles.Take(Features.MaxProfiles))
         {
             if (HotkeyGesture.TryParse(profile.Hotkey, out HotkeyGesture gesture))
                 desired[ProfileActionPrefix + profile.Id] = gesture;

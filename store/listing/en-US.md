@@ -34,9 +34,9 @@ TEMPLATES AND SHARING
 • Start from ready-made profiles for games, films and night reading
 • Share your own profile as a link; anyone with DispHub can add it in one click
 
-AUTOMATION (DISPHUB PRO)
-• Per-game profiles: your game gets its look while it's in front, and your desktop goes back to normal when you
-  switch away
+AUTOMATION (DISPHUB PRO, FREE FOR THE FIRST WEEK)
+• Per-app profiles: your game or app gets its look while it's in front, and your desktop goes back to normal when
+  you switch away (one app is included free)
 • Schedules like Windows' Night light: from sunset to sunrise or set hours, with a smooth fade
 • Different settings for each display
 • Unlimited profiles
@@ -46,8 +46,9 @@ SAFE AND LIGHT
 • Runs quietly in the notification area and uses very little memory
 • No account, no ads, no telemetry
 
-DispHub is free with three profiles. The one-time Pro upgrade unlocks automation, per-display settings and
-unlimited profiles, and supports development. DispHub is open source: https://github.com/qlintenFX/DispHub
+Try every Pro feature free for 7 days. After that DispHub stays free with three profiles and one per-app profile;
+the one-time Pro upgrade keeps profiles for every app, schedules, per-display settings and unlimited profiles, and
+supports development. DispHub is open source: https://github.com/qlintenFX/DispHub
 
 Notes: gamma-based adjustments aren't available while Windows HDR is on. Windows limits how far colours can change
 by default; DispHub can lift that limit with your permission for very warm night profiles.
@@ -63,7 +64,7 @@ First release.
 3. Vibrance on NVIDIA and Intel graphics, including laptop screens
 4. Works on every connected display
 5. Profile templates and shareable links
-6. Per-game profiles that switch automatically (Pro)
+6. Per-app profiles that switch automatically (one free, every app with Pro)
 7. Schedules with smooth fades to warmer evening colours (Pro)
 8. Different settings per display (Pro)
 9. Original colours restored on pause, exit or after a crash

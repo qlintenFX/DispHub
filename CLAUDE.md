@@ -10,7 +10,7 @@ Sold on the Microsoft Store as free + one-time "Pro" add-on; source is GPL-3.0.
 dotnet build DispHub.slnx -c Release          # must finish with 0 warnings (warnings are errors)
 dotnet test --project tests/DispHub.Tests/DispHub.Tests.csproj
 dotnet format DispHub.slnx                    # CI runs --verify-no-changes
-dotnet run --project src/DispHub -- --fake-store=free   # try the free tier and upgrade flow
+dotnet run --project src/DispHub -- --fake-store=free   # the free tier and upgrade flow (also: pro, trial, ending, ended)
 dotnet run --project src/DispHub -- --fresh             # first run as a new user; your settings stay untouched
 pwsh build/package-msix.ps1                   # MSIX for the Store; see the script header
 ```

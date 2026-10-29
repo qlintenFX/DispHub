@@ -184,6 +184,37 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public void Trial_HasEveryProFeature()
+    {
+        _app.SetTrial(DateTimeOffset.UtcNow.AddDays(3));
+
+        Assert.True(_app.InTrial);
+        Assert.True(_app.Features.HasPro);
+        Assert.NotNull(_app.AddProfile());
+        Assert.Equal(4, _app.Config.Profiles.Count);
+    }
+
+    [Fact]
+    public void TrialEnding_KeepsExtraProfilesButOffScreen()
+    {
+        _app.SetTrial(DateTimeOffset.UtcNow.AddDays(3));
+        Profile extra = _app.AddProfile(new ColorSettings(Brightness: 12), "Trial look")!;
+        _app.SetProfileHotkey(extra.Id, HotkeyGesture.TryParse("Ctrl+Alt+4", out HotkeyGesture gesture) ? gesture : null);
+        _app.ActivateProfile(extra.Id, ChangeSource.Editor);
+        Assert.Equal(extra.Id, _app.Current!.ProfileId);
+        Assert.Equal(5, _hotkeys.Registered.Count);
+
+        _app.SetTrial(DateTimeOffset.UtcNow.AddMinutes(-1));
+
+        Assert.False(_app.InTrial);
+        Assert.Contains(_app.Config.Profiles, p => p.Id == extra.Id);
+        Assert.Equal(Standard.Id, _app.Current!.ProfileId);
+        Assert.Equal(4, _hotkeys.Registered.Count); // its shortcut no longer takes the keys
+        _app.ActivateProfile(extra.Id, ChangeSource.Hotkey);
+        Assert.Equal(Standard.Id, _app.Current!.ProfileId);
+    }
+
+    [Fact]
     public void FreeTier_StopsAtProfileLimit()
     {
         while (_app.AddProfile() is not null)

@@ -151,7 +151,7 @@ public sealed partial class HomeViewModel : PageViewModel
             Loc.Format(config.Profiles.Count == 1 ? "Home_OneProfile" : "Home_Profiles", config.Profiles.Count), true, false));
         int rules = config.AppRules.Count(r => r.Enabled);
         Features.Add(new HomeFeature(typeof(AppsViewModel), SymbolRegular.AppsList24, Loc.Get("Nav_Apps"),
-            rules == 0 ? Loc.Get("Home_NoApps") : Loc.Format(rules == 1 ? "Home_OneApp" : "Home_Apps", rules), rules > 0 && features.AppRules, !features.AppRules));
+            rules == 0 ? Loc.Get("Home_NoApps") : Loc.Format(rules == 1 ? "Home_OneApp" : "Home_Apps", rules), rules > 0, false));
         int displays = _app.Monitors.Count;
         Features.Add(new HomeFeature(typeof(DisplaysViewModel), SymbolRegular.Desktop24, Loc.Get("Nav_Displays"),
             Loc.Format(displays == 1 ? "Home_OneDisplay" : "Home_Displays", displays), true, false));

@@ -151,6 +151,7 @@ public partial class App : Application
                 _controller.ResumeHotkeys();
         };
 
+        _services.GetRequiredService<ProTrial>().Attach(FakeStoreMode(args));
         _controller.Start(hotkeys);
         _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, CreateQuickPanel, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
@@ -201,7 +202,9 @@ public partial class App : Application
         services.AddSingleton<AppController>();
         services.AddSingleton<ThemeService>();
         services.AddSingleton<OsdService>();
+        services.AddSingleton<AppState>();
         services.AddSingleton<ReviewPrompt>();
+        services.AddSingleton<ProTrial>();
         services.AddSingleton<IUpgradeService>(sp => new UpgradeService(
             sp.GetRequiredService<ILicenseService>(), () => sp.GetRequiredService<MainWindow>()));
         services.AddSingleton<HomeViewModel>();
@@ -217,11 +220,14 @@ public partial class App : Application
         return services.BuildServiceProvider();
     }
 
+    /// <summary>The --fake-store mode (pro, free, trial or ended), or null.</summary>
+    private static string? FakeStoreMode(IEnumerable<string> args) =>
+        args.FirstOrDefault(a => a.StartsWith("--fake-store=", StringComparison.OrdinalIgnoreCase))?["--fake-store=".Length..].ToLowerInvariant();
+
     private static ServiceDescriptor CreateLicenseService(string[] args)
     {
-        string? fake = args.FirstOrDefault(a => a.StartsWith("--fake-store=", StringComparison.OrdinalIgnoreCase));
-        if (fake is not null)
-            return ServiceDescriptor.Singleton<ILicenseService>(new FakeLicenseService(fake.EndsWith("=pro", StringComparison.OrdinalIgnoreCase)));
+        if (FakeStoreMode(args) is { } fake)
+            return ServiceDescriptor.Singleton<ILicenseService>(new FakeLicenseService(fake == "pro"));
         return PackageInfo.IsStoreSigned
             ? ServiceDescriptor.Singleton<ILicenseService, StoreLicenseService>()
             : ServiceDescriptor.Singleton<ILicenseService, UnlockedLicenseService>();
