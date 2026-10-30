@@ -511,6 +511,9 @@ It also supports development of DispHub.</value>
   <data name="Preview_flowers" xml:space="preserve">
     <value>Wildflowers</value>
   </data>
+  <data name="Preview_testcard" xml:space="preserve">
+    <value>DispHub test image</value>
+  </data>
   <data name="Preview_reef" xml:space="preserve">
     <value>Coral reef</value>
   </data>

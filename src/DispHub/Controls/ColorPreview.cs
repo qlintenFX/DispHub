@@ -11,13 +11,13 @@ namespace DispHub.Controls;
 /// Shows a photo strip through a profile's actual colour maths (vibrance, then the gamma ramp), the same way the
 /// display will change it, so each profile shows what it does: warmer, brighter, punchier or dimmer.
 /// </summary>
-/// <remarks>The photos are public domain; see THIRD_PARTY_NOTICES.md.</remarks>
+/// <remarks>The test image is DispHub's own (branding/testcard); the photos are public domain, see THIRD_PARTY_NOTICES.md.</remarks>
 public static class ColorPreview
 {
-    public const string DefaultPicture = "reef";
+    public const string DefaultPicture = "testcard";
 
     /// <summary>The pictures to choose from, as their file names in Assets/Previews.</summary>
-    public static readonly IReadOnlyList<string> Pictures = ["reef", "flowers", "autumn", "spring"];
+    public static readonly IReadOnlyList<string> Pictures = ["testcard", "reef", "flowers", "autumn", "spring"];
 
     private const int MaxCached = 32;
     private static readonly Dictionary<(string, ColorSettings), BitmapSource> Cache = [];

@@ -1,0 +1,36 @@
+<!doctype html>
+<!--
+  The test image as a strip for the profile cards and the day timeline (Assets/Previews/testcard.jpg, 720 x 90),
+  rendered at twice that size. Every part is a full-height column, so any slice of it looks the same: the logo's
+  colour gradient, skin tones, primaries and secondaries, and grey steps from white down to black.
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 1440px; height: 180px; overflow: hidden; background: #070a12; }
+  body { display: flex; }
+  .gradient {
+    width: 560px;
+    background: linear-gradient(90deg, #148cf5 0%, #1ed2e6 30%, #8cdc50 55%, #f5c82d 78%, #fa781e 100%);
+  }
+  .column { flex: 1; }
+  .gap { width: 10px; background: #070a12; }
+</style>
+</head>
+<body>
+  <div class="gradient"></div>
+  <div class="gap"></div>
+  <i class="column" style="background: #f3d5c0"></i><i class="column" style="background: #e6b594"></i>
+  <i class="column" style="background: #cf9670"></i><i class="column" style="background: #b27551"></i>
+  <i class="column" style="background: #87573a"></i><i class="column" style="background: #573626"></i>
+  <div class="gap"></div>
+  <i class="column" style="background: #e0362e"></i><i class="column" style="background: #2fb44b"></i>
+  <i class="column" style="background: #2f6fe0"></i><i class="column" style="background: #23c4d8"></i>
+  <i class="column" style="background: #d43ea4"></i><i class="column" style="background: #f2c12e"></i>
+  <div class="gap"></div>
+  <i class="column" style="background: #fff"></i><i class="column" style="background: #ccc"></i>
+  <i class="column" style="background: #999"></i><i class="column" style="background: #666"></i>
+  <i class="column" style="background: #333"></i><i class="column" style="background: #000"></i>
+</body>
+</html>
