@@ -30,6 +30,7 @@
     <Resource Include="Assets\DispHub-paused.ico" />
     <Resource Include="Assets\DispHub.png" />
     <Resource Include="Assets\DispHub-64.png" />
+    <Resource Include="Assets\wordmark.png" />
     <Resource Include="Assets\Previews\*.jpg" />
     <Resource Include="Assets\Onboarding\*.jpg" />
   </ItemGroup>

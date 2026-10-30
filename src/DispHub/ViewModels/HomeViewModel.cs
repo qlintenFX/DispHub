@@ -134,7 +134,7 @@ public sealed partial class HomeViewModel : PageViewModel
         ProfilesOff = !config.IsOff && config.IsPaused;
         ShowPro = _license.CanPurchase && !_license.IsPro;
 
-        NowPicture = ColorPreview.Home(active?.Color ?? ColorSettings.Neutral);
+        NowPicture = ColorPreview.Large(active?.Color ?? ColorSettings.Neutral);
         NowName = active?.Name ?? Loc.Get(config.IsOff ? "Home_Off" : "Home_Original");
         NowReason = Reason(config, active, current);
 

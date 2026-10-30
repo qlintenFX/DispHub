@@ -36,6 +36,7 @@
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <!-- The picture in the current profile's colours, with DispHub's wordmark on it. -->
         <Border
           Width="264"
           Height="165"
@@ -46,6 +47,48 @@
               RenderOptions.BitmapScalingMode="HighQuality"
               Stretch="UniformToFill" />
           </Border.Background>
+          <!--
+            Acrylic behind the wordmark, as Windows draws its flyouts: the same picture blurred, a dark tint and a
+            light edge.
+          -->
+          <Grid
+            Width="224"
+            Height="72"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Grid.Clip>
+              <RectangleGeometry
+                RadiusX="10"
+                RadiusY="10"
+                Rect="0,0,224,72" />
+            </Grid.Clip>
+            <Rectangle
+              Width="264"
+              Height="165"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+              <Rectangle.Fill>
+                <ImageBrush ImageSource="{Binding NowPicture}" Stretch="UniformToFill" />
+              </Rectangle.Fill>
+              <Rectangle.Effect>
+                <BlurEffect
+                  KernelType="Gaussian"
+                  Radius="24"
+                  RenderingBias="Quality" />
+              </Rectangle.Effect>
+            </Rectangle>
+            <Border
+              Background="#6614171E"
+              BorderBrush="#33FFFFFF"
+              BorderThickness="1"
+              CornerRadius="10" />
+            <Image
+              Width="196"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              RenderOptions.BitmapScalingMode="HighQuality"
+              Source="pack://application:,,,/Assets/wordmark.png" />
+          </Grid>
         </Border>
         <StackPanel
           Grid.Column="1"

@@ -43,9 +43,8 @@ public sealed partial class LocalizationTests
         {
             Assert.Contains($"Preview_{picture}", english);
             Assert.True(File.Exists(Path.Combine(Root, "src", "DispHub", "Assets", "Previews", picture + ".jpg")), picture);
+            Assert.True(File.Exists(Path.Combine(Root, "src", "DispHub", "Assets", "Previews", picture + "-wide.jpg")), picture);
         }
-        // Home's own picture.
-        Assert.True(File.Exists(Path.Combine(Root, "src", "DispHub", "Assets", "Previews", "home.jpg")));
     }
 
     [Fact]
