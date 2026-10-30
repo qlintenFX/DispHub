@@ -22,18 +22,6 @@
   WindowStartupLocation="Manual"
   mc:Ignorable="d">
   <Window.Resources>
-    <!-- Minimise, maximise and close light up as rounded buttons, the size of the power button beside them. -->
-    <Style BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="ui:TitleBarButton">
-      <Setter Property="Height" Value="48" />
-      <Setter Property="Clip">
-        <Setter.Value>
-          <RectangleGeometry
-            RadiusX="4"
-            RadiusY="4"
-            Rect="2,8,40,32" />
-        </Setter.Value>
-      </Setter>
-    </Style>
     <DataTemplate x:Key="NavEntry" DataType="{x:Type vm:PageViewModel}">
       <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
         <StackPanel.Style>
@@ -70,6 +58,13 @@
       <ui:TitleBar.Icon>
         <ui:ImageIcon RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Assets/DispHub-64.png" />
       </ui:TitleBar.Icon>
+      <!-- Minimise, maximise and close fill the title bar's height, as FluentFlyout sets WPF-UI's buttons. -->
+      <ui:TitleBar.Resources>
+        <Style BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="{x:Type ui:TitleBarButton}">
+          <Setter Property="Height" Value="48" />
+          <Setter Property="Width" Value="48" />
+        </Style>
+      </ui:TitleBar.Resources>
       <!-- Search every page and setting, like Windows Settings. -->
       <ui:TitleBar.CenterContent>
         <ui:AutoSuggestBox
