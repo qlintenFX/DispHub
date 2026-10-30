@@ -84,7 +84,6 @@ public sealed partial class ScheduleViewModel : PageViewModel
     [ObservableProperty] public partial double? Sunrise { get; set; }
     [ObservableProperty] public partial double? Sunset { get; set; }
     [ObservableProperty] public partial double? Now { get; set; }
-    [ObservableProperty] public partial Guid? SelectedSlotId { get; set; }
     [ObservableProperty] public partial string StatusText { get; set; } = "";
     [ObservableProperty] public partial bool UsesSun { get; set; }
     [ObservableProperty] public partial string SunText { get; set; } = "";
@@ -166,12 +165,6 @@ public sealed partial class ScheduleViewModel : PageViewModel
         Save();
     }
 
-    partial void OnSelectedSlotIdChanged(Guid? value)
-    {
-        foreach (ScheduleChangeItem change in Changes)
-            change.IsSelected = change.Id == value;
-    }
-
     partial void OnLocationQueryChanged(string value)
     {
         LocationResults.Clear();
@@ -229,7 +222,6 @@ public sealed partial class ScheduleViewModel : PageViewModel
             FadeMinutes = Fade?.Minutes ?? 30,
         };
         slots.Add(slot);
-        SelectedSlotId = slot.Id;
         Save(reload: true);
     }
 
@@ -350,7 +342,6 @@ public sealed partial class ScheduleViewModel : PageViewModel
         if (Mode != ScheduleMode.Custom && schedule.Slots.Count != 2)
             WriteSimple(force: true);
         RefreshTimeline();
-        OnSelectedSlotIdChanged(SelectedSlotId);
     }
 
     private void RefreshTimeline()
@@ -555,7 +546,6 @@ public sealed partial class ScheduleChangeItem : ObservableObject
 
     [ObservableProperty] public partial TimeOnly Time { get; set; }
     [ObservableProperty] public partial DaysChoice DaysChoice { get; set; }
-    [ObservableProperty] public partial bool IsSelected { get; set; }
 
     public bool IsTimeAnchor => When.Anchor == ScheduleAnchor.Time;
 
@@ -594,9 +584,6 @@ public sealed partial class ScheduleChangeItem : ObservableObject
 
     [RelayCommand]
     private void Remove() => _owner.RemoveChange(_slot);
-
-    [RelayCommand]
-    private void Select() => _owner.SelectedSlotId = Id;
 
     private static DaysChoice[] StandardDays() =>
     [
