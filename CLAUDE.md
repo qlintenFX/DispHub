@@ -37,7 +37,7 @@ and starts with empty settings in `%TEMP%\DispHub-fresh`, without touching autos
   Win32 calls go through CsWin32: add the API name to `NativeMethods.txt`, never hand-write `DllImport`. The one
   exception is `SetWindowCompositionAttribute` (quick panel acrylic), which isn't in the Win32 metadata.
 - `src/DispHub` (WPF + WPF-UI): `AppController` owns state and is the only thing views talk to;
-  view models in `ViewModels/`, XAML in `Views/`, `SmoothScrollViewer` for all page scrolling.
+  view models in `ViewModels/`, XAML in `Views/`, pages scroll in WPF-UI's `DynamicScrollViewer` (smooth scrolling from FluentFlyout's fork).
 - `tests/DispHub.Tests`: xUnit v3. Fakes for the colour applier, hotkeys and display backend live in the test files.
 - `packaging/`, `build/`, `store/`: MSIX manifest and assets, scripts, Store listing text.
 - `site/`: the website (static HTML, CSS and JS in Fluent 2 style, no build step), published to GitHub Pages by

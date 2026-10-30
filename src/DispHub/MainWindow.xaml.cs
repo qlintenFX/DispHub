@@ -10,6 +10,7 @@ using DispHub.Localization;
 using DispHub.Platform.Shell;
 using DispHub.Services;
 using DispHub.ViewModels;
+using Wpf.Ui.Controls;
 
 namespace DispHub;
 
@@ -66,8 +67,23 @@ public partial class MainWindow : Wpf.Ui.Controls.FluentWindow
         viewModel.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(MainViewModel.SelectedPage))
-                PageScroller.ResetToTop();
+                ScrollToTop();
         };
+    }
+
+    /// <summary>
+    /// A new page starts at its top, without the last page's scroll still gliding. Smooth scrolling is switched off
+    /// and on around the jump, so it starts again from the top rather than from where the glide was heading.
+    /// </summary>
+    private void ScrollToTop()
+    {
+        PageScroller.BeginAnimation(SmoothScrollBehavior.AnimatedVerticalOffsetProperty, null);
+        bool smooth = SmoothScrollBehavior.GetIsEnabled(PageScroller);
+        if (smooth)
+            PageScroller.SetCurrentValue(SmoothScrollBehavior.IsEnabledProperty, false);
+        PageScroller.ScrollToVerticalOffset(0);
+        if (smooth)
+            PageScroller.SetCurrentValue(SmoothScrollBehavior.IsEnabledProperty, true);
     }
 
     /// <summary>The guided tour of this window, on the Home page.</summary>

@@ -42,7 +42,7 @@ public partial class OnboardingWindow : Wpf.Ui.Controls.FluentWindow
         };
     }
 
-    private static bool Animate => !SmoothScrollViewer.ReduceMotion;
+    private static bool Animate => !Motion.Reduced;
 
     /// <summary>Keeps a picture of the step that is about to go, to slide it away.</summary>
     private void OnStepChanging(object? sender, PropertyChangingEventArgs e)

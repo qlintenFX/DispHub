@@ -289,7 +289,7 @@ public sealed class TourOverlay : Canvas
         }
         goal.Inflate(Gap, Gap);
 
-        double t = SmoothScrollViewer.ReduceMotion || _from.IsEmpty ? 1
+        double t = Motion.Reduced || _from.IsEmpty ? 1
             : Math.Clamp((DateTime.UtcNow - _movedAt).TotalMilliseconds / Glide.TotalMilliseconds, 0, 1);
         double ease = 1 - Math.Pow(1 - t, 3);
         _shown = t >= 1 ? goal : new Rect(
