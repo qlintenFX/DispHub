@@ -291,14 +291,6 @@
   </Style>
 
   <!-- A card that can be selected, e.g. a schedule slot picked on the day view. -->
-  <Style x:Key="SelectableCard" BasedOn="{StaticResource SettingCard}" TargetType="Border">
-    <Style.Triggers>
-      <DataTrigger Binding="{Binding IsSelected}" Value="True">
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-      </DataTrigger>
-    </Style.Triggers>
-  </Style>
-
   <!-- A round colour to pick (accent colour, tint colour): Name and Swatch come from the item. -->
   <Style x:Key="ColourSwatch" TargetType="ListBoxItem">
     <Setter Property="Margin" Value="0,0,4,4" />

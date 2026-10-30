@@ -18,7 +18,8 @@ public sealed record TimelineSegment(Guid? SlotId, string Label, Color Colour, d
 /// <summary>
 /// A 24-hour bar showing which profile runs when: each stretch shows the preview photo in that profile's colours
 /// (as on the profile cards), fades blend one photo into the next, and sunrise, sunset and "now" are marked.
-/// Names sit on a small dark label so they read on any photo. Clicking a stretch selects the change that starts it.
+/// Names sit on a small dark label so they read on any photo. Each change is a light line, and a fade a glow that
+/// softens out over the time it takes. It only shows the day; nothing on it is selected.
 /// </summary>
 public sealed class DayTimeline : FrameworkElement
 {
@@ -40,15 +41,7 @@ public sealed class DayTimeline : FrameworkElement
     public static readonly DependencyProperty NowProperty = DependencyProperty.Register(
         nameof(Now), typeof(double?), typeof(DayTimeline), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
-    public static readonly DependencyProperty SelectedSlotProperty = DependencyProperty.Register(
-        nameof(SelectedSlot), typeof(Guid?), typeof(DayTimeline),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-    public DayTimeline()
-    {
-        Focusable = false;
-        Cursor = Cursors.Hand;
-    }
+    public DayTimeline() => Focusable = false;
 
     public IReadOnlyList<TimelineSegment>? Segments
     {
@@ -59,7 +52,6 @@ public sealed class DayTimeline : FrameworkElement
     public double? Sunrise { get => (double?)GetValue(SunriseProperty); set => SetValue(SunriseProperty, value); }
     public double? Sunset { get => (double?)GetValue(SunsetProperty); set => SetValue(SunsetProperty, value); }
     public double? Now { get => (double?)GetValue(NowProperty); set => SetValue(NowProperty, value); }
-    public Guid? SelectedSlot { get => (Guid?)GetValue(SelectedSlotProperty); set => SetValue(SelectedSlotProperty, value); }
 
     protected override Size MeasureOverride(Size availableSize) =>
         new(double.IsInfinity(availableSize.Width) ? 600 : availableSize.Width, TrackTop + TrackHeight + LabelsHeight + 2);
@@ -73,7 +65,6 @@ public sealed class DayTimeline : FrameworkElement
             return;
         Brush text = Resource("TextFillColorPrimaryBrush", Brushes.White);
         Brush muted = Resource("TextFillColorSecondaryBrush", Brushes.Gray);
-        Brush accent = Resource("AccentFillColorDefaultBrush", Brushes.DodgerBlue);
         Brush stroke = Resource("CardStrokeColorDefaultBrush", Brushes.DimGray);
         var track = new Rect(0, TrackTop, width, TrackHeight);
         double dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
@@ -105,8 +96,19 @@ public sealed class DayTimeline : FrameworkElement
             else
             {
                 dc.DrawRectangle(fill, null, area);
-                if (i > 0)
-                    dc.DrawRectangle(Resource("CardBackgroundFillColorDefaultBrush", Brushes.Black), null, new Rect(x0 - 1, TrackTop, 2, TrackHeight));
+            }
+
+            // Where the profile changes: a light line with a dark edge, so it reads on any photo, and for a fade a glow
+            // that softens out over the time the fade takes.
+            if (i > 0)
+            {
+                if (fades)
+                {
+                    var glow = new LinearGradientBrush(Color.FromArgb(170, 255, 255, 255), Color.FromArgb(0, 255, 255, 255), new Point(x0, 0), new Point(fadeEnd, 0)) { MappingMode = BrushMappingMode.Absolute };
+                    dc.DrawRectangle(Frozen(glow), null, new Rect(x0, TrackTop, fadeEnd - x0, TrackHeight));
+                }
+                dc.DrawRectangle(SwitchEdge, null, new Rect(x0 - 1.5, TrackTop, 3, TrackHeight));
+                dc.DrawRectangle(SwitchLine, null, new Rect(x0 - 0.75, TrackTop, 1.5, TrackHeight));
             }
 
             // The profile's name on a small dark label, if it fits.
@@ -117,9 +119,6 @@ public sealed class DayTimeline : FrameworkElement
                 dc.DrawRoundedRectangle(Frozen(new SolidColorBrush(Color.FromArgb(150, 0, 0, 0))), null, plate, 4, 4);
                 dc.DrawText(label, new Point(plate.X + 6, plate.Y + 2));
             }
-
-            if (segment.SlotId is { } id && id == SelectedSlot)
-                dc.DrawRoundedRectangle(null, new Pen(accent, 2.5), Inset(area, 1.25), 5, 5);
         }
         dc.Pop();
         dc.DrawRoundedRectangle(null, new Pen(stroke, 1), track, 6, 6);
@@ -154,17 +153,6 @@ public sealed class DayTimeline : FrameworkElement
         ToolTip = SegmentAt(p) is { } segment ? $"{segment.Label}  {TimeLabel(segment.Start)} – {TimeLabel(segment.End)}" : null;
     }
 
-    protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-    {
-        ArgumentNullException.ThrowIfNull(e);
-        base.OnMouseLeftButtonDown(e);
-        if (SegmentAt(e.GetPosition(this))?.SlotId is { } slot)
-        {
-            SelectedSlot = slot;
-            e.Handled = true;
-        }
-    }
-
     private double X(double minutes) => minutes / MinutesPerDay * ActualWidth;
 
     private TimelineSegment? SegmentAt(Point p)
@@ -195,7 +183,8 @@ public sealed class DayTimeline : FrameworkElement
             ? Frozen(new ImageBrush(picture) { Stretch = Stretch.UniformToFill, ViewboxUnits = BrushMappingMode.RelativeToBoundingBox, Viewport = track, ViewportUnits = BrushMappingMode.Absolute })
             : Frozen(new SolidColorBrush(segment.Colour));
 
-    private static Rect Inset(Rect r, double by) => new(r.X + by, r.Y + by, Math.Max(0, r.Width - (2 * by)), Math.Max(0, r.Height - (2 * by)));
+    private static readonly Brush SwitchLine = Frozen(new SolidColorBrush(Color.FromArgb(235, 255, 255, 255)));
+    private static readonly Brush SwitchEdge = Frozen(new SolidColorBrush(Color.FromArgb(90, 0, 0, 0)));
 
     private static T Frozen<T>(T freezable)
         where T : Freezable

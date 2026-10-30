@@ -164,10 +164,7 @@
       <ItemsControl ItemsSource="{Binding Changes}">
         <ItemsControl.ItemTemplate>
           <DataTemplate DataType="{x:Type vm:ScheduleChangeItem}">
-            <Border Padding="14,8,8,4" Style="{StaticResource SelectableCard}">
-              <Border.InputBindings>
-                <MouseBinding Command="{Binding SelectCommand}" MouseAction="LeftClick" />
-              </Border.InputBindings>
+            <Border Padding="14,8,8,4" Style="{StaticResource SettingCard}">
               <DockPanel>
                 <ui:Button
                   Width="32"
@@ -244,7 +241,6 @@
       <ctl:DayTimeline
         Now="{Binding Now}"
         Segments="{Binding Segments}"
-        SelectedSlot="{Binding SelectedSlotId}"
         Sunrise="{Binding Sunrise}"
         Sunset="{Binding Sunset}" />
     </Border>
