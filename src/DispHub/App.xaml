@@ -16,7 +16,6 @@
       </ResourceDictionary.MergedDictionaries>
 
       <!-- Subclasses don't pick up implicit styles of their base type. -->
-      <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ctl:SmoothScrollViewer" />
       <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="ctl:HotkeyBox" />
 
       <DataTemplate DataType="{x:Type vm:HomeViewModel}">

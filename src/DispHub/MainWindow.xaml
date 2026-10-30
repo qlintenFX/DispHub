@@ -189,13 +189,14 @@
         BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
         BorderThickness="1,1,0,0"
         CornerRadius="8,0,0,0">
-        <ctl:SmoothScrollViewer x:Name="PageScroller">
+        <!-- WPF-UI's scroll viewer from FluentFlyout's fork: the same smooth wheel scrolling as FluentFlyout. -->
+        <ui:DynamicScrollViewer x:Name="PageScroller" ui:SmoothScrollBehavior.IsEnabled="{Binding SmoothScrolling}">
           <ContentControl
             MaxWidth="960"
             Margin="36,28,36,36"
             Content="{Binding SelectedPage}"
             Focusable="False" />
-        </ctl:SmoothScrollViewer>
+        </ui:DynamicScrollViewer>
       </Border>
     </Grid>
 
