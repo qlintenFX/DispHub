@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+  The picture on DispHub's Home page, shown in the current profile's colours.
+  Rendered at twice the size of Assets/Previews/home.jpg (960 x 600); see render.py next to it.
+  The logo's own colour wave, soft and flowing over deep navy, with the wordmark.
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1200px; overflow: hidden; background: #070a12; }
+  svg { position: absolute; inset: 0; }
+  .wordmark {
+    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-54%);
+    text-align: center; color: #fff;
+    font: 600 330px/1 "Segoe UI Variable Display", "Segoe UI", sans-serif; letter-spacing: -0.035em;
+    text-shadow: 0 10px 60px rgba(3, 6, 20, 0.55), 0 2px 8px rgba(3, 6, 20, 0.35);
+  }
+</style>
+</head>
+<body>
+  <svg viewBox="0 0 1920 1416" width="1920" height="1200" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <!-- The brand colours, as on the logo's screen: blue at the top to orange at the bottom. -->
+      <linearGradient id="brand" x1="0" y1="0" x2="0.35" y2="1">
+        <stop offset="0" stop-color="#148cf5" />
+        <stop offset="0.3" stop-color="#1ed2e6" />
+        <stop offset="0.55" stop-color="#8cdc50" />
+        <stop offset="0.78" stop-color="#f5c82d" />
+        <stop offset="1" stop-color="#fa781e" />
+      </linearGradient>
+      <linearGradient id="night" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#16233f" />
+        <stop offset="0.55" stop-color="#0b1122" />
+        <stop offset="1" stop-color="#07080f" />
+      </linearGradient>
+      <linearGradient id="silk" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#fff" stop-opacity="0" />
+        <stop offset="0.5" stop-color="#fff" stop-opacity="0.55" />
+        <stop offset="1" stop-color="#fff" stop-opacity="0" />
+      </linearGradient>
+      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="26" /></filter>
+      <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="120" /></filter>
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+        <feColorMatrix values="0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0.07 0" />
+      </filter>
+    </defs>
+
+    <rect width="1920" height="1416" fill="url(#night)" />
+
+    <!-- The colour wave, with the S-shaped edge of the logo's screen. -->
+    <path d="M-80 -80 H1300 C1250 140 1215 250 1190 360 C1150 540 1080 640 1000 760 C900 910 830 1040 800 1180 C780 1280 770 1380 765 1500 H-80 Z" fill="url(#brand)" filter="url(#glow)" opacity="0.7" />
+    <path d="M-80 -80 H1250 C1200 140 1165 250 1140 360 C1100 540 1030 640 950 760 C850 910 780 1040 750 1180 C730 1280 720 1380 715 1500 H-80 Z" fill="url(#brand)" filter="url(#soft)" />
+
+    <!-- Light catching the wave's edge, as on the logo, and two fainter ribbons beyond it. -->
+    <path id="edge" d="M1250 -80 C1200 140 1165 250 1140 360 C1100 540 1030 640 950 760 C850 910 780 1040 750 1180 C730 1280 720 1380 715 1500" fill="none" stroke="url(#silk)" stroke-width="14" opacity="0.85" filter="url(#soft)" />
+    <path d="M1250 -80 C1200 140 1165 250 1140 360 C1100 540 1030 640 950 760 C850 910 780 1040 750 1180 C730 1280 720 1380 715 1500" fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" />
+    <path d="M1470 -80 C1420 150 1385 270 1360 380 C1320 560 1250 670 1170 790 C1070 940 1000 1070 975 1210 C955 1310 945 1400 940 1500" fill="none" stroke="#9fd8ff" stroke-opacity="0.16" stroke-width="2" />
+    <path d="M1700 -80 C1650 160 1615 290 1590 400 C1550 580 1480 690 1400 820 C1300 970 1230 1100 1205 1240 C1185 1340 1175 1420 1170 1500" fill="none" stroke="#ffd39a" stroke-opacity="0.10" stroke-width="2" />
+
+    <!-- A little light from the corners, as on the website and the Store art. -->
+    <ellipse cx="1920" cy="1416" rx="760" ry="560" fill="#fa781e" opacity="0.16" filter="url(#glow)" />
+    <ellipse cx="1500" cy="120" rx="620" ry="420" fill="#1758dc" opacity="0.20" filter="url(#glow)" />
+
+    <rect width="1920" height="1416" filter="url(#grain)" />
+  </svg>
+  <div class="wordmark">DispHub</div>
+</body>
+</html>

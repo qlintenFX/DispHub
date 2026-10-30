@@ -33,8 +33,11 @@ public static class ColorPreview
 
     public static BitmapSource Render(ColorSettings settings) => Render(Picture, settings);
 
-    /// <summary>The picture large (960 by 600), for the Home page.</summary>
-    public static BitmapSource Large(ColorSettings settings) => Render(Picture + "-wide", settings);
+    /// <summary>
+    /// DispHub's own picture, the wordmark on the logo's colours (960 by 600), for the Home page. Its source is
+    /// branding/home.
+    /// </summary>
+    public static BitmapSource Home(ColorSettings settings) => Render("home", settings);
 
     private static BitmapSource Render(string picture, ColorSettings settings)
     {
