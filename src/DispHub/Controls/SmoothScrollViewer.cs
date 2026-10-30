@@ -52,6 +52,8 @@ public class SmoothScrollViewer : ScrollViewer
     public SmoothScrollViewer()
     {
         CanContentScroll = false;
+        // The wheel still lands here while the page under the pointer ignores the mouse during a glide.
+        Background = Brushes.Transparent;
         PanningMode = PanningMode.VerticalFirst;
         HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
         VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -155,6 +157,9 @@ public class SmoothScrollViewer : ScrollViewer
             return;
         _animating = true;
         _clock.Restart();
+        // As browsers do: what slides under a still pointer doesn't light up, so frames aren't spent on hover effects.
+        if (Content is UIElement content)
+            content.IsHitTestVisible = false;
         CompositionTarget.Rendering += OnRendering;
     }
 
@@ -170,6 +175,8 @@ public class SmoothScrollViewer : ScrollViewer
     {
         _animating = false;
         CompositionTarget.Rendering -= OnRendering;
+        if (Content is UIElement content)
+            content.IsHitTestVisible = true;
     }
 
     private void OnRendering(object? sender, EventArgs e)
