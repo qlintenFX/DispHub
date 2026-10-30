@@ -78,10 +78,6 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial double TextScale { get; set; } = 1;
 
-    /// <summary>Pages glide when the wheel turns, unless the user turned animations off.</summary>
-    [ObservableProperty]
-    public partial bool SmoothScrolling { get; set; } = true;
-
     [ObservableProperty]
     public partial bool ShowUpgradeCard { get; set; }
 
@@ -177,8 +173,7 @@ public sealed partial class MainViewModel : ObservableObject
 
     private void RefreshLayout()
     {
-        Controls.Motion.Reduced = _app.Config.Ui.ReduceMotion;
-        SmoothScrolling = !_app.Config.Ui.ReduceMotion;
+        Controls.SmoothScrollViewer.ReduceMotion = _app.Config.Ui.ReduceMotion;
         IsNavExpanded = !_app.Config.Ui.CompactNavigation && !_isNarrow;
         NavWidth = new System.Windows.GridLength(IsNavExpanded ? 220 : 64);
         TextScale = _app.Config.Ui.TextScale;
