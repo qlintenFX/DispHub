@@ -73,21 +73,26 @@
               <Rectangle.Effect>
                 <BlurEffect
                   KernelType="Gaussian"
-                  Radius="24"
+                  Radius="30"
                   RenderingBias="Quality" />
               </Rectangle.Effect>
             </Rectangle>
             <Border
-              Background="#6614171E"
-              BorderBrush="#33FFFFFF"
+              Background="#1F14171E"
+              BorderBrush="#40FFFFFF"
               BorderThickness="1"
               CornerRadius="10" />
+            <!-- "DispHub" sits level with the monitor's screen, above the image's middle: lowered to the panel's. -->
             <Image
               Width="196"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
               RenderOptions.BitmapScalingMode="HighQuality"
-              Source="pack://application:,,,/Assets/wordmark.png" />
+              Source="pack://application:,,,/Assets/wordmark.png">
+              <Image.RenderTransform>
+                <TranslateTransform X="1" Y="3.5" />
+              </Image.RenderTransform>
+            </Image>
           </Grid>
         </Border>
         <StackPanel
