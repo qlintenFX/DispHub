@@ -75,6 +75,8 @@ var thread = new Thread(() =>
     Icon(1024, fill: 0.92).Save(Path.Combine(root, "store", "icon-1024.png"));
     Wordmark(Icon(192), dark: true).Save(Path.Combine(root, "docs", "images", "wordmark-light.png"));
     Wordmark(Icon(192), dark: false).Save(Path.Combine(root, "docs", "images", "wordmark-dark.png"));
+    // The same light wordmark for the app, shown on the Home page's picture.
+    Wordmark(Icon(192), dark: false).Save(Path.Combine(appAssets, "wordmark.png"));
 
     Image Wide(int width, int height)
     {
