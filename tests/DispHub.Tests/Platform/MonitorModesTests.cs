@@ -51,7 +51,8 @@ public sealed class MonitorModesTests : IDisposable
 
         _modes.Apply(Game, byHand: true);
         // With HDR on this display tops out lower: the rate is picked after HDR switched.
-        WaitFor(() => _backend.HdrOn && _backend.Rate == 144);
+        // What was there is reported just after the switch, so it can land a moment after the backend changes.
+        WaitFor(() => _backend.HdrOn && _backend.Rate == 144 && _originals is { Count: > 0 });
         Assert.Equal(new SavedMode(120, false), _originals![Screen.Key]);
 
         _modes.Apply(new Dictionary<string, ModeTarget>(), byHand: true);
