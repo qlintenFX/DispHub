@@ -37,6 +37,16 @@ on them. Thank you to the photographers.
 | Coral reef | [Biscayne underwater](https://commons.wikimedia.org/wiki/File:Biscayne_underwater_NPS1.jpg) | U.S. National Park Service |
 | Autumn forest | [Fall Trail Panorama](https://commons.wikimedia.org/wiki/File:Fall_Trail_Panorama_(50671767778).jpg) | Shenandoah National Park, NPS |
 | Hot spring | [Grand Prismatic Spring Panorama](https://commons.wikimedia.org/wiki/File:Grand_Prismatic_Spring_Panorama_(37109293945).jpg) | Jacob W. Frank, Yellowstone National Park, NPS |
+| Grand Canyon | [Powell Point Sunset](https://commons.wikimedia.org/wiki/File:Grand_Canyon_National_Park,_Powell_Point_Sunset_Feb.10,_2013_1516_-_Flickr_-_Grand_Canyon_NPS.jpg) | Grand Canyon National Park, NPS |
+| Winter sunset | [Delicate Arch Sunset (8406472644)](https://commons.wikimedia.org/wiki/File:Delicate_Arch_Sunset_%288406472644%29.jpg) | Arches National Park, NPS |
+| Red rock arch | [First Light at Delicate Arch (8709273042)](https://commons.wikimedia.org/wiki/File:First_Light_at_Delicate_Arch_%288709273042%29.jpg) | Arches National Park, NPS |
+| Island fort | [Fort Jefferson at Dry Tortugas National Park](https://commons.wikimedia.org/wiki/File:Fort_Jefferson_at_Dry_Tortugas_National_Park,_Florida_%28e23e278c-e4cb-45d2-a77f-afe7eb556068%29.jpg) | U.S. National Park Service |
+| Lake pebbles | [Rocks in Lake McDonald (30061292108)](https://commons.wikimedia.org/wiki/File:Rocks_in_Lake_McDonald_%2830061292108%29.jpg) | Glacier National Park, NPS |
+| Snowy mountain | [Denali, seen from Wonder Lake](https://commons.wikimedia.org/wiki/File:Denali,_seen_from_Wonder_Lake,_around_2-30_am._%282701cb23-1071-4701-a4b6-09ffe990e291%29.jpg) | Mary Lewandowski, Denali National Park, NPS |
+| Northern lights | [Northern lights over the Noatak River](https://commons.wikimedia.org/wiki/File:A_huge_spray_of_northern_lights_is_reflected_in_a_tiny_sliver_of_water_in_the_Noatak_River._This_image_was_captured_in_early_%2893522930-1dd8-b71c-07cc-3dd725d0fff8%29.jpg) | U.S. National Park Service |
+| Milky Way | [Milky Way arching over Devils Tower](https://commons.wikimedia.org/wiki/File:Milky_Way_arching_over_Devils_Tower.jpg) | NPS Natural Resources |
+| Starry dunes | [Milky Way over a Dune Ridge (53908885943)](https://commons.wikimedia.org/wiki/File:Milky_Way_over_a_Dune_Ridge_%2853908885943%29.jpg) | Great Sand Dunes National Park and Preserve, NPS |
+| Desert cactus | [Teddy Bear Cholla and the Milky Way (53433935011)](https://commons.wikimedia.org/wiki/File:Teddy_Bear_Cholla_and_the_Milky_Way_%2853433935011%29.jpg) | Joshua Tree National Park, NPS |
 
 ## Used at runtime, not shipped
 

@@ -520,6 +520,36 @@ It also supports development of DispHub.</value>
   <data name="Preview_spring" xml:space="preserve">
     <value>Hot spring</value>
   </data>
+  <data name="Preview_canyon" xml:space="preserve">
+    <value>Grand Canyon</value>
+  </data>
+  <data name="Preview_sunset" xml:space="preserve">
+    <value>Winter sunset</value>
+  </data>
+  <data name="Preview_redrock" xml:space="preserve">
+    <value>Red rock arch</value>
+  </data>
+  <data name="Preview_island" xml:space="preserve">
+    <value>Island fort</value>
+  </data>
+  <data name="Preview_pebbles" xml:space="preserve">
+    <value>Lake pebbles</value>
+  </data>
+  <data name="Preview_mountain" xml:space="preserve">
+    <value>Snowy mountain</value>
+  </data>
+  <data name="Preview_aurora" xml:space="preserve">
+    <value>Northern lights</value>
+  </data>
+  <data name="Preview_milkyway" xml:space="preserve">
+    <value>Milky Way</value>
+  </data>
+  <data name="Preview_dunes" xml:space="preserve">
+    <value>Starry dunes</value>
+  </data>
+  <data name="Preview_cactus" xml:space="preserve">
+    <value>Desert cactus</value>
+  </data>
   <data name="Tray_StillRunningTitle" xml:space="preserve">
     <value>DispHub is still running</value>
   </data>

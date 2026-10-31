@@ -17,7 +17,11 @@ public static class ColorPreview
     public const string DefaultPicture = "reef";
 
     /// <summary>The pictures to choose from, as their file names in Assets/Previews.</summary>
-    public static readonly IReadOnlyList<string> Pictures = ["reef", "flowers", "autumn", "spring"];
+    public static readonly IReadOnlyList<string> Pictures =
+    [
+        "reef", "flowers", "autumn", "spring", "canyon", "sunset", "redrock",
+        "island", "pebbles", "mountain", "aurora", "milkyway", "dunes", "cactus",
+    ];
 
     private const string Wide = "-wide";
     private const int MaxCached = 32;
