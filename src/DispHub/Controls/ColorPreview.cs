@@ -19,6 +19,7 @@ public static class ColorPreview
     /// <summary>The pictures to choose from, as their file names in Assets/Previews.</summary>
     public static readonly IReadOnlyList<string> Pictures = ["reef", "flowers", "autumn", "spring"];
 
+    private const string Wide = "-wide";
     private const int MaxCached = 32;
     private static readonly Dictionary<(string, ColorSettings), BitmapSource> Cache = [];
     private static readonly Dictionary<string, (byte[] Pixels, int Width, int Height)> Sources = [];
@@ -33,8 +34,11 @@ public static class ColorPreview
 
     public static BitmapSource Render(ColorSettings settings) => Render(Picture, settings);
 
-    /// <summary>The picture large (960 by 600), for the Home page.</summary>
-    public static BitmapSource Large(ColorSettings settings) => Render(Picture + "-wide", settings);
+    /// <summary>
+    /// The picture large (960 by 600) under the clear glass panel that holds DispHub's wordmark, for the Home page.
+    /// The glass is part of the picture before the profile's colours, as it would be on the screen.
+    /// </summary>
+    public static BitmapSource Large(ColorSettings settings) => Render(Picture + Wide, settings);
 
     private static BitmapSource Render(string picture, ColorSettings settings)
     {
@@ -80,9 +84,21 @@ public static class ColorPreview
         var decoder = BitmapDecoder.Create(
             new Uri($"pack://application:,,,/Assets/Previews/{picture}.jpg"), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
         var converted = new FormatConvertedBitmap(decoder.Frames[0], PixelFormats.Bgra32, null, 0);
-        byte[] pixels = new byte[converted.PixelWidth * converted.PixelHeight * 4];
-        converted.CopyPixels(pixels, converted.PixelWidth * 4, 0);
-        return Sources[picture] = (pixels, converted.PixelWidth, converted.PixelHeight);
+        int width = converted.PixelWidth, height = converted.PixelHeight;
+        byte[] pixels = new byte[width * height * 4];
+        converted.CopyPixels(pixels, width * 4, 0);
+        if (picture.EndsWith(Wide, StringComparison.Ordinal))
+            pixels = WithGlass(pixels, width, height);
+        return Sources[picture] = (pixels, width, height);
+    }
+
+    // Home shows the picture 264 by 165 points with the 224 by 72 panel in the middle, and the wordmark on top of it
+    // (HomeView.xaml).
+    private static byte[] WithGlass(byte[] pixels, int width, int height)
+    {
+        double scale = width / 264.0;
+        var look = new GlassLook(CornerRadius: 24 * scale, BevelDepth: 12 * scale, Scale: scale);
+        return LiquidGlass.Draw(pixels, width, height, width / 2.0, height / 2.0, 224 * scale, 72 * scale, look);
     }
 
     private static int Clamp(double value) => (int)Math.Clamp(Math.Round(value), 0, 255);
