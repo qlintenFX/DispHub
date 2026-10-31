@@ -79,8 +79,8 @@ vibrance, gamma, screen dimmer, night light, color temperature, display profiles
 
 ## Screenshots
 
-Use `store/screenshots/*.png` in numbered order (1920 x 1080 copies in git; Partner Center has the same shots at
-3840 x 2160). Captions:
+Use `store/screenshots/*.png` in numbered order (1920 x 1080 in git; Partner Center has 1 and 5 at 3840 x 2160 and
+2 to 4, refreshed on 2026-10-31, at 1920 x 1080). Captions:
 
 1. Switch profiles with a keyboard shortcut
 2. A profile for every moment
