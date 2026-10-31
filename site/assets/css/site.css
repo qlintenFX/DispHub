@@ -743,9 +743,19 @@ details.expander[open] .body {
   font: 600 11.5px/1 var(--font-small);
 }
 
+.store-badge {
+  display: inline-flex;
+  border-radius: 6px;
+}
+
 .store-badge img {
   width: auto;
   height: 52px;
+}
+
+/* in a row of calls to action the badge takes their height */
+.cta .store-badge img {
+  height: 56px;
 }
 
 .option + .option {
