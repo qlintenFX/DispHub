@@ -50,7 +50,10 @@
               RenderOptions.BitmapScalingMode="HighQuality"
               Stretch="UniformToFill" />
           </Border.Background>
-          <!-- "DispHub" sits level with the monitor's screen, above the image's middle: lowered to the panel's. -->
+          <!--
+            "DispHub" sits level with the monitor's screen, above the image's middle: lowered to the panel's. A soft
+            shadow lifts it off the bright, busy glass.
+          -->
           <Image
             Width="196"
             HorizontalAlignment="Center"
@@ -60,6 +63,15 @@
             <Image.RenderTransform>
               <TranslateTransform X="1" Y="3.5" />
             </Image.RenderTransform>
+            <Image.Effect>
+              <DropShadowEffect
+                BlurRadius="10"
+                Direction="270"
+                Opacity="0.8"
+                RenderingBias="Quality"
+                ShadowDepth="1"
+                Color="Black" />
+            </Image.Effect>
           </Image>
         </Border>
         <StackPanel
