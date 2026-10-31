@@ -36,7 +36,10 @@
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <!-- The picture in the current profile's colours, with DispHub's wordmark on it. -->
+        <!--
+          The picture in the current profile's colours, with DispHub's wordmark on the 224 by 72 glass panel drawn
+          into its middle (ColorPreview.Large).
+        -->
         <Border
           Width="264"
           Height="165"
@@ -47,53 +50,17 @@
               RenderOptions.BitmapScalingMode="HighQuality"
               Stretch="UniformToFill" />
           </Border.Background>
-          <!--
-            Acrylic behind the wordmark, as Windows draws its flyouts: the same picture blurred, a dark tint and a
-            light edge.
-          -->
-          <Grid
-            Width="224"
-            Height="72"
+          <!-- "DispHub" sits level with the monitor's screen, above the image's middle: lowered to the panel's. -->
+          <Image
+            Width="196"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <Grid.Clip>
-              <RectangleGeometry
-                RadiusX="10"
-                RadiusY="10"
-                Rect="0,0,224,72" />
-            </Grid.Clip>
-            <Rectangle
-              Width="264"
-              Height="165"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center">
-              <Rectangle.Fill>
-                <ImageBrush ImageSource="{Binding NowPicture}" Stretch="UniformToFill" />
-              </Rectangle.Fill>
-              <Rectangle.Effect>
-                <BlurEffect
-                  KernelType="Gaussian"
-                  Radius="30"
-                  RenderingBias="Quality" />
-              </Rectangle.Effect>
-            </Rectangle>
-            <Border
-              Background="#1F14171E"
-              BorderBrush="#40FFFFFF"
-              BorderThickness="1"
-              CornerRadius="10" />
-            <!-- "DispHub" sits level with the monitor's screen, above the image's middle: lowered to the panel's. -->
-            <Image
-              Width="196"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              RenderOptions.BitmapScalingMode="HighQuality"
-              Source="pack://application:,,,/Assets/wordmark.png">
-              <Image.RenderTransform>
-                <TranslateTransform X="1" Y="3.5" />
-              </Image.RenderTransform>
-            </Image>
-          </Grid>
+            VerticalAlignment="Center"
+            RenderOptions.BitmapScalingMode="HighQuality"
+            Source="pack://application:,,,/Assets/wordmark.png">
+            <Image.RenderTransform>
+              <TranslateTransform X="1" Y="3.5" />
+            </Image.RenderTransform>
+          </Image>
         </Border>
         <StackPanel
           Grid.Column="1"

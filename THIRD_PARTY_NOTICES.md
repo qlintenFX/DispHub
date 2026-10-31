@@ -22,6 +22,9 @@ DispHub's effect shader (`src/DispHub.Platform/Effects/Effects.hlsl`) and `FilmG
 | VHS tape, head switching, tracking noise, snow, edge wave | The effect chain of [ntsc-rs](https://github.com/ntsc-rs/ntsc-rs) | MIT, Apache-2.0 or ISC |
 | Colour vision help | Daltonisation by Fidaner, Lin and Ozguven | Published method |
 
+Home's glass panel (`src/DispHub.Core/Color/LiquidGlass.cs`) follows the glass shader of
+[liquidglass](https://github.com/ybouane/liquidglass) by ybouane (MIT).
+
 ### Preview photos
 
 The profile previews (`src/DispHub/Assets/Previews`) are strips cropped from public-domain photos by U.S.
