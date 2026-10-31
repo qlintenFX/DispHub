@@ -23,7 +23,8 @@ public static class DefaultConfig
     public static AppConfig Create(Func<HotkeyGesture, bool> typesCharacter)
     {
         ArgumentNullException.ThrowIfNull(typesCharacter);
-        string? Starter(char digit) => StarterHotkey(digit, typesCharacter);
+        Func<char, HotkeyGesture>? set = StarterSets.FirstOrDefault(s => StarterDigits.All(d => !typesCharacter(s(d))));
+        string? Starter(char digit) => (set is not null ? set(digit) : FirstFree(digit, typesCharacter))?.ToString();
 
         var standard = new Profile { Name = Names.Standard, Color = ColorSettings.Neutral, Hotkey = Starter('1') };
         var config = new AppConfig
@@ -50,14 +51,27 @@ public static class DefaultConfig
         return config;
     }
 
-    /// <summary>Ctrl+Alt and the digit, or with Shift too where AltGr types a character with it; none if both do.</summary>
-    private static string? StarterHotkey(char digit, Func<HotkeyGesture, bool> typesCharacter)
+    private const string StarterDigits = "1230";
+    private const int F1 = 0x70;
+
+    // The starters, all four in one pattern so they're easy to remember: Ctrl+Alt and the digit; with Shift too where
+    // AltGr types characters with the digits (Belgian, French); or the function keys where it types characters with
+    // Shift as well (US-International: AltGr+1 is ¡ and AltGr+Shift+1 is ¹). Function keys never type anything.
+    private static readonly Func<char, HotkeyGesture>[] StarterSets =
+    [
+        digit => new HotkeyGesture(HotkeyModifiers.Control | HotkeyModifiers.Alt, digit),
+        digit => new HotkeyGesture(HotkeyModifiers.Control | HotkeyModifiers.Alt | HotkeyModifiers.Shift, digit),
+        digit => new HotkeyGesture(HotkeyModifiers.Control | HotkeyModifiers.Alt, F1 + (digit == '0' ? 9 : digit - '1')),
+    ];
+
+    /// <summary>For a keyboard where no pattern is free for all four: the first one free for this key, if any.</summary>
+    private static HotkeyGesture? FirstFree(char digit, Func<HotkeyGesture, bool> typesCharacter)
     {
-        foreach (HotkeyModifiers modifiers in new[] { HotkeyModifiers.Control | HotkeyModifiers.Alt, HotkeyModifiers.Control | HotkeyModifiers.Alt | HotkeyModifiers.Shift })
+        foreach (Func<char, HotkeyGesture> set in StarterSets)
         {
-            var gesture = new HotkeyGesture(modifiers, digit);
+            HotkeyGesture gesture = set(digit);
             if (!typesCharacter(gesture))
-                return gesture.ToString();
+                return gesture;
         }
         return null;
     }
