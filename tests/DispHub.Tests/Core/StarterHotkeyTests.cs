@@ -30,9 +30,28 @@ public sealed class StarterHotkeyTests
     }
 
     [Fact]
-    public void Starters_LeaveAKeyOut_WhenBothWaysTypeSomething()
+    public void Starters_UseFunctionKeys_WhereAltGrTypesWithShiftToo()
     {
-        AppConfig config = DefaultConfig.Create(g => g.VirtualKey == '1');
+        // US-International: AltGr+1 types ¡ and AltGr+Shift+1 types ¹; the other digits only without Shift.
+        AppConfig config = DefaultConfig.Create(g => g.VirtualKey == '1' || (g.Modifiers == CtrlAlt && g.VirtualKey is >= '0' and <= '9'));
+
+        Assert.Equal(["Ctrl+Alt+F1", "Ctrl+Alt+F2", "Ctrl+Alt+F3"], config.Profiles.Select(p => p.Hotkey));
+        Assert.Equal("Ctrl+Alt+F10", config.Hotkeys.TogglePause);
+    }
+
+    [Fact]
+    public void Starters_StayTogether_WhenOnlyOneDigitTypesSomething()
+    {
+        AppConfig config = DefaultConfig.Create(g => g.Modifiers == CtrlAlt && g.VirtualKey == '0');
+
+        Assert.Equal(["Ctrl+Alt+Shift+1", "Ctrl+Alt+Shift+2", "Ctrl+Alt+Shift+3"], config.Profiles.Select(p => p.Hotkey));
+        Assert.Equal("Ctrl+Alt+Shift+0", config.Hotkeys.TogglePause);
+    }
+
+    [Fact]
+    public void Starters_LeaveAKeyOut_WhenEveryPatternTypesSomethingWithIt()
+    {
+        AppConfig config = DefaultConfig.Create(g => g.VirtualKey is '1' or 0x70);
 
         Assert.Null(config.Profiles[0].Hotkey);
         Assert.Equal("Ctrl+Alt+2", config.Profiles[1].Hotkey);
