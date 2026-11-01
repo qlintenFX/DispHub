@@ -66,6 +66,9 @@ public sealed class ReviewPrompt(AppController app, ILicenseService license, App
     private static readonly TimeSpan MinimumUse = TimeSpan.FromDays(7);
     private const int MinimumSwitches = 10;
 
+    // The Pro trial also ends after a week: someone who just lost Pro isn't asked until a few days after hearing so.
+    private static readonly TimeSpan AfterTrialEnded = TimeSpan.FromDays(3);
+
     public void Attach()
     {
         app.StateChanged += (_, source) =>
@@ -82,13 +85,24 @@ public sealed class ReviewPrompt(AppController app, ILicenseService license, App
     /// <summary>Called whenever the main window is activated.</summary>
     public async Task OnWindowActivatedAsync(MainWindow window)
     {
-        if (!license.CanPurchase || state.Data.ReviewPromptedUtc is not null || state.Data.FirstRunUtc is not { } first)
+        if (!license.CanPurchase || state.Data.ReviewPromptedUtc is not null
+            || !ShouldAsk(DateTimeOffset.UtcNow, state.Data.FirstRunUtc, state.Data.ProfileSwitchCount, license.IsPro, state.Data.TrialEndShownUtc))
+        {
             return;
-        if (DateTimeOffset.UtcNow - first < MinimumUse || state.Data.ProfileSwitchCount < MinimumSwitches)
-            return;
+        }
 
         state.Data.ReviewPromptedUtc = DateTimeOffset.UtcNow;
         state.Save();
         await license.RequestReviewAsync(new System.Windows.Interop.WindowInteropHelper(window).Handle);
+    }
+
+    /// <summary>
+    /// A week of use and real switching; without Pro, also a few days since the trial-ended message (never with it).
+    /// </summary>
+    public static bool ShouldAsk(DateTimeOffset now, DateTimeOffset? firstRun, int switches, bool isPro, DateTimeOffset? trialEndShown)
+    {
+        if (firstRun is not { } first || now - first < MinimumUse || switches < MinimumSwitches)
+            return false;
+        return isPro || (trialEndShown is { } shown && now - shown >= AfterTrialEnded);
     }
 }
