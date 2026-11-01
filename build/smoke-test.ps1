@@ -62,7 +62,9 @@ Start-Sleep -Seconds 1
 $listItem = Cond $AE::ControlTypeProperty ([System.Windows.Automation.ControlType]::ListItem)
 $index = 2
 foreach ($page in "Home", "Profiles", "Schedule", "Apps", "Displays", "Settings", "About") {
-    $nav = $main.FindAll($TS::Descendants, $listItem) | Where-Object { $_.Current.Name -eq "DispHub.ViewModels.$($page)ViewModel" } | Select-Object -First 1
+    # Menu items read as the pages' titles (English on the runner).
+    $nav = $main.FindAll($TS::Descendants, $listItem) |
+    Where-Object { $_.Current.Name -eq $page } | Select-Object -First 1
     if (-not $nav) { $failures.Add("No $page page in the menu"); continue }
     $nav.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select()
     Start-Sleep -Seconds 2

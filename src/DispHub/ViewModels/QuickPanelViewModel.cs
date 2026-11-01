@@ -144,6 +144,9 @@ public sealed partial class QuickProfile(QuickPanelViewModel owner, Guid id, str
     public System.Windows.Media.ImageSource Preview { get; } = preview;
     public bool IsActive { get; } = isActive;
 
+    // What screen readers say for the profile's tile.
+    public override string ToString() => Name;
+
     [RelayCommand]
     private void Activate() => owner.Activate(Id);
 }
