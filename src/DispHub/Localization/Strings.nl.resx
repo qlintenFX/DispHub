@@ -419,7 +419,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>DispHub Pro-proefversie</value>
   </data>
   <data name="About_Tip" xml:space="preserve">
-    <value>Doneren</value>
+    <value>Fooi geven</value>
   </data>
   <data name="About_TipHint" xml:space="preserve">
     <value>Een eenmalig bedankje dat helpt DispHub draaiende te houden. Wat is inbegrepen, verandert er niet door.</value>
@@ -467,7 +467,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>Duur van bericht</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Toont de naam van het profiel als het verandert, in de stijl van de snelle instellingen. Haalt nooit de focus bij games weg.</value>
+    <value>Toont de naam van het profiel als het verandert, in de stijl van het snelpaneel. Haalt nooit de focus bij games weg.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
     <value>Bericht op het scherm</value>
@@ -692,7 +692,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>Achtergrond</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica kleurt het venster met de kleuren van je achtergrond, acryl vervaagt wat erachter ligt. De snelle instellingen en berichten op het scherm gebruiken acryl, tenzij je Effen kiest. Windows toont een effen kleur zolang energiebesparing aan staat of transparantie-effecten uit staan.</value>
+    <value>Mica kleurt het venster met de kleuren van je achtergrond, acryl vervaagt wat erachter ligt. Het snelpaneel en de berichten op het scherm gebruiken acryl, tenzij je Effen kleur kiest. Windows toont een effen kleur zolang energiebesparing aan staat of transparantie-effecten uit staan.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Tekstgrootte</value>
@@ -725,7 +725,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>Acryl</value>
   </data>
   <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
-    <value>Effen</value>
+    <value>Effen kleur</value>
   </data>
   <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
     <value>Linksboven</value>
@@ -899,7 +899,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>Donkerder dan de laagste helderheidsinstelling van je monitor.</value>
   </data>
   <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
-    <value>Snelle instellingen tonen</value>
+    <value>Het snelpaneel tonen</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
     <value>Profielen zijn uitgeschakeld</value>
@@ -923,7 +923,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>Link gekopieerd</value>
   </data>
   <data name="Settings_QuickPanelHotkey" xml:space="preserve">
-    <value>Snelle instellingen</value>
+    <value>Snelpaneel</value>
   </data>
   <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
     <value>Profielen, helderheid en warmte zonder het venster te openen.</value>
@@ -962,7 +962,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>Elke dag</value>
   </data>
   <data name="Schedule_Weekdays" xml:space="preserve">
-    <value>Doordeweeks</value>
+    <value>Werkdagen</value>
   </data>
   <data name="Schedule_Weekends" xml:space="preserve">
     <value>Weekends</value>
@@ -1349,9 +1349,9 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>op {0} om {1}</value>
   </data>
   <data name="Settings_PanelOpacity" xml:space="preserve">
-    <value>Dekking van de snelle instellingen en berichten</value>
+    <value>Dekking van het snelpaneel en de berichten</value>
   </data>
   <data name="Settings_PanelOpacityHint" xml:space="preserve">
-    <value>Hoe ondoorzichtig de vervaagde achtergrond van de snelle instellingen en de berichten op het scherm is. Lager toont meer van wat erachter ligt. Beschikbaar met DispHub Pro.</value>
+    <value>Hoe ondoorzichtig de vervaagde achtergrond van het snelpaneel en de berichten op het scherm is. Lager toont meer van wat erachter ligt. Beschikbaar met DispHub Pro.</value>
   </data>
 </root>

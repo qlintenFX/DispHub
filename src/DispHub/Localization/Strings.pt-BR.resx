@@ -467,7 +467,7 @@ Você também apoia o desenvolvimento do DispHub.</value>
     <value>Duração da mensagem</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Mostra o nome do perfil quando ele muda, no estilo das configurações rápidas. Nunca tira o foco dos jogos.</value>
+    <value>Mostra o nome do perfil quando ele muda, no estilo do painel rápido. Nunca tira o foco dos jogos.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
     <value>Mensagem na tela</value>
@@ -692,7 +692,7 @@ Você também apoia o desenvolvimento do DispHub.</value>
     <value>Plano de fundo</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>O Mica tinge a janela com as cores do seu papel de parede; o acrílico desfoca o que está atrás dela. As configurações rápidas e as mensagens na tela usam acrílico, a menos que você escolha Sólido. O Windows mostra uma cor sólida enquanto a economia de energia estiver ativada ou os efeitos de transparência estiverem desativados.</value>
+    <value>O Mica tinge a janela com as cores do seu papel de parede; o acrílico desfoca o que está atrás dela. O painel rápido e as mensagens na tela usam acrílico, a menos que você escolha Cor sólida. O Windows mostra uma cor sólida enquanto a economia de energia estiver ativada ou os efeitos de transparência estiverem desativados.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Tamanho do texto</value>
@@ -725,7 +725,7 @@ Você também apoia o desenvolvimento do DispHub.</value>
     <value>Acrílico</value>
   </data>
   <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
-    <value>Sólido</value>
+    <value>Cor sólida</value>
   </data>
   <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
     <value>Superior esquerdo</value>
@@ -899,7 +899,7 @@ Você também apoia o desenvolvimento do DispHub.</value>
     <value>Mais escuro que a configuração de brilho mínimo do seu monitor.</value>
   </data>
   <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
-    <value>Mostrar as configurações rápidas</value>
+    <value>Mostrar o painel rápido</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
     <value>Os perfis estão desativados</value>
@@ -923,7 +923,7 @@ Você também apoia o desenvolvimento do DispHub.</value>
     <value>Link copiado</value>
   </data>
   <data name="Settings_QuickPanelHotkey" xml:space="preserve">
-    <value>Configurações rápidas</value>
+    <value>Painel rápido</value>
   </data>
   <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
     <value>Perfis, brilho e temperatura sem abrir a janela.</value>
@@ -1349,9 +1349,9 @@ Você também apoia o desenvolvimento do DispHub.</value>
     <value>em {0} às {1}</value>
   </data>
   <data name="Settings_PanelOpacity" xml:space="preserve">
-    <value>Opacidade das configurações rápidas e das mensagens</value>
+    <value>Opacidade do painel rápido e das mensagens</value>
   </data>
   <data name="Settings_PanelOpacityHint" xml:space="preserve">
-    <value>Quão sólido é o fundo desfocado das configurações rápidas e das mensagens na tela. Valores menores mostram mais do que há atrás. Disponível com o DispHub Pro.</value>
+    <value>Quão sólido é o fundo desfocado do painel rápido e das mensagens na tela. Valores menores mostram mais do que há atrás. Disponível com o DispHub Pro.</value>
   </data>
 </root>

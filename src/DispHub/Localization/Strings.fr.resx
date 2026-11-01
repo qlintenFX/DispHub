@@ -419,7 +419,7 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>Essai de DispHub Pro</value>
   </data>
   <data name="About_Tip" xml:space="preserve">
-    <value>Faire un don</value>
+    <value>Laisser un pourboire</value>
   </data>
   <data name="About_TipHint" xml:space="preserve">
     <value>Un remerciement ponctuel qui aide DispHub à continuer. Cela ne change rien à ce qui est inclus.</value>
@@ -467,7 +467,7 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>Durée du message</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Affiche le nom du profil lorsqu'il change, dans le style des paramètres rapides. Ne prend jamais le focus aux jeux.</value>
+    <value>Affiche le nom du profil lorsqu'il change, dans le style du panneau rapide. Ne prend jamais le focus aux jeux.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
     <value>Message à l'écran</value>
@@ -692,7 +692,7 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>Arrière-plan</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica teinte la fenêtre avec les couleurs de votre fond d'écran, l'acrylique floute ce qui se trouve derrière. Les paramètres rapides et les messages à l'écran utilisent l'acrylique, sauf si vous choisissez Uni. Windows affiche une couleur unie lorsque l'économiseur d'énergie est actif ou que les effets de transparence sont désactivés.</value>
+    <value>Mica teinte la fenêtre avec les couleurs de votre fond d'écran, l'acrylique floute ce qui se trouve derrière. Le panneau rapide et les messages à l'écran utilisent l'acrylique, sauf si vous choisissez Couleur unie. Windows affiche une couleur unie lorsque l'économiseur d'énergie est actif ou que les effets de transparence sont désactivés.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Taille du texte</value>
@@ -725,7 +725,7 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>Acrylique</value>
   </data>
   <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
-    <value>Uni</value>
+    <value>Couleur unie</value>
   </data>
   <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
     <value>En haut à gauche</value>
@@ -899,7 +899,7 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>Plus sombre que le réglage de luminosité minimal de votre écran.</value>
   </data>
   <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
-    <value>Afficher les paramètres rapides</value>
+    <value>Afficher le panneau rapide</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
     <value>Les profils sont désactivés</value>
@@ -923,7 +923,7 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>Lien copié</value>
   </data>
   <data name="Settings_QuickPanelHotkey" xml:space="preserve">
-    <value>Paramètres rapides</value>
+    <value>Panneau rapide</value>
   </data>
   <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
     <value>Profils, luminosité et chaleur sans ouvrir la fenêtre.</value>
@@ -1349,9 +1349,9 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>le {0} à {1}</value>
   </data>
   <data name="Settings_PanelOpacity" xml:space="preserve">
-    <value>Opacité des paramètres rapides et des messages</value>
+    <value>Opacité du panneau rapide et des messages</value>
   </data>
   <data name="Settings_PanelOpacityHint" xml:space="preserve">
-    <value>Le degré d'opacité de l'arrière-plan flouté des paramètres rapides et des messages à l'écran. Plus la valeur est basse, plus on voit ce qui se trouve derrière. Disponible avec DispHub Pro.</value>
+    <value>Le degré d'opacité de l'arrière-plan flouté du panneau rapide et des messages à l'écran. Plus la valeur est basse, plus on voit ce qui se trouve derrière. Disponible avec DispHub Pro.</value>
   </data>
 </root>

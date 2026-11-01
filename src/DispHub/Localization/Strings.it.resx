@@ -467,7 +467,7 @@ Inoltre sostieni lo sviluppo di DispHub.</value>
     <value>Durata del messaggio</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Mostra il nome del profilo quando cambia, nello stile delle impostazioni rapide. Non sottrae mai il focus ai giochi.</value>
+    <value>Mostra il nome del profilo quando cambia, nello stile del pannello rapido. Non sottrae mai il focus ai giochi.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
     <value>Messaggio a schermo</value>
@@ -692,7 +692,7 @@ Inoltre sostieni lo sviluppo di DispHub.</value>
     <value>Sfondo</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica colora la finestra con i colori dello sfondo, l'acrilico sfoca ciò che c'è dietro. Le impostazioni rapide e i messaggi a schermo usano l'acrilico, a meno che tu non scelga Tinta unita. Windows mostra un colore pieno quando il risparmio energia è attivo o gli effetti di trasparenza sono disattivati.</value>
+    <value>Mica colora la finestra con i colori dello sfondo, l'acrilico sfoca ciò che c'è dietro. Il pannello rapido e i messaggi a schermo usano l'acrilico, a meno che tu non scelga Tinta unita. Windows mostra un colore pieno quando il risparmio energia è attivo o gli effetti di trasparenza sono disattivati.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Dimensioni del testo</value>
@@ -899,7 +899,7 @@ Inoltre sostieni lo sviluppo di DispHub.</value>
     <value>Più scuro dell'impostazione di luminosità minima del tuo monitor.</value>
   </data>
   <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
-    <value>Mostra le impostazioni rapide</value>
+    <value>Mostra il pannello rapido</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
     <value>I profili sono disattivati</value>
@@ -923,7 +923,7 @@ Inoltre sostieni lo sviluppo di DispHub.</value>
     <value>Link copiato</value>
   </data>
   <data name="Settings_QuickPanelHotkey" xml:space="preserve">
-    <value>Impostazioni rapide</value>
+    <value>Pannello rapido</value>
   </data>
   <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
     <value>Profili, luminosità e calore senza aprire la finestra.</value>
@@ -1349,9 +1349,9 @@ Inoltre sostieni lo sviluppo di DispHub.</value>
     <value>il {0} alle {1}</value>
   </data>
   <data name="Settings_PanelOpacity" xml:space="preserve">
-    <value>Opacità delle impostazioni rapide e dei messaggi</value>
+    <value>Opacità del pannello rapido e dei messaggi</value>
   </data>
   <data name="Settings_PanelOpacityHint" xml:space="preserve">
-    <value>Quanto è opaco lo sfondo sfocato delle impostazioni rapide e dei messaggi a schermo. Un valore più basso mostra di più ciò che c'è dietro. Disponibile con DispHub Pro.</value>
+    <value>Quanto è opaco lo sfondo sfocato del pannello rapido e dei messaggi a schermo. Un valore più basso mostra di più ciò che c'è dietro. Disponibile con DispHub Pro.</value>
   </data>
 </root>

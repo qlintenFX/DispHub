@@ -419,7 +419,7 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>DispHub Pro-Testversion</value>
   </data>
   <data name="About_Tip" xml:space="preserve">
-    <value>Spenden</value>
+    <value>Trinkgeld geben</value>
   </data>
   <data name="About_TipHint" xml:space="preserve">
     <value>Ein einmaliges Dankeschön, das DispHub am Laufen hält. Am Funktionsumfang ändert sich dadurch nichts.</value>
@@ -467,7 +467,7 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>Dauer der Nachricht</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Zeigt den Namen des Profils, wenn es wechselt, im Stil der Schnelleinstellungen. Entzieht Spielen nie den Fokus.</value>
+    <value>Zeigt den Namen des Profils, wenn es wechselt, im Stil des Schnellbereichs. Entzieht Spielen nie den Fokus.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
     <value>Nachricht auf dem Bildschirm</value>
@@ -692,7 +692,7 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>Hintergrund</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica färbt das Fenster mit den Farben deines Hintergrundbilds ein, Acryl macht das Dahinterliegende unscharf. Die Schnelleinstellungen und Nachrichten auf dem Bildschirm verwenden Acryl, außer du wählst Einfarbig. Windows zeigt eine einfache Farbe, solange der Energiesparmodus aktiv ist oder die Transparenzeffekte aus sind.</value>
+    <value>Mica färbt das Fenster mit den Farben deines Hintergrundbilds ein, Acryl macht das Dahinterliegende unscharf. Der Schnellbereich und die Nachrichten auf dem Bildschirm verwenden Acryl, außer du wählst Volltonfarbe. Windows zeigt eine einfache Farbe, solange der Energiesparmodus aktiv ist oder die Transparenzeffekte aus sind.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Textgröße</value>
@@ -725,7 +725,7 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>Acryl</value>
   </data>
   <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
-    <value>Einfarbig</value>
+    <value>Volltonfarbe</value>
   </data>
   <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
     <value>Oben links</value>
@@ -899,7 +899,7 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>Dunkler als die niedrigste Helligkeitsstufe deines Monitors.</value>
   </data>
   <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
-    <value>Schnelleinstellungen anzeigen</value>
+    <value>Den Schnellbereich anzeigen</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
     <value>Profile sind ausgeschaltet</value>
@@ -923,7 +923,7 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>Link kopiert</value>
   </data>
   <data name="Settings_QuickPanelHotkey" xml:space="preserve">
-    <value>Schnelleinstellungen</value>
+    <value>Schnellbereich</value>
   </data>
   <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
     <value>Profile, Helligkeit und Wärme, ohne das Fenster zu öffnen.</value>
@@ -1349,9 +1349,9 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>am {0} um {1}</value>
   </data>
   <data name="Settings_PanelOpacity" xml:space="preserve">
-    <value>Deckkraft der Schnelleinstellungen und Nachrichten</value>
+    <value>Deckkraft des Schnellbereichs und der Nachrichten</value>
   </data>
   <data name="Settings_PanelOpacityHint" xml:space="preserve">
-    <value>Wie undurchsichtig der unscharfe Hintergrund der Schnelleinstellungen und der Nachrichten auf dem Bildschirm ist. Ein niedrigerer Wert zeigt mehr von dem, was dahinter liegt. Verfügbar mit DispHub Pro.</value>
+    <value>Wie undurchsichtig der unscharfe Hintergrund des Schnellbereichs und der Nachrichten auf dem Bildschirm ist. Ein niedrigerer Wert zeigt mehr von dem, was dahinter liegt. Verfügbar mit DispHub Pro.</value>
   </data>
 </root>

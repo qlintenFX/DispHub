@@ -467,7 +467,7 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>Duración del mensaje</value>
   </data>
   <data name="Settings_OsdHint" xml:space="preserve">
-    <value>Muestra el nombre del perfil cuando cambia, con el estilo de la configuración rápida. Nunca quita el foco a los juegos.</value>
+    <value>Muestra el nombre del perfil cuando cambia, con el estilo del panel rápido. Nunca quita el foco a los juegos.</value>
   </data>
   <data name="Settings_OsdToggle" xml:space="preserve">
     <value>Mensaje en pantalla</value>
@@ -692,7 +692,7 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>Fondo</value>
   </data>
   <data name="Settings_BackdropHint" xml:space="preserve">
-    <value>Mica tiñe la ventana con los colores de tu fondo de escritorio; acrílico desenfoca lo que hay detrás. La configuración rápida y los mensajes en pantalla usan acrílico, salvo que elijas Sólido. Windows muestra un color liso mientras el ahorro de energía está activado o los efectos de transparencia están desactivados.</value>
+    <value>Mica tiñe la ventana con los colores de tu fondo de escritorio; acrílico desenfoca lo que hay detrás. El panel rápido y los mensajes en pantalla usan acrílico, salvo que elijas Color sólido. Windows muestra un color liso mientras el ahorro de energía está activado o los efectos de transparencia están desactivados.</value>
   </data>
   <data name="Settings_TextSize" xml:space="preserve">
     <value>Tamaño del texto</value>
@@ -725,7 +725,7 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>Acrílico</value>
   </data>
   <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
-    <value>Sólido</value>
+    <value>Color sólido</value>
   </data>
   <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
     <value>Arriba a la izquierda</value>
@@ -887,7 +887,7 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>Negros más profundos y un poco más de contraste para películas y series.</value>
   </data>
   <data name="Template_evening" xml:space="preserve">
-    <value>Tarde</value>
+    <value>Atardecer</value>
   </data>
   <data name="Template_eveningHint" xml:space="preserve">
     <value>Luz más cálida y suave después del atardecer.</value>
@@ -899,7 +899,7 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>Más oscuro que el ajuste de brillo mínimo de tu monitor.</value>
   </data>
   <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
-    <value>Mostrar la configuración rápida</value>
+    <value>Mostrar el panel rápido</value>
   </data>
   <data name="Quick_Paused" xml:space="preserve">
     <value>Los perfiles están desactivados</value>
@@ -923,7 +923,7 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>Vínculo copiado</value>
   </data>
   <data name="Settings_QuickPanelHotkey" xml:space="preserve">
-    <value>Configuración rápida</value>
+    <value>Panel rápido</value>
   </data>
   <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
     <value>Perfiles, brillo y calidez sin abrir la ventana.</value>
@@ -1349,9 +1349,9 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>el {0} a las {1}</value>
   </data>
   <data name="Settings_PanelOpacity" xml:space="preserve">
-    <value>Opacidad de la configuración rápida y de los mensajes</value>
+    <value>Opacidad del panel rápido y de los mensajes</value>
   </data>
   <data name="Settings_PanelOpacityHint" xml:space="preserve">
-    <value>Qué tan opaco es el fondo desenfocado de la configuración rápida y de los mensajes en pantalla. Un valor más bajo muestra más de lo que hay detrás. Disponible con DispHub Pro.</value>
+    <value>Qué tan opaco es el fondo desenfocado del panel rápido y de los mensajes en pantalla. Un valor más bajo muestra más de lo que hay detrás. Disponible con DispHub Pro.</value>
   </data>
 </root>
