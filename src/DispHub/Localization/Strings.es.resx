@@ -664,6 +664,9 @@ Además apoyas el desarrollo de DispHub.</value>
   <data name="Displays_Title" xml:space="preserve">
     <value>Pantallas</value>
   </data>
+  <data name="Displays_BuiltIn" xml:space="preserve">
+    <value>Pantalla integrada</value>
+  </data>
   <data name="Displays_Subtitle" xml:space="preserve">
     <value>Tus pantallas conectadas y lo que DispHub muestra en cada una. Desactiva una para dejarla como está.</value>
   </data>

@@ -664,6 +664,9 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
   <data name="Displays_Title" xml:space="preserve">
     <value>Bildschirme</value>
   </data>
+  <data name="Displays_BuiltIn" xml:space="preserve">
+    <value>Integrierter Bildschirm</value>
+  </data>
   <data name="Displays_Subtitle" xml:space="preserve">
     <value>Deine angeschlossenen Bildschirme und was DispHub auf jedem zeigt. Schalte einen aus, um ihn unverändert zu lassen.</value>
   </data>

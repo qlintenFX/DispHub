@@ -11,7 +11,7 @@ namespace DispHub.Platform.Displays;
 /// <summary>An active monitor.</summary>
 /// <param name="Key">Stable ID: the monitor device path, lowercased. Survives reboots and port renumbering.</param>
 /// <param name="DeviceName">GDI device name such as \\.\DISPLAY1, used for gamma ramps. Can change between boots.</param>
-/// <param name="Name">Friendly name from the monitor's EDID, or "Built-in display".</param>
+/// <param name="Name">Friendly name from the monitor's EDID, or <see cref="DisplayEnumerator.BuiltInName"/>.</param>
 public sealed record MonitorInfo(
     string Key,
     string DeviceName,
@@ -26,6 +26,9 @@ public sealed record MonitorInfo(
 /// <summary>Lists active monitors through the Windows display configuration API.</summary>
 public static class DisplayEnumerator
 {
+    /// <summary>What a laptop's own screen is called when it reports no name; the app sets it in the UI language.</summary>
+    public static string BuiltInName { get; set; } = "Built-in display";
+
     public static IReadOnlyList<MonitorInfo> GetMonitors()
     {
         var result = new List<MonitorInfo>();
@@ -51,7 +54,7 @@ public static class DisplayEnumerator
 
             string name = target.monitorFriendlyDeviceName.ToString();
             if (string.IsNullOrWhiteSpace(name))
-                name = isInternal ? "Built-in display" : deviceName.TrimStart('\\', '.');
+                name = isInternal ? BuiltInName : deviceName.TrimStart('\\', '.');
 
             result.Add(new MonitorInfo(
                 key,

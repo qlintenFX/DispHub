@@ -14,6 +14,12 @@
     <Style x:Key="SliderRow" TargetType="Grid">
       <Setter Property="Margin" Value="0,6" />
     </Style>
+    <!-- Longer languages wrap the label rather than run it under the control beside it. -->
+    <Style x:Key="RowLabel" TargetType="TextBlock">
+      <Setter Property="Margin" Value="0,0,8,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
   </UserControl.Resources>
 
   <StackPanel>
@@ -284,17 +290,17 @@
 
         <Grid Margin="0,0,0,8" Visibility="{Binding ShowDisplayPicker, Converter={StaticResource BoolToVisibility}}">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon
               Margin="0,0,10,0"
               FontSize="18"
               Symbol="Desktop24" />
-            <TextBlock Text="{l:Tr Profiles_ApplyTo}" />
-          </StackPanel>
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_ApplyTo}" />
+          </DockPanel>
           <ComboBox
             Grid.Column="1"
             MinWidth="220"
@@ -310,14 +316,14 @@
 
         <Grid Style="{StaticResource SliderRow}">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="64" />
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="BrightnessHigh24" />
-            <TextBlock Text="{l:Tr Profiles_Brightness}" />
-          </StackPanel>
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_Brightness}" />
+          </DockPanel>
           <Slider
             Grid.Column="1"
             IsSnapToTickEnabled="True"
@@ -334,14 +340,14 @@
 
         <Grid Style="{StaticResource SliderRow}">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="64" />
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="DarkTheme24" />
-            <TextBlock Text="{l:Tr Profiles_Contrast}" />
-          </StackPanel>
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_Contrast}" />
+          </DockPanel>
           <Slider
             Grid.Column="1"
             IsSnapToTickEnabled="True"
@@ -358,14 +364,14 @@
 
         <Grid Style="{StaticResource SliderRow}">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="64" />
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="DataLine24" />
-            <TextBlock Text="{l:Tr Profiles_Gamma}" />
-          </StackPanel>
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_Gamma}" />
+          </DockPanel>
           <Slider
             Grid.Column="1"
             IsSnapToTickEnabled="True"
@@ -383,14 +389,14 @@
         <!-- Lifts dark tones (Pro): what lets you see into dark corners of a game. -->
         <Grid Style="{StaticResource SliderRow}">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="64" />
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="BrightnessLow24" />
-            <TextBlock Text="{l:Tr Profiles_ShadowBoost}" />
-          </StackPanel>
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_ShadowBoost}" />
+          </DockPanel>
           <Slider
             Grid.Column="1"
             IsEnabled="{Binding CanUseShadowBoost}"
@@ -418,14 +424,14 @@
         </Grid>
         <Grid Style="{StaticResource SliderRow}">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="64" />
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Temperature24" />
-            <TextBlock Text="{l:Tr Profiles_Temperature}" />
-          </StackPanel>
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_Temperature}" />
+          </DockPanel>
           <Slider
             Grid.Column="1"
             IsSnapToTickEnabled="True"
@@ -442,14 +448,14 @@
 
         <Grid Style="{StaticResource SliderRow}">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="64" />
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Color24" />
-            <TextBlock Text="{l:Tr Profiles_Vibrance}" />
-          </StackPanel>
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_Vibrance}" />
+          </DockPanel>
           <Slider
             Grid.Column="1"
             IsEnabled="{Binding VibranceSupported}"
@@ -465,7 +471,7 @@
             Text="{Binding Vibrance, StringFormat={}{0}%}" />
         </Grid>
         <TextBlock
-          Margin="180,0,64,8"
+          Margin="200,0,64,8"
           Style="{StaticResource Hint}"
           Text="{Binding VibranceHelp}" />
 
@@ -475,15 +481,15 @@
           <!-- The external monitor's own backlight (DDC/CI); off leaves it where it is. -->
           <Grid Style="{StaticResource SliderRow}" Visibility="{Binding HasMonitorLevel, Converter={StaticResource BoolToVisibility}}">
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="170" />
+              <ColumnDefinition Width="190" />
               <ColumnDefinition Width="Auto" />
               <ColumnDefinition Width="*" />
               <ColumnDefinition Width="64" />
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <DockPanel VerticalAlignment="Center">
               <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Desktop24" />
-              <TextBlock Text="{l:Tr Profiles_MonitorBrightness}" />
-            </StackPanel>
+              <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_MonitorBrightness}" />
+            </DockPanel>
             <ui:ToggleSwitch
               Grid.Column="1"
               Margin="0,0,12,0"
@@ -527,14 +533,14 @@
 
           <Grid Style="{StaticResource SliderRow}" Visibility="{Binding HasRefreshChoice, Converter={StaticResource BoolToVisibility}}">
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="170" />
+              <ColumnDefinition Width="190" />
               <ColumnDefinition Width="*" />
               <ColumnDefinition Width="64" />
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <DockPanel VerticalAlignment="Center">
               <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="TopSpeed24" />
-              <TextBlock Text="{l:Tr Profiles_RefreshRate}" />
-            </StackPanel>
+              <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_RefreshRate}" />
+            </DockPanel>
             <ComboBox
               Grid.Column="1"
               MinWidth="220"
@@ -557,14 +563,14 @@
 
           <Grid Style="{StaticResource SliderRow}" Visibility="{Binding HasHdrChoice, Converter={StaticResource BoolToVisibility}}">
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="170" />
+              <ColumnDefinition Width="190" />
               <ColumnDefinition Width="*" />
               <ColumnDefinition Width="64" />
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <DockPanel VerticalAlignment="Center">
               <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Hdr24" />
-              <TextBlock Text="{l:Tr Profiles_Hdr}" />
-            </StackPanel>
+              <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_Hdr}" />
+            </DockPanel>
             <ComboBox
               Grid.Column="1"
               MinWidth="220"
@@ -590,24 +596,25 @@
 
         <Grid>
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="190" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <DockPanel VerticalAlignment="Center">
             <ui:SymbolIcon Margin="0,0,10,0" FontSize="18" Symbol="Keyboard24" />
-            <TextBlock Text="{l:Tr Profiles_Hotkey}" />
-          </StackPanel>
-          <StackPanel Grid.Column="1" Orientation="Horizontal">
-            <ctl:HotkeyBox Gesture="{Binding Hotkey}" />
+            <TextBlock Style="{StaticResource RowLabel}" Text="{l:Tr Profiles_Hotkey}" />
+          </DockPanel>
+          <DockPanel Grid.Column="1">
+            <ctl:HotkeyBox VerticalAlignment="Center" Gesture="{Binding Hotkey}" />
             <TextBlock
               Margin="12,0,0,0"
               VerticalAlignment="Center"
               Style="{StaticResource ErrorText}"
-              Text="{Binding HotkeyError}" />
-          </StackPanel>
+              Text="{Binding HotkeyError}"
+              TextWrapping="Wrap" />
+          </DockPanel>
         </Grid>
         <TextBlock
-          Margin="180,6,0,0"
+          Margin="200,6,0,0"
           Style="{StaticResource Hint}"
           Text="{l:Tr Profiles_HotkeyHint}" />
       </StackPanel>
