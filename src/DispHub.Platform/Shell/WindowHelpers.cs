@@ -101,6 +101,11 @@ public static partial class WindowHelpers
         _ = PInvoke.SetWindowPos(hwnd, HWND.Null, bounds.X, bounds.Y, bounds.Width, bounds.Height, Flags);
     }
 
+    /// <summary>Moves a window to a point in physical pixels, keeping its size and activation.</summary>
+    public static void MoveTo(nint handle, int x, int y) =>
+        _ = PInvoke.SetWindowPos((HWND)handle, HWND.Null, x, y, 0, 0,
+            SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE);
+
     /// <summary>Moves and resizes a window in physical pixels and shows it on top, keeping its activation.</summary>
     public static void PlaceOnTop(nint handle, Rectangle bounds) =>
         PInvoke.SetWindowPos(
@@ -168,6 +173,23 @@ public static partial class WindowHelpers
             SizeOfData = sizeof(AccentPolicy),
         };
         _ = SetWindowCompositionAttribute(handle, &data);
+    }
+
+    /// <summary>
+    /// Asks Windows 11 to round a window's corners, as it does its own menus; with a blur behind the window
+    /// (<see cref="SetAcrylic"/>) that rounds the blur too. Windows 10 keeps square corners.
+    /// </summary>
+    public static unsafe void SetRoundCorners(nint handle)
+    {
+        DWM_WINDOW_CORNER_PREFERENCE round = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
+        _ = PInvoke.DwmSetWindowAttribute((HWND)handle, DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, &round, (uint)sizeof(DWM_WINDOW_CORNER_PREFERENCE));
+    }
+
+    /// <summary>Hides a window from view while it keeps drawing (DWM's cloak), or shows it again.</summary>
+    public static unsafe void Cloak(nint handle, bool cloaked)
+    {
+        BOOL value = cloaked;
+        _ = PInvoke.DwmSetWindowAttribute((HWND)handle, DWMWINDOWATTRIBUTE.DWMWA_CLOAK, &value, (uint)sizeof(BOOL));
     }
 
     /// <summary>The size in pixels Windows draws small icons at (notification area, title bars) on this system's DPI.</summary>
