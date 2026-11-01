@@ -127,6 +127,18 @@ public sealed class MonitorModesTests : IDisposable
         WaitFor(() => _originals is { Count: 0 });
     }
 
+    [Fact]
+    public void Requests_AfterDispose_AreIgnored()
+    {
+        Start();
+        _modes.Dispose();
+
+        _modes.Refresh([Screen]);
+        _modes.Apply(Game, byHand: true);
+        Assert.True(_modes.RestoreAll(Wait));
+        Assert.False(_backend.HdrOn);
+    }
+
     private static void WaitFor(Func<bool> condition) =>
         Assert.True(SpinWait.SpinUntil(condition, Wait), "timed out waiting for the display mode thread");
 

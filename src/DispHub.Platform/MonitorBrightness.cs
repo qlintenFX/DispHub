@@ -95,28 +95,28 @@ public sealed class MonitorBrightness : IMonitorBrightness
     {
         lock (_gate)
             _pendingMonitors = monitors;
-        _wake.Set();
+        Wake();
     }
 
     public void Apply(IReadOnlyDictionary<string, int?> targets)
     {
         lock (_gate)
             _pendingTargets = targets;
-        _wake.Set();
+        Wake();
     }
 
     public void SetLevel(string monitorKey, int percent)
     {
         lock (_gate)
             _pendingManual[monitorKey] = Math.Clamp(percent, 0, 100);
-        _wake.Set();
+        Wake();
     }
 
     public void Reread()
     {
         lock (_gate)
             _pendingReread = true;
-        _wake.Set();
+        Wake();
     }
 
     public bool RestoreAll(TimeSpan timeout)
@@ -124,12 +124,23 @@ public sealed class MonitorBrightness : IMonitorBrightness
         TaskCompletionSource<bool> done;
         lock (_gate)
         {
-            if (!_thread.IsAlive)
+            if (!_thread.IsAlive || _stopping)
                 return true;
             done = _pendingRestore ??= new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         }
-        _wake.Set();
+        Wake();
         return done.Task.Wait(timeout) && done.Task.Result;
+    }
+
+    // Requests after Dispose are dropped: the thread has stopped and its event is gone (a window closing during
+    // shut-down still asks for an update).
+    private void Wake()
+    {
+        lock (_gate)
+        {
+            if (!_stopping)
+                _wake.Set();
+        }
     }
 
     public void Dispose()
@@ -144,7 +155,8 @@ public sealed class MonitorBrightness : IMonitorBrightness
         if (_thread.IsAlive)
             _thread.Join(TimeSpan.FromSeconds(3));
         _watch?.Dispose();
-        _wake.Dispose();
+        lock (_gate)
+            _wake.Dispose();
     }
 
     private void Run()

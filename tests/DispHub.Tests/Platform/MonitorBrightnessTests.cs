@@ -143,6 +143,20 @@ public sealed class MonitorBrightnessTests : IDisposable
         WaitFor(() => _brightness.Levels[Laptop.Key] == 35);
     }
 
+    [Fact]
+    public void Requests_AfterDispose_AreIgnored()
+    {
+        Start();
+        _brightness.Dispose();
+
+        _brightness.Refresh([External]);
+        _brightness.Apply(new Dictionary<string, int?> { [External.Key] = 30 });
+        _brightness.SetLevel(External.Key, 30);
+        _brightness.Reread();
+        Assert.True(_brightness.RestoreAll(Wait));
+        Assert.Equal(60, ExternalLevel);
+    }
+
     private static void WaitFor(Func<bool> condition) =>
         Assert.True(SpinWait.SpinUntil(condition, Wait), "timed out waiting for the brightness thread");
 
