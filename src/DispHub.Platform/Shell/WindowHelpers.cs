@@ -170,6 +170,16 @@ public static partial class WindowHelpers
         _ = SetWindowCompositionAttribute(handle, &data);
     }
 
+    /// <summary>
+    /// Asks Windows 11 to round a window's corners, as it does its own menus; with a blur behind the window
+    /// (<see cref="SetAcrylic"/>) that rounds the blur too. Windows 10 keeps square corners.
+    /// </summary>
+    public static unsafe void SetRoundCorners(nint handle)
+    {
+        DWM_WINDOW_CORNER_PREFERENCE round = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
+        _ = PInvoke.DwmSetWindowAttribute((HWND)handle, DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE, &round, (uint)sizeof(DWM_WINDOW_CORNER_PREFERENCE));
+    }
+
     /// <summary>The size in pixels Windows draws small icons at (notification area, title bars) on this system's DPI.</summary>
     public static int SmallIconSize() =>
         PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXSMICON, PInvoke.GetDpiForSystem());

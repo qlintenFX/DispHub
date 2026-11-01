@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
+using System.Windows.Media;
 using DispHub.Core.Licensing;
 using DispHub.Core.Model;
 using DispHub.Localization;
@@ -199,6 +202,80 @@ public sealed class ThemeService
             _flyouts.Remove(window);
         };
         UpdateWindow(window);
+    }
+
+    /// <summary>
+    /// Gives drop-down lists and menus the flyouts' acrylic, as Windows 11 draws its own. Call once at start-up.
+    /// </summary>
+    public void AttachPopups()
+    {
+        EventManager.RegisterClassHandler(typeof(System.Windows.Controls.ComboBox), FrameworkElement.LoadedEvent, new RoutedEventHandler(OnComboBoxLoaded));
+        EventManager.RegisterClassHandler(typeof(System.Windows.Controls.ContextMenu), System.Windows.Controls.ContextMenu.OpenedEvent, new RoutedEventHandler(OnContextMenuOpened));
+    }
+
+    // WPF-UI draws these popups in a see-through window with a 30-point margin for its own shadow. A blur behind the
+    // window would fill that margin too, so the window is made exactly the size of the list and Windows rounds it.
+    private void OnComboBoxLoaded(object sender, RoutedEventArgs e)
+    {
+        var comboBox = (System.Windows.Controls.ComboBox)sender;
+        if (comboBox.Template?.FindName("Popup", comboBox) is not Popup popup || popup.Child is not EffectThicknessDecorator decorator
+            || comboBox.Template.FindName("DropDownBorder", comboBox) is not Border border || popup.Tag is PopupAcrylic)
+            return;
+        popup.Tag = PopupAcrylic.Instance;
+        popup.Opened += (_, _) =>
+        {
+            if (PresentationSource.FromVisual(popup.Child) is HwndSource source)
+                ApplyPopupAcrylic(source, decorator, border, "ComboBoxDropDownBackground");
+        };
+        if (PopupAcrylicOn())
+        {
+            popup.AllowsTransparency = false;
+            Unshadow(decorator, border);
+        }
+    }
+
+    private void OnContextMenuOpened(object sender, RoutedEventArgs e)
+    {
+        var menu = (System.Windows.Controls.ContextMenu)sender;
+        if (VisualTreeHelper.GetChildrenCount(menu) == 0 || VisualTreeHelper.GetChild(menu, 0) is not EffectThicknessDecorator decorator
+            || decorator.Child is not Border border || PresentationSource.FromVisual(menu) is not HwndSource source)
+            return;
+        if (PopupAcrylicOn())
+            Unshadow(decorator, border);
+        ApplyPopupAcrylic(source, decorator, border, "ContextMenuBackground");
+    }
+
+    private static void Unshadow(EffectThicknessDecorator decorator, Border border)
+    {
+        decorator.Thickness = default;
+        border.Effect = null;
+    }
+
+    private void ApplyPopupAcrylic(HwndSource source, EffectThicknessDecorator decorator, Border border, string background)
+    {
+        bool acrylic = PopupAcrylicOn() && decorator.Thickness == default;
+        if (acrylic)
+        {
+            border.Background = Brushes.Transparent;
+            source.CompositionTarget.BackgroundColor = Colors.Transparent;
+            WindowHelpers.SetRoundCorners(source.Handle);
+            WindowHelpers.SetAcrylic(source.Handle, FlyoutTint(ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Dark));
+        }
+        else
+        {
+            border.SetResourceReference(Border.BackgroundProperty, background);
+            WindowHelpers.SetAcrylic(source.Handle, null);
+        }
+    }
+
+    private bool PopupAcrylicOn() =>
+        HasMaterials && ApplicationThemeManager.GetAppTheme() != ApplicationTheme.HighContrast
+        && _ui.Backdrop != WindowBackdrop.Solid && TransparencyEffectsOn();
+
+    // Marks a drop-down whose popup is set up.
+    private sealed class PopupAcrylic
+    {
+        public static readonly PopupAcrylic Instance = new();
     }
 
     private static ApplicationTheme WindowsTheme()
