@@ -1,9 +1,12 @@
 // Copyright (c) 2026 The DispHub Authors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using DispHub.Core.Licensing;
@@ -149,6 +152,7 @@ public sealed class ThemeService
     private readonly HashSet<FluentWindow> _flyouts = [];
     private readonly ILicenseService _license;
     private UiConfig _ui = new();
+    private Action? _slide;
 
     public ThemeService(ILicenseService license)
     {
@@ -210,55 +214,82 @@ public sealed class ThemeService
     public void AttachPopups()
     {
         EventManager.RegisterClassHandler(typeof(System.Windows.Controls.ComboBox), FrameworkElement.LoadedEvent, new RoutedEventHandler(OnComboBoxLoaded));
+        EventManager.RegisterClassHandler(typeof(System.Windows.Controls.ContextMenu), FrameworkElement.LoadedEvent, new RoutedEventHandler(OnContextMenuLoaded));
         EventManager.RegisterClassHandler(typeof(System.Windows.Controls.ContextMenu), System.Windows.Controls.ContextMenu.OpenedEvent, new RoutedEventHandler(OnContextMenuOpened));
     }
 
-    // WPF-UI draws these popups in a see-through window with a 30-point margin for its own shadow. A blur behind the
-    // window would fill that margin too, so the window is made exactly the size of the list and Windows rounds it.
+    // WPF-UI draws these popups in a see-through window with a 30-point margin for its own shadow, and slides the list
+    // in inside that window. A blur behind the window would fill the margin, and the window would show before the list
+    // arrives. So on Windows 11 the window is the list's size, Windows rounds it, the window stays hidden until its
+    // first frame is drawn, and then the whole window slides in.
     private void OnComboBoxLoaded(object sender, RoutedEventArgs e)
     {
         var comboBox = (System.Windows.Controls.ComboBox)sender;
-        if (comboBox.Template?.FindName("Popup", comboBox) is not Popup popup || popup.Child is not EffectThicknessDecorator decorator
+        if (!HasMaterials || comboBox.Template?.FindName("Popup", comboBox) is not Popup popup || popup.Child is not EffectThicknessDecorator decorator
             || comboBox.Template.FindName("DropDownBorder", comboBox) is not Border border || popup.Tag is PopupAcrylic)
             return;
         popup.Tag = PopupAcrylic.Instance;
+        popup.AllowsTransparency = false;
+        Unshadow(decorator, border);
+        PresentationSource.AddSourceChangedHandler(popup.Child, OnPopupSourceChanged);
         popup.Opened += (_, _) =>
         {
             if (PresentationSource.FromVisual(popup.Child) is HwndSource source)
-                ApplyPopupAcrylic(source, decorator, border, "ComboBoxDropDownBackground");
+                ShowPopup(source, border, "ComboBoxDropDownBackground", above: popup.Child.PointToScreen(default).Y < comboBox.PointToScreen(default).Y);
         };
-        if (PopupAcrylicOn())
-        {
-            popup.AllowsTransparency = false;
-            Unshadow(decorator, border);
-        }
+    }
+
+    private void OnContextMenuLoaded(object sender, RoutedEventArgs e)
+    {
+        if (HasMaterials && PresentationSource.FromVisual((Visual)sender) is HwndSource source)
+            WindowHelpers.Cloak(source.Handle, true);
     }
 
     private void OnContextMenuOpened(object sender, RoutedEventArgs e)
     {
         var menu = (System.Windows.Controls.ContextMenu)sender;
-        if (VisualTreeHelper.GetChildrenCount(menu) == 0 || VisualTreeHelper.GetChild(menu, 0) is not EffectThicknessDecorator decorator
-            || decorator.Child is not Border border || PresentationSource.FromVisual(menu) is not HwndSource source)
+        if (!HasMaterials || PresentationSource.FromVisual(menu) is not HwndSource source)
             return;
-        if (PopupAcrylicOn())
-            Unshadow(decorator, border);
-        ApplyPopupAcrylic(source, decorator, border, "ContextMenuBackground");
+        if (VisualTreeHelper.GetChildrenCount(menu) == 0 || VisualTreeHelper.GetChild(menu, 0) is not EffectThicknessDecorator decorator
+            || decorator.Child is not Border border)
+        {
+            WindowHelpers.Cloak(source.Handle, false);
+            return;
+        }
+        Unshadow(decorator, border);
+        // Menus open below the pointer, or above it near the bottom of the screen.
+        ShowPopup(source, border, "ContextMenuBackground", above: Mouse.GetPosition(menu).Y > menu.ActualHeight / 2);
+    }
+
+    private static void OnPopupSourceChanged(object sender, SourceChangedEventArgs e)
+    {
+        if (e.NewSource is HwndSource source)
+            WindowHelpers.Cloak(source.Handle, true);
     }
 
     private static void Unshadow(EffectThicknessDecorator decorator, Border border)
     {
         decorator.Thickness = default;
         border.Effect = null;
+        // WPF-UI slides the list in inside its window, from 90 points up; the decorator moves it back by as much. The
+        // template's transform is frozen, so the slide would animate a copy: the border gets one of its own to animate.
+        if (border.RenderTransform is TranslateTransform && decorator.RenderTransform is not TranslateTransform)
+        {
+            var inner = new TranslateTransform();
+            border.RenderTransform = inner;
+            var back = new TranslateTransform();
+            BindingOperations.SetBinding(back, TranslateTransform.YProperty, new Binding(nameof(TranslateTransform.Y)) { Source = inner, Converter = Negate.Instance });
+            decorator.RenderTransform = back;
+        }
     }
 
-    private void ApplyPopupAcrylic(HwndSource source, EffectThicknessDecorator decorator, Border border, string background)
+    private void ShowPopup(HwndSource source, Border border, string background, bool above)
     {
-        bool acrylic = PopupAcrylicOn() && decorator.Thickness == default;
-        if (acrylic)
+        WindowHelpers.SetRoundCorners(source.Handle);
+        if (PopupAcrylicOn())
         {
             border.Background = Brushes.Transparent;
             source.CompositionTarget.BackgroundColor = Colors.Transparent;
-            WindowHelpers.SetRoundCorners(source.Handle);
             WindowHelpers.SetAcrylic(source.Handle, FlyoutTint(ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Dark));
         }
         else
@@ -266,6 +297,61 @@ public sealed class ThemeService
             border.SetResourceReference(Border.BackgroundProperty, background);
             WindowHelpers.SetAcrylic(source.Handle, null);
         }
+        SlideIn(source, above, animate: !_ui.ReduceMotion && SystemParameters.ClientAreaAnimation);
+    }
+
+    // Shown once its first frame is drawn, then slides 16 points out from where it opened, easing out over 200 ms.
+    private void SlideIn(HwndSource source, bool above, bool animate)
+    {
+        _slide?.Invoke();
+        System.Drawing.Rectangle end = WindowHelpers.Bounds(source.Handle);
+        double distance = animate && !end.IsEmpty ? 16 * source.CompositionTarget.TransformToDevice.M22 * (above ? 1 : -1) : 0;
+        void Offset(double y)
+        {
+            if (!source.IsDisposed && !end.IsEmpty)
+                WindowHelpers.MoveTo(source.Handle, end.X, end.Y + (int)Math.Round(y));
+        }
+        Offset(distance);
+        Stopwatch? clock = null;
+        void Finish()
+        {
+            CompositionTarget.Rendering -= Step;
+            _slide = null;
+            if (!source.IsDisposed)
+                WindowHelpers.Cloak(source.Handle, false);
+            Offset(0);
+        }
+        void Step(object? s, EventArgs e)
+        {
+            if (clock is null)
+            {
+                // This frame draws the popup; it shows from the next one.
+                clock = new Stopwatch();
+                return;
+            }
+            if (!clock.IsRunning)
+            {
+                if (!source.IsDisposed)
+                    WindowHelpers.Cloak(source.Handle, false);
+                clock.Start();
+            }
+            double t = source.IsDisposed ? 1 : Math.Min(clock.Elapsed.TotalMilliseconds / 200, 1);
+            if (t >= 1)
+                Finish();
+            else
+                Offset(distance * Math.Pow(1 - t, 3));
+        }
+        _slide = Finish;
+        CompositionTarget.Rendering += Step;
+    }
+
+    private sealed class Negate : IValueConverter
+    {
+        public static readonly Negate Instance = new();
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => -(double)value;
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => -(double)value;
     }
 
     private bool PopupAcrylicOn() =>
