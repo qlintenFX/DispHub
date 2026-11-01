@@ -164,21 +164,21 @@ public sealed class ColorApplier : IColorApplier
             _requested = targets;
             _pendingApply = true;
         }
-        _wake.Set();
+        Wake();
     }
 
     public void RefreshDisplays()
     {
         lock (_gate)
             _pendingRefresh = true;
-        _wake.Set();
+        Wake();
     }
 
     public void Reapply()
     {
         lock (_gate)
             _pendingReapply = true;
-        _wake.Set();
+        Wake();
     }
 
     public bool RestoreAll(TimeSpan timeout)
@@ -186,12 +186,23 @@ public sealed class ColorApplier : IColorApplier
         TaskCompletionSource<bool> done;
         lock (_gate)
         {
-            if (!_thread.IsAlive)
+            if (!_thread.IsAlive || _stopping)
                 return true;
             done = _pendingRestore ??= new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         }
-        _wake.Set();
+        Wake();
         return done.Task.Wait(timeout) && done.Task.Result;
+    }
+
+    // Requests after Dispose are dropped: the thread has stopped and its event is gone (a window closing during
+    // shut-down still asks for an update).
+    private void Wake()
+    {
+        lock (_gate)
+        {
+            if (!_stopping)
+                _wake.Set();
+        }
     }
 
     public void Dispose()
@@ -205,7 +216,8 @@ public sealed class ColorApplier : IColorApplier
         _wake.Set();
         if (_thread.IsAlive)
             _thread.Join(TimeSpan.FromSeconds(3));
-        _wake.Dispose();
+        lock (_gate)
+            _wake.Dispose();
         _backend.Dispose();
     }
 

@@ -179,6 +179,19 @@ public sealed class ColorApplierTests : IDisposable
         Assert.Null(RampBuilder.Build(Warm).Scaled(0.6).DimFactor()); // coloured: not a plain dimmer
     }
 
+    [Fact]
+    public void Requests_AfterDispose_AreIgnored()
+    {
+        _applier.Start();
+        _applier.Dispose();
+
+        // A window closing during shut-down still asks for an update.
+        Apply(Warm);
+        _applier.RefreshDisplays();
+        _applier.Reapply();
+        Assert.True(_applier.RestoreAll(Wait));
+    }
+
     private void Apply(ColorSettings settings) =>
         _applier.Apply(new MonitorTargets(new Dictionary<string, ColorSettings?>(), settings));
 
