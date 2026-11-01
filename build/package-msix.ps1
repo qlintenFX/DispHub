@@ -4,7 +4,7 @@
 
 .DESCRIPTION
   Publishes DispHub self-contained for each architecture, stamps packaging/AppxManifest.xml with the Store identity
-  from packaging/identity.json (the dev identity with -Register), indexes resources with makepri, packs each architecture with makeappx and bundles them.
+  from packaging/identity.json (the dev identity with -Register) and the languages in src/DispHub/Localization, indexes resources with makepri, packs each architecture with makeappx and bundles them.
   The Store signs the package on upload, so the output is unsigned.
 
   -Register skips packing and registers the x64 layout for local testing. It needs Developer Mode
@@ -35,6 +35,12 @@ if (-not $Version) {
 # MSIX versions have four parts and the Store requires the last one to be 0.
 $packageVersion = (($Version -split "[.-]")[0..2] -join ".") + ".0"
 
+# Every language DispHub ships, English first as the default. Windows only offers a packaged app the languages its
+# manifest declares (and the Store lists only those), so a missing one would leave its speakers in English.
+$languages = @("en-US") + @(Get-ChildItem (Join-Path $root "src/DispHub/Localization") -Filter "Strings.*.resx" |
+    ForEach-Object { $_.BaseName.Substring("Strings.".Length) } | Sort-Object)
+$resources = ($languages | ForEach-Object { "<Resource Language=`"$_`" />" }) -join "`r`n    "
+
 # Locate makeappx and makepri from the Windows SDK build tools NuGet package.
 dotnet restore (Join-Path $PSScriptRoot "tools/Tools.csproj") | Out-Null
 $nuget = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path $HOME ".nuget/packages" }
@@ -60,7 +66,8 @@ foreach ($arch in $Architectures) {
         Replace('$Publisher$', $identity.publisher).
         Replace('$PublisherDisplayName$', $identity.publisherDisplayName).
         Replace('$Version$', $packageVersion).
-        Replace('$Architecture$', $arch)
+        Replace('$Architecture$', $arch).
+        Replace('$Resources$', $resources)
     Set-Content (Join-Path $layout "AppxManifest.xml") $manifest -Encoding utf8
     Copy-Item (Join-Path $root "packaging/Assets") (Join-Path $layout "Assets") -Recurse -Force
 
@@ -71,7 +78,7 @@ foreach ($arch in $Architectures) {
     Copy-Item (Join-Path $layout "AppxManifest.xml") $staging
     Copy-Item (Join-Path $layout "Assets") (Join-Path $staging "Assets") -Recurse
     $priConfig = Join-Path $artifacts "priconfig.xml"
-    & $makepri createconfig /cf $priConfig /dq en-US /pv 10.0.0 /o | Out-Null
+    & $makepri createconfig /cf $priConfig /dq ($languages -join "_") /pv 10.0.0 /o | Out-Null
     & $makepri new /pr $staging /cf $priConfig /mn (Join-Path $staging "AppxManifest.xml") /of (Join-Path $layout "resources.pri") /o | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "makepri failed for $arch" }
 
