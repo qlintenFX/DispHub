@@ -412,4 +412,949 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
   <data name="Warning_ResetTitle" xml:space="preserve">
     <value>Een andere app wijzigt je kleuren</value>
   </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>Gekopieerd</value>
+  </data>
+  <data name="About_EditionTrial" xml:space="preserve">
+    <value>DispHub Pro-proefversie</value>
+  </data>
+  <data name="About_Tip" xml:space="preserve">
+    <value>Fooi geven</value>
+  </data>
+  <data name="About_TipHint" xml:space="preserve">
+    <value>Een eenmalig bedankje dat helpt DispHub draaiende te houden. Wat is inbegrepen, verandert er niet door.</value>
+  </data>
+  <data name="About_TipThanks" xml:space="preserve">
+    <value>Bedankt</value>
+  </data>
+  <data name="Hotkey_TypesCharacter" xml:space="preserve">
+    <value>Met deze combinatie (AltGr) typt je toetsenbord ‘{0}’, dus kies een andere.</value>
+  </data>
+  <data name="Osd_Paused" xml:space="preserve">
+    <value>DispHub uit</value>
+  </data>
+  <data name="Profiles_LinkCopied" xml:space="preserve">
+    <value>Kopieert een link: iedereen met DispHub kan die openen om dit profiel toe te voegen.</value>
+  </data>
+  <data name="Profiles_PauseTooltip" xml:space="preserve">
+    <value>Schakel alle profielen uit, inclusief je planning en profielen per app.</value>
+  </data>
+  <data name="Profiles_Status" xml:space="preserve">
+    <value>{0} wordt gebruikt op {1}</value>
+  </data>
+  <data name="Profiles_StatusAppRule" xml:space="preserve">
+    <value>{0} wordt gebruikt op {1} voor de app die je gebruikt</value>
+  </data>
+  <data name="Profiles_StatusManual" xml:space="preserve">
+    <value>{0} wordt gebruikt op {1}, handmatig gekozen</value>
+  </data>
+  <data name="Profiles_StatusPaused" xml:space="preserve">
+    <value>Profielen zijn uitgeschakeld. Je beeldschermen tonen hun oorspronkelijke kleuren.</value>
+  </data>
+  <data name="Profiles_StatusSchedule" xml:space="preserve">
+    <value>{0} wordt gebruikt op {1}, volgens planning</value>
+  </data>
+  <data name="Profiles_UseMainSettings" xml:space="preserve">
+    <value>Hetzelfde als de andere beeldschermen</value>
+  </data>
+  <data name="Settings_KeepRunning" xml:space="preserve">
+    <value>Op de achtergrond blijven draaien</value>
+  </data>
+  <data name="Settings_KeepRunningHint" xml:space="preserve">
+    <value>Als je het venster sluit, blijft DispHub in het systeemvak, zodat sneltoetsen en planningen blijven werken.</value>
+  </data>
+  <data name="Settings_OsdDuration" xml:space="preserve">
+    <value>Duur van bericht</value>
+  </data>
+  <data name="Settings_OsdHint" xml:space="preserve">
+    <value>Toont de naam van het profiel als het verandert, in de stijl van het snelpaneel. Haalt nooit de focus bij games weg.</value>
+  </data>
+  <data name="Settings_OsdToggle" xml:space="preserve">
+    <value>Bericht op het scherm</value>
+  </data>
+  <data name="Settings_Pause" xml:space="preserve">
+    <value>DispHub aan of uit</value>
+  </data>
+  <data name="Settings_PauseHint" xml:space="preserve">
+    <value>Zet DispHub uit (oorspronkelijke kleuren) en weer aan, zoals de aan/uit-knop.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Thema</value>
+  </data>
+  <data name="Settings_ThemeHint" xml:space="preserve">
+    <value>Systeem volgt de lichte of donkere modus van Windows.</value>
+  </data>
+  <data name="Settings_TrayClick" xml:space="preserve">
+    <value>Pictogram in het systeemvak</value>
+  </data>
+  <data name="Settings_TrayClickHint" xml:space="preserve">
+    <value>Wat een klik op het DispHub-pictogram in het systeemvak opent. Met de rechtermuisknop zie je altijd het menu.</value>
+  </data>
+  <data name="Tray_Pause" xml:space="preserve">
+    <value>DispHub uitschakelen</value>
+  </data>
+  <data name="Tray_Paused" xml:space="preserve">
+    <value>DispHub · Uit</value>
+  </data>
+  <data name="Tray_Resume" xml:space="preserve">
+    <value>DispHub inschakelen</value>
+  </data>
+  <data name="Settings_PreviewPicture" xml:space="preserve">
+    <value>Voorbeeldfoto</value>
+  </data>
+  <data name="Settings_PreviewPictureHint" xml:space="preserve">
+    <value>De foto bij elk profiel, getoond met de kleuren van dat profiel.</value>
+  </data>
+  <data name="Preview_flowers" xml:space="preserve">
+    <value>Wilde bloemen</value>
+  </data>
+  <data name="Preview_reef" xml:space="preserve">
+    <value>Koraalrif</value>
+  </data>
+  <data name="Preview_autumn" xml:space="preserve">
+    <value>Herfstbos</value>
+  </data>
+  <data name="Preview_spring" xml:space="preserve">
+    <value>Hete bron</value>
+  </data>
+  <data name="Preview_canyon" xml:space="preserve">
+    <value>Grand Canyon</value>
+  </data>
+  <data name="Preview_sunset" xml:space="preserve">
+    <value>Winterzonsondergang</value>
+  </data>
+  <data name="Preview_redrock" xml:space="preserve">
+    <value>Rode rotsboog</value>
+  </data>
+  <data name="Preview_island" xml:space="preserve">
+    <value>Fort op het eiland</value>
+  </data>
+  <data name="Preview_pebbles" xml:space="preserve">
+    <value>Stenen aan het meer</value>
+  </data>
+  <data name="Preview_mountain" xml:space="preserve">
+    <value>Besneeuwde berg</value>
+  </data>
+  <data name="Preview_aurora" xml:space="preserve">
+    <value>Noorderlicht</value>
+  </data>
+  <data name="Preview_milkyway" xml:space="preserve">
+    <value>Melkweg</value>
+  </data>
+  <data name="Preview_dunes" xml:space="preserve">
+    <value>Sterrige duinen</value>
+  </data>
+  <data name="Preview_cactus" xml:space="preserve">
+    <value>Woestijncactus</value>
+  </data>
+  <data name="Tray_StillRunningTitle" xml:space="preserve">
+    <value>DispHub blijft actief</value>
+  </data>
+  <data name="Tray_StillRunningText" xml:space="preserve">
+    <value>Het houdt je profielen en sneltoetsen actief vanuit het systeemvak. Selecteer dit om het pictogram op de taakbalk te houden.</value>
+  </data>
+  <data name="Nav_Schedule" xml:space="preserve">
+    <value>Planning</value>
+  </data>
+  <data name="Nav_Apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Nav_Displays" xml:space="preserve">
+    <value>Beeldschermen</value>
+  </data>
+  <data name="Common_Off" xml:space="preserve">
+    <value>Uit</value>
+  </data>
+  <data name="Schedule_Title" xml:space="preserve">
+    <value>Planning</value>
+  </data>
+  <data name="Schedule_ProHint" xml:space="preserve">
+    <value>Planningen werken met DispHub Pro. Je kunt hier er een maken en eerst precies zien wat hij doet.</value>
+  </data>
+  <data name="Schedule_LocationHint" xml:space="preserve">
+    <value>Wordt alleen op deze pc gebruikt om de zonsopgang en zonsondergang te berekenen.</value>
+  </data>
+  <data name="Schedule_UseMyLocation" xml:space="preserve">
+    <value>Mijn locatie gebruiken</value>
+  </data>
+  <data name="Schedule_SearchCity" xml:space="preserve">
+    <value>Zoek een stad</value>
+  </data>
+  <data name="Schedule_Instant" xml:space="preserve">
+    <value>Direct</value>
+  </data>
+  <data name="Schedule_LocationDenied" xml:space="preserve">
+    <value>Windows heeft DispHub geen toestemming gegeven om je locatie te zien. Zoek in plaats daarvan een stad, of zet de locatietoegang aan in de Windows-instellingen.</value>
+  </data>
+  <data name="Schedule_LocationUnavailable" xml:space="preserve">
+    <value>Windows kan je locatie op dit moment niet vinden. Zoek in plaats daarvan een stad.</value>
+  </data>
+  <data name="Schedule_Near" xml:space="preserve">
+    <value>Bij {0}</value>
+  </data>
+  <data name="Schedule_StatusOff" xml:space="preserve">
+    <value>De planning staat uit. Zet hem aan om profielen automatisch te wisselen.</value>
+  </data>
+  <data name="Schedule_StatusPro" xml:space="preserve">
+    <value>Alleen voorbeeld: de planning werkt met DispHub Pro.</value>
+  </data>
+  <data name="Schedule_StatusRunning" xml:space="preserve">
+    <value>{0} is nu actief. {1} begint {2}.</value>
+  </data>
+  <data name="Apps_Title" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="Apps_Subtitle" xml:space="preserve">
+    <value>Gebruik automatisch een profiel zolang een app voorop staat, en ga terug naar je gewone profiel zodra je naar een andere app gaat.</value>
+  </data>
+  <data name="Apps_ProHint" xml:space="preserve">
+    <value>Profielen per app werken met DispHub Pro. Je kunt nu al apps toevoegen; ze wisselen zodra je overstapt naar Pro.</value>
+  </data>
+  <data name="Apps_LastInFront" xml:space="preserve">
+    <value>Laatste app voorop</value>
+  </data>
+  <data name="Apps_AddThis" xml:space="preserve">
+    <value>Deze app toevoegen</value>
+  </data>
+  <data name="Apps_Rules" xml:space="preserve">
+    <value>Je apps</value>
+  </data>
+  <data name="Apps_AddApp" xml:space="preserve">
+    <value>App toevoegen</value>
+  </data>
+  <data name="Apps_PickTitle" xml:space="preserve">
+    <value>Kies een actieve app</value>
+  </data>
+  <data name="Apps_Browse" xml:space="preserve">
+    <value>Bladeren</value>
+  </data>
+  <data name="Apps_Search" xml:space="preserve">
+    <value>Actieve apps zoeken</value>
+  </data>
+  <data name="Apps_EmptyTitle" xml:space="preserve">
+    <value>Nog geen apps</value>
+  </data>
+  <data name="Apps_EmptyHint" xml:space="preserve">
+    <value>Voeg een game of app toe en kies het profiel dat hij moet gebruiken.</value>
+  </data>
+  <data name="Apps_Remove" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="Apps_OrderHint" xml:space="preserve">
+    <value>Als een app twee keer voorkomt, geldt de eerste regel in de lijst.</value>
+  </data>
+  <data name="Apps_ChooseProgram" xml:space="preserve">
+    <value>Kies een programma</value>
+  </data>
+  <data name="Apps_ProgramsFilter" xml:space="preserve">
+    <value>Programma's (*.exe)|*.exe</value>
+  </data>
+  <data name="Apps_NothingYet" xml:space="preserve">
+    <value>Nog niets</value>
+  </data>
+  <data name="Apps_ForegroundRule" xml:space="preserve">
+    <value>Gebruikt {0} zolang hij voorop staat</value>
+  </data>
+  <data name="Apps_ForegroundRulePro" xml:space="preserve">
+    <value>Zou {0} gebruiken met DispHub Pro</value>
+  </data>
+  <data name="Apps_ForegroundNoRule" xml:space="preserve">
+    <value>Gebruikt je gewone profiel</value>
+  </data>
+  <data name="Displays_Title" xml:space="preserve">
+    <value>Beeldschermen</value>
+  </data>
+  <data name="Displays_BuiltIn" xml:space="preserve">
+    <value>Ingebouwd beeldscherm</value>
+  </data>
+  <data name="Displays_Subtitle" xml:space="preserve">
+    <value>Je aangesloten beeldschermen en wat DispHub op elk toont. Zet er één uit om hem zo te laten.</value>
+  </data>
+  <data name="Displays_Main" xml:space="preserve">
+    <value>Primair</value>
+  </data>
+  <data name="Settings_AccentWindows" xml:space="preserve">
+    <value>Zelfde als Windows</value>
+  </data>
+  <data name="Settings_TextNormal" xml:space="preserve">
+    <value>100 % (normaal)</value>
+  </data>
+  <data name="Settings_Appearance" xml:space="preserve">
+    <value>Uiterlijk</value>
+  </data>
+  <data name="Settings_ResetAppearance" xml:space="preserve">
+    <value>Uiterlijk terugzetten</value>
+  </data>
+  <data name="Settings_Accent" xml:space="preserve">
+    <value>Accentkleur</value>
+  </data>
+  <data name="Settings_AccentHint" xml:space="preserve">
+    <value>Wordt gebruikt voor schakelaars, schuifbalken en knoppen. De eerste kleur is die van Windows.</value>
+  </data>
+  <data name="Settings_Backdrop" xml:space="preserve">
+    <value>Achtergrond</value>
+  </data>
+  <data name="Settings_BackdropHint" xml:space="preserve">
+    <value>Mica kleurt het venster met de kleuren van je achtergrond, acryl vervaagt wat erachter ligt. Het snelpaneel en de berichten op het scherm gebruiken acryl, tenzij je Effen kleur kiest. Windows toont een effen kleur zolang energiebesparing aan staat of transparantie-effecten uit staan.</value>
+  </data>
+  <data name="Settings_TextSize" xml:space="preserve">
+    <value>Tekstgrootte</value>
+  </data>
+  <data name="Settings_TextSizeHint" xml:space="preserve">
+    <value>Maakt het venster van DispHub groter of kleiner.</value>
+  </data>
+  <data name="Settings_CompactNav" xml:space="preserve">
+    <value>Compact menu</value>
+  </data>
+  <data name="Settings_CompactNavHint" xml:space="preserve">
+    <value>Toont de pagina's links alleen als pictogrammen.</value>
+  </data>
+  <data name="Settings_StartPage" xml:space="preserve">
+    <value>Startpagina</value>
+  </data>
+  <data name="Settings_StartPageHint" xml:space="preserve">
+    <value>De pagina waarmee het venster opent.</value>
+  </data>
+  <data name="Settings_OsdPosition" xml:space="preserve">
+    <value>Positie van het bericht</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Mica" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Enum_WindowBackdrop_MicaAlt" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Acrylic" xml:space="preserve">
+    <value>Acryl</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
+    <value>Effen kleur</value>
+  </data>
+  <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
+    <value>Linksboven</value>
+  </data>
+  <data name="Enum_OsdPosition_TopCenter" xml:space="preserve">
+    <value>Midden boven</value>
+  </data>
+  <data name="Enum_OsdPosition_TopRight" xml:space="preserve">
+    <value>Rechtsboven</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomLeft" xml:space="preserve">
+    <value>Linksonder</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomCenter" xml:space="preserve">
+    <value>Midden onder</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomRight" xml:space="preserve">
+    <value>Rechtsonder</value>
+  </data>
+  <data name="Profiles_NewHint" xml:space="preserve">
+    <value>Leeg, een sjabloon of een link</value>
+  </data>
+  <data name="Profiles_Blank" xml:space="preserve">
+    <value>Leeg profiel</value>
+  </data>
+  <data name="Profiles_MoreTitle" xml:space="preserve">
+    <value>Meer profielen</value>
+  </data>
+  <data name="Profiles_MoreHint" xml:space="preserve">
+    <value>De gratis versie bevat {0}. Pro heeft geen limiet.</value>
+  </data>
+  <data name="Profiles_More" xml:space="preserve">
+    <value>Meer</value>
+  </data>
+  <data name="Profiles_FullTitle" xml:space="preserve">
+    <value>{0} profielen</value>
+  </data>
+  <data name="Profiles_FullHint" xml:space="preserve">
+    <value>Het maximum dat DispHub bewaart</value>
+  </data>
+  <data name="Profiles_NeedsPro" xml:space="preserve">
+    <value>Bewaard voor DispHub Pro</value>
+  </data>
+  <data name="Apps_FreeHint" xml:space="preserve">
+    <value>De gratis versie wisselt profielen voor één app. Pro doet dat voor elke app.</value>
+  </data>
+  <data name="Apps_NeedsPro" xml:space="preserve">
+    <value>Wisselt met DispHub Pro</value>
+  </data>
+  <data name="Trial_CardTitle" xml:space="preserve">
+    <value>Pro-proefversie</value>
+  </data>
+  <data name="Trial_DaysLeft" xml:space="preserve">
+    <value>Nog {0} dagen met alle Pro-functies.</value>
+  </data>
+  <data name="Trial_DayLeft" xml:space="preserve">
+    <value>Laatste dag met alle Pro-functies.</value>
+  </data>
+  <data name="Trial_EndedTitle" xml:space="preserve">
+    <value>Je Pro-proefversie is afgelopen</value>
+  </data>
+  <data name="Trial_EndedUsage" xml:space="preserve">
+    <value>Deze week heeft DispHub je profielen voor je apps {0} keer gewisseld en je planning {1} keer gevolgd. Behoud alles met Pro, een eenmalige aankoop.</value>
+  </data>
+  <data name="Trial_EndedGeneric" xml:space="preserve">
+    <value>Profielen voor elke app, planningen, instellingen per beeldscherm en onbeperkt profielen blijven bij Pro, een eenmalige aankoop.</value>
+  </data>
+  <data name="Trial_EndedFree" xml:space="preserve">
+    <value>De gratis versie bewaart je eerste {0} profielen en één apparegel. De rest wordt bewaard voor als je overstapt.</value>
+  </data>
+  <data name="Trial_ContinueFree" xml:space="preserve">
+    <value>Gratis doorgaan</value>
+  </data>
+  <data name="Profiles_ShadowBoost" xml:space="preserve">
+    <value>Schaduwversterking</value>
+  </data>
+  <data name="Profiles_ShadowBoostPro" xml:space="preserve">
+    <value>Schaduwversterking hoort bij DispHub Pro</value>
+  </data>
+  <data name="Upgrade_ShadowBoost" xml:space="preserve">
+    <value>Schaduwversterking</value>
+  </data>
+  <data name="Summary_Shadows" xml:space="preserve">
+    <value>Schaduwen +{0}</value>
+  </data>
+  <data name="Profiles_RefreshRate" xml:space="preserve">
+    <value>Vernieuwingsfrequentie</value>
+  </data>
+  <data name="Profiles_RefreshHighest" xml:space="preserve">
+    <value>Hoogste</value>
+  </data>
+  <data name="Profiles_RefreshLowest" xml:space="preserve">
+    <value>Laagste</value>
+  </data>
+  <data name="Profiles_RefreshRateHz" xml:space="preserve">
+    <value>{0} ({1} Hz)</value>
+  </data>
+  <data name="Profiles_Unchanged" xml:space="preserve">
+    <value>Niet wijzigen</value>
+  </data>
+  <data name="Profiles_Hdr" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="Profiles_HdrOn" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="Profiles_HdrOff" xml:space="preserve">
+    <value>Uit</value>
+  </data>
+  <data name="Profiles_DisplayModesPro" xml:space="preserve">
+    <value>Profielen die de vernieuwingsfrequentie of HDR wisselen, horen bij DispHub Pro</value>
+  </data>
+  <data name="Upgrade_DisplayModes" xml:space="preserve">
+    <value>Vernieuwingsfrequentie en HDR wisselen</value>
+  </data>
+  <data name="Displays_LowRefreshOnBattery" xml:space="preserve">
+    <value>Lagere vernieuwingsfrequentie op batterij ({0} Hz)</value>
+  </data>
+  <data name="Displays_LowRefreshPro" xml:space="preserve">
+    <value>Een lagere vernieuwingsfrequentie op batterij hoort bij DispHub Pro</value>
+  </data>
+  <data name="Profiles_MonitorBrightness" xml:space="preserve">
+    <value>Helderheid van het scherm</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessOff" xml:space="preserve">
+    <value>Laten zoals het is</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessPro" xml:space="preserve">
+    <value>Profielen die de eigen helderheid van het scherm instellen, horen bij DispHub Pro</value>
+  </data>
+  <data name="Upgrade_MonitorBrightness" xml:space="preserve">
+    <value>De eigen helderheid van het scherm instellen</value>
+  </data>
+  <data name="Displays_MonitorBrightness" xml:space="preserve">
+    <value>Helderheid van het scherm</value>
+  </data>
+  <data name="Profiles_FromTemplate" xml:space="preserve">
+    <value>Uit een sjabloon</value>
+  </data>
+  <data name="Profiles_FromLink" xml:space="preserve">
+    <value>Uit een link</value>
+  </data>
+  <data name="Template_vivid" xml:space="preserve">
+    <value>Levendig</value>
+  </data>
+  <data name="Template_vividHint" xml:space="preserve">
+    <value>Rijkere kleuren voor foto's, video's en games.</value>
+  </data>
+  <data name="Template_shadows" xml:space="preserve">
+    <value>Schaduwdetail</value>
+  </data>
+  <data name="Template_shadowsHint" xml:space="preserve">
+    <value>Maakt donkere delen lichter, zodat details in de schaduw beter zichtbaar zijn.</value>
+  </data>
+  <data name="Template_film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Template_filmHint" xml:space="preserve">
+    <value>Dieper zwart en iets meer contrast voor films en series.</value>
+  </data>
+  <data name="Template_evening" xml:space="preserve">
+    <value>Avond</value>
+  </data>
+  <data name="Template_eveningHint" xml:space="preserve">
+    <value>Warmer, zachter licht na zonsondergang.</value>
+  </data>
+  <data name="Template_dim" xml:space="preserve">
+    <value>Gedimd</value>
+  </data>
+  <data name="Template_dimHint" xml:space="preserve">
+    <value>Donkerder dan de laagste helderheidsinstelling van je monitor.</value>
+  </data>
+  <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
+    <value>Het snelpaneel tonen</value>
+  </data>
+  <data name="Quick_Paused" xml:space="preserve">
+    <value>Profielen zijn uitgeschakeld</value>
+  </data>
+  <data name="Quick_FromSchedule" xml:space="preserve">
+    <value>{0} · Gepland</value>
+  </data>
+  <data name="Quick_FromApp" xml:space="preserve">
+    <value>{0} · Voor deze app</value>
+  </data>
+  <data name="Quick_Active" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Quick_Adjusting" xml:space="preserve">
+    <value>{0} aanpassen</value>
+  </data>
+  <data name="Quick_Open" xml:space="preserve">
+    <value>DispHub openen</value>
+  </data>
+  <data name="Common_LinkCopied" xml:space="preserve">
+    <value>Link gekopieerd</value>
+  </data>
+  <data name="Settings_QuickPanelHotkey" xml:space="preserve">
+    <value>Snelpaneel</value>
+  </data>
+  <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
+    <value>Profielen, helderheid en warmte zonder het venster te openen.</value>
+  </data>
+  <data name="Quick_Brightness" xml:space="preserve">
+    <value>Helderheid</value>
+  </data>
+  <data name="Quick_Warmth" xml:space="preserve">
+    <value>Warmte</value>
+  </data>
+  <data name="Displays_Showing" xml:space="preserve">
+    <value>Toont {0}</value>
+  </data>
+  <data name="Displays_ShowingOriginal" xml:space="preserve">
+    <value>Oorspronkelijke kleuren (profielen uit)</value>
+  </data>
+  <data name="Displays_LeftAlone" xml:space="preserve">
+    <value>DispHub laat dit beeldscherm met rust</value>
+  </data>
+  <data name="Displays_HdrNote" xml:space="preserve">
+    <value>HDR staat aan, dus Windows staat hier geen kleurwijzigingen toe. Levendigheid werkt nog steeds.</value>
+  </data>
+  <data name="Displays_LimitedNote" xml:space="preserve">
+    <value>Windows staat standaard alleen kleine kleurwijzigingen toe, dus dit beeldscherm toont een mildere versie van sterke profielen.</value>
+  </data>
+  <data name="Displays_NoVibrance" xml:space="preserve">
+    <value>Levendigheid is niet beschikbaar op dit beeldscherm.</value>
+  </data>
+  <data name="Displays_UseOnThis" xml:space="preserve">
+    <value>DispHub op dit beeldscherm gebruiken</value>
+  </data>
+  <data name="Schedule_Today" xml:space="preserve">
+    <value>{0} (vandaag)</value>
+  </data>
+  <data name="Schedule_EveryDay" xml:space="preserve">
+    <value>Elke dag</value>
+  </data>
+  <data name="Schedule_Weekdays" xml:space="preserve">
+    <value>Werkdagen</value>
+  </data>
+  <data name="Schedule_Weekends" xml:space="preserve">
+    <value>Weekends</value>
+  </data>
+  <data name="Schedule_Minutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="Schedule_Hours" xml:space="preserve">
+    <value>{0} u</value>
+  </data>
+  <data name="Schedule_HoursMinutes" xml:space="preserve">
+    <value>{0} u {1} min</value>
+  </data>
+  <data name="Schedule_ChangePlace" xml:space="preserve">
+    <value>Locatie wijzigen</value>
+  </data>
+  <data name="Schedule_Changes" xml:space="preserve">
+    <value>Wijzigingen</value>
+  </data>
+  <data name="Schedule_AddSlot" xml:space="preserve">
+    <value>Een wijziging toevoegen</value>
+  </data>
+  <data name="Schedule_Starts" xml:space="preserve">
+    <value>Begint</value>
+  </data>
+  <data name="Schedule_Fade" xml:space="preserve">
+    <value>Overgang</value>
+  </data>
+  <data name="Schedule_On" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="Schedule_AtTime" xml:space="preserve">
+    <value>om {0}</value>
+  </data>
+  <data name="Schedule_AtClockTime" xml:space="preserve">
+    <value>Op een vaste tijd</value>
+  </data>
+  <data name="Schedule_Sunrise" xml:space="preserve">
+    <value>Bij zonsopgang</value>
+  </data>
+  <data name="Schedule_Sunset" xml:space="preserve">
+    <value>Bij zonsondergang</value>
+  </data>
+  <data name="Schedule_Remove" xml:space="preserve">
+    <value>Deze wijziging verwijderen</value>
+  </data>
+  <data name="Schedule_Profile" xml:space="preserve">
+    <value>Profiel</value>
+  </data>
+  <data name="Schedule_NoLocation" xml:space="preserve">
+    <value>Zonsopgang en zonsondergang zijn {0} en {1} totdat je een locatie kiest.</value>
+  </data>
+  <data name="Schedule_LocationSun" xml:space="preserve">
+    <value>Zonsopgang {1}, zonsondergang {2} · {0}</value>
+  </data>
+  <data name="Schedule_LocationPolar" xml:space="preserve">
+    <value>Geen zonsopgang of zonsondergang op deze dag · {0}</value>
+  </data>
+  <data name="Accent_blue" xml:space="preserve">
+    <value>Blauw</value>
+  </data>
+  <data name="Accent_purple" xml:space="preserve">
+    <value>Paars</value>
+  </data>
+  <data name="Accent_pink" xml:space="preserve">
+    <value>Roze</value>
+  </data>
+  <data name="Accent_red" xml:space="preserve">
+    <value>Rood</value>
+  </data>
+  <data name="Accent_orange" xml:space="preserve">
+    <value>Oranje</value>
+  </data>
+  <data name="Accent_yellow" xml:space="preserve">
+    <value>Geel</value>
+  </data>
+  <data name="Accent_green" xml:space="preserve">
+    <value>Groen</value>
+  </data>
+  <data name="Accent_teal" xml:space="preserve">
+    <value>Blauwgroen</value>
+  </data>
+  <data name="Accent_graphite" xml:space="preserve">
+    <value>Grafiet</value>
+  </data>
+  <data name="Settings_Animations" xml:space="preserve">
+    <value>Animatie-effecten</value>
+  </data>
+  <data name="Settings_AnimationsHint" xml:space="preserve">
+    <value>Soepel scrollen en andere beweging in het venster van DispHub.</value>
+  </data>
+  <data name="Schedule_SunsetToSunrise" xml:space="preserve">
+    <value>Van zonsondergang tot zonsopgang</value>
+  </data>
+  <data name="Schedule_SetHours" xml:space="preserve">
+    <value>Vaste uren</value>
+  </data>
+  <data name="Schedule_Custom" xml:space="preserve">
+    <value>Aangepast</value>
+  </data>
+  <data name="Schedule_TurnOn" xml:space="preserve">
+    <value>Nacht begint</value>
+  </data>
+  <data name="Schedule_TurnOff" xml:space="preserve">
+    <value>Nacht eindigt</value>
+  </data>
+  <data name="Schedule_NightProfile" xml:space="preserve">
+    <value>Nachtprofiel</value>
+  </data>
+  <data name="Schedule_NightProfileHint" xml:space="preserve">
+    <value>Wordt 's nachts gebruikt.</value>
+  </data>
+  <data name="Schedule_DayProfile" xml:space="preserve">
+    <value>Dagprofiel</value>
+  </data>
+  <data name="Schedule_DayProfileHint" xml:space="preserve">
+    <value>Wordt overdag gebruikt.</value>
+  </data>
+  <data name="Schedule_FadeHint" xml:space="preserve">
+    <value>Hoe lang elke wijziging duurt. Een langzame overgang is fijn voor je ogen.</value>
+  </data>
+  <data name="Schedule_TodayTitle" xml:space="preserve">
+    <value>Vandaag</value>
+  </data>
+  <data name="TimePicker_Hour" xml:space="preserve">
+    <value>Uur</value>
+  </data>
+  <data name="TimePicker_Minute" xml:space="preserve">
+    <value>Minuten</value>
+  </data>
+  <data name="TimePicker_Period" xml:space="preserve">
+    <value>AM of PM</value>
+  </data>
+  <data name="Power_Name" xml:space="preserve">
+    <value>DispHub aan- of uitzetten</value>
+  </data>
+  <data name="Power_TurnOff" xml:space="preserve">
+    <value>DispHub uitzetten. Je beeldschermen tonen hun oorspronkelijke kleuren.</value>
+  </data>
+  <data name="Power_TurnOn" xml:space="preserve">
+    <value>DispHub aanzetten</value>
+  </data>
+  <data name="Quick_Off" xml:space="preserve">
+    <value>DispHub staat uit</value>
+  </data>
+  <data name="Quick_ProfilesTooltip" xml:space="preserve">
+    <value>Profielen aan of uit</value>
+  </data>
+  <data name="Osd_ProfilesOff" xml:space="preserve">
+    <value>Profielen uit</value>
+  </data>
+  <data name="Tray_ProfilesOff" xml:space="preserve">
+    <value>DispHub · Profielen uit</value>
+  </data>
+  <data name="Profiles_StatusOff" xml:space="preserve">
+    <value>DispHub staat uit. Zet hem bovenaan aan met de aan/uit-knop.</value>
+  </data>
+  <data name="Displays_ShowingOff" xml:space="preserve">
+    <value>Oorspronkelijke kleuren (DispHub staat uit)</value>
+  </data>
+  <data name="Onboarding_WelcomeTitle" xml:space="preserve">
+    <value>Welkom bij DispHub</value>
+  </data>
+  <data name="Onboarding_WelcomeText" xml:space="preserve">
+    <value>Maak beeldschermprofielen voor elk moment: helderder en levendiger voor games, warmer voor de avond, of de oorspronkelijke kleuren van je beeldscherm. Wissel met een klik of een sneltoets, of laat DispHub voor je wisselen.</value>
+  </data>
+  <data name="Onboarding_TrayTitle" xml:space="preserve">
+    <value>Zoek DispHub op de taakbalk</value>
+  </data>
+  <data name="Onboarding_TrayText" xml:space="preserve">
+    <value>DispHub draait in het systeemvak. Zie je het pictogram niet, selecteer dan de pijl naast de klok en sleep het pictogram daarna naar de taakbalk om het zichtbaar te houden.</value>
+  </data>
+  <data name="Onboarding_LeftClick" xml:space="preserve">
+    <value>Linkermuisknop</value>
+  </data>
+  <data name="Onboarding_RightClick" xml:space="preserve">
+    <value>Rechtermuisknop</value>
+  </data>
+  <data name="Onboarding_RightClickHint" xml:space="preserve">
+    <value>Opent een menu met je profielen en de aan/uit-knop.</value>
+  </data>
+  <data name="Onboarding_HotkeysTitle" xml:space="preserve">
+    <value>Sneltoetsen gebruiken</value>
+  </data>
+  <data name="Onboarding_HotkeysText" xml:space="preserve">
+    <value>Wissel profielen vanuit elke app, ook in games op volledig scherm. Een klein bericht laat zien naar welk profiel je bent gewisseld. Je kunt sneltoetsen wijzigen in Instellingen.</value>
+  </data>
+  <data name="Onboarding_PowerTitle" xml:space="preserve">
+    <value>Alles in één keer uitzetten</value>
+  </data>
+  <data name="Onboarding_PowerText" xml:space="preserve">
+    <value>Met de aan/uit-knop zet je DispHub uit en herstel je de oorspronkelijke kleuren van je beeldschermen. Selecteer hem opnieuw om verder te gaan waar je was gebleven.</value>
+  </data>
+  <data name="Onboarding_Back" xml:space="preserve">
+    <value>Terug</value>
+  </data>
+  <data name="Onboarding_Next" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="Onboarding_Done" xml:space="preserve">
+    <value>Niet nu</value>
+  </data>
+  <data name="Schedule_StatusDispHubOff" xml:space="preserve">
+    <value>DispHub staat uit, dus de planning wacht. Zet hem aan met de aan/uit-knop.</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Home_Now" xml:space="preserve">
+    <value>Huidig profiel</value>
+  </data>
+  <data name="Home_Off" xml:space="preserve">
+    <value>DispHub staat uit</value>
+  </data>
+  <data name="Home_Original" xml:space="preserve">
+    <value>Oorspronkelijke kleuren</value>
+  </data>
+  <data name="Home_ReasonOff" xml:space="preserve">
+    <value>Je beeldschermen tonen hun oorspronkelijke kleuren.</value>
+  </data>
+  <data name="Home_ReasonProfilesOff" xml:space="preserve">
+    <value>Profielen zijn uitgeschakeld, dus je beeldschermen tonen hun oorspronkelijke kleuren.</value>
+  </data>
+  <data name="Home_ReasonSchedule" xml:space="preserve">
+    <value>Gepland</value>
+  </data>
+  <data name="Home_ReasonScheduleUntil" xml:space="preserve">
+    <value>Gepland tot {0}</value>
+  </data>
+  <data name="Home_ReasonApp" xml:space="preserve">
+    <value>Terwijl je {0} gebruikt</value>
+  </data>
+  <data name="Home_ReasonAppUnknown" xml:space="preserve">
+    <value>Terwijl je deze app gebruikt</value>
+  </data>
+  <data name="Home_NoHotkey" xml:space="preserve">
+    <value>Geen sneltoets</value>
+  </data>
+  <data name="Home_Features" xml:space="preserve">
+    <value>In één oogopslag</value>
+  </data>
+  <data name="Home_Profiles" xml:space="preserve">
+    <value>{0} profielen</value>
+  </data>
+  <data name="Home_OneProfile" xml:space="preserve">
+    <value>1 profiel</value>
+  </data>
+  <data name="Home_ScheduleNext" xml:space="preserve">
+    <value>Volgende: {0} {1}</value>
+  </data>
+  <data name="Home_NoApps" xml:space="preserve">
+    <value>Geen apps toegevoegd</value>
+  </data>
+  <data name="Home_Apps" xml:space="preserve">
+    <value>{0} apps</value>
+  </data>
+  <data name="Home_OneApp" xml:space="preserve">
+    <value>1 app</value>
+  </data>
+  <data name="Home_Displays" xml:space="preserve">
+    <value>{0} beeldschermen</value>
+  </data>
+  <data name="Home_OneDisplay" xml:space="preserve">
+    <value>1 beeldscherm</value>
+  </data>
+  <data name="Home_SettingsStatus" xml:space="preserve">
+    <value>Sneltoetsen, opstarten en uiterlijk</value>
+  </data>
+  <data name="Home_WhatsNew" xml:space="preserve">
+    <value>Wat is er nieuw</value>
+  </data>
+  <data name="Home_Rate" xml:space="preserve">
+    <value>DispHub beoordelen</value>
+  </data>
+  <data name="Home_Report" xml:space="preserve">
+    <value>Een probleem melden</value>
+  </data>
+  <data name="Home_GitHub" xml:space="preserve">
+    <value>Broncode</value>
+  </data>
+  <data name="Home_Version" xml:space="preserve">
+    <value>DispHub {0}</value>
+  </data>
+  <data name="Home_Tour" xml:space="preserve">
+    <value>Rondleiding volgen</value>
+  </data>
+  <data name="Tour_Skip" xml:space="preserve">
+    <value>Overslaan</value>
+  </data>
+  <data name="Tour_Back" xml:space="preserve">
+    <value>Terug</value>
+  </data>
+  <data name="Tour_Next" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="Tour_Done" xml:space="preserve">
+    <value>Klaar</value>
+  </data>
+  <data name="Tour_Count" xml:space="preserve">
+    <value>{0} van {1}</value>
+  </data>
+  <data name="Tour_PowerTitle" xml:space="preserve">
+    <value>DispHub aan- of uitzetten</value>
+  </data>
+  <data name="Tour_PowerText" xml:space="preserve">
+    <value>DispHub uitzetten herstelt de oorspronkelijke kleuren van je beeldschermen. Zet hem weer aan om verder te gaan waar je was gebleven.</value>
+  </data>
+  <data name="Tour_NowTitle" xml:space="preserve">
+    <value>Huidig profiel</value>
+  </data>
+  <data name="Tour_NowText" xml:space="preserve">
+    <value>Zie welk profiel in gebruik is en waarom: jij hebt het gekozen, je planning deed dat, of een app heeft een eigen profiel.</value>
+  </data>
+  <data name="Onboarding_Step" xml:space="preserve">
+    <value>{0} van {1}</value>
+  </data>
+  <data name="Onboarding_Tour" xml:space="preserve">
+    <value>Rondleiding volgen</value>
+  </data>
+  <data name="Search_Placeholder" xml:space="preserve">
+    <value>Instellingen doorzoeken</value>
+  </data>
+  <data name="Search_Page" xml:space="preserve">
+    <value>Pagina</value>
+  </data>
+  <data name="Quick_NothingToAdjust" xml:space="preserve">
+    <value>Selecteer een profiel om het aan te passen</value>
+  </data>
+  <data name="Home_TurnProfilesOn" xml:space="preserve">
+    <value>Profielen aanzetten</value>
+  </data>
+  <data name="Home_ReasonSelected" xml:space="preserve">
+    <value>Geselecteerd</value>
+  </data>
+  <data name="Home_ReasonManualUntil" xml:space="preserve">
+    <value>Geselecteerd tot {0}, wanneer je planning verandert</value>
+  </data>
+  <data name="Home_Today" xml:space="preserve">
+    <value>Vandaag</value>
+  </data>
+  <data name="Home_EditSchedule" xml:space="preserve">
+    <value>Planning bewerken</value>
+  </data>
+  <data name="Home_NoSchedule" xml:space="preserve">
+    <value>Planning</value>
+  </data>
+  <data name="Home_NoScheduleHint" xml:space="preserve">
+    <value>Wissel profielen automatisch bij zonsondergang en zonsopgang, of op tijden die je kiest.</value>
+  </data>
+  <data name="Home_SetUpSchedule" xml:space="preserve">
+    <value>Instellen</value>
+  </data>
+  <data name="Tour_ProfilesTitle" xml:space="preserve">
+    <value>Profielen</value>
+  </data>
+  <data name="Tour_ProfilesText" xml:space="preserve">
+    <value>Selecteer een profiel om het te gebruiken. De instellingen staan hieronder, waar je het fijn kunt afstellen en er een sneltoets aan kunt geven.</value>
+  </data>
+  <data name="Tour_ScheduleTitle" xml:space="preserve">
+    <value>Planning</value>
+  </data>
+  <data name="Tour_ScheduleText" xml:space="preserve">
+    <value>Wissel profielen automatisch bij zonsondergang en zonsopgang, op vaste tijden, of volgens je eigen schema.</value>
+  </data>
+  <data name="Tour_AppsTitle" xml:space="preserve">
+    <value>Profielen voor apps</value>
+  </data>
+  <data name="Tour_AppsText" xml:space="preserve">
+    <value>Geef een game of app een eigen profiel. DispHub gebruikt het zodra die app voorop staat.</value>
+  </data>
+  <data name="Tour_HotkeysTitle" xml:space="preserve">
+    <value>Sneltoetsen</value>
+  </data>
+  <data name="Tour_HotkeysText" xml:space="preserve">
+    <value>Zet DispHub aan of uit en wissel profielen vanuit elke app, ook in games op volledig scherm.</value>
+  </data>
+  <data name="Schedule_TomorrowAt" xml:space="preserve">
+    <value>morgen om {0}</value>
+  </data>
+  <data name="Schedule_DayAt" xml:space="preserve">
+    <value>op {0} om {1}</value>
+  </data>
+  <data name="Settings_PanelOpacity" xml:space="preserve">
+    <value>Dekking van het snelpaneel en de berichten</value>
+  </data>
+  <data name="Settings_PanelOpacityHint" xml:space="preserve">
+    <value>Hoe ondoorzichtig de vervaagde achtergrond van het snelpaneel en de berichten op het scherm is. Lager toont meer van wat erachter ligt. Beschikbaar met DispHub Pro.</value>
+  </data>
 </root>
