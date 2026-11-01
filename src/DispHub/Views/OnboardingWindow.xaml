@@ -231,7 +231,10 @@
               Padding="14,10"
               Style="{StaticResource ClickRow}">
               <DockPanel>
-                <ui:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding LaunchAtLogin}" />
+                <ui:ToggleSwitch
+                  AutomationProperties.Name="{l:Tr Settings_StartWithWindows}"
+                  DockPanel.Dock="Right"
+                  IsChecked="{Binding LaunchAtLogin}" />
                 <StackPanel>
                   <TextBlock FontWeight="SemiBold" Text="{l:Tr Settings_StartWithWindows}" />
                   <TextBlock

@@ -24,6 +24,7 @@ First release of DispHub on the Microsoft Store: free, with a week of Pro to try
 - Vibrance through NVIDIA, AMD and Intel graphics drivers, including most laptops' built-in screens.
 - Original colours are saved before the first change and put back on pause, exit, sign-out or after a crash.
   When another app keeps resetting the colours, DispHub stops fighting it for a while and says so.
+- Starts with Windows, which you can turn off in the walkthrough or in Settings.
 - A first-run walkthrough and a guided tour, fourteen preview pictures, light and dark themes, accent colours,
   Mica or acrylic backgrounds, text size and a compact menu.
 - English, German, Spanish, French, Italian, Dutch and Brazilian Portuguese.
