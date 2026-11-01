@@ -1,6 +1,9 @@
 # Microsoft Store listing (English)
 
-Paste these into Partner Center > DispHub > Store listings > English (United States).
+Paste these into Partner Center > DispHub > Store listings > English (United States). The other languages
+(de.md, es.md, fr.md, it.md, nl.md, pt-BR.md) go in the same way, or all at once: Export listings gives a CSV
+with one column per language, where uploaded pictures appear as Partner Center URLs that other columns can reuse;
+fill the columns and use Import listings.
 
 Partner Center: app Store ID `9N5183BRLX34` (https://apps.microsoft.com/detail/9N5183BRLX34), package identity in
 `packaging/identity.json`; the `pro` add-on is Store ID `9NMJ1WGTW0B8`.
@@ -39,6 +42,7 @@ AUTOMATION (DISPHUB PRO, FREE FOR THE FIRST WEEK)
 • Per-app profiles: your game or app gets its look while it's in front, and your desktop goes back to normal when
   you switch away (one app is included free)
 • Schedules like Windows' Night light: from sunset to sunrise or set hours, with a smooth fade
+• Shadow boost: see into dark corners without washing out the rest of the picture
 • Different settings for each display
 • Profiles that set your monitor's brightness, refresh rate and HDR
 • A lower refresh rate on battery for laptop screens
@@ -51,31 +55,32 @@ SAFE AND LIGHT
 
 Try every Pro feature free for 7 days. After that DispHub stays free with three profiles and one per-app profile;
 the one-time Pro upgrade keeps profiles for every app, schedules, per-display settings and unlimited profiles, and
-supports development. DispHub is open source: https://github.com/qlintenFX/DispHub
+supports development. DispHub is open source on GitHub.
 
 Notes: gamma-based adjustments aren't available while Windows HDR is on. Windows limits how far colours can change
 by default; DispHub can lift that limit with your permission for very warm night profiles.
 
 ## What's new in this version [1,500 characters]
 
-First release.
+Leave empty for the first release.
 
 ## Product features [up to 20, 200 characters each]
 
 1. Profiles for brightness, contrast, gamma, colour temperature and vibrance
 2. Global hotkeys to switch profiles, even in games
-3. Vibrance on NVIDIA and Intel graphics, including laptop screens
+3. Vibrance on NVIDIA, AMD and Intel graphics, including laptop screens
 4. Works on every connected display
 5. Profile templates and shareable links
 6. Per-app profiles that switch automatically (one free, every app with Pro)
 7. Schedules with smooth fades to warmer evening colours (Pro)
-8. Different settings per display (Pro)
-9. Original colours restored on pause, exit or after a crash
-10. Light and dark theme, starts with Windows
+8. Shadow boost to see into dark areas (Pro)
+9. Different settings per display (Pro)
+10. Original colours restored on pause, exit or after a crash
+11. Light and dark theme, starts with Windows
 
-## Search terms [7 terms]
+## Search terms [7 terms, 30 characters each, 21 words in all]
 
-vibrance, gamma, screen dimmer, night light, color temperature, display profiles, monitor settings
+vibrance, gamma, screen brightness, night light, color temperature, display profiles, monitor settings
 
 ## Screenshots
 
