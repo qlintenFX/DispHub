@@ -18,6 +18,9 @@ public abstract class PageViewModel(string title, SymbolRegular icon) : Observab
     /// <summary>Stable name for settings such as the start page.</summary>
     public string Key => GetType().Name.Replace("ViewModel", "", StringComparison.Ordinal);
 
+    // What screen readers say for the page in the navigation list.
+    public override string ToString() => Title;
+
     /// <summary>Called when the page is shown.</summary>
     public virtual void OnShown()
     {

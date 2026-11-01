@@ -349,6 +349,9 @@ public sealed partial class AddTileViewModel : ObservableObject
     [ObservableProperty]
     public partial string Title { get; set; } = Loc.Get("Profiles_New");
 
+    // What screen readers say for the tile.
+    public override string ToString() => Title;
+
     [ObservableProperty]
     public partial string Hint { get; set; } = Loc.Get("Profiles_NewHint");
 
@@ -384,6 +387,9 @@ public sealed partial class ProfileItemViewModel(Profile profile) : ObservableOb
     /// <summary>Past the free profiles without Pro: kept, but it can't go on screen.</summary>
     [ObservableProperty]
     public partial bool IsLocked { get; set; }
+
+    // What screen readers say for the profile's tile.
+    public override string ToString() => Name;
 
     [ObservableProperty]
     public partial string Summary { get; set; } = Describe(profile.Color);

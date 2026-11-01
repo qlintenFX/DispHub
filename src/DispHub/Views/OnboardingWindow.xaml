@@ -73,6 +73,10 @@
     <DataTemplate x:Key="EnumItem">
       <TextBlock Text="{Binding Converter={x:Static ctl:EnumWordsConverter.Instance}}" />
     </DataTemplate>
+    <!-- Screen readers say the same words the list shows, not the enum's name. -->
+    <Style BasedOn="{StaticResource {x:Type ComboBoxItem}}" TargetType="ComboBoxItem">
+      <Setter Property="AutomationProperties.Name" Value="{Binding Converter={x:Static ctl:EnumWordsConverter.Instance}}" />
+    </Style>
   </ui:FluentWindow.Resources>
 
   <Grid>
