@@ -6,7 +6,7 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap desktop rescap">
 
-  <!-- Tokens are filled in by build/package-msix.ps1 from packaging/identity.json. -->
+  <!-- Tokens are filled in by build/package-msix.ps1 from packaging/identity.json and the translations. -->
   <Identity Name="$IdentityName$" Publisher="$Publisher$" Version="$Version$" ProcessorArchitecture="$Architecture$" />
 
   <Properties>
@@ -20,7 +20,7 @@
   </Dependencies>
 
   <Resources>
-    <Resource Language="en-us" />
+    $Resources$
   </Resources>
 
   <Applications>
