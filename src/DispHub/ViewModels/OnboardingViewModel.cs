@@ -22,6 +22,7 @@ public sealed partial class OnboardingViewModel : ObservableObject
 
     private readonly AppController _app;
     private readonly IAutostart _autostart;
+    private readonly bool _firstRun;
     private bool _loading = true;
     private bool _finished;
 
@@ -29,6 +30,7 @@ public sealed partial class OnboardingViewModel : ObservableObject
     {
         _app = app;
         _autostart = autostart;
+        _firstRun = !app.Config.Ui.OnboardingDone;
         TrayLeftClick = app.Config.Ui.TrayLeftClick;
         foreach (Profile profile in app.Config.Profiles.Where(p => p.Hotkey is not null).Take(4))
             Hotkeys.Add(new HotkeyLine(profile.Name, profile.Hotkey!));
@@ -120,6 +122,13 @@ public sealed partial class OnboardingViewModel : ObservableObject
         try
         {
             AutostartState state = await _autostart.GetStateAsync();
+            // A tray app is most use when it's already there: on by default for new users, with the switch showing
+            // it. Off in Task Manager or by policy stays off.
+            if (_firstRun && state == AutostartState.Disabled)
+            {
+                LaunchAtLogin = true;
+                return;
+            }
             _loading = true;
             LaunchAtLogin = state == AutostartState.Enabled;
         }

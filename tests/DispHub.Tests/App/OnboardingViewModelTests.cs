@@ -57,10 +57,52 @@ public sealed class OnboardingViewModelTests : IDisposable
         Assert.True(_app.Config.Ui.OnboardingDone);
     }
 
-    private sealed class FakeAutostart : IAutostart
+    [Fact]
+    public void FirstRun_StartsWithWindows()
     {
-        public Task<AutostartState> GetStateAsync() => Task.FromResult(AutostartState.Disabled);
+        var autostart = new FakeAutostart(AutostartState.Disabled);
 
-        public Task<AutostartState> SetEnabledAsync(bool enabled) => Task.FromResult(enabled ? AutostartState.Enabled : AutostartState.Disabled);
+        var walkthrough = new OnboardingViewModel(_app, autostart);
+
+        Assert.True(walkthrough.LaunchAtLogin);
+        Assert.Equal(AutostartState.Enabled, autostart.State);
+    }
+
+    [Theory]
+    [InlineData(AutostartState.DisabledByUser)]
+    [InlineData(AutostartState.DisabledByPolicy)]
+    public void FirstRun_LeavesWindowsSettingAlone(AutostartState state)
+    {
+        var autostart = new FakeAutostart(state);
+
+        var walkthrough = new OnboardingViewModel(_app, autostart);
+
+        Assert.False(walkthrough.LaunchAtLogin);
+        Assert.Equal(state, autostart.State);
+    }
+
+    [Fact]
+    public void ShownAgain_KeepsTheChoice()
+    {
+        _app.Config.Ui.OnboardingDone = true;
+        var autostart = new FakeAutostart(AutostartState.Disabled);
+
+        var walkthrough = new OnboardingViewModel(_app, autostart);
+
+        Assert.False(walkthrough.LaunchAtLogin);
+        Assert.Equal(AutostartState.Disabled, autostart.State);
+    }
+
+    private sealed class FakeAutostart(AutostartState state = AutostartState.Disabled) : IAutostart
+    {
+        public AutostartState State { get; private set; } = state;
+
+        public Task<AutostartState> GetStateAsync() => Task.FromResult(State);
+
+        public Task<AutostartState> SetEnabledAsync(bool enabled)
+        {
+            State = enabled ? AutostartState.Enabled : AutostartState.Disabled;
+            return Task.FromResult(State);
+        }
     }
 }
