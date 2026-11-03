@@ -98,10 +98,10 @@
     <value>Version</value>
   </data>
   <data name="About_WpfUi" xml:space="preserve">
-    <value>WPF UI by lepo.co</value>
+    <value>WPF UI by lepo.co, in unchihugo's fork</value>
   </data>
   <data name="About_WpfUiHint" xml:space="preserve">
-    <value>The Fluent controls and Mica window.</value>
+    <value>The Fluent controls and the Mica window, through FluentFlyout's fork that matches Windows 11 more closely.</value>
   </data>
   <data name="Common_Add" xml:space="preserve">
     <value>Add</value>
@@ -1320,6 +1320,9 @@ It also supports development of DispHub.</value>
   </data>
   <data name="Home_NoScheduleHint" xml:space="preserve">
     <value>Change profiles automatically at sunset and sunrise, or at times you choose.</value>
+  </data>
+  <data name="Home_ScheduleNeedsPro" xml:space="preserve">
+    <value>Your schedule is set up. It runs with DispHub Pro.</value>
   </data>
   <data name="Home_SetUpSchedule" xml:space="preserve">
     <value>Set up</value>

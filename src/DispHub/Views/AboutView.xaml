@@ -91,7 +91,7 @@
     <ctl:SettingsCard Description="{l:Tr About_WpfUiHint}" Header="{l:Tr About_WpfUi}">
       <ui:HyperlinkButton
         Command="{Binding OpenUrlCommand}"
-        CommandParameter="https://github.com/lepoco/wpfui"
+        CommandParameter="https://github.com/unchihugo/wpfui"
         Content="WPF UI" />
     </ctl:SettingsCard>
     <ctl:SettingsCard Description="{l:Tr About_CommunityHint}" Header="{l:Tr About_Community}">

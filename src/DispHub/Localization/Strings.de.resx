@@ -83,10 +83,10 @@
     <value>Version</value>
   </data>
   <data name="About_WpfUi" xml:space="preserve">
-    <value>WPF UI von lepo.co</value>
+    <value>WPF UI von lepo.co, im Fork von unchihugo</value>
   </data>
   <data name="About_WpfUiHint" xml:space="preserve">
-    <value>Die Fluent-Steuerelemente, das Mica-Fenster und das Infobereichssymbol.</value>
+    <value>Die Fluent-Steuerelemente und das Mica-Fenster, über den Fork von FluentFlyout, der Windows 11 genauer folgt.</value>
   </data>
   <data name="Common_Add" xml:space="preserve">
     <value>Hinzufügen</value>
@@ -1317,6 +1317,9 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
   </data>
   <data name="Home_NoScheduleHint" xml:space="preserve">
     <value>Wechsle Profile automatisch bei Sonnenuntergang und Sonnenaufgang oder zu Uhrzeiten deiner Wahl.</value>
+  </data>
+  <data name="Home_ScheduleNeedsPro" xml:space="preserve">
+    <value>Dein Zeitplan ist eingerichtet. Er läuft mit DispHub Pro.</value>
   </data>
   <data name="Home_SetUpSchedule" xml:space="preserve">
     <value>Einrichten</value>

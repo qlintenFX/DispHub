@@ -83,10 +83,10 @@
     <value>Versie</value>
   </data>
   <data name="About_WpfUi" xml:space="preserve">
-    <value>WPF UI door lepo.co</value>
+    <value>WPF UI door lepo.co, in de fork van unchihugo</value>
   </data>
   <data name="About_WpfUiHint" xml:space="preserve">
-    <value>De Fluent-bedieningselementen, het Mica-venster en het systeemvakpictogram.</value>
+    <value>De Fluent-bedieningselementen en het Mica-venster, via de fork van FluentFlyout die Windows 11 beter volgt.</value>
   </data>
   <data name="Common_Add" xml:space="preserve">
     <value>Toevoegen</value>
@@ -95,7 +95,7 @@
     <value>Annuleren</value>
   </data>
   <data name="Common_GetPro" xml:space="preserve">
-    <value>Pro nemen</value>
+    <value>Pro kopen</value>
   </data>
   <data name="Common_OK" xml:space="preserve">
     <value>OK</value>
@@ -1317,6 +1317,9 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
   </data>
   <data name="Home_NoScheduleHint" xml:space="preserve">
     <value>Wissel profielen automatisch bij zonsondergang en zonsopgang, of op tijden die je kiest.</value>
+  </data>
+  <data name="Home_ScheduleNeedsPro" xml:space="preserve">
+    <value>Je planning staat klaar. Die werkt met DispHub Pro.</value>
   </data>
   <data name="Home_SetUpSchedule" xml:space="preserve">
     <value>Instellen</value>
