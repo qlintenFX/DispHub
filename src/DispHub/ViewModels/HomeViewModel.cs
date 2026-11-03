@@ -76,6 +76,12 @@ public sealed partial class HomeViewModel : PageViewModel
     /// <summary>A schedule runs: Home shows today on it.</summary>
     [ObservableProperty] public partial bool ShowToday { get; set; }
 
+    /// <summary>A schedule is set up but waits for Pro (kept from the trial, or built as a preview).</summary>
+    [ObservableProperty] public partial bool ScheduleNeedsPro { get; set; }
+
+    /// <summary>No schedule yet: Home offers to set one up.</summary>
+    [ObservableProperty] public partial bool ShowScheduleOffer { get; set; }
+
     [ObservableProperty] public partial IReadOnlyList<TimelineSegment> TodaySegments { get; set; } = [];
 
     [ObservableProperty] public partial double? TodayNow { get; set; }
@@ -138,7 +144,10 @@ public sealed partial class HomeViewModel : PageViewModel
         NowName = active?.Name ?? Loc.Get(config.IsOff ? "Home_Off" : "Home_Original");
         NowReason = Reason(config, active, current);
 
-        ShowToday = features.Schedules && config.Schedule.Enabled && config.Schedule.Slots.Count > 0;
+        bool hasSchedule = config.Schedule.Enabled && config.Schedule.Slots.Count > 0;
+        ShowToday = features.Schedules && hasSchedule;
+        ScheduleNeedsPro = !features.Schedules && hasSchedule && ShowPro;
+        ShowScheduleOffer = !ShowToday && !ScheduleNeedsPro;
         if (ShowToday)
         {
             TodaySegments = ScheduleViewModel.SegmentsFor(config, DateOnly.FromDateTime(_time.GetLocalNow().DateTime), _time.LocalTimeZone);

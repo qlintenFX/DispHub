@@ -128,8 +128,15 @@
       Description="{l:Tr Home_NoScheduleHint}"
       Header="{l:Tr Home_NoSchedule}"
       Icon="Clock24"
-      Visibility="{Binding ShowToday, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}">
+      Visibility="{Binding ShowScheduleOffer, Converter={StaticResource BoolToVisibility}}">
       <ui:Button Command="{Binding OpenScheduleCommand}" Content="{l:Tr Home_SetUpSchedule}" />
+    </ctl:SettingsCard>
+    <ctl:SettingsCard
+      Description="{l:Tr Home_ScheduleNeedsPro}"
+      Header="{l:Tr Home_NoSchedule}"
+      Icon="Clock24"
+      Visibility="{Binding ScheduleNeedsPro, Converter={StaticResource BoolToVisibility}}">
+      <ui:Button Command="{Binding UpgradeCommand}" Content="{l:Tr Common_GetPro}" />
     </ctl:SettingsCard>
     <!-- Where each feature stands. -->
     <ctl:SectionHeader Text="{l:Tr Home_Features}" />

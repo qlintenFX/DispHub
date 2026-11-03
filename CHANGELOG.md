@@ -8,6 +8,9 @@ versions follow [Semantic Versioning](https://semver.org).
 ### Fixed
 
 - Tips show on the About page of the Microsoft Store version.
+- Home says when a schedule waits for Pro, instead of offering to set it up again.
+- The About page credits the WPF UI fork DispHub uses (unchihugo's, from FluentFlyout).
+- Dutch: the Pro button says "Pro kopen".
 
 ## [1.0.2] - 2026-11-01
 
