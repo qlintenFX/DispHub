@@ -422,7 +422,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>Fooi geven</value>
   </data>
   <data name="About_TipHint" xml:space="preserve">
-    <value>Een eenmalig bedankje dat helpt DispHub draaiende te houden. Wat is inbegrepen, verandert er niet door.</value>
+    <value>Een eenmalig bedankje dat helpt DispHub draaiende te houden. Het verandert niets aan wat inbegrepen is.</value>
   </data>
   <data name="About_TipThanks" xml:space="preserve">
     <value>Bedankt</value>
