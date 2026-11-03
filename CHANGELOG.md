@@ -3,6 +3,12 @@
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com) and
 versions follow [Semantic Versioning](https://semver.org).
 
+## [1.0.3] - 2026-11-03
+
+### Fixed
+
+- Tips show on the About page of the Microsoft Store version.
+
 ## [1.0.2] - 2026-11-01
 
 First release of DispHub on the Microsoft Store: free, with a week of Pro to try, and Pro as a one-time purchase.
@@ -29,4 +35,5 @@ First release of DispHub on the Microsoft Store: free, with a week of Pro to try
   Mica or acrylic backgrounds, text size and a compact menu.
 - English, German, Spanish, French, Italian, Dutch and Brazilian Portuguese.
 
+[1.0.3]: https://github.com/qlintenFX/DispHub/releases/tag/v1.0.3
 [1.0.2]: https://github.com/qlintenFX/DispHub/releases/tag/v1.0.2

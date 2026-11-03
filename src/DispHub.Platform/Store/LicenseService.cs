@@ -226,7 +226,8 @@ public sealed class StoreLicenseService(ILogger<StoreLicenseService> logger) : I
 
     private async Task<IEnumerable<StoreProduct>> TipProductsAsync()
     {
-        StoreProductQueryResult products = await _context!.GetAssociatedStoreProductsAsync(["Consumable"]);
+        // The Store calls developer-managed consumables "UnmanagedConsumable"; "Consumable" means Store-managed.
+        StoreProductQueryResult products = await _context!.GetAssociatedStoreProductsAsync(["UnmanagedConsumable", "Consumable"]);
         if (products.ExtendedError is { } error)
             logger.LogWarning("Store add-on list: {Error}", error.Message);
         return products.Products.Values.Where(p => TipOfferTokens.Contains(p.InAppOfferToken));
