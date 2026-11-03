@@ -131,6 +131,16 @@ registry value set through a UAC prompt.
 - Product type: Durable, no expiry
 - Product ID (in-app offer token): `pro` (the app looks for this token)
 - Title: DispHub Pro
-- Description: Per-game profiles, schedules with smooth fades, different settings per display and unlimited profiles.
-  A one-time purchase that also supports development.
-- Suggested price: USD 4.99, with Microsoft's automatic regional pricing
+- Description [200 characters]: Profiles for every app, schedules with smooth fades, shadow boost, refresh rate and HDR in
+  profiles, settings per display and unlimited profiles. One-time purchase.
+- Price: USD 7.99 with Microsoft's automatic regional pricing, plus a "Launch" sale at USD 4.99; shown in the app's
+  listing and bought from within the app.
+
+## Tip add-ons
+
+- `tip-small`, `tip-medium`, `tip-large`: developer-managed consumables at USD 1.99, 4.99 and 9.99, hidden in the
+  Store and bought from within the app only (About page). The app reports each one fulfilled straight away.
+- Titles: Small tip, Medium tip, Large tip. Description: the app's About_TipHint line in each language.
+
+The add-on listings exist in the same seven languages as the app (German titles: Kleines, Mittleres, Großes
+Trinkgeld; the Pro description in each language is in the add-on's listing in Partner Center).
