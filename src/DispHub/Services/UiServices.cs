@@ -150,17 +150,17 @@ public sealed class ThemeService
 
     private readonly List<FluentWindow> _windows = [];
     private readonly HashSet<FluentWindow> _flyouts = [];
-    private readonly ILicenseService _license;
+    private readonly AppController _app;
     private UiConfig _ui = new();
     private Action? _slide;
 
-    public ThemeService(ILicenseService license)
+    public ThemeService(AppController app)
     {
-        _license = license;
+        _app = app;
         // Windows got the new theme colours: match the window material (dark or light Mica).
         ApplicationThemeManager.Changed += (_, _) => UpdateWindows();
-        // The quick panel's opacity is Pro: buying it (or losing it) changes the panel.
-        _license.Changed += (_, _) => Application.Current?.Dispatcher.BeginInvoke(UpdateWindows);
+        // The quick panel's opacity is Pro, the trial included: buying Pro or the trial ending changes the panel.
+        _app.LicenceChanged += (_, _) => UpdateWindows();
     }
 
     public void Apply(UiConfig ui)
@@ -399,7 +399,7 @@ public sealed class ThemeService
     /// </summary>
     private System.Drawing.Color FlyoutTint(bool dark)
     {
-        double opacity = new FeatureGate(_license.IsPro).PanelOpacity ? _ui.PanelOpacity : UiConfig.DefaultPanelOpacity;
+        double opacity = _app.Features.PanelOpacity ? _ui.PanelOpacity : UiConfig.DefaultPanelOpacity;
         int alpha = (int)Math.Round(Math.Clamp(opacity, 0, 1) * 255);
         return dark ? System.Drawing.Color.FromArgb(alpha, 0x20, 0x20, 0x20) : System.Drawing.Color.FromArgb(alpha, 0xF3, 0xF3, 0xF3);
     }

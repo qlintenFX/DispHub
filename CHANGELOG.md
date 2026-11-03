@@ -3,6 +3,13 @@
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com) and
 versions follow [Semantic Versioning](https://semver.org).
 
+## [Unreleased]
+
+### Fixed
+
+- During the Pro trial, the opacity setting changes the quick panel, messages, drop-downs and menus (it was stuck
+  at 70 %).
+
 ## [1.0.3] - 2026-11-03
 
 ### Fixed
