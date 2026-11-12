@@ -9,6 +9,7 @@ versions follow [Semantic Versioning](https://semver.org).
 
 - During the Pro trial, the opacity setting changes the quick panel, messages, drop-downs and menus (it was stuck
   at 70 %).
+- Screen readers name every setting, every slider in the profile editor, the cards on Home and each display.
 
 ## [1.0.3] - 2026-11-03
 

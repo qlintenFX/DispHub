@@ -89,6 +89,9 @@ public sealed partial class DisplayItem : ObservableObject
         _lowRefreshOnBattery = config?.LowRefreshOnBattery == true;
     }
 
+    // What screen readers say for the display's row.
+    public override string ToString() => Name;
+
     /// <summary>A laptop screen with a lower refresh rate to save battery.</summary>
     public bool HasBatteryRefresh { get; }
 

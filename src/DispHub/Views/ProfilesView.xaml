@@ -199,7 +199,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
-          <ui:TextBox PlaceholderText="disphub://preset?name=…" Text="{Binding ImportText, UpdateSourceTrigger=PropertyChanged}">
+          <ui:TextBox AutomationProperties.Name="{l:Tr Presets_ImportTitle}" PlaceholderText="disphub://preset?name=…" Text="{Binding ImportText, UpdateSourceTrigger=PropertyChanged}">
             <ui:TextBox.InputBindings>
               <KeyBinding Key="Enter" Command="{Binding ImportCommand}" />
             </ui:TextBox.InputBindings>
@@ -240,6 +240,7 @@
           <ui:TextBox
             MaxWidth="360"
             HorizontalAlignment="Left"
+            AutomationProperties.Name="{l:Tr Profiles_NamePlaceholder}"
             FontSize="18"
             FontWeight="SemiBold"
             MaxLength="40"
@@ -326,6 +327,7 @@
           </DockPanel>
           <Slider
             Grid.Column="1"
+            AutomationProperties.Name="{l:Tr Profiles_Brightness}"
             IsSnapToTickEnabled="True"
             Maximum="50"
             Minimum="-50"
@@ -350,6 +352,7 @@
           </DockPanel>
           <Slider
             Grid.Column="1"
+            AutomationProperties.Name="{l:Tr Profiles_Contrast}"
             IsSnapToTickEnabled="True"
             Maximum="50"
             Minimum="-50"
@@ -374,6 +377,7 @@
           </DockPanel>
           <Slider
             Grid.Column="1"
+            AutomationProperties.Name="{l:Tr Profiles_Gamma}"
             IsSnapToTickEnabled="True"
             Maximum="2.8"
             Minimum="0.3"
@@ -399,6 +403,7 @@
           </DockPanel>
           <Slider
             Grid.Column="1"
+            AutomationProperties.Name="{l:Tr Profiles_ShadowBoost}"
             IsEnabled="{Binding CanUseShadowBoost}"
             IsSnapToTickEnabled="True"
             Maximum="100"
@@ -434,6 +439,7 @@
           </DockPanel>
           <Slider
             Grid.Column="1"
+            AutomationProperties.Name="{l:Tr Profiles_Temperature}"
             IsSnapToTickEnabled="True"
             Maximum="10000"
             Minimum="2000"
@@ -458,6 +464,7 @@
           </DockPanel>
           <Slider
             Grid.Column="1"
+            AutomationProperties.Name="{l:Tr Profiles_Vibrance}"
             IsEnabled="{Binding VibranceSupported}"
             IsSnapToTickEnabled="True"
             Maximum="100"

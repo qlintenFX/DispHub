@@ -212,4 +212,8 @@ public sealed partial class HomeViewModel : PageViewModel
 /// <summary>A feature card on the Home page: where it stands, and the page that sets it up.</summary>
 /// <param name="IsActive">Whether it is doing something now (its status reads brighter).</param>
 /// <param name="NeedsPro">Part of Pro, which this user doesn't have: the card says so.</param>
-public sealed record HomeFeature(Type Page, SymbolRegular Icon, string Title, string Status, bool IsActive, bool NeedsPro);
+public sealed record HomeFeature(Type Page, SymbolRegular Icon, string Title, string Status, bool IsActive, bool NeedsPro)
+{
+    // What screen readers say for the card: its two lines, not the record's fields.
+    public override string ToString() => $"{Title}, {Status}";
+}
