@@ -110,7 +110,11 @@
 
     <!-- Today on the schedule, or the offer of one. -->
     <ctl:SectionHeader Text="{l:Tr Home_Today}">
-      <ui:HyperlinkButton Command="{Binding OpenScheduleCommand}" Content="{l:Tr Home_EditSchedule}" />
+      <!-- With no schedule yet, the card below offers to set one up instead. -->
+      <ui:HyperlinkButton
+        Command="{Binding OpenScheduleCommand}"
+        Content="{l:Tr Home_EditSchedule}"
+        Visibility="{Binding ShowScheduleOffer, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
     </ctl:SectionHeader>
     <Border
       Padding="16,12,16,14"

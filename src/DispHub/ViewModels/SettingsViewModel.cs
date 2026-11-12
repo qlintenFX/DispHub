@@ -44,7 +44,10 @@ public sealed partial class SettingsViewModel : PageViewModel
     public IReadOnlyList<AccentChoice> AccentChoices { get; }
 
     public IReadOnlyList<ScaleChoice> TextScales { get; } =
-        [new(0.9, "90 %"), new(1.0, Loc.Get("Settings_TextNormal")), new(1.1, "110 %"), new(1.25, "125 %")];
+        [new(0.9, Percent(0.9)), new(1.0, Loc.Get("Settings_TextNormal")), new(1.1, Percent(1.1)), new(1.25, Percent(1.25))];
+
+    /// <summary>A percentage written the way the user's region writes it: 70% in English, 70 % in French.</summary>
+    private static string Percent(double fraction) => fraction.ToString("P0", System.Globalization.CultureInfo.CurrentCulture);
 
     public IReadOnlyList<LanguageChoice> LanguageChoices { get; } =
         [new LanguageChoice(null, Loc.Get("Settings_LanguageWindows")), .. Loc.Languages.Select(l => new LanguageChoice(l, Loc.NativeName(l)))];
@@ -105,7 +108,7 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     partial void OnPanelOpacityChanged(double value)
     {
-        PanelOpacityText = string.Create(System.Globalization.CultureInfo.CurrentCulture, $"{value * 100:0} %");
+        PanelOpacityText = Percent(value);
         if (_loading || !IsProPanelOpacity)
             return;
         // Only the panel's background changes: no need to reload the theme on every step of the slider.

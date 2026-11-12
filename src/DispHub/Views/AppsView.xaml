@@ -257,6 +257,7 @@
     <TextBlock
       Margin="2,8,0,0"
       Style="{StaticResource Hint}"
-      Text="{l:Tr Apps_OrderHint}" />
+      Text="{l:Tr Apps_OrderHint}"
+      Visibility="{Binding ShowOrderHint, Converter={StaticResource BoolToVisibility}}" />
   </StackPanel>
 </UserControl>

@@ -49,6 +49,9 @@ public sealed partial class AppsViewModel : PageViewModel
     /// <summary>The free tier: say that one app is included and Pro does every app.</summary>
     [ObservableProperty] public partial bool ShowProHint { get; set; }
     [ObservableProperty] public partial bool HasRules { get; set; }
+
+    /// <summary>Which rule wins only matters once there are two.</summary>
+    [ObservableProperty] public partial bool ShowOrderHint { get; set; }
     [ObservableProperty] public partial bool IsPicking { get; set; }
     [ObservableProperty] public partial string PickerQuery { get; set; } = "";
     [ObservableProperty] public partial ImageSource? ForegroundIcon { get; set; }
@@ -170,6 +173,7 @@ public sealed partial class AppsViewModel : PageViewModel
         for (int i = 0; i < _app.Config.AppRules.Count; i++)
             Rules.Add(new AppRuleItem(this, _app.Config.AppRules[i], ProfileChoices, isLocked: !_app.Features.CanUseAppRule(i)));
         HasRules = Rules.Count > 0;
+        ShowOrderHint = Rules.Count > 1;
         RefreshForeground();
     }
 
