@@ -93,6 +93,41 @@ public sealed class OnboardingViewModelTests : IDisposable
         Assert.Equal(AutostartState.Disabled, autostart.State);
     }
 
+    [Fact]
+    public void Picture_ShowsTheSecondProfilesOwnKeys()
+    {
+        _app.Config.Profiles[1].Hotkey = "Ctrl+Alt+F2";
+
+        var walkthrough = new OnboardingViewModel(_app, new FakeAutostart());
+
+        Assert.Equal([new KeyCap("Ctrl", true), new KeyCap("Alt", false), new KeyCap("F2", false)], walkthrough.ShownKeys);
+        Assert.Equal(_app.Config.Profiles[1].Name, walkthrough.ShownName);
+    }
+
+    [Fact]
+    public void Picture_WithOneHotkey_ShowsThatOne()
+    {
+        _app.Config.Profiles[0].Hotkey = "Ctrl+Alt+Shift+1";
+        foreach (var profile in _app.Config.Profiles.Skip(1))
+            profile.Hotkey = null;
+
+        var walkthrough = new OnboardingViewModel(_app, new FakeAutostart());
+
+        Assert.Equal(["Ctrl", "Alt", "Shift", "1"], walkthrough.ShownKeys.Select(k => k.Name));
+        Assert.Equal(_app.Config.Profiles[0].Name, walkthrough.ShownName);
+    }
+
+    [Fact]
+    public void Picture_WithoutHotkeys_ShowsNoKeys()
+    {
+        foreach (var profile in _app.Config.Profiles)
+            profile.Hotkey = null;
+
+        var walkthrough = new OnboardingViewModel(_app, new FakeAutostart());
+
+        Assert.False(walkthrough.HasShownHotkey);
+    }
+
     private sealed class FakeAutostart(AutostartState state = AutostartState.Disabled) : IAutostart
     {
         public AutostartState State { get; private set; } = state;

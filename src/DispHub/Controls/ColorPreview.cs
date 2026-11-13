@@ -24,6 +24,7 @@ public static class ColorPreview
     ];
 
     private const string Wide = "-wide";
+    private const string Glass = "+glass";
     private const int MaxCached = 32;
     private static readonly Dictionary<(string, ColorSettings), BitmapSource> Cache = [];
     private static readonly Dictionary<string, (byte[] Pixels, int Width, int Height)> Sources = [];
@@ -42,7 +43,10 @@ public static class ColorPreview
     /// The picture large (960 by 600) under the clear glass panel that holds DispHub's wordmark, for the Home page.
     /// The glass is part of the picture before the profile's colours, as it would be on the screen.
     /// </summary>
-    public static BitmapSource Large(ColorSettings settings) => Render(Picture + Wide, settings);
+    public static BitmapSource Large(ColorSettings settings) => Render(Picture + Wide + Glass, settings);
+
+    /// <summary>A picture large (960 by 600) as it is, without the glass, for the walkthrough.</summary>
+    public static BitmapSource Photo(string picture, ColorSettings settings) => Render(picture + Wide, settings);
 
     private static BitmapSource Render(string picture, ColorSettings settings)
     {
@@ -85,13 +89,15 @@ public static class ColorPreview
     {
         if (Sources.TryGetValue(picture, out var loaded))
             return loaded;
+        bool glass = picture.EndsWith(Glass, StringComparison.Ordinal);
+        string file = glass ? picture[..^Glass.Length] : picture;
         var decoder = BitmapDecoder.Create(
-            new Uri($"pack://application:,,,/Assets/Previews/{picture}.jpg"), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+            new Uri($"pack://application:,,,/Assets/Previews/{file}.jpg"), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
         var converted = new FormatConvertedBitmap(decoder.Frames[0], PixelFormats.Bgra32, null, 0);
         int width = converted.PixelWidth, height = converted.PixelHeight;
         byte[] pixels = new byte[width * height * 4];
         converted.CopyPixels(pixels, width * 4, 0);
-        if (picture.EndsWith(Wide, StringComparison.Ordinal))
+        if (glass)
             pixels = WithGlass(pixels, width, height);
         return Sources[picture] = (pixels, width, height);
     }

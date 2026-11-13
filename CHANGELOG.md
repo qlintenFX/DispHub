@@ -13,6 +13,8 @@ versions follow [Semantic Versioning](https://semver.org).
 - Home no longer shows "Edit schedule" next to the offer to set a schedule up.
 - The Apps page only explains which rule wins once there are two rules.
 - Percentages are written the same way everywhere, and the message settings have icons like the other settings.
+- The walkthrough's shortcut picture shows your own shortcut and profile, so it matches every keyboard and language
+  (it always showed Ctrl + Alt + 2, which is a different shortcut on keyboards with AltGr).
 
 ## [1.0.3] - 2026-11-03
 

@@ -40,6 +40,17 @@ public sealed class HotkeyGestureTests
     public void TryParse_InvalidOrUnsafeGesture_IsRejected(string? text) =>
         Assert.False(HotkeyGesture.TryParse(text, out _));
 
+    [Theory]
+    [InlineData("Ctrl+Alt+2", new[] { "Ctrl", "Alt", "2" })]
+    [InlineData("Ctrl+Alt+Shift+2", new[] { "Ctrl", "Alt", "Shift", "2" })]
+    [InlineData("Ctrl+Alt+F2", new[] { "Ctrl", "Alt", "F2" })]
+    [InlineData("F13", new[] { "F13" })]
+    public void Keys_AreTheKeycapsInOrder(string text, string[] keys)
+    {
+        Assert.True(HotkeyGesture.TryParse(text, out HotkeyGesture gesture));
+        Assert.Equal(keys, gesture.Keys);
+    }
+
     [Fact]
     public void IsModifierKey_RecognisesLeftAndRightModifiers()
     {
