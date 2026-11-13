@@ -5,7 +5,7 @@ here (pictures, art, name, copyright) is the same as the English listing.
 
 ## Short description
 
-Perfis de tela para Windows. Ajuste gama, contraste, brilho, temperatura de cor e vivacidade em cada tela e troque com um atalho, por jogo ou por agendamento, como a Luz noturna.
+Perfis de tela para Windows. Ajuste gama, contraste, brilho, temperatura de cor e vivacidade em cada tela e troque com um atalho, por app ou por agendamento, como a Luz noturna.
 
 ## Description
 
@@ -51,7 +51,7 @@ Observações: os ajustes baseados em gama não ficam disponíveis enquanto o HD
 4. Funciona em todas as telas conectadas
 5. Modelos de perfil e links compartilháveis
 6. Perfis por app que trocam automaticamente (um grátis, todos os apps com o Pro)
-7. Agendamentos com transições suaves para cores mais quentes à noite (Pro)
+7. Agendamentos que trocam de perfil ao pôr do sol, ao nascer do sol ou em horários definidos, com transições suaves (Pro)
 8. Realce de sombras para enxergar áreas escuras (Pro)
 9. Ajustes diferentes para cada tela (Pro)
 10. Cores originais restauradas ao pausar, sair ou depois de uma falha
@@ -63,8 +63,10 @@ brilho da tela, luz noturna, temperatura de cor, perfis de tela, configurações
 
 ## Screenshot captions
 
-1. Troque de perfil com um atalho de teclado
-2. Um perfil para cada momento
-3. Noites mais quentes, automaticamente (Pro)
-4. Perfis para cada app, perfeitos para jogos (Pro)
-5. Troque e ajuste pelo painel rápido
+1. Mude as cores da tela com um clique
+2. Um perfil para cada app (Pro)
+3. Troque com um atalho de teclado
+4. Agende seus perfis (Pro)
+5. Ajuste as cores com precisão
+6. Brilho, taxa de atualização e HDR em cada perfil (Pro)
+7. Pequeno e leve

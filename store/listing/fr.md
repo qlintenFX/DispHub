@@ -5,7 +5,7 @@ here (pictures, art, name, copyright) is the same as the English listing.
 
 ## Short description
 
-Profils d'écran pour Windows. Réglez le gamma, le contraste, la luminosité, la température de couleur et l'éclat de chaque écran, et passez de l'un à l'autre avec un raccourci, par jeu ou selon une planification comme l'Éclairage nocturne.
+Profils d'écran pour Windows. Réglez le gamma, le contraste, la luminosité, la température de couleur et l'éclat de chaque écran, et passez de l'un à l'autre avec un raccourci, par application ou selon une planification comme l'Éclairage nocturne.
 
 ## Description
 
@@ -51,7 +51,7 @@ Remarques : les réglages basés sur le gamma ne sont pas disponibles tant que l
 4. Fonctionne avec tous les écrans connectés
 5. Modèles de profils et liens à partager
 6. Profils par application qui changent automatiquement (une application gratuite, toutes avec Pro)
-7. Planifications avec transitions douces vers des couleurs du soir plus chaudes (Pro)
+7. Planifications qui changent de profil au coucher du soleil, au lever du soleil ou à heures fixes, avec des transitions douces (Pro)
 8. Renforcement des ombres pour distinguer les zones sombres (Pro)
 9. Réglages distincts pour chaque écran (Pro)
 10. Couleurs d'origine restaurées en pause, à la sortie ou après un plantage
@@ -63,8 +63,10 @@ luminosité écran, éclairage nocturne, température de couleur, profils d'écr
 
 ## Screenshot captions
 
-1. Changez de profil avec un raccourci clavier
-2. Un profil pour chaque moment
-3. Des soirées plus chaudes, automatiquement (Pro)
-4. Des profils pour chaque application, parfaits pour les jeux (Pro)
-5. Changez et réglez depuis le panneau rapide
+1. Changez les couleurs de votre écran en un clic
+2. Un profil pour chaque application (Pro)
+3. Changez avec un raccourci clavier
+4. Planifiez vos profils (Pro)
+5. Affinez les couleurs
+6. Luminosité, fréquence de rafraîchissement et HDR dans chaque profil (Pro)
+7. Petit et léger

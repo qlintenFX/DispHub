@@ -5,7 +5,7 @@ here (pictures, art, name, copyright) is the same as the English listing.
 
 ## Short description
 
-Perfiles de pantalla para Windows. Ajusta gamma, contraste, brillo, temperatura de color e intensidad de color en cada pantalla, y cambia con un método abreviado, por juego o con una programación como Luz nocturna.
+Perfiles de pantalla para Windows. Ajusta gamma, contraste, brillo, temperatura de color e intensidad de color en cada pantalla, y cambia con un método abreviado, por aplicación o con una programación como Luz nocturna.
 
 ## Description
 
@@ -51,7 +51,7 @@ Notas: los ajustes basados en gamma no están disponibles mientras el HDR de Win
 4. Funciona con todas las pantallas conectadas
 5. Plantillas de perfiles y vínculos para compartir
 6. Perfiles por aplicación que cambian solos (una aplicación gratis, todas con Pro)
-7. Programaciones con transiciones suaves hacia colores más cálidos al anochecer (Pro)
+7. Programaciones que cambian de perfil al atardecer, al amanecer o a horas fijas, con transiciones suaves (Pro)
 8. Realce de sombras para ver las zonas oscuras (Pro)
 9. Ajustes distintos para cada pantalla (Pro)
 10. Colores originales restaurados al pausar, salir o tras un cierre inesperado
@@ -63,8 +63,10 @@ brillo de pantalla, luz nocturna, temperatura de color, perfiles de pantalla, aj
 
 ## Screenshot captions
 
-1. Cambia de perfil con un método abreviado de teclado
-2. Un perfil para cada momento
-3. Tardes más cálidas, automáticamente (Pro)
-4. Perfiles para cada aplicación, ideales para juegos (Pro)
-5. Cambia y ajusta desde el panel rápido
+1. Cambia los colores de tu pantalla con un clic
+2. Un perfil para cada aplicación (Pro)
+3. Cambia con un método abreviado de teclado
+4. Programa tus perfiles (Pro)
+5. Ajusta los colores al detalle
+6. Brillo, frecuencia de actualización y HDR en cada perfil (Pro)
+7. Pequeño y ligero

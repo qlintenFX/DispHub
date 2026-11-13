@@ -5,7 +5,7 @@ here (pictures, art, name, copyright) is the same as the English listing.
 
 ## Short description
 
-Beeldschermprofielen voor Windows. Stel gamma, contrast, helderheid, kleurtemperatuur en levendigheid in voor elk beeldscherm en wissel met een sneltoets, per game of volgens een planning zoals het Nachtlampje.
+Beeldschermprofielen voor Windows. Stel gamma, contrast, helderheid, kleurtemperatuur en levendigheid in voor elk beeldscherm en wissel met een sneltoets, per app of volgens een planning zoals het Nachtlampje.
 
 ## Description
 
@@ -51,7 +51,7 @@ Let op: aanpassingen op basis van gamma zijn niet beschikbaar zolang HDR van Win
 4. Werkt op elk aangesloten beeldscherm
 5. Profielsjablonen en deelbare links
 6. Profielen per app die automatisch wisselen (één gratis, elke app met Pro)
-7. Planningen met zachte overgangen naar warmere avondkleuren (Pro)
+7. Planningen die bij zonsondergang, zonsopgang of op vaste tijden van profiel wisselen, met zachte overgangen (Pro)
 8. Schaduwversterking om donkere delen beter te zien (Pro)
 9. Aparte instellingen per beeldscherm (Pro)
 10. Oorspronkelijke kleuren hersteld bij pauze, afsluiten of na een crash
@@ -63,8 +63,10 @@ helderheid beeldscherm, nachtlampje, kleurtemperatuur, beeldschermprofielen, bee
 
 ## Screenshot captions
 
-1. Wissel van profiel met een sneltoets
-2. Een profiel voor elk moment
-3. Warmere avonden, automatisch (Pro)
-4. Profielen voor elke app, perfect voor games (Pro)
-5. Wissel en pas aan vanuit het snelpaneel
+1. Verander de kleuren van je scherm met één klik
+2. Een profiel voor elke app (Pro)
+3. Wissel met een sneltoets
+4. Plan je profielen (Pro)
+5. Stel de kleuren precies af
+6. Helderheid, vernieuwingsfrequentie en HDR in elk profiel (Pro)
+7. Klein en licht

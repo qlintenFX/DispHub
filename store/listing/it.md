@@ -5,7 +5,7 @@ here (pictures, art, name, copyright) is the same as the English listing.
 
 ## Short description
 
-Profili dello schermo per Windows. Regola gamma, contrasto, luminosità, temperatura colore e vivacità per ogni schermo, e passa da uno all'altro con una scelta rapida da tastiera, per gioco o con una pianificazione come Luce notturna.
+Profili dello schermo per Windows. Regola gamma, contrasto, luminosità, temperatura colore e vivacità per ogni schermo, e passa da uno all'altro con una scelta rapida da tastiera, per app o con una pianificazione come Luce notturna.
 
 ## Description
 
@@ -51,7 +51,7 @@ Note: le regolazioni basate su gamma non sono disponibili mentre HDR di Windows 
 4. Funziona con ogni schermo collegato
 5. Modelli di profilo e link da condividere
 6. Profili per app che cambiano in automatico (un'app gratis, tutte con Pro)
-7. Pianificazioni con dissolvenze graduali verso colori serali più caldi (Pro)
+7. Pianificazioni che cambiano profilo al tramonto, all'alba o a orari fissi, con dissolvenze graduali (Pro)
 8. Potenziamento ombre per vedere nelle zone scure (Pro)
 9. Impostazioni diverse per ogni schermo (Pro)
 10. Colori originali ripristinati in pausa, in uscita o dopo un arresto anomalo
@@ -63,8 +63,10 @@ luminosità schermo, luce notturna, temperatura colore, profili schermo, imposta
 
 ## Screenshot captions
 
-1. Cambia profilo con una scelta rapida da tastiera
-2. Un profilo per ogni momento
-3. Serate più calde, in automatico (Pro)
-4. Profili per ogni app, perfetti per i giochi (Pro)
-5. Cambia e regola dal pannello rapido
+1. Cambia i colori dello schermo con un clic
+2. Un profilo per ogni app (Pro)
+3. Cambia con una scelta rapida da tastiera
+4. Pianifica i tuoi profili (Pro)
+5. Regola i colori con precisione
+6. Luminosità, frequenza di aggiornamento e HDR in ogni profilo (Pro)
+7. Piccolo e leggero
