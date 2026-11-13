@@ -21,7 +21,8 @@
   mc:Ignorable="d">
   <!--
     The walkthrough: a picture on the left, what it shows and any choice to make on the right. The pictures are
-    DispHub's own windows, captured and laid on its public-domain preview photos (Assets/Onboarding).
+    DispHub's own windows, captured and laid on its public-domain preview photos (Assets/Onboarding); the hotkeys
+    picture is drawn here, from the user's own hotkey.
   -->
   <ui:FluentWindow.Resources>
     <Style x:Key="StepTitle" TargetType="TextBlock">
@@ -129,10 +130,96 @@
             </Grid>
           </Border>
 
+          <!-- One of the user's own hotkeys, the profile's message and its colours, so it matches any keyboard. -->
           <Border Style="{StaticResource Picture}" Visibility="{Binding IsHotkeys, Converter={StaticResource BoolToVisibility}}">
             <Border.Background>
-              <ImageBrush ImageSource="pack://application:,,,/Assets/Onboarding/hotkeys.jpg" Stretch="UniformToFill" />
+              <ImageBrush ImageSource="{Binding ShownPicture}" Stretch="UniformToFill" />
             </Border.Background>
+            <Grid IsHitTestVisible="False" Visibility="{Binding HasShownHotkey, Converter={StaticResource BoolToVisibility}}">
+              <ItemsControl
+                Margin="0,62,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                ItemsSource="{Binding ShownKeys}">
+                <ItemsControl.Effect>
+                  <DropShadowEffect
+                    BlurRadius="8"
+                    Opacity="0.5"
+                    ShadowDepth="1" />
+                </ItemsControl.Effect>
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type vm:KeyCap}">
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock
+                        Margin="9,0,9,3"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        Text="+"
+                        Visibility="{Binding IsFirst, Converter={x:Static ctl:InverseBoolToVisibilityConverter.Instance}}" />
+                      <!-- A dark keycap: the darker strip under it is its side. -->
+                      <Border
+                        Padding="0,0,0,2"
+                        Background="#121314"
+                        CornerRadius="6">
+                        <Border
+                          MinWidth="30"
+                          Height="28"
+                          Padding="10,0"
+                          Background="#33373B"
+                          BorderBrush="#4C5055"
+                          BorderThickness="1"
+                          CornerRadius="5">
+                          <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="White"
+                            Text="{Binding Name}" />
+                        </Border>
+                      </Border>
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <!-- The message DispHub shows when the hotkey switches profile (OsdWindow), in the app's theme. -->
+              <Grid
+                MinWidth="150"
+                Margin="0,0,0,24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom">
+                <Border
+                  Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                  BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8"
+                  Opacity="0.92" />
+                <StackPanel Margin="16,9,20,9" Orientation="Horizontal">
+                  <ui:SymbolIcon
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    FontSize="18"
+                    Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                    Symbol="Color24" />
+                  <TextBlock
+                    MaxWidth="250"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="{Binding ShownName}"
+                    TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </Grid>
+            </Grid>
           </Border>
 
           <Border Style="{StaticResource Picture}" Visibility="{Binding IsReady, Converter={StaticResource BoolToVisibility}}">

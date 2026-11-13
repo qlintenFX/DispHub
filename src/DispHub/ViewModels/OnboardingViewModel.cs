@@ -2,8 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DispHub.Controls;
+using DispHub.Core.Color;
+using DispHub.Core.Hotkeys;
 using DispHub.Core.Model;
 using DispHub.Localization;
 using DispHub.Platform.Shell;
@@ -32,10 +36,21 @@ public sealed partial class OnboardingViewModel : ObservableObject
         _autostart = autostart;
         _firstRun = !app.Config.Ui.OnboardingDone;
         TrayLeftClick = app.Config.Ui.TrayLeftClick;
-        foreach (Profile profile in app.Config.Profiles.Where(p => p.Hotkey is not null).Take(4))
+        List<Profile> withHotkeys = [.. app.Config.Profiles.Where(p => p.Hotkey is not null)];
+        foreach (Profile profile in withHotkeys.Take(4))
             Hotkeys.Add(new HotkeyLine(profile.Name, profile.Hotkey!));
         if (app.Config.Hotkeys.TogglePause is { } onOff)
             Hotkeys.Add(new HotkeyLine(Loc.Get("Settings_Pause"), onOff));
+
+        // The picture shows one of the user's own hotkeys at work, so it matches their keyboard and language: the
+        // second profile with one, which on a first run is Gaming, so the picture changes visibly.
+        if ((withHotkeys.ElementAtOrDefault(1) ?? withHotkeys.FirstOrDefault()) is { } shown &&
+            HotkeyGesture.TryParse(shown.Hotkey, out HotkeyGesture gesture))
+        {
+            ShownKeys = [.. gesture.Keys.Select((key, i) => new KeyCap(key, i == 0))];
+            ShownName = shown.Name;
+            _shownColor = shown.Color;
+        }
         _loading = false;
         _ = LoadAutostartAsync();
     }
@@ -46,6 +61,19 @@ public sealed partial class OnboardingViewModel : ObservableObject
     public IReadOnlyList<TrayClickAction> TrayActions { get; } = [TrayClickAction.QuickPanel, TrayClickAction.OpenWindow, TrayClickAction.ShowProfileMenu];
 
     public ObservableCollection<HotkeyLine> Hotkeys { get; } = [];
+
+    private readonly ColorSettings _shownColor = ColorSettings.Neutral;
+
+    /// <summary>The keys of the hotkey the picture shows; none when no profile has one.</summary>
+    public IReadOnlyList<KeyCap> ShownKeys { get; } = [];
+
+    /// <summary>The name of the profile that hotkey switches to, in its on-screen message.</summary>
+    public string ShownName { get; } = "";
+
+    public bool HasShownHotkey => ShownKeys.Count > 0;
+
+    /// <summary>The wildflowers in that profile's colours (made when the step first shows).</summary>
+    public ImageSource ShownPicture => field ??= ColorPreview.Photo("flowers", _shownColor);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFirst), nameof(IsLast), nameof(IsWelcome), nameof(IsTray), nameof(IsHotkeys), nameof(IsReady), nameof(StepText))]
@@ -143,3 +171,6 @@ public sealed partial class OnboardingViewModel : ObservableObject
 }
 
 public sealed record HotkeyLine(string Name, string Keys);
+
+/// <summary>A key on the walkthrough's picture; every key after the first has a plus before it.</summary>
+public sealed record KeyCap(string Name, bool IsFirst);

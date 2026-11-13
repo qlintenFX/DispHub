@@ -28,20 +28,26 @@ public readonly record struct HotkeyGesture(HotkeyModifiers Modifiers, int Virtu
         ((Modifiers & (HotkeyModifiers.Control | HotkeyModifiers.Alt | HotkeyModifiers.Win)) != 0 ||
          KeyNames.IsFunctionKey(VirtualKey));
 
-    public override string ToString()
+    /// <summary>The keys to press, in order, as their keycaps read: "Ctrl", "Alt", "2".</summary>
+    public IReadOnlyList<string> Keys
     {
-        var parts = new List<string>(5);
-        if (Modifiers.HasFlag(HotkeyModifiers.Control))
-            parts.Add("Ctrl");
-        if (Modifiers.HasFlag(HotkeyModifiers.Alt))
-            parts.Add("Alt");
-        if (Modifiers.HasFlag(HotkeyModifiers.Shift))
-            parts.Add("Shift");
-        if (Modifiers.HasFlag(HotkeyModifiers.Win))
-            parts.Add("Win");
-        parts.Add(KeyNames.GetName(VirtualKey));
-        return string.Join('+', parts);
+        get
+        {
+            var keys = new List<string>(5);
+            if (Modifiers.HasFlag(HotkeyModifiers.Control))
+                keys.Add("Ctrl");
+            if (Modifiers.HasFlag(HotkeyModifiers.Alt))
+                keys.Add("Alt");
+            if (Modifiers.HasFlag(HotkeyModifiers.Shift))
+                keys.Add("Shift");
+            if (Modifiers.HasFlag(HotkeyModifiers.Win))
+                keys.Add("Win");
+            keys.Add(KeyNames.GetName(VirtualKey));
+            return keys;
+        }
     }
+
+    public override string ToString() => string.Join('+', Keys);
 
     public static bool TryParse([NotNullWhen(true)] string? text, out HotkeyGesture gesture)
     {
