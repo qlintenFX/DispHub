@@ -21,17 +21,17 @@
 - **Every monitor.** Colours apply to all connected displays, and DispHub can leave chosen displays alone.
 - **Vibrance.** Saturation on NVIDIA, Intel and AMD (beta) graphics, so it also works on the built-in screen of most laptops.
 - **Templates and links.** Start a profile from a template, or share one as a `disphub://` link.
-- **Automation.** Switch profiles while a specific app is in front (one app free, every app with Pro), and fade to
-  warmer colours at night on a schedule (Pro), from sunset to sunrise or at set hours.
+- **Automation.** Switch profiles while a specific app is in front (one app free, every app with Pro), and schedule
+  your profiles (Pro): from sunset to sunrise, at set hours or at times you choose, with smooth fades.
 - **Safe.** Your original colours are saved before anything changes and restored when you turn DispHub off or quit,
   even after a crash.
 - **Private.** No account, no telemetry. Everything stays on your PC.
 
 ## Get it
 
-DispHub is on the Microsoft Store. Every Pro feature is free for the first week; after that the free version keeps
-three profiles and one app rule, and a one-time **Pro** upgrade keeps the rest (every app, schedules, per-display
-settings and unlimited profiles) and supports development.
+DispHub is on the [Microsoft Store](https://apps.microsoft.com/detail/9N5183BRLX34). Every Pro feature is free for the
+first week; after that the free version keeps three profiles and one app rule, and a one-time **Pro** upgrade keeps the
+rest (every app, schedules, per-display settings and unlimited profiles) and supports development.
 
 You can also build it yourself (below).
 

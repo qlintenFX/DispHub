@@ -16,7 +16,7 @@ DispHub
 ## Short description [up to 270 characters shown in search]
 
 Display profiles for Windows. Tune gamma, contrast, brightness, colour temperature and vibrance for every display,
-and switch with a hotkey, per game or on a schedule like Night light.
+and switch with a hotkey, per app or on a schedule like Night light.
 
 ## Description [10,000 characters]
 
@@ -72,7 +72,7 @@ Leave empty for the first release.
 4. Works on every connected display
 5. Profile templates and shareable links
 6. Per-app profiles that switch automatically (one free, every app with Pro)
-7. Schedules with smooth fades to warmer evening colours (Pro)
+7. Schedules that switch profiles at sunset, at sunrise or at set times, with smooth fades (Pro)
 8. Shadow boost to see into dark areas (Pro)
 9. Different settings per display (Pro)
 10. Original colours restored on pause, exit or after a crash
@@ -84,26 +84,30 @@ vibrance, gamma, screen brightness, night light, color temperature, display prof
 
 ## Screenshots
 
-Use `store/screenshots/*.png` in numbered order (1920 x 1080 in git; Partner Center has 1 and 5 at 3840 x 2160 and
-2 to 4, refreshed on 2026-10-31, at 1920 x 1080). Captions:
+Use `store/screenshots/*.png` in numbered order: 1920 x 1080 in git; the 3840 x 2160 originals and their PhotoCraft
+files are kept outside git (artifacts/store-screenshots-v5). Captions:
 
-1. Switch profiles with a keyboard shortcut
-2. A profile for every moment
-3. Warmer evenings, automatically (Pro)
-4. Profiles for every app, perfect for games (Pro)
-5. Switch and adjust from the quick panel
+1. Change your screen colours in one click
+2. A profile for each app (Pro)
+3. Switch with a hotkey
+4. Schedule your profiles (Pro)
+5. Fine-tune the colours
+6. Brightness, refresh rate and HDR in each profile (Pro)
+7. Small and light
+
+The photos are public-domain U.S. National Park Service pictures (see THIRD_PARTY_NOTICES.md); there are no game
+pictures.
 
 ## Store art and trailer
 
 - 16:9 Super hero art: `store/art/super-hero-1920x1080.png` (no text; the Store puts the title over its left side)
 - 1:1 Box art: `store/art/box-art-2160.png`
 - 9:16 Poster art: `store/art/poster-1440x2160.png`
-- Trailer: 30.5 s, 1920 x 1080, 30 fps, H.264 with AAC stereo, built from the same UI captures; thumbnail
-  `store/art/trailer-thumbnail.png`. The video (96 MB) is uploaded to Partner Center and not kept in git.
-- Credits for the trailer and screenshot 4: the game scene is a screenshot of Veloren (https://veloren.net, art under
-  GPL-3.0) by Antimundo, released under CC0 on Wikimedia Commons. Music "Calm Ambient Dreamscape" by MondaMusic;
-  sound effects "Minimalist Light Whoosh FX" by Chrysalyn, "Soft luxury air whoosh #8" by Sdanezis and "Subtle UI
-  Button Click" by Turning_Pages; all from Pixabay under the Pixabay Content License.
+- Trailer: 20 s, 1920 x 1080, 30 fps, H.264 with AAC stereo, made in After Effects from the real app and the same
+  photos (artifacts/trailer-ae); thumbnail `store/art/trailer-thumbnail.png`. The video is uploaded to Partner Center
+  and not kept in git.
+- Trailer music: "GAMECUBE" by yung brownie (prod. brownie.), released by the producer as free for profit; the
+  credit goes in descriptions, not in the video. Photos: U.S. National Park Service, public domain.
 
 ## Store logo
 
