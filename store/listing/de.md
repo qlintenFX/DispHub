@@ -5,7 +5,7 @@ here (pictures, art, name, copyright) is the same as the English listing.
 
 ## Short description
 
-Bildschirmprofile für Windows. Stelle Gamma, Kontrast, Helligkeit, Farbtemperatur und Farbintensität für jeden Bildschirm ein und wechsle per Tastenkombination, pro Spiel oder nach Zeitplan wie beim Nachtmodus.
+Bildschirmprofile für Windows. Stelle Gamma, Kontrast, Helligkeit, Farbtemperatur und Farbintensität für jeden Bildschirm ein und wechsle per Tastenkombination, pro App oder nach Zeitplan wie beim Nachtmodus.
 
 ## Description
 
@@ -51,7 +51,7 @@ Hinweise: Gamma-basierte Anpassungen sind nicht verfügbar, solange HDR in Windo
 4. Funktioniert mit jedem angeschlossenen Bildschirm
 5. Profilvorlagen und teilbare Links
 6. Profile pro App, die automatisch wechseln (eine App kostenlos, alle mit Pro)
-7. Zeitpläne mit sanften Übergängen zu wärmeren Abendfarben (Pro)
+7. Zeitpläne, die Profile bei Sonnenuntergang, Sonnenaufgang oder zu festen Zeiten wechseln, mit sanften Übergängen (Pro)
 8. Schattenaufhellung für mehr Details in dunklen Bereichen (Pro)
 9. Eigene Einstellungen pro Bildschirm (Pro)
 10. Ursprüngliche Farben werden bei Pause, Beenden oder nach einem Absturz wiederhergestellt
@@ -63,8 +63,10 @@ Bildschirmhelligkeit, Farbtemperatur, Nachtmodus, Bildschirmprofile, Monitor Ein
 
 ## Screenshot captions
 
-1. Profile per Tastenkombination wechseln
-2. Ein Profil für jeden Moment
-3. Wärmere Abende, automatisch (Pro)
-4. Profile für jede App, ideal für Spiele (Pro)
-5. Wechseln und anpassen im Schnellbereich
+1. Bildschirmfarben mit einem Klick ändern
+2. Ein Profil für jede App (Pro)
+3. Per Tastenkombination wechseln
+4. Profile nach Zeitplan (Pro)
+5. Farben fein abstimmen
+6. Helligkeit, Bildwiederholrate und HDR in jedem Profil (Pro)
+7. Klein und leicht
