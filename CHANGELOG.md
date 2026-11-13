@@ -9,7 +9,8 @@ versions follow [Semantic Versioning](https://semver.org).
 
 - During the Pro trial, the opacity setting changes the quick panel, messages, drop-downs and menus (it was stuck
   at 70%).
-- Screen readers name every setting, every slider in the profile editor, the cards on Home and each display.
+- Screen readers name every setting, every slider in the profile editor, the cards on Home and each display, and
+  the minimise, maximise and close buttons of DispHub's windows.
 - Home no longer shows "Edit schedule" next to the offer to set a schedule up.
 - The Apps page only explains which rule wins once there are two rules.
 - Percentages are written the same way everywhere, and the message settings have icons like the other settings.
