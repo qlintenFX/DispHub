@@ -118,6 +118,18 @@
   <data name="Common_On" xml:space="preserve">
     <value>On</value>
   </data>
+  <data name="Window_Minimise" xml:space="preserve">
+    <value>Minimise</value>
+  </data>
+  <data name="Window_Maximise" xml:space="preserve">
+    <value>Maximise</value>
+  </data>
+  <data name="Window_Restore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="Default_Gaming" xml:space="preserve">
     <value>Gaming</value>
   </data>
