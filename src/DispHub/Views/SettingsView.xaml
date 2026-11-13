@@ -87,13 +87,19 @@
       Icon="SlideText24">
       <ui:ToggleSwitch IsChecked="{Binding ShowOsd}" />
     </ctl:SettingsCard>
-    <ctl:SettingsCard Header="{l:Tr Settings_OsdPosition}" IsEnabled="{Binding ShowOsd}">
+    <ctl:SettingsCard
+      Header="{l:Tr Settings_OsdPosition}"
+      Icon="AlignBottom24"
+      IsEnabled="{Binding ShowOsd}">
       <ComboBox
         ItemTemplate="{StaticResource EnumItem}"
         ItemsSource="{Binding OsdPositions}"
         SelectedItem="{Binding OsdPosition}" />
     </ctl:SettingsCard>
-    <ctl:SettingsCard Header="{l:Tr Settings_OsdDuration}" IsEnabled="{Binding ShowOsd}">
+    <ctl:SettingsCard
+      Header="{l:Tr Settings_OsdDuration}"
+      Icon="Timer24"
+      IsEnabled="{Binding ShowOsd}">
       <StackPanel Orientation="Horizontal">
         <Slider
           Width="180"

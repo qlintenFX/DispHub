@@ -680,7 +680,7 @@ It also supports development of DispHub.</value>
     <value>Same as Windows</value>
   </data>
   <data name="Settings_TextNormal" xml:space="preserve">
-    <value>100 % (normal)</value>
+    <value>100% (normal)</value>
   </data>
   <data name="Settings_Appearance" xml:space="preserve">
     <value>Appearance</value>
