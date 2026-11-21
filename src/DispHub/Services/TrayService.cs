@@ -28,6 +28,7 @@ public sealed class TrayService : IDisposable
     private readonly Action _exit;
     private readonly ILogger _logger;
     private readonly TrayIcon _icon;
+    private Action? _onNotificationClick;
     private readonly byte[] _normalIcon = LoadResource("Assets/DispHub.ico");
     private readonly byte[] _pausedIcon = LoadResource("Assets/DispHub-paused.ico");
     private readonly DispatcherTimer _retry = new() { Interval = RetryInterval };
@@ -82,15 +83,24 @@ public sealed class TrayService : IDisposable
     public void ShowStillRunningHint(OsdService osd)
     {
         ArgumentNullException.ThrowIfNull(osd);
-        if (!_app.Config.Ui.TrayHintShown && _icon.IsAdded)
+        if (!_app.Config.Ui.TrayHintShown && ShowNotification(Loc.Get("Tray_StillRunningTitle"), Loc.Get("Tray_StillRunningText"), OpenTaskbarSettings))
         {
-            _icon.ShowNotification(Loc.Get("Tray_StillRunningTitle"), Loc.Get("Tray_StillRunningText"));
             _app.Config.Ui.TrayHintShown = true;
             _app.SettingsChanged();
         }
         // Notifications don't show during Do not disturb, so also say it on screen while the icon is hidden.
         if (TrayIcon.IsOnTaskbar() != true)
             osd.ShowHint(Loc.Get("Osd_StillRunning"));
+    }
+
+    /// <summary>A Windows notification from the icon; selecting it runs <paramref name="onClick"/>. False while there's no icon.</summary>
+    public bool ShowNotification(string title, string text, Action onClick)
+    {
+        if (!_icon.IsAdded)
+            return false;
+        _onNotificationClick = onClick;
+        _icon.ShowNotification(title, text);
+        return true;
     }
 
     public void Dispose()
@@ -115,7 +125,7 @@ public sealed class TrayService : IDisposable
                 _openWindow();
                 break;
             case TrayIconAction.NotificationClicked:
-                OpenTaskbarSettings();
+                _onNotificationClick?.Invoke();
                 break;
         }
     }
