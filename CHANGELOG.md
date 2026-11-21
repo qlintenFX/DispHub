@@ -3,6 +3,32 @@
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com) and
 versions follow [Semantic Versioning](https://semver.org).
 
+## [1.0.5] - 2026-11-21
+
+### Added
+
+- When the Pro trial ends, a single Windows notification says so, for people who use DispHub only from the tray and
+  with hotkeys. Selecting it shows what Pro keeps.
+
+### Fixed
+
+- With DispHub off, or a display left alone, other programs such as f.lux, games or calibration tools can change the
+  colours again: DispHub no longer puts the original ones back over them.
+- When another program keeps resetting the colours, DispHub's pause from fighting it lasts, instead of ending at the
+  next window switch.
+- A warm profile that Windows refuses after Allow stronger changes is shown in a milder version instead of not at all.
+- Reinstalling DispHub doesn't start a new Pro trial, and a clock that was ahead at the first start no longer stops
+  DispHub from starting.
+- If the Store's licence check fails at sign-in, DispHub tries again, so Pro is recognised; the check can no longer
+  crash DispHub.
+- DispHub starts again after a Store update.
+- Quitting no longer leaves a profile's monitor brightness on.
+- Schedules switch on time the night the clocks change, and after the clock or time zone is changed.
+
+### Removed
+
+- The unused preset gallery and, with it, the internet permission in the Store package.
+
 ## [1.0.4] - 2026-11-13
 
 ### Fixed
@@ -52,6 +78,7 @@ First release of DispHub on the Microsoft Store: free, with a week of Pro to try
   Mica or acrylic backgrounds, text size and a compact menu.
 - English, German, Spanish, French, Italian, Dutch and Brazilian Portuguese.
 
+[1.0.5]: https://github.com/qlintenFX/DispHub/releases/tag/v1.0.5
 [1.0.4]: https://github.com/qlintenFX/DispHub/releases/tag/v1.0.4
 [1.0.3]: https://github.com/qlintenFX/DispHub/releases/tag/v1.0.3
 [1.0.2]: https://github.com/qlintenFX/DispHub/releases/tag/v1.0.2
