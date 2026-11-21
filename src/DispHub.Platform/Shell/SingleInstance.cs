@@ -99,10 +99,23 @@ public sealed class SingleInstance : IDisposable
             }
             catch (IOException)
             {
-                // A client disconnected mid-write; keep listening.
+                // A client disconnected mid-write, or the pipe is busy: wait a moment, then keep listening.
+                try
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(500), _cancel.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
             }
         }
     }
 
-    private static string PipeNameFor(string name) => $"{name}.{Environment.UserName}.Activation";
+    // Per session, like the mutex: the same user signed in twice (fast user switching, remote desktop) runs two.
+    private static string PipeNameFor(string name)
+    {
+        using var process = System.Diagnostics.Process.GetCurrentProcess();
+        return $"{name}.{Environment.UserName}.{process.SessionId}.Activation";
+    }
 }

@@ -161,6 +161,11 @@ public partial class App : Application
         _router.SessionUnlocked += (_, _) => _controller.OnResumed();
         _router.PowerSourceChanged += (_, _) => _controller.OnPowerSourceChanged(_simulateBattery || PowerSource.OnBattery());
         _router.ThemeChanged += (_, _) => OnWindowsThemeChanged();
+        _router.TimeChanged += (_, _) =>
+        {
+            TimeZoneInfo.ClearCachedData();
+            _controller.OnTimeChanged();
+        };
         HotkeyBox.RecordingChanged += (_, recording) =>
         {
             if (recording)
@@ -179,6 +184,9 @@ public partial class App : Application
 
         _instance.Activated += (_, forwarded) => Dispatcher.BeginInvoke(() => HandleActivation(forwarded));
         _instance.StartListening();
+        // A Store update closes DispHub: come back, in the notification area, so hotkeys keep working.
+        if (PackageInfo.IsPackaged)
+            WindowHelpers.RestartAfterUpdates(Autostart.StartupArgument);
 
         try
         {

@@ -11,6 +11,7 @@ using Windows.Win32.Graphics.Gdi;
 using Windows.Win32.UI.HiDpi;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 using Windows.Win32.UI.WindowsAndMessaging;
+using Restart = Windows.Win32.System.Recovery.REGISTER_APPLICATION_RESTART_FLAGS;
 
 namespace DispHub.Platform.Shell;
 
@@ -18,6 +19,13 @@ namespace DispHub.Platform.Shell;
 public static partial class WindowHelpers
 {
     /// <summary>Makes a window that never takes focus, stays out of Alt+Tab and lets clicks pass through.</summary>
+    /// <summary>
+    /// Asks Windows to start DispHub again with <paramref name="arguments"/> when it closes it to install an update or
+    /// restart, not after a crash or hang.
+    /// </summary>
+    public static void RestartAfterUpdates(string arguments) =>
+        PInvoke.RegisterApplicationRestart(arguments, Restart.RESTART_NO_CRASH | Restart.RESTART_NO_HANG);
+
     public static void MakeOverlay(nint handle)
     {
         var hwnd = (HWND)handle;

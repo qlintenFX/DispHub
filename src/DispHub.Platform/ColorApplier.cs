@@ -225,6 +225,9 @@ public sealed class ColorApplier : IColorApplier
         _wake.Set();
         if (_thread.IsAlive)
             _thread.Join(TimeSpan.FromSeconds(3));
+        // A thread still in a slow driver call keeps its handle and driver: freeing them under it would crash the exit.
+        if (_thread.IsAlive)
+            return;
         lock (_gate)
             _wake.Dispose();
         _backend.Dispose();
