@@ -81,7 +81,7 @@ public sealed class AppController : IDisposable
         _dispatcher = Dispatcher.CurrentDispatcher;
         _saveTimer = _time.CreateTimer(_ => _dispatcher.BeginInvoke(FlushSave), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         _ruleTimer = _time.CreateTimer(_ => _dispatcher.BeginInvoke(() => Evaluate(ChangeSource.Automation)), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-        _trialTimer = _time.CreateTimer(_ => _dispatcher.BeginInvoke(OnLicenceChanged), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _trialTimer = _time.CreateTimer(_ => _dispatcher.BeginInvoke(OnTrialTimer), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
 
         ConfigLoadResult loaded = store.Load();
         Config = loaded.Config;
@@ -130,9 +130,23 @@ public sealed class AppController : IDisposable
     {
         bool before = InTrial;
         _trialEnds = endsUtc;
-        TimeSpan left = endsUtc is { } end ? end - _time.GetUtcNow() : Timeout.InfiniteTimeSpan;
-        _trialTimer.Change(left > TimeSpan.Zero ? left : Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        ArmTrialTimer();
         if (_hotkeys is not null && before != InTrial)
+            OnLicenceChanged();
+    }
+
+    // Timers can't wait longer than about 49 days, and the clock may be put right meanwhile: check at least daily.
+    private void ArmTrialTimer()
+    {
+        TimeSpan left = _trialEnds is { } end ? end - _time.GetUtcNow() : Timeout.InfiniteTimeSpan;
+        _trialTimer.Change(left > TimeSpan.Zero ? (left < TimeSpan.FromDays(1) ? left : TimeSpan.FromDays(1)) : Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+    }
+
+    private void OnTrialTimer()
+    {
+        if (_trialEnds is { } end && _time.GetUtcNow() < end)
+            ArmTrialTimer();
+        else
             OnLicenceChanged();
     }
 

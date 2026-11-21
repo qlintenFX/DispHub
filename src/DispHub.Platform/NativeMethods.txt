@@ -138,3 +138,8 @@ SHDefExtractIcon
 SHGetStockIconInfo
 EnumDisplaySettings
 ENUM_DISPLAY_SETTINGS_MODE
+
+// The Pro trial's first-run date, kept beyond an uninstall
+CredRead
+CredWrite
+CredFree

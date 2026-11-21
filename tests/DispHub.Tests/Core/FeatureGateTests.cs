@@ -51,4 +51,18 @@ public sealed class FeatureGateTests
         Assert.Equal(0, FeatureGate.TrialDaysLeft(end, end));
         Assert.Equal(0, FeatureGate.TrialDaysLeft(end, end.AddDays(3)));
     }
+
+    [Fact]
+    public void FirstRun_IsTheEarliestKnown_AndNeverLaterThanNow()
+    {
+        var now = new DateTimeOffset(2026, 11, 21, 12, 0, 0, TimeSpan.Zero);
+        DateTimeOffset week = now.AddDays(-7), month = now.AddDays(-30);
+
+        Assert.Equal(now, FeatureGate.FirstRun(null, null, now)); // a new user
+        Assert.Equal(week, FeatureGate.FirstRun(week, null, now));
+        Assert.Equal(month, FeatureGate.FirstRun(null, month, now)); // reinstalled: the earlier install counts
+        Assert.Equal(month, FeatureGate.FirstRun(week, month, now));
+        Assert.Equal(month, FeatureGate.FirstRun(month, week, now));
+        Assert.Equal(now, FeatureGate.FirstRun(now.AddDays(60), null, now)); // the clock was ahead at first run
+    }
 }
