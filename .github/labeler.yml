@@ -22,10 +22,6 @@ ui:
           - 'src/DispHub/Resources/**'
           - 'src/DispHub/*.xaml'
 
-presets:
-  - changed-files:
-      - any-glob-to-any-file: 'presets/**'
-
 # Translations, but not the English source text.
 translations:
   - all:

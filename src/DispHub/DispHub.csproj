@@ -23,9 +23,6 @@
     <ProjectReference Include="..\DispHub.Platform\DispHub.Platform.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\presets\gallery.json" LogicalName="DispHub.gallery.json" Link="Assets\gallery.json" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\DispHub.ico" />
     <Resource Include="Assets\DispHub-paused.ico" />
     <Resource Include="Assets\DispHub.png" />
