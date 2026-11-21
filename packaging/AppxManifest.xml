@@ -47,7 +47,6 @@
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
     <!-- Only for the schedule's "Use my location" button; Windows asks the user first. -->
     <DeviceCapability Name="location" />
