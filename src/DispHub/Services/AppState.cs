@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 using DispHub.Core.Config;
+using DispHub.Core.Licensing;
 using DispHub.Platform;
+using DispHub.Platform.Store;
 
 namespace DispHub.Services;
 
@@ -12,14 +14,20 @@ namespace DispHub.Services;
 /// </summary>
 public sealed class AppState
 {
-    public AppState(TimeProvider time)
+    public AppState(TimeProvider time, IFirstRunMarker firstRun)
     {
         Data = JsonFiles.ReadState(AppPaths.StatePath);
-        if (Data.FirstRunUtc is null)
+
+        // The trial counts from the first run of any install, so reinstalling doesn't start it again.
+        DateTimeOffset? earlier = firstRun.Read();
+        DateTimeOffset first = FeatureGate.FirstRun(Data.FirstRunUtc, earlier, time.GetUtcNow());
+        if (Data.FirstRunUtc != first)
         {
-            Data.FirstRunUtc = time.GetUtcNow();
+            Data.FirstRunUtc = first;
             Save();
         }
+        if (earlier != first)
+            firstRun.Write(first);
     }
 
     public AppStateData Data { get; }

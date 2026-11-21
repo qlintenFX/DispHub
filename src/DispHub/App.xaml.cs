@@ -58,7 +58,8 @@ public partial class App : Application
         base.OnStartup(e);
 
         // Before anything reads the settings or starts a log.
-        _fresh = Has(e.Args, FreshArgument);
+        // The Store version has no developer switches: a fresh run would be a new Pro trial.
+        _fresh = Has(e.Args, FreshArgument) && !PackageInfo.IsStoreSigned;
         if (_fresh)
             AppPaths.UseDataDirectory(FreshDataDirectory());
 
@@ -231,6 +232,7 @@ public partial class App : Application
         else
             services.AddSingleton<IAutostart, Autostart>();
         services.Add(CreateLicenseService(args));
+        services.AddSingleton<IFirstRunMarker>(PackageInfo.IsStoreSigned ? new CredentialFirstRunMarker() : new NoFirstRunMarker());
         services.AddSingleton<AppController>();
         services.AddSingleton<ThemeService>();
         services.AddSingleton<OsdService>();
@@ -252,8 +254,8 @@ public partial class App : Application
         return services.BuildServiceProvider();
     }
 
-    /// <summary>The --fake-store mode (pro, free, trial or ended), or null.</summary>
-    private static string? FakeStoreMode(IEnumerable<string> args) =>
+    /// <summary>The --fake-store mode (pro, free, ending or ended), or null; never in the Store version.</summary>
+    private static string? FakeStoreMode(IEnumerable<string> args) => PackageInfo.IsStoreSigned ? null :
         args.FirstOrDefault(a => a.StartsWith("--fake-store=", StringComparison.OrdinalIgnoreCase))?["--fake-store=".Length..].ToLowerInvariant();
 
     private static ServiceDescriptor CreateLicenseService(string[] args)

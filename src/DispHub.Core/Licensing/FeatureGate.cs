@@ -64,6 +64,23 @@ public sealed record FeatureGate(bool IsPro, bool InTrial = false)
     /// <summary>When the trial of an install first started on <paramref name="firstRunUtc"/> ends.</summary>
     public static DateTimeOffset TrialEnds(DateTimeOffset firstRunUtc) => firstRunUtc + TrialLength;
 
+    /// <summary>
+    /// The first run the trial counts from: the earliest one known, from this install's settings or from what an
+    /// earlier install of DispHub left on this PC, so reinstalling doesn't start a new trial. A date later than now
+    /// (the clock was ahead and has been put right) counts as now.
+    /// </summary>
+    public static DateTimeOffset FirstRun(DateTimeOffset? stored, DateTimeOffset? earlierInstall, DateTimeOffset nowUtc)
+    {
+        DateTimeOffset first = (stored, earlierInstall) switch
+        {
+            ({ } a, { } b) => a < b ? a : b,
+            ({ } a, null) => a,
+            (null, { } b) => b,
+            _ => nowUtc,
+        };
+        return first > nowUtc ? nowUtc : first;
+    }
+
     /// <summary>Whole days left in a trial ending at <paramref name="endsUtc"/>, counting a part day as one.</summary>
     public static int TrialDaysLeft(DateTimeOffset endsUtc, DateTimeOffset nowUtc) =>
         endsUtc <= nowUtc ? 0 : (int)Math.Ceiling((endsUtc - nowUtc).TotalDays);
