@@ -81,8 +81,6 @@ MONITORINFOEXW
 SetWindowPos
 GetWindowLong
 SetWindowLong
-ShowWindow
-ShowWindowAsync
 SetForegroundWindow
 EmptyWorkingSet
 GetCurrentProcess
@@ -115,9 +113,6 @@ GetForegroundWindow
 GetLastInputInfo
 LASTINPUTINFO
 GetWindowRect
-GetClassName
-MonitorFromWindow
-SHQueryUserNotificationState
 WINDOW_STYLE
 SHOW_WINDOW_CMD
 

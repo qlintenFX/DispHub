@@ -11,17 +11,6 @@ DispHub is licensed under GPL-3.0-or-later. It uses the following components.
 | Microsoft.Extensions.DependencyInjection, Microsoft.Extensions.Logging | MIT | https://github.com/dotnet/runtime |
 | .NET runtime (self-contained Store build) | MIT | https://github.com/dotnet/runtime |
 
-### Screen effect techniques
-
-DispHub's effect shader (`src/DispHub.Platform/Effects/Effects.hlsl`) and `FilmGrain.cs` follow published work:
-
-| Effect | Based on | Licence |
-| --- | --- | --- |
-| Film grain | AV1 film grain synthesis as in [dav1d](https://code.videolan.org/videolan/dav1d) (grain generation and application) and [libaom](https://aomedia.googlesource.com/aom)'s film grain test vector 1 (filter coefficients, brightness curve) | BSD-2-Clause |
-| CRT scanlines, shadow mask, screen curve | [Timothy Lottes' CRT shader](https://github.com/libretro/slang-shaders/blob/master/crt/shaders/crt-lottes.slang) | Public domain |
-| VHS tape, head switching, tracking noise, snow, edge wave | The effect chain of [ntsc-rs](https://github.com/ntsc-rs/ntsc-rs) | MIT, Apache-2.0 or ISC |
-| Colour vision help | Daltonisation by Fidaner, Lin and Ozguven | Published method |
-
 Home's glass panel (`src/DispHub.Core/Color/LiquidGlass.cs`) follows the glass shader of
 [liquidglass](https://github.com/ybouane/liquidglass) by ybouane (MIT).
 
