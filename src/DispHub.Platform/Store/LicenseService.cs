@@ -119,12 +119,27 @@ public sealed class StoreLicenseService(ILogger<StoreLicenseService> logger) : I
         {
             _context = StoreContext.GetDefault();
             _context.OfflineLicensesChanged += async (_, _) => await RefreshAsync();
-            await RefreshAsync();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Store licence check failed");
+            return;
         }
+        if (!await RefreshAsync())
+            _ = RetryRefreshAsync();
+    }
+
+    // The Store's licence service can be busy right after sign-in; a Pro buyer mustn't be treated as free all day.
+    private async Task RetryRefreshAsync()
+    {
+        TimeSpan delay = TimeSpan.FromSeconds(30);
+        do
+        {
+            await Task.Delay(delay);
+            if (delay < TimeSpan.FromMinutes(15))
+                delay *= 2;
+        }
+        while (!await RefreshAsync());
     }
 
     public async Task<PurchaseResult> PurchaseProAsync(nint windowHandle)
@@ -233,16 +248,28 @@ public sealed class StoreLicenseService(ILogger<StoreLicenseService> logger) : I
         return products.Products.Values.Where(p => TipOfferTokens.Contains(p.InAppOfferToken));
     }
 
-    private async Task RefreshAsync()
+    /// <summary>Reads the licences again; false when the Store couldn't say (Pro stays as it was).</summary>
+    private async Task<bool> RefreshAsync()
     {
         if (_context is null)
-            return;
-        StoreAppLicense license = await _context.GetAppLicenseAsync();
-        bool isPro = license.AddOnLicenses.Values.Any(l => l.IsActive && l.InAppOfferToken == ProOfferToken);
-        if (isPro != _isPro)
+            return false;
+        try
         {
-            _isPro = isPro;
-            Changed?.Invoke(this, EventArgs.Empty);
+            StoreAppLicense license = await _context.GetAppLicenseAsync();
+            if (!license.IsActive)
+                return false; // every Store install of a free app has an active licence: the check didn't work
+            bool isPro = license.AddOnLicenses.Values.Any(l => l.IsActive && l.InAppOfferToken == ProOfferToken);
+            if (isPro != _isPro)
+            {
+                _isPro = isPro;
+                Changed?.Invoke(this, EventArgs.Empty);
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Store licence check failed");
+            return false;
         }
     }
 }
