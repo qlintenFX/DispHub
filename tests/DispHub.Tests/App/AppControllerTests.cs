@@ -249,6 +249,20 @@ public sealed class AppControllerTests : IDisposable
     }
 
     [Fact]
+    public void AfterShutdown_AWindowSwitch_PutsNothingOnScreen()
+    {
+        _app.Config.AppRules.Add(new AppRule { Executable = "cs2.exe", ProfileId = Gaming.Id });
+        _app.Shutdown();
+        MonitorTargets? before = _colors.Last;
+
+        // The tray menu closing brings another window to the front while DispHub quits.
+        _foreground.Switch(@"C:\Games\cs2.exe");
+        _app.OnForegroundChanged();
+
+        Assert.Same(before, _colors.Last);
+    }
+
+    [Fact]
     public void AppRule_KeepsAPathThatStillExists()
     {
         string program = Path.Combine(_dir.Path, "cs2.exe");

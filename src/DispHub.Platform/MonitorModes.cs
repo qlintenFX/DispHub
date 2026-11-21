@@ -165,8 +165,12 @@ public sealed class MonitorModes : IMonitorModes
         _wake.Set();
         if (_thread.IsAlive)
             _thread.Join(TimeSpan.FromSeconds(3));
-        lock (_gate)
-            _wake.Dispose();
+        // A thread still in a slow driver call keeps its handle: disposing it under the thread would crash the exit.
+        if (!_thread.IsAlive)
+        {
+            lock (_gate)
+                _wake.Dispose();
+        }
     }
 
     private void Run()

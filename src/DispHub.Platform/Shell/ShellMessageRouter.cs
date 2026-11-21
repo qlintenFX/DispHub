@@ -42,6 +42,9 @@ public sealed class ShellMessageRouter : IDisposable
     /// <summary>Windows switched between light and dark, or the accent colour changed.</summary>
     public event EventHandler? ThemeChanged;
 
+    /// <summary>The clock was set, or the time zone changed.</summary>
+    public event EventHandler? TimeChanged;
+
     /// <summary>Call from the window procedure. Returns true when the message was fully handled.</summary>
     public bool HandleMessage(uint message, nuint wParam, nint lParam)
     {
@@ -65,6 +68,8 @@ public sealed class ShellMessageRouter : IDisposable
         else if (message == PInvoke.WM_DWMCOLORIZATIONCOLORCHANGED
             || (message == PInvoke.WM_SETTINGCHANGE && lParam != 0 && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet"))
             ThemeChanged?.Invoke(this, EventArgs.Empty);
+        else if (message == PInvoke.WM_TIMECHANGE)
+            TimeChanged?.Invoke(this, EventArgs.Empty);
 
         return false;
     }

@@ -51,6 +51,7 @@ public sealed class AppController : IDisposable
     private readonly ITimer _saveTimer;
     private readonly ITimer _ruleTimer;
     private readonly ITimer _trialTimer;
+    private bool _shuttingDown;
     private readonly Dispatcher _dispatcher;
     private DateTimeOffset? _trialEnds;
     private HashSet<string> _probedMonitors = new(StringComparer.OrdinalIgnoreCase);
@@ -564,9 +565,15 @@ public sealed class AppController : IDisposable
 
     public void OnResumed() => _colors.Reapply();
 
+    /// <summary>The clock or the time zone changed: the schedule's next change is at a different moment now.</summary>
+    public void OnTimeChanged() => Evaluate(ChangeSource.Automation);
+
     /// <summary>Restores original colours and monitor brightness, and saves. Call before exiting.</summary>
     public void Shutdown()
     {
+        // From here nothing is put on screen again: a queued re-evaluation (the window in front changing as the tray
+        // menu closes) would re-apply a profile's brightness after it was put back.
+        _shuttingDown = true;
         if (_brightness is not null && !_brightness.RestoreAll(TimeSpan.FromSeconds(3)))
             _logger.LogWarning("Not every monitor's brightness could be put back on exit");
         if (_modes is not null && !_modes.RestoreAll(TimeSpan.FromSeconds(5)))
@@ -649,6 +656,8 @@ public sealed class AppController : IDisposable
 
     private void Evaluate(ChangeSource source)
     {
+        if (_shuttingDown)
+            return;
         RuleOutput output = Resolve();
 
         // A pick by hand lasts as long as what it was made in: an app's pick until that app leaves the front, a pick
@@ -724,8 +733,16 @@ public sealed class AppController : IDisposable
     {
         if (next is null)
             return Timeout.InfiniteTimeSpan;
-        TimeSpan delay = next.Value - _time.GetLocalNow().DateTime;
-        return delay < TimeSpan.FromMilliseconds(100) ? TimeSpan.FromMilliseconds(100) : delay;
+        // The schedule speaks in local times: count through UTC, so the night the clocks change is an hour shorter or
+        // longer, and look again at least hourly in case the clock is put right without Windows saying so.
+        TimeZoneInfo zone = _time.LocalTimeZone;
+        DateTime local = DateTime.SpecifyKind(next.Value, DateTimeKind.Unspecified);
+        if (zone.IsInvalidTime(local))
+            local = local.AddHours(1); // in the hour skipped when the clocks go forward
+        TimeSpan delay = TimeZoneInfo.ConvertTimeToUtc(local, zone) - _time.GetUtcNow().UtcDateTime;
+        if (delay < TimeSpan.FromMilliseconds(100))
+            return TimeSpan.FromMilliseconds(100);
+        return delay > TimeSpan.FromHours(1) ? TimeSpan.FromHours(1) : delay;
     }
 
     private void OnHotkey(string action)
