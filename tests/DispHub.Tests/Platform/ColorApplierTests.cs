@@ -105,6 +105,50 @@ public sealed class ColorApplierTests : IDisposable
     }
 
     [Fact]
+    public void Apply_RefusedUnderTheWiderLimits_FallsBackToTheUsualOnes()
+    {
+        _backend.Limits = RampLimits.Extended; // "Allow stronger changes", but Windows still holds the usual limits
+        _applier.Start();
+
+        Apply(new ColorSettings(TemperatureK: 2000));
+        WaitFor(() => _applier.Monitors.Count == 1 && _applier.Monitors[0].State != MonitorColorState.Original);
+
+        Assert.Equal(MonitorColorState.Limited, _applier.Monitors[0].State);
+        Assert.True(RampLimits.Default.Accepts(_backend.Ramps["\\\\.\\DISPLAY1"]));
+    }
+
+    [Fact]
+    public void OriginalColours_AreLeftToOtherPrograms()
+    {
+        _applier.Start();
+        Apply(Warm);
+        WaitFor(() => _backend.SetCalls == 1);
+        _applier.Apply(MonitorTargets.None);
+        WaitFor(() => _backend.SetCalls == 2);
+
+        // DispHub is off; f.lux or a calibration loader sets its own colours.
+        GammaRamp theirs = RampBuilder.Build(new ColorSettings(TemperatureK: 5000));
+        _backend.SetFromOutside(theirs);
+        Thread.Sleep(2500); // past both quick checks after the change
+
+        Assert.Equal(2, _backend.SetCalls);
+        Assert.True(theirs.ApproximatelyEquals(_backend.Ramps["\\\\.\\DISPLAY1"], 0));
+    }
+
+    [Fact]
+    public void Targets_WithTheSameColours_AreTheSame()
+    {
+        var a = new MonitorTargets(new Dictionary<string, ColorSettings?> { ["x"] = Warm }, null);
+        var b = new MonitorTargets(new Dictionary<string, ColorSettings?> { ["x"] = new ColorSettings(TemperatureK: 4000) }, null);
+        var c = new MonitorTargets(new Dictionary<string, ColorSettings?> { ["x"] = null }, null);
+
+        Assert.True(a.SameAs(b));
+        Assert.False(a.SameAs(c));
+        Assert.False(a.SameAs(MonitorTargets.None));
+        Assert.True(MonitorTargets.None.SameAs(new MonitorTargets(new Dictionary<string, ColorSettings?>(), null)));
+    }
+
+    [Fact]
     public void Apply_HdrMonitor_LeavesGammaAlone()
     {
         _backend.Hdr = true;
@@ -239,7 +283,9 @@ public sealed class ColorApplierTests : IDisposable
                 Ramps["\\\\.\\DISPLAY1"] = ramp;
         }
 
-        public RampLimits GetRampLimits() => RampLimits.Default;
+        public RampLimits Limits { get; set; } = RampLimits.Default;
+
+        public RampLimits GetRampLimits() => Limits;
 
         public void Dispose()
         {

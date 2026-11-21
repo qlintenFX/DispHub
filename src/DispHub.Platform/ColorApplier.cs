@@ -34,6 +34,12 @@ public sealed record MonitorTargets(IReadOnlyDictionary<string, ColorSettings?> 
 
     public ColorSettings? For(string monitorKey) =>
         PerMonitor.TryGetValue(monitorKey, out ColorSettings? settings) ? settings : Default;
+
+    /// <summary>The same colours for every display (the record's own equality only compares the dictionaries).</summary>
+    public bool SameAs(MonitorTargets other) =>
+        Equals(Default, other.Default) &&
+        PerMonitor.Count == other.PerMonitor.Count &&
+        PerMonitor.All(p => other.PerMonitor.TryGetValue(p.Key, out ColorSettings? settings) && Equals(p.Value, settings));
 }
 
 public interface IColorApplier : IDisposable
@@ -109,6 +115,7 @@ public sealed class ColorApplier : IColorApplier
     // Guarded by _gate.
     private MonitorTargets _requested = MonitorTargets.None;
     private bool _pendingApply;
+    private bool _pendingNewTarget;
     private bool _pendingRefresh = true;
     private bool _pendingReapply;
     private TaskCompletionSource<bool>? _pendingRestore;
@@ -161,6 +168,8 @@ public sealed class ColorApplier : IColorApplier
     {
         lock (_gate)
         {
+            // The same colours again (a window switch, a fade step) mustn't end a pause from fighting another program.
+            _pendingNewTarget |= !_requested.SameAs(targets);
             _requested = targets;
             _pendingApply = true;
         }
@@ -240,13 +249,13 @@ public sealed class ColorApplier : IColorApplier
             _wake.WaitOne(UntilNextCheck());
 
             MonitorTargets requested;
-            bool apply, refresh, reapply, stopping;
+            bool apply, newTarget, refresh, reapply, stopping;
             TaskCompletionSource<bool>? restore;
             lock (_gate)
             {
-                (requested, apply, refresh, reapply, restore, stopping) =
-                    (_requested, _pendingApply, _pendingRefresh, _pendingReapply, _pendingRestore, _stopping);
-                _pendingApply = _pendingRefresh = _pendingReapply = false;
+                (requested, apply, newTarget, refresh, reapply, restore, stopping) =
+                    (_requested, _pendingApply, _pendingNewTarget, _pendingRefresh, _pendingReapply, _pendingRestore, _stopping);
+                _pendingApply = _pendingNewTarget = _pendingRefresh = _pendingReapply = false;
                 _pendingRestore = null;
             }
 
@@ -266,7 +275,7 @@ public sealed class ColorApplier : IColorApplier
 
                 if (apply || refresh || reapply)
                 {
-                    if (apply)
+                    if (newTarget)
                         OnNewTarget();
                     ApplyAll(requested, force: refresh || reapply);
                 }
@@ -307,7 +316,7 @@ public sealed class ColorApplier : IColorApplier
             return FastInterval;
         TimeSpan next = WatchdogInterval;
         // Only while a profile is on: nothing to protect otherwise, and the PC can sleep in peace.
-        if (_appliedRamps.Count > 0 && (_wasIdle || _idleTime() >= IdleForDimming))
+        if (_watched.Count > 0 && (_wasIdle || _idleTime() >= IdleForDimming))
             next = IdleInputInterval;
         if (_quickChecks.Count > 0)
         {
@@ -360,6 +369,7 @@ public sealed class ColorApplier : IColorApplier
             // Gamma ramps are undefined in HDR. Put back the original if we changed it before HDR was enabled.
             if (original?.Ramp is not null && _appliedRamps.Remove(monitor.Key))
                 SetOriginalRamp(monitor, original);
+            _watched.Remove(monitor.Key);
             _states[monitor.Key] = MonitorColorState.Hdr;
             return;
         }
@@ -368,6 +378,8 @@ public sealed class ColorApplier : IColorApplier
         {
             if (original?.Ramp is not null && (!_appliedRamps.TryGetValue(monitor.Key, out GammaRamp? last) || !IsOriginal(last, original)))
                 SetOriginalRamp(monitor, original);
+            // Original colours are the user's to change: f.lux, a game or a calibration loader may do so now.
+            _watched.Remove(monitor.Key);
             _states[monitor.Key] = _states.GetValueOrDefault(monitor.Key) == MonitorColorState.Unsupported
                 ? MonitorColorState.Unsupported
                 : MonitorColorState.Original;
@@ -386,6 +398,17 @@ public sealed class ColorApplier : IColorApplier
         }
 
         GammaResult result = _backend.SetRamp(monitor.DeviceName, target);
+        if (result == GammaResult.Failed && _limits != RampLimits.Default)
+        {
+            // Windows may still keep its usual limits (some drivers ignore the wider range): try a milder version.
+            GammaRamp milder = RampBuilder.FitToLimits(requestedRamp, RampLimits.Default);
+            GammaResult retried = _backend.SetRamp(monitor.DeviceName, milder);
+            if (retried != GammaResult.Failed)
+            {
+                target = milder;
+                result = retried;
+            }
+        }
         _appliedRamps[monitor.Key] = target;
         if (result == GammaResult.Applied)
             _watched.Add(monitor.Key);
@@ -557,7 +580,7 @@ public sealed class ColorApplier : IColorApplier
         if (_dimmedByOther)
             return;
 
-        if (now < _backoffUntil || _appliedRamps.Count == 0)
+        if (now < _backoffUntil || _watched.Count == 0)
             return;
 
         // While idle the loop wakes often to notice input; the ramps themselves are read less often.
