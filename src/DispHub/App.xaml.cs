@@ -174,6 +174,7 @@ public partial class App : Application
         _controller.Start(hotkeys);
         _tray = new TrayService(_controller, _router, handle, ShowMainWindow, RequestExit, CreateQuickPanel, _services.GetRequiredService<ILogger<TrayService>>());
         _tray.Show();
+        _services.GetRequiredService<ProTrial>().NotifyWhenEnded(_tray.ShowNotification, ShowMainWindow);
         _services.GetRequiredService<OsdService>().Attach();
         _services.GetRequiredService<ReviewPrompt>().Attach();
 

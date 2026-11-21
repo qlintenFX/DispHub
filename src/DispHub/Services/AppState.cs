@@ -14,9 +14,13 @@ namespace DispHub.Services;
 /// </summary>
 public sealed class AppState
 {
-    public AppState(TimeProvider time, IFirstRunMarker firstRun)
+    private readonly string _path;
+
+    /// <param name="path">Where state.json is; tests give a temporary one.</param>
+    public AppState(TimeProvider time, IFirstRunMarker firstRun, string? path = null)
     {
-        Data = JsonFiles.ReadState(AppPaths.StatePath);
+        _path = path ?? AppPaths.StatePath;
+        Data = JsonFiles.ReadState(_path);
 
         // The trial counts from the first run of any install, so reinstalling doesn't start it again.
         DateTimeOffset? earlier = firstRun.Read();
@@ -36,7 +40,7 @@ public sealed class AppState
     {
         try
         {
-            JsonFiles.WriteState(AppPaths.StatePath, Data);
+            JsonFiles.WriteState(_path, Data);
         }
         catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException)
         {

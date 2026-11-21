@@ -3,6 +3,7 @@
 
 using DispHub.Core.Licensing;
 using DispHub.Core.Rules;
+using DispHub.Localization;
 using DispHub.Platform.Store;
 
 namespace DispHub.Services;
@@ -44,14 +45,38 @@ public sealed class ProTrial(AppController app, ILicenseService license, AppStat
         };
     }
 
+    /// <summary>
+    /// For people who only use the tray and hotkeys: once the trial has ended, one Windows notification says so, and
+    /// selecting it opens DispHub with the offer. Windows holds it back during games and Do not disturb.
+    /// </summary>
+    /// <param name="notify">Shows a notification (title, text, what selecting it does); false when it couldn't.</param>
+    public void NotifyWhenEnded(Func<string, string, Action, bool> notify, Action openWindow)
+    {
+        void Check()
+        {
+            if (!JustEnded || state.Data.TrialEndNotifiedUtc is not null)
+                return;
+            if (notify(Loc.Get("Trial_EndedTitle"), Loc.Get("Trial_EndedGeneric"), openWindow))
+            {
+                state.Data.TrialEndNotifiedUtc = time.GetUtcNow();
+                state.Save();
+            }
+        }
+
+        app.LicenceChanged += (_, _) => Check();
+        Check();
+    }
+
+    /// <summary>The trial is over, Pro wasn't bought and the offer hasn't been shown yet.</summary>
+    private bool JustEnded =>
+        license.CanPurchase && !license.IsPro && state.Data.TrialEndShownUtc is null &&
+        app.TrialEnds is { } end && time.GetUtcNow() >= end;
+
     /// <summary>Called whenever the main window is activated.</summary>
     public async Task OnWindowActivatedAsync()
     {
-        if (!license.CanPurchase || license.IsPro || state.Data.TrialEndShownUtc is not null ||
-            app.TrialEnds is not { } end || time.GetUtcNow() < end)
-        {
+        if (!JustEnded)
             return;
-        }
         state.Data.TrialEndShownUtc = time.GetUtcNow();
         state.Save();
         await upgrade.ShowTrialEndedAsync(state.Data.TrialAppSwitches, state.Data.TrialScheduleSwitches);

@@ -24,6 +24,9 @@ public sealed class AppStateData
 
     /// <summary>The "trial has ended" message was shown.</summary>
     public DateTimeOffset? TrialEndShownUtc { get; set; }
+
+    /// <summary>The Windows notification that the trial has ended was shown.</summary>
+    public DateTimeOffset? TrialEndNotifiedUtc { get; set; }
 }
 
 /// <summary>
