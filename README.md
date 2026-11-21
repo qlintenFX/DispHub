@@ -45,7 +45,8 @@ You can also build it yourself (below).
 | Vibrance | NVIDIA and Intel (including laptop screens on Intel graphics). AMD is in beta: please report how it works for you. |
 
 Windows only allows moderate colour changes by default. For very warm night colours, DispHub can lift that limit
-for you (Settings > Displays > Full colour range; needs administrator approval once).
+for you: Allow stronger changes, on the Displays page and in the profile editor when a profile is limited (needs
+administrator approval once).
 
 ## Questions
 
@@ -55,8 +56,8 @@ drawn the screen, so they capture the original colours and your viewers see a no
 different: it records the signal going to your monitor, so it shows your profile too.
 
 **My night profile isn't as warm as I set it.**
-Windows limits how far colours can change by default. Turn on Settings > Displays > Full colour range (asks for
-administrator approval once).
+Windows limits how far colours can change by default. Click Allow stronger changes on the Displays page or in the
+profile editor (asks for administrator approval once).
 
 **Nothing changes on my HDR screen.**
 Windows doesn't allow gamma changes while HDR is on. Vibrance still works.
