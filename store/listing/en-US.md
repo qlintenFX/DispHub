@@ -137,8 +137,8 @@ registry value set through a UAC prompt.
 - Title: DispHub Pro
 - Description [200 characters]: Profiles for every app, schedules with smooth fades, shadow boost, refresh rate and HDR in
   profiles, settings per display and unlimited profiles. One-time purchase.
-- Price: USD 7.99 with Microsoft's automatic regional pricing, plus a "Launch" sale at USD 4.99; shown in the app's
-  listing and bought from within the app.
+- Price: USD 5.99 with Microsoft's automatic regional pricing, plus a "Launch price" sale at USD 3.99 until 15 December
+  2026; shown in the app's listing and bought from within the app.
 
 ## Tip add-ons
 
