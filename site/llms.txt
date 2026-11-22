@@ -1,0 +1,22 @@
+# DispHub
+
+> DispHub is a free Windows 10 and 11 app that saves display colour profiles (brightness, contrast, gamma, colour temperature and vibrance) and switches between them by hotkey, per app or on a schedule. It is open source (GPL-3.0) and available on the Microsoft Store, with an optional one-time Pro upgrade.
+
+- Switch profiles with your own global hotkeys or from the tray.
+- Vibrance works on NVIDIA, AMD and Intel graphics.
+- A profile for each app switches on when that app is in focus; schedules switch profiles at set times.
+- Controls brightness, refresh rate and HDR for each of your displays.
+- Runs in the tray with about 30 MB of memory and almost no CPU. No account, no telemetry.
+- Free: hotkeys, up to 3 profiles and 1 app rule.
+- Pro (one-time purchase, no subscription; every new install gets 7 days of Pro): unlimited profiles and app rules, schedules, settings per display, and profiles that change refresh rate, HDR and monitor brightness.
+
+## Get DispHub
+
+- [Microsoft Store](https://apps.microsoft.com/detail/9N5183BRLX34): install DispHub
+- [Download options](https://getdisphub.com/download/): Microsoft Store or WinGet (`winget install 9N5183BRLX34 --source msstore`)
+
+## More
+
+- [Website](https://getdisphub.com/): features and screenshots
+- [Privacy policy](https://getdisphub.com/privacy/): what DispHub stores and why
+- [Source code](https://github.com/qlintenFX/DispHub): GPL-3.0, issues and contributions
