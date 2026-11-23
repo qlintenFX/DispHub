@@ -103,9 +103,11 @@ pictures.
 - 16:9 Super hero art: `store/art/super-hero-1920x1080.png` (no text; the Store puts the title over its left side)
 - 1:1 Box art: `store/art/box-art-2160.png`
 - 9:16 Poster art: `store/art/poster-1440x2160.png`
-- Trailer: 20 s, 1920 x 1080, 30 fps, H.264 with AAC stereo, made in After Effects from the real app and the same
-  photos (artifacts/trailer-ae); thumbnail `store/art/trailer-thumbnail.png`. The video is uploaded to Partner Center
-  and not kept in git.
+- Trailer: the showcase video, the same one as on YouTube: 25 s, 1920 x 1080 (the Store's required size, scaled down
+  from the 4K render), 30 fps, H.264 High at 50 Mbps with AAC-LC 384 kbps at -16 LUFS, made in After Effects from the
+  real app and the same photos (artifacts/teaser-ae2, `DispHub-teaser2-store.mp4` and `DispHub-teaser2-thumbnail.png`).
+  It is uploaded once to the English listing and picked from the existing trailers in the other languages; not kept in
+  git.
 - Trailer music: "GAMECUBE" by yung brownie (prod. brownie.), released by the producer as free for profit; the
   credit goes in descriptions, not in the video. Photos: U.S. National Park Service, public domain.
 
@@ -115,8 +117,8 @@ pictures.
 
 ## Other fields
 
-- Privacy policy URL: https://github.com/qlintenFX/DispHub/blob/main/PRIVACY.md
-- Website: https://github.com/qlintenFX/DispHub
+- Privacy policy URL: https://getdisphub.com/privacy/
+- Website: https://getdisphub.com/
 - Support contact: https://github.com/qlintenFX/DispHub/issues
 - Copyright: © 2026 qlintenFX
 - Category: Utilities & tools
