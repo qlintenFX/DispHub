@@ -60,7 +60,7 @@
       </ui:TitleBar.Icon>
       <!-- Minimise, maximise and close fill the title bar's height, as FluentFlyout sets WPF-UI's buttons. -->
       <ui:TitleBar.Resources>
-        <Style BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="{x:Type ui:TitleBarButton}">
+        <Style BasedOn="{StaticResource TitleBarButtonStyle}" TargetType="{x:Type ui:TitleBarButton}">
           <Setter Property="Height" Value="48" />
           <Setter Property="Width" Value="48" />
         </Style>

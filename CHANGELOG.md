@@ -3,6 +3,12 @@
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com) and
 versions follow [Semantic Versioning](https://semver.org).
 
+## [Unreleased]
+
+### Fixed
+
+- The minimise, maximise and close buttons show their icons again instead of plain grey boxes, a fault since 1.0.4.
+
 ## [1.0.5] - 2026-11-21
 
 ### Added

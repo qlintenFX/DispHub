@@ -94,6 +94,9 @@
       <ui:TitleBar.Icon>
         <ui:ImageIcon Source="pack://application:,,,/Assets/DispHub-64.png" />
       </ui:TitleBar.Icon>
+      <ui:TitleBar.Resources>
+        <Style BasedOn="{StaticResource TitleBarButtonStyle}" TargetType="{x:Type ui:TitleBarButton}" />
+      </ui:TitleBar.Resources>
     </ui:TitleBar>
 
     <!-- The step. A snapshot of the previous one slides away over it when moving on. -->
