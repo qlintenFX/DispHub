@@ -20,8 +20,12 @@
       <Style BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ctl:SmoothScrollViewer" />
       <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="ctl:HotkeyBox" />
 
-      <!-- WPF UI leaves the window's own buttons without a name for screen readers. -->
-      <Style BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="ui:TitleBarButton">
+      <!--
+        WPF UI leaves the window's own buttons without a name for screen readers. Each title bar uses this style through
+        its resources: an implicit style here, based on WPF UI's style of the same key, loses WPF UI's template and the
+        buttons are drawn as plain grey Windows buttons.
+      -->
+      <Style x:Key="TitleBarButtonStyle" BasedOn="{StaticResource {x:Type ui:TitleBarButton}}" TargetType="ui:TitleBarButton">
         <Style.Triggers>
           <Trigger Property="ButtonType" Value="Minimize">
             <Setter Property="AutomationProperties.Name" Value="{l:Tr Window_Minimise}" />
