@@ -11,7 +11,8 @@ Field limits are noted in brackets.
 
 ## Product name
 
-DispHub
+DispHub: Display Profiles & Vibrance (in every language; reserved in Partner Center so Store search
+matches what people look for). The app and the package are still called DispHub.
 
 ## Short description [up to 270 characters shown in search]
 
