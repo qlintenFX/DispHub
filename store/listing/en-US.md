@@ -1,7 +1,7 @@
 # Microsoft Store listing (English)
 
 Paste these into Partner Center > DispHub > Store listings > English (United States). The other languages
-(de.md, es.md, fr.md, it.md, nl.md, pt-BR.md) go in the same way, or all at once: Export listings gives a CSV
+(de, es, fr, it, ja, ko, nl, pl, pt-BR, tr and zh-Hans .md) go in the same way, or all at once: Export listings gives a CSV
 with one column per language, where uploaded pictures appear as Partner Center URLs that other columns can reuse;
 fill the columns and use Import listings.
 
@@ -148,5 +148,5 @@ registry value set through a UAC prompt.
   Store and bought from within the app only (About page). The app reports each one fulfilled straight away.
 - Titles: Small tip, Medium tip, Large tip. Description: the app's About_TipHint line in each language.
 
-The add-on listings exist in the same seven languages as the app (German titles: Kleines, Mittleres, Großes
+The add-on listings exist in the app's first seven languages (German titles: Kleines, Mittleres, Großes
 Trinkgeld; the Pro description in each language is in the add-on's listing in Partner Center).

@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="About_About" xml:space="preserve">
+    <value>정보</value>
+  </data>
+  <data name="About_Community" xml:space="preserve">
+    <value>테스트하고, 번역하고, 프리셋을 공유하는 모든 분</value>
+  </data>
+  <data name="About_CommunityHint" xml:space="preserve">
+    <value>DispHub는 모든 신고와 프리셋 덕분에 더 좋아집니다. 감사합니다.</value>
+  </data>
+  <data name="About_Contributors" xml:space="preserve">
+    <value>기여자</value>
+  </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>복사됨</value>
+  </data>
+  <data name="About_CopyDiagnostics" xml:space="preserve">
+    <value>진단 정보 복사</value>
+  </data>
+  <data name="About_Credits" xml:space="preserve">
+    <value>크레딧</value>
+  </data>
+  <data name="About_EditionAll" xml:space="preserve">
+    <value>DispHub (모든 기능)</value>
+  </data>
+  <data name="About_EditionFree" xml:space="preserve">
+    <value>DispHub Free</value>
+  </data>
+  <data name="About_EditionTrial" xml:space="preserve">
+    <value>DispHub Pro 체험판</value>
+  </data>
+  <data name="About_EditionPro" xml:space="preserve">
+    <value>DispHub Pro</value>
+  </data>
+  <data name="About_FluentFlyout" xml:space="preserve">
+    <value>FluentFlyout (unchihugo)</value>
+  </data>
+  <data name="About_FluentFlyoutHint" xml:space="preserve">
+    <value>DispHub의 모양과 느낌에 많은 영감을 준, 정성껏 만든 Windows 유틸리티입니다.</value>
+  </data>
+  <data name="About_Help" xml:space="preserve">
+    <value>도움말 및 피드백</value>
+  </data>
+  <data name="About_Licence" xml:space="preserve">
+    <value>DispHub는 GNU General Public License v3.0에 따른 오픈 소스입니다. 모든 데이터를 PC에 저장하며 원격 분석 데이터를 보내지 않습니다.</value>
+  </data>
+  <data name="About_Logs" xml:space="preserve">
+    <value>로그 파일</value>
+  </data>
+  <data name="About_Note1" xml:space="preserve">
+    <value>안녕하세요, Quinten입니다. 게임을 제대로 보이게 하거나 밤에 화면을 눈에 편하게 만들려고 매번 제어판 세 개를 열어야 해서 DispHub를 만들었습니다. 이 일을 제대로 해내면서 Windows에 자연스럽게 어울리는 작고 조용한 앱 하나를 원했습니다.</value>
+  </data>
+  <data name="About_Note2" xml:space="preserve">
+    <value>DispHub는 한 사람이 여가 시간에 정성을 다해 만듭니다. 화면을 보는 일이 조금이라도 더 즐거워졌다면 큰 의미가 있습니다. 아이디어와 버그 신고는 GitHub에서 언제나 환영하며, 하나하나 모두 읽습니다.</value>
+  </data>
+  <data name="About_NoteHeader" xml:space="preserve">
+    <value>개발자의 한마디</value>
+  </data>
+  <data name="About_NoteSignature" xml:space="preserve">
+    <value>DispHub를 사용해 주셔서 감사합니다. — Quinten (qlintenFX)</value>
+  </data>
+  <data name="About_Notices" xml:space="preserve">
+    <value>타사 고지</value>
+  </data>
+  <data name="About_OpenFolder" xml:space="preserve">
+    <value>폴더 열기</value>
+  </data>
+  <data name="About_OpenGitHub" xml:space="preserve">
+    <value>GitHub 열기</value>
+  </data>
+  <data name="About_Privacy" xml:space="preserve">
+    <value>개인 정보</value>
+  </data>
+  <data name="About_Report" xml:space="preserve">
+    <value>문제 신고 또는 기능 제안</value>
+  </data>
+  <data name="About_ReportHint" xml:space="preserve">
+    <value>디스플레이와 GPU 구성을 확인할 수 있도록 진단 정보를 포함해 주세요.</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>소스 코드</value>
+  </data>
+  <data name="About_Tip" xml:space="preserve">
+    <value>팁 남기기</value>
+  </data>
+  <data name="About_TipHint" xml:space="preserve">
+    <value>DispHub를 계속 만들 수 있도록 돕는 일회성 감사 표시입니다. 포함된 기능은 바뀌지 않습니다.</value>
+  </data>
+  <data name="About_TipThanks" xml:space="preserve">
+    <value>감사합니다</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>버전</value>
+  </data>
+  <data name="About_WpfUi" xml:space="preserve">
+    <value>WPF UI (lepo.co, unchihugo의 포크)</value>
+  </data>
+  <data name="About_WpfUiHint" xml:space="preserve">
+    <value>Fluent 컨트롤과 Mica 창입니다. Windows 11에 더 가깝게 맞춘 FluentFlyout의 포크를 사용합니다.</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>추가</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Common_GetPro" xml:space="preserve">
+    <value>Pro 구매</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="Common_On" xml:space="preserve">
+    <value>켬</value>
+  </data>
+  <data name="Window_Minimise" xml:space="preserve">
+    <value>최소화</value>
+  </data>
+  <data name="Window_Maximise" xml:space="preserve">
+    <value>최대화</value>
+  </data>
+  <data name="Window_Restore" xml:space="preserve">
+    <value>이전 크기로 복원</value>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="Default_Gaming" xml:space="preserve">
+    <value>게임</value>
+  </data>
+  <data name="Default_Night" xml:space="preserve">
+    <value>야간</value>
+  </data>
+  <data name="Default_Standard" xml:space="preserve">
+    <value>표준</value>
+  </data>
+  <data name="Enum_ThemePreference_Dark" xml:space="preserve">
+    <value>어둡게</value>
+  </data>
+  <data name="Enum_ThemePreference_Light" xml:space="preserve">
+    <value>밝게</value>
+  </data>
+  <data name="Enum_ThemePreference_System" xml:space="preserve">
+    <value>시스템</value>
+  </data>
+  <data name="Enum_TrayClickAction_OpenWindow" xml:space="preserve">
+    <value>창 열기</value>
+  </data>
+  <data name="Enum_TrayClickAction_ShowProfileMenu" xml:space="preserve">
+    <value>프로필 메뉴 표시</value>
+  </data>
+  <data name="Hotkey_Duplicate" xml:space="preserve">
+    <value>다른 DispHub 단축키에서 이미 사용 중</value>
+  </data>
+  <data name="Hotkey_InUseElsewhere" xml:space="preserve">
+    <value>다른 앱에서 사용 중</value>
+  </data>
+  <data name="Hotkey_NeedsModifier" xml:space="preserve">
+    <value>Ctrl, Alt 또는 Win을 추가하세요</value>
+  </data>
+  <data name="Hotkey_NotSet" xml:space="preserve">
+    <value>설정 안 됨</value>
+  </data>
+  <data name="Hotkey_Recording" xml:space="preserve">
+    <value>키 조합을 누르세요…</value>
+  </data>
+  <data name="Hotkey_Refused" xml:space="preserve">
+    <value>Windows에서 이 단축키를 거부했습니다</value>
+  </data>
+  <data name="Hotkey_TypesCharacter" xml:space="preserve">
+    <value>이 조합은 키보드에서 “{0}”을(를) 입력하므로(AltGr) 다른 조합을 고르세요</value>
+  </data>
+  <data name="Nav_About" xml:space="preserve">
+    <value>정보</value>
+  </data>
+  <data name="Nav_Profiles" xml:space="preserve">
+    <value>프로필</value>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="Osd_Paused" xml:space="preserve">
+    <value>DispHub 꺼짐</value>
+  </data>
+  <data name="Osd_StillRunning" xml:space="preserve">
+    <value>DispHub가 계속 실행 중입니다</value>
+  </data>
+  <data name="Preset_AddText" xml:space="preserve">
+    <value>{0}
+{1}
+
+새 프로필로 추가되며, 바로 확인할 수 있도록 켜집니다.</value>
+  </data>
+  <data name="Preset_AddTitle" xml:space="preserve">
+    <value>이 프리셋을 추가할까요?</value>
+  </data>
+  <data name="Preset_InvalidLink" xml:space="preserve">
+    <value>올바른 DispHub 프리셋 링크가 아닙니다.</value>
+  </data>
+  <data name="Presets_ImportHint" xml:space="preserve">
+    <value>다른 사람이 공유한 링크를 붙여 넣으세요. 내 프로필을 공유하려면 프로필을 열고 공유를 클릭하세요.</value>
+  </data>
+  <data name="Presets_ImportTitle" xml:space="preserve">
+    <value>링크로 프리셋 추가</value>
+  </data>
+  <data name="Presets_InvalidLink" xml:space="preserve">
+    <value>DispHub 프리셋 링크가 아닌 것 같습니다.</value>
+  </data>
+  <data name="Pro_LongPitch" xml:space="preserve">
+    <value>앱별 프로필, 일정, 그림자 강화, 프로필로 주사율과 HDR 전환, 무제한 프로필. 한 번만 구매하면 됩니다.</value>
+  </data>
+  <data name="Pro_ShortPitch" xml:space="preserve">
+    <value>앱별 프로필, 일정, 그림자 강화, HDR 등. 한 번만 구매하면 됩니다.</value>
+  </data>
+  <data name="Profiles_AllDisplays" xml:space="preserve">
+    <value>모든 디스플레이</value>
+  </data>
+  <data name="Profiles_ApplyTo" xml:space="preserve">
+    <value>적용 대상</value>
+  </data>
+  <data name="Profiles_Brightness" xml:space="preserve">
+    <value>밝기</value>
+  </data>
+  <data name="Profiles_Contrast" xml:space="preserve">
+    <value>대비</value>
+  </data>
+  <data name="Profiles_CopyName" xml:space="preserve">
+    <value>{0} 복사본</value>
+  </data>
+  <data name="Profiles_Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="Profiles_Displays" xml:space="preserve">
+    <value>디스플레이 {0}개</value>
+  </data>
+  <data name="Profiles_Duplicate" xml:space="preserve">
+    <value>복제</value>
+  </data>
+  <data name="Profiles_FreeLimit" xml:space="preserve">
+    <value>무료 버전에는 프로필이 {0}개까지 포함됩니다. Pro를 구매하면 무제한으로 사용할 수 있습니다.</value>
+  </data>
+  <data name="Profiles_Gamma" xml:space="preserve">
+    <value>감마</value>
+  </data>
+  <data name="Profiles_Hotkey" xml:space="preserve">
+    <value>단축키</value>
+  </data>
+  <data name="Profiles_HotkeyHint" xml:space="preserve">
+    <value>클릭한 다음 키를 누르세요. Backspace로 지웁니다. 게임을 포함해 어디서나 작동합니다.</value>
+  </data>
+  <data name="Profiles_HotkeyInUse" xml:space="preserve">
+    <value>이 단축키는 다른 앱에서 사용 중입니다</value>
+  </data>
+  <data name="Profiles_LinkCopied" xml:space="preserve">
+    <value>이 프로필의 링크를 복사합니다. 누구나 열 수 있으며, DispHub가 없는 사람에게는 받는 곳이 표시됩니다.</value>
+  </data>
+  <data name="Profiles_MoveLeft" xml:space="preserve">
+    <value>왼쪽으로 이동</value>
+  </data>
+  <data name="Profiles_MoveRight" xml:space="preserve">
+    <value>오른쪽으로 이동</value>
+  </data>
+  <data name="Profiles_NamePlaceholder" xml:space="preserve">
+    <value>프로필 이름</value>
+  </data>
+  <data name="Profiles_New" xml:space="preserve">
+    <value>새 프로필</value>
+  </data>
+  <data name="Profiles_NewName" xml:space="preserve">
+    <value>새 프로필</value>
+  </data>
+  <data name="Profiles_OneDisplay" xml:space="preserve">
+    <value>디스플레이 1개</value>
+  </data>
+  <data name="Profiles_PauseTooltip" xml:space="preserve">
+    <value>일정과 앱 프로필을 포함한 모든 프로필을 끕니다.</value>
+  </data>
+  <data name="Profiles_Reset" xml:space="preserve">
+    <value>원래대로 재설정</value>
+  </data>
+  <data name="Profiles_Share" xml:space="preserve">
+    <value>공유</value>
+  </data>
+  <data name="Profiles_Status" xml:space="preserve">
+    <value>{1}에서 {0} 사용 중</value>
+  </data>
+  <data name="Profiles_StatusAppRule" xml:space="preserve">
+    <value>사용 중인 앱 때문에 {1}에서 {0} 사용 중</value>
+  </data>
+  <data name="Profiles_StatusManual" xml:space="preserve">
+    <value>{1}에서 {0} 사용 중 (직접 선택)</value>
+  </data>
+  <data name="Profiles_StatusPaused" xml:space="preserve">
+    <value>프로필이 꺼져 있습니다. 디스플레이에 원래 색이 표시됩니다.</value>
+  </data>
+  <data name="Profiles_StatusSchedule" xml:space="preserve">
+    <value>일정에 따라 {1}에서 {0} 사용 중</value>
+  </data>
+  <data name="Profiles_Temperature" xml:space="preserve">
+    <value>색 온도</value>
+  </data>
+  <data name="Profiles_Title" xml:space="preserve">
+    <value>프로필</value>
+  </data>
+  <data name="Profiles_UseMainSettings" xml:space="preserve">
+    <value>다른 디스플레이와 동일</value>
+  </data>
+  <data name="Profiles_Vibrance" xml:space="preserve">
+    <value>생동감</value>
+  </data>
+  <data name="Profiles_VibranceHelp" xml:space="preserve">
+    <value>그래픽 드라이버를 통해 설정되는 색 채도입니다.</value>
+  </data>
+  <data name="Profiles_VibranceUnsupported" xml:space="preserve">
+    <value>생동감을 사용하려면 이 디스플레이를 NVIDIA, Intel 또는 AMD GPU가 구동하고 그래픽 드라이버가 설치되어 있어야 합니다.</value>
+  </data>
+  <data name="Settings_AllowFullRange" xml:space="preserve">
+    <value>더 강한 변경 허용</value>
+  </data>
+  <data name="Settings_General" xml:space="preserve">
+    <value>일반</value>
+  </data>
+  <data name="Settings_HotkeyFailure" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Settings_Hotkeys" xml:space="preserve">
+    <value>단축키</value>
+  </data>
+  <data name="Settings_KeepRunning" xml:space="preserve">
+    <value>백그라운드에서 실행</value>
+  </data>
+  <data name="Settings_KeepRunningHint" xml:space="preserve">
+    <value>창을 닫아도 DispHub가 알림 영역에 남아 단축키와 일정이 계속 작동합니다.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="Settings_LanguageHint" xml:space="preserve">
+    <value>번역은 정성껏 만들어지며 커뮤니티가 개선합니다.</value>
+  </data>
+  <data name="Settings_LanguageRestart" xml:space="preserve">
+    <value>언어를 바꾸려면 DispHub를 다시 시작하세요.</value>
+  </data>
+  <data name="Settings_LanguageWindows" xml:space="preserve">
+    <value>Windows와 동일</value>
+  </data>
+  <data name="Settings_Next" xml:space="preserve">
+    <value>다음 프로필</value>
+  </data>
+  <data name="Settings_OsdDuration" xml:space="preserve">
+    <value>메시지 표시 시간</value>
+  </data>
+  <data name="Settings_OsdHint" xml:space="preserve">
+    <value>프로필이 바뀌면 빠른 패널과 같은 스타일로 이름을 보여 줍니다. 게임의 포커스를 빼앗지 않습니다.</value>
+  </data>
+  <data name="Settings_OsdToggle" xml:space="preserve">
+    <value>화면 메시지</value>
+  </data>
+  <data name="Settings_Pause" xml:space="preserve">
+    <value>DispHub 켜기 또는 끄기</value>
+  </data>
+  <data name="Settings_PauseHint" xml:space="preserve">
+    <value>전원 버튼처럼 DispHub를 끄고(원래 색) 다시 켭니다.</value>
+  </data>
+  <data name="Settings_Previous" xml:space="preserve">
+    <value>이전 프로필</value>
+  </data>
+  <data name="Settings_RestartNow" xml:space="preserve">
+    <value>지금 다시 시작</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Windows와 함께 시작</value>
+  </data>
+  <data name="Settings_StartWithWindowsHint" xml:space="preserve">
+    <value>알림 영역에서 조용히 시작하고 프로필을 적용합니다.</value>
+  </data>
+  <data name="Settings_StartupDenied" xml:space="preserve">
+    <value>Windows에서 시작 설정 변경을 허용하지 않았습니다.</value>
+  </data>
+  <data name="Settings_StartupDisabledByPolicy" xml:space="preserve">
+    <value>조직 정책이 시작 앱을 차단합니다.</value>
+  </data>
+  <data name="Settings_StartupDisabledByUser" xml:space="preserve">
+    <value>작업 관리자에서 꺼져 있습니다. 설정 &gt; 앱 &gt; 시작 프로그램에서 다시 켜세요.</value>
+  </data>
+  <data name="Settings_StartupUnreadable" xml:space="preserve">
+    <value>시작 설정을 읽을 수 없습니다.</value>
+  </data>
+  <data name="Settings_Subtitle" xml:space="preserve">
+    <value>DispHub가 시작하고, 보이고, 반응하는 방식.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>테마</value>
+  </data>
+  <data name="Settings_ThemeHint" xml:space="preserve">
+    <value>시스템은 Windows의 밝은 모드 또는 어두운 모드를 따릅니다.</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="Settings_TrayClick" xml:space="preserve">
+    <value>트레이 아이콘</value>
+  </data>
+  <data name="Settings_TrayClickHint" xml:space="preserve">
+    <value>알림 영역의 DispHub 아이콘을 클릭하면 열리는 항목입니다. 마우스 오른쪽 클릭은 항상 메뉴를 표시합니다.</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>DispHub를 시작할 수 없습니다.
+
+{0}
+
+로그: {1}</value>
+  </data>
+  <data name="Summary_Brightness" xml:space="preserve">
+    <value>밝기 {0}</value>
+  </data>
+  <data name="Summary_Contrast" xml:space="preserve">
+    <value>대비 {0}</value>
+  </data>
+  <data name="Summary_Gamma" xml:space="preserve">
+    <value>감마 {0}</value>
+  </data>
+  <data name="Summary_Original" xml:space="preserve">
+    <value>원래 색</value>
+  </data>
+  <data name="Summary_Vibrance" xml:space="preserve">
+    <value>생동감 {0}%</value>
+  </data>
+  <data name="Tray_Active" xml:space="preserve">
+    <value>DispHub · {0}</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>종료</value>
+  </data>
+  <data name="Tray_MoreProfiles" xml:space="preserve">
+    <value>더 많은 프로필…</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>DispHub 열기</value>
+  </data>
+  <data name="Tray_Pause" xml:space="preserve">
+    <value>DispHub 끄기</value>
+  </data>
+  <data name="Tray_Paused" xml:space="preserve">
+    <value>DispHub · 꺼짐</value>
+  </data>
+  <data name="Tray_Ready" xml:space="preserve">
+    <value>준비됨</value>
+  </data>
+  <data name="Tray_Resume" xml:space="preserve">
+    <value>DispHub 켜기</value>
+  </data>
+  <data name="Upgrade_AppRules" xml:space="preserve">
+    <value>앱별 프로필</value>
+  </data>
+  <data name="Upgrade_Body" xml:space="preserve">
+    <value>{0}은(는) DispHub Pro 기능입니다.
+
+Pro는 한 번만 구매하면 다음 기능을 사용할 수 있습니다.
+• 한 앱뿐 아니라 모든 앱에서 전환되는 프로필
+• 어두운 부분을 잘 보이게 하는 그림자 강화
+• 모니터 밝기, 주사율, HDR을 설정하는 프로필
+• 배터리 사용 시 더 낮은 주사율
+• 부드럽게 전환되는 일정
+• 디스플레이별 설정
+• {1}개를 넘는 프로필
+
+DispHub 개발을 지원하는 일이기도 합니다.</value>
+  </data>
+  <data name="Upgrade_FailedText" xml:space="preserve">
+    <value>Microsoft Store에서 구매를 완료하지 못했습니다. 연결을 확인하고 다시 시도하세요.</value>
+  </data>
+  <data name="Upgrade_FailedTitle" xml:space="preserve">
+    <value>구매가 완료되지 않았습니다</value>
+  </data>
+  <data name="Upgrade_MoreProfiles" xml:space="preserve">
+    <value>무제한 프로필</value>
+  </data>
+  <data name="Upgrade_NotNow" xml:space="preserve">
+    <value>나중에</value>
+  </data>
+  <data name="Upgrade_PerDisplay" xml:space="preserve">
+    <value>디스플레이별 설정</value>
+  </data>
+  <data name="Upgrade_Schedules" xml:space="preserve">
+    <value>일정</value>
+  </data>
+  <data name="Warning_HdrText" xml:space="preserve">
+    <value>Windows는 HDR 디스플레이에서 감마 변경을 지원하지 않으므로 해당 디스플레이에는 생동감만 적용됩니다.</value>
+  </data>
+  <data name="Warning_HdrTitle" xml:space="preserve">
+    <value>HDR이 켜져 있습니다</value>
+  </data>
+  <data name="Warning_LimitedText" xml:space="preserve">
+    <value>Windows는 기본적으로 작은 색 변경만 허용하므로 DispHub가 허용되는 가장 가까운 값을 적용했습니다. 전체 범위를 허용하려면 관리자 승인이 한 번 필요합니다.</value>
+  </data>
+  <data name="Warning_LimitedTitle" xml:space="preserve">
+    <value>Windows가 이 프로필을 제한하고 있습니다</value>
+  </data>
+  <data name="Warning_RepairedText" xml:space="preserve">
+    <value>설정 파일이 손상되었습니다. DispHub가 마지막 정상 사본을 복원했으며, 손상된 파일은 그 옆에 보관했습니다.</value>
+  </data>
+  <data name="Warning_RepairedTitle" xml:space="preserve">
+    <value>설정을 복구했습니다</value>
+  </data>
+  <data name="Warning_ResetText" xml:space="preserve">
+    <value>무언가가 디스플레이 색을 계속 재설정하고 있습니다(예: 야간 모드, f.lux 또는 게임). DispHub는 5분 동안 이에 맞서지 않습니다.</value>
+  </data>
+  <data name="Warning_ResetTitle" xml:space="preserve">
+    <value>다른 앱이 색을 바꾸고 있습니다</value>
+  </data>
+  <data name="Settings_PreviewPicture" xml:space="preserve">
+    <value>미리 보기 사진</value>
+  </data>
+  <data name="Settings_PreviewPictureHint" xml:space="preserve">
+    <value>각 프로필에 표시되는 사진으로, 해당 프로필의 색으로 보여 줍니다.</value>
+  </data>
+  <data name="Preview_flowers" xml:space="preserve">
+    <value>들꽃</value>
+  </data>
+  <data name="Preview_reef" xml:space="preserve">
+    <value>산호초</value>
+  </data>
+  <data name="Preview_autumn" xml:space="preserve">
+    <value>가을 숲</value>
+  </data>
+  <data name="Preview_spring" xml:space="preserve">
+    <value>온천</value>
+  </data>
+  <data name="Preview_canyon" xml:space="preserve">
+    <value>그랜드 캐니언</value>
+  </data>
+  <data name="Preview_sunset" xml:space="preserve">
+    <value>겨울 노을</value>
+  </data>
+  <data name="Preview_redrock" xml:space="preserve">
+    <value>붉은 바위 아치</value>
+  </data>
+  <data name="Preview_island" xml:space="preserve">
+    <value>섬 요새</value>
+  </data>
+  <data name="Preview_pebbles" xml:space="preserve">
+    <value>호수 조약돌</value>
+  </data>
+  <data name="Preview_mountain" xml:space="preserve">
+    <value>눈 덮인 산</value>
+  </data>
+  <data name="Preview_aurora" xml:space="preserve">
+    <value>오로라</value>
+  </data>
+  <data name="Preview_milkyway" xml:space="preserve">
+    <value>은하수</value>
+  </data>
+  <data name="Preview_dunes" xml:space="preserve">
+    <value>별이 빛나는 사구</value>
+  </data>
+  <data name="Preview_cactus" xml:space="preserve">
+    <value>사막 선인장</value>
+  </data>
+  <data name="Tray_StillRunningTitle" xml:space="preserve">
+    <value>DispHub가 계속 실행 중입니다</value>
+  </data>
+  <data name="Tray_StillRunningText" xml:space="preserve">
+    <value>알림 영역에서 프로필과 단축키가 계속 작동하게 합니다. 아이콘을 작업 표시줄에 계속 표시하려면 이것을 선택하세요.</value>
+  </data>
+  <data name="Nav_Schedule" xml:space="preserve">
+    <value>일정</value>
+  </data>
+  <data name="Nav_Apps" xml:space="preserve">
+    <value>앱</value>
+  </data>
+  <data name="Nav_Displays" xml:space="preserve">
+    <value>디스플레이</value>
+  </data>
+  <data name="Common_Off" xml:space="preserve">
+    <value>끔</value>
+  </data>
+  <data name="Schedule_Title" xml:space="preserve">
+    <value>일정</value>
+  </data>
+  <data name="Schedule_ProHint" xml:space="preserve">
+    <value>일정은 DispHub Pro에서 실행됩니다. 여기서 일정을 만들고 어떻게 동작할지 먼저 정확히 확인할 수 있습니다.</value>
+  </data>
+  <data name="Schedule_LocationHint" xml:space="preserve">
+    <value>일출과 일몰을 계산하는 데에만 이 PC에서 사용됩니다.</value>
+  </data>
+  <data name="Schedule_UseMyLocation" xml:space="preserve">
+    <value>내 위치 사용</value>
+  </data>
+  <data name="Schedule_SearchCity" xml:space="preserve">
+    <value>도시 검색</value>
+  </data>
+  <data name="Schedule_Instant" xml:space="preserve">
+    <value>즉시</value>
+  </data>
+  <data name="Schedule_LocationDenied" xml:space="preserve">
+    <value>Windows에서 DispHub의 위치 확인을 허용하지 않았습니다. 대신 도시를 검색하거나 Windows 설정에서 위치 액세스를 켜세요.</value>
+  </data>
+  <data name="Schedule_LocationUnavailable" xml:space="preserve">
+    <value>지금은 Windows에서 위치를 찾을 수 없습니다. 대신 도시를 검색하세요.</value>
+  </data>
+  <data name="Schedule_Near" xml:space="preserve">
+    <value>{0} 근처</value>
+  </data>
+  <data name="Schedule_StatusOff" xml:space="preserve">
+    <value>일정이 꺼져 있습니다. 켜면 프로필이 자동으로 전환됩니다.</value>
+  </data>
+  <data name="Schedule_StatusPro" xml:space="preserve">
+    <value>미리 보기 전용: 일정은 DispHub Pro에서 실행됩니다.</value>
+  </data>
+  <data name="Schedule_StatusRunning" xml:space="preserve">
+    <value>지금은 {0}이(가) 켜져 있습니다. {1}은(는) {2}에 시작됩니다.</value>
+  </data>
+  <data name="Apps_Title" xml:space="preserve">
+    <value>앱</value>
+  </data>
+  <data name="Apps_Subtitle" xml:space="preserve">
+    <value>앱이 앞에 있는 동안 자동으로 프로필을 사용하고, 다른 앱으로 전환하면 평소 프로필로 돌아갑니다.</value>
+  </data>
+  <data name="Apps_ProHint" xml:space="preserve">
+    <value>앱 프로필은 DispHub Pro에서 실행됩니다. 지금 앱을 추가해 두면 업그레이드할 때 전환이 시작됩니다.</value>
+  </data>
+  <data name="Apps_LastInFront" xml:space="preserve">
+    <value>마지막으로 앞에 있던 앱</value>
+  </data>
+  <data name="Apps_AddThis" xml:space="preserve">
+    <value>이 앱 추가</value>
+  </data>
+  <data name="Apps_Rules" xml:space="preserve">
+    <value>내 앱</value>
+  </data>
+  <data name="Apps_AddApp" xml:space="preserve">
+    <value>앱 추가</value>
+  </data>
+  <data name="Apps_PickTitle" xml:space="preserve">
+    <value>실행 중인 앱 선택</value>
+  </data>
+  <data name="Apps_Browse" xml:space="preserve">
+    <value>찾아보기</value>
+  </data>
+  <data name="Apps_Search" xml:space="preserve">
+    <value>실행 중인 앱 검색</value>
+  </data>
+  <data name="Apps_EmptyTitle" xml:space="preserve">
+    <value>아직 앱이 없습니다</value>
+  </data>
+  <data name="Apps_EmptyHint" xml:space="preserve">
+    <value>게임이나 앱을 추가하고 사용할 프로필을 선택하세요.</value>
+  </data>
+  <data name="Apps_Remove" xml:space="preserve">
+    <value>제거</value>
+  </data>
+  <data name="Apps_OrderHint" xml:space="preserve">
+    <value>같은 앱이 두 번 있으면 목록의 첫 번째 규칙이 우선합니다.</value>
+  </data>
+  <data name="Apps_ChooseProgram" xml:space="preserve">
+    <value>프로그램 선택</value>
+  </data>
+  <data name="Apps_ProgramsFilter" xml:space="preserve">
+    <value>프로그램 (*.exe)|*.exe</value>
+  </data>
+  <data name="Apps_NothingYet" xml:space="preserve">
+    <value>아직 없음</value>
+  </data>
+  <data name="Apps_ForegroundRule" xml:space="preserve">
+    <value>앞에 있는 동안 {0} 사용</value>
+  </data>
+  <data name="Apps_ForegroundRulePro" xml:space="preserve">
+    <value>DispHub Pro에서는 {0} 사용</value>
+  </data>
+  <data name="Apps_ForegroundNoRule" xml:space="preserve">
+    <value>평소 프로필 사용</value>
+  </data>
+  <data name="Displays_Title" xml:space="preserve">
+    <value>디스플레이</value>
+  </data>
+  <data name="Displays_BuiltIn" xml:space="preserve">
+    <value>내장 디스플레이</value>
+  </data>
+  <data name="Displays_Subtitle" xml:space="preserve">
+    <value>연결된 디스플레이와 DispHub가 각 디스플레이에 표시하는 내용입니다. 그대로 두려면 해당 디스플레이를 끄세요.</value>
+  </data>
+  <data name="Displays_Main" xml:space="preserve">
+    <value>기본</value>
+  </data>
+  <data name="Settings_AccentWindows" xml:space="preserve">
+    <value>Windows와 동일</value>
+  </data>
+  <data name="Settings_TextNormal" xml:space="preserve">
+    <value>100%(보통)</value>
+  </data>
+  <data name="Settings_Appearance" xml:space="preserve">
+    <value>모양</value>
+  </data>
+  <data name="Settings_ResetAppearance" xml:space="preserve">
+    <value>모양 재설정</value>
+  </data>
+  <data name="Settings_Accent" xml:space="preserve">
+    <value>강조 색</value>
+  </data>
+  <data name="Settings_AccentHint" xml:space="preserve">
+    <value>스위치, 슬라이더, 버튼에 사용됩니다. 첫 번째 색은 Windows가 사용하는 색입니다.</value>
+  </data>
+  <data name="Settings_Backdrop" xml:space="preserve">
+    <value>배경</value>
+  </data>
+  <data name="Settings_BackdropHint" xml:space="preserve">
+    <value>Mica는 배경 화면의 색으로 창에 색조를 입히고, 아크릴은 뒤쪽을 흐리게 합니다. 단색을 선택하지 않으면 빠른 패널과 화면 메시지는 아크릴을 사용합니다. 절전 모드가 켜져 있거나 투명 효과가 꺼져 있으면 Windows는 단색을 표시합니다.</value>
+  </data>
+  <data name="Settings_TextSize" xml:space="preserve">
+    <value>텍스트 크기</value>
+  </data>
+  <data name="Settings_TextSizeHint" xml:space="preserve">
+    <value>DispHub 창을 크게 또는 작게 만듭니다.</value>
+  </data>
+  <data name="Settings_CompactNav" xml:space="preserve">
+    <value>간단한 메뉴</value>
+  </data>
+  <data name="Settings_CompactNavHint" xml:space="preserve">
+    <value>왼쪽 페이지 목록을 아이콘으로만 표시합니다.</value>
+  </data>
+  <data name="Settings_StartPage" xml:space="preserve">
+    <value>시작 페이지</value>
+  </data>
+  <data name="Settings_StartPageHint" xml:space="preserve">
+    <value>창을 열 때 표시되는 페이지입니다.</value>
+  </data>
+  <data name="Settings_OsdPosition" xml:space="preserve">
+    <value>메시지 위치</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Mica" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Enum_WindowBackdrop_MicaAlt" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Acrylic" xml:space="preserve">
+    <value>아크릴</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
+    <value>단색</value>
+  </data>
+  <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
+    <value>왼쪽 위</value>
+  </data>
+  <data name="Enum_OsdPosition_TopCenter" xml:space="preserve">
+    <value>위쪽 가운데</value>
+  </data>
+  <data name="Enum_OsdPosition_TopRight" xml:space="preserve">
+    <value>오른쪽 위</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomLeft" xml:space="preserve">
+    <value>왼쪽 아래</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomCenter" xml:space="preserve">
+    <value>아래쪽 가운데</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomRight" xml:space="preserve">
+    <value>오른쪽 아래</value>
+  </data>
+  <data name="Profiles_NewHint" xml:space="preserve">
+    <value>빈 프로필, 템플릿 또는 링크</value>
+  </data>
+  <data name="Profiles_Blank" xml:space="preserve">
+    <value>빈 프로필</value>
+  </data>
+  <data name="Profiles_MoreTitle" xml:space="preserve">
+    <value>더 많은 프로필</value>
+  </data>
+  <data name="Profiles_MoreHint" xml:space="preserve">
+    <value>무료 버전은 {0}개까지입니다. Pro는 제한이 없습니다.</value>
+  </data>
+  <data name="Profiles_More" xml:space="preserve">
+    <value>더 보기</value>
+  </data>
+  <data name="Profiles_FullTitle" xml:space="preserve">
+    <value>프로필 {0}개</value>
+  </data>
+  <data name="Profiles_FullHint" xml:space="preserve">
+    <value>DispHub가 보관할 수 있는 최대 개수</value>
+  </data>
+  <data name="Profiles_NeedsPro" xml:space="preserve">
+    <value>DispHub Pro용으로 보관됨</value>
+  </data>
+  <data name="Apps_FreeHint" xml:space="preserve">
+    <value>무료 버전은 한 앱에서만 프로필을 전환합니다. Pro는 모든 앱에서 전환합니다.</value>
+  </data>
+  <data name="Apps_NeedsPro" xml:space="preserve">
+    <value>DispHub Pro에서 전환됩니다</value>
+  </data>
+  <data name="Trial_CardTitle" xml:space="preserve">
+    <value>Pro 체험판</value>
+  </data>
+  <data name="Trial_DaysLeft" xml:space="preserve">
+    <value>모든 Pro 기능을 {0}일 더 사용할 수 있습니다.</value>
+  </data>
+  <data name="Trial_DayLeft" xml:space="preserve">
+    <value>모든 Pro 기능을 사용할 수 있는 마지막 날입니다.</value>
+  </data>
+  <data name="Trial_EndedTitle" xml:space="preserve">
+    <value>Pro 체험판이 끝났습니다</value>
+  </data>
+  <data name="Trial_EndedUsage" xml:space="preserve">
+    <value>이번 주에 DispHub는 앱에 맞춰 프로필을 {0}번 전환했고 일정을 {1}번 따랐습니다. 한 번만 구매하는 Pro로 모두 계속 사용하세요.</value>
+  </data>
+  <data name="Trial_EndedGeneric" xml:space="preserve">
+    <value>모든 앱의 프로필, 일정, 디스플레이별 설정, 무제한 프로필은 한 번만 구매하는 Pro에서 계속 사용할 수 있습니다.</value>
+  </data>
+  <data name="Trial_EndedFree" xml:space="preserve">
+    <value>무료 버전에서는 처음 {0}개의 프로필과 앱 규칙 1개를 계속 사용합니다. 나머지는 업그레이드할 때를 위해 보관됩니다.</value>
+  </data>
+  <data name="Trial_ContinueFree" xml:space="preserve">
+    <value>무료로 계속</value>
+  </data>
+  <data name="Profiles_ShadowBoost" xml:space="preserve">
+    <value>그림자 강화</value>
+  </data>
+  <data name="Profiles_ShadowBoostPro" xml:space="preserve">
+    <value>그림자 강화는 DispHub Pro 기능입니다</value>
+  </data>
+  <data name="Upgrade_ShadowBoost" xml:space="preserve">
+    <value>그림자 강화</value>
+  </data>
+  <data name="Summary_Shadows" xml:space="preserve">
+    <value>그림자 +{0}</value>
+  </data>
+  <data name="Profiles_RefreshRate" xml:space="preserve">
+    <value>주사율</value>
+  </data>
+  <data name="Profiles_RefreshHighest" xml:space="preserve">
+    <value>최고</value>
+  </data>
+  <data name="Profiles_RefreshLowest" xml:space="preserve">
+    <value>최저</value>
+  </data>
+  <data name="Profiles_RefreshRateHz" xml:space="preserve">
+    <value>{0} ({1}Hz)</value>
+  </data>
+  <data name="Profiles_Unchanged" xml:space="preserve">
+    <value>변경 안 함</value>
+  </data>
+  <data name="Profiles_Hdr" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="Profiles_HdrOn" xml:space="preserve">
+    <value>켬</value>
+  </data>
+  <data name="Profiles_HdrOff" xml:space="preserve">
+    <value>끔</value>
+  </data>
+  <data name="Profiles_DisplayModesPro" xml:space="preserve">
+    <value>주사율이나 HDR을 전환하는 프로필은 DispHub Pro 기능입니다</value>
+  </data>
+  <data name="Upgrade_DisplayModes" xml:space="preserve">
+    <value>주사율 및 HDR 전환</value>
+  </data>
+  <data name="Displays_LowRefreshOnBattery" xml:space="preserve">
+    <value>배터리 사용 시 더 낮은 주사율 ({0}Hz)</value>
+  </data>
+  <data name="Displays_LowRefreshPro" xml:space="preserve">
+    <value>배터리 사용 시 더 낮은 주사율은 DispHub Pro 기능입니다</value>
+  </data>
+  <data name="Profiles_MonitorBrightness" xml:space="preserve">
+    <value>화면 밝기</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessOff" xml:space="preserve">
+    <value>그대로 두기</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessPro" xml:space="preserve">
+    <value>화면 자체의 밝기를 설정하는 프로필은 DispHub Pro 기능입니다</value>
+  </data>
+  <data name="Upgrade_MonitorBrightness" xml:space="preserve">
+    <value>화면 자체의 밝기 설정</value>
+  </data>
+  <data name="Displays_MonitorBrightness" xml:space="preserve">
+    <value>화면 밝기</value>
+  </data>
+  <data name="Profiles_FromTemplate" xml:space="preserve">
+    <value>템플릿에서</value>
+  </data>
+  <data name="Profiles_FromLink" xml:space="preserve">
+    <value>링크에서</value>
+  </data>
+  <data name="Template_vivid" xml:space="preserve">
+    <value>선명하게</value>
+  </data>
+  <data name="Template_vividHint" xml:space="preserve">
+    <value>사진, 동영상, 게임을 위한 더 풍부한 색.</value>
+  </data>
+  <data name="Template_shadows" xml:space="preserve">
+    <value>그림자 디테일</value>
+  </data>
+  <data name="Template_shadowsHint" xml:space="preserve">
+    <value>어두운 부분을 밝혀 그림자 속 디테일을 더 쉽게 볼 수 있게 합니다.</value>
+  </data>
+  <data name="Template_film" xml:space="preserve">
+    <value>영화</value>
+  </data>
+  <data name="Template_filmHint" xml:space="preserve">
+    <value>영화와 드라마를 위한 더 깊은 검은색과 약간 더 높은 대비.</value>
+  </data>
+  <data name="Template_evening" xml:space="preserve">
+    <value>저녁</value>
+  </data>
+  <data name="Template_eveningHint" xml:space="preserve">
+    <value>해가 진 뒤의 더 따뜻하고 부드러운 빛.</value>
+  </data>
+  <data name="Template_dim" xml:space="preserve">
+    <value>어두운 방</value>
+  </data>
+  <data name="Template_dimHint" xml:space="preserve">
+    <value>모니터의 가장 낮은 밝기 설정보다 더 어둡게.</value>
+  </data>
+  <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
+    <value>빠른 패널 표시</value>
+  </data>
+  <data name="Quick_Paused" xml:space="preserve">
+    <value>프로필이 꺼져 있습니다</value>
+  </data>
+  <data name="Quick_FromSchedule" xml:space="preserve">
+    <value>{0} · 일정</value>
+  </data>
+  <data name="Quick_FromApp" xml:space="preserve">
+    <value>{0} · 이 앱용</value>
+  </data>
+  <data name="Quick_Active" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Quick_Adjusting" xml:space="preserve">
+    <value>{0} 조정 중</value>
+  </data>
+  <data name="Quick_Open" xml:space="preserve">
+    <value>DispHub 열기</value>
+  </data>
+  <data name="Common_LinkCopied" xml:space="preserve">
+    <value>링크를 복사했습니다</value>
+  </data>
+  <data name="Settings_QuickPanelHotkey" xml:space="preserve">
+    <value>빠른 패널</value>
+  </data>
+  <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
+    <value>창을 열지 않고 프로필, 밝기, 따뜻함을 바꿉니다.</value>
+  </data>
+  <data name="Quick_Brightness" xml:space="preserve">
+    <value>밝기</value>
+  </data>
+  <data name="Quick_Warmth" xml:space="preserve">
+    <value>따뜻함</value>
+  </data>
+  <data name="Displays_Showing" xml:space="preserve">
+    <value>{0} 표시 중</value>
+  </data>
+  <data name="Displays_ShowingOriginal" xml:space="preserve">
+    <value>원래 색 (프로필 꺼짐)</value>
+  </data>
+  <data name="Displays_LeftAlone" xml:space="preserve">
+    <value>DispHub가 이 디스플레이는 그대로 둡니다</value>
+  </data>
+  <data name="Displays_HdrNote" xml:space="preserve">
+    <value>HDR이 켜져 있어 Windows가 여기서 색 변경을 허용하지 않습니다. 생동감은 계속 작동합니다.</value>
+  </data>
+  <data name="Displays_LimitedNote" xml:space="preserve">
+    <value>Windows는 기본적으로 작은 색 변경만 허용하므로 이 디스플레이에는 강한 프로필이 더 약하게 표시됩니다.</value>
+  </data>
+  <data name="Displays_NoVibrance" xml:space="preserve">
+    <value>이 디스플레이에서는 생동감을 사용할 수 없습니다.</value>
+  </data>
+  <data name="Displays_UseOnThis" xml:space="preserve">
+    <value>이 디스플레이에서 DispHub 사용</value>
+  </data>
+  <data name="Schedule_Today" xml:space="preserve">
+    <value>{0} (오늘)</value>
+  </data>
+  <data name="Schedule_EveryDay" xml:space="preserve">
+    <value>매일</value>
+  </data>
+  <data name="Schedule_Weekdays" xml:space="preserve">
+    <value>평일</value>
+  </data>
+  <data name="Schedule_Weekends" xml:space="preserve">
+    <value>주말</value>
+  </data>
+  <data name="Schedule_Minutes" xml:space="preserve">
+    <value>{0}분</value>
+  </data>
+  <data name="Schedule_Hours" xml:space="preserve">
+    <value>{0}시간</value>
+  </data>
+  <data name="Schedule_HoursMinutes" xml:space="preserve">
+    <value>{0}시간 {1}분</value>
+  </data>
+  <data name="Schedule_ChangePlace" xml:space="preserve">
+    <value>장소 변경</value>
+  </data>
+  <data name="Schedule_Changes" xml:space="preserve">
+    <value>변경</value>
+  </data>
+  <data name="Schedule_AddSlot" xml:space="preserve">
+    <value>변경 추가</value>
+  </data>
+  <data name="Schedule_Starts" xml:space="preserve">
+    <value>시작</value>
+  </data>
+  <data name="Schedule_Fade" xml:space="preserve">
+    <value>페이드</value>
+  </data>
+  <data name="Schedule_On" xml:space="preserve">
+    <value>요일</value>
+  </data>
+  <data name="Schedule_AtTime" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Schedule_AtClockTime" xml:space="preserve">
+    <value>정해진 시간에</value>
+  </data>
+  <data name="Schedule_Sunrise" xml:space="preserve">
+    <value>일출 때</value>
+  </data>
+  <data name="Schedule_Sunset" xml:space="preserve">
+    <value>일몰 때</value>
+  </data>
+  <data name="Schedule_Remove" xml:space="preserve">
+    <value>이 변경 제거</value>
+  </data>
+  <data name="Schedule_Profile" xml:space="preserve">
+    <value>프로필</value>
+  </data>
+  <data name="Schedule_NoLocation" xml:space="preserve">
+    <value>장소를 고를 때까지 일출은 {0}, 일몰은 {1}입니다.</value>
+  </data>
+  <data name="Schedule_LocationSun" xml:space="preserve">
+    <value>일출 {1}, 일몰 {2} · {0}</value>
+  </data>
+  <data name="Schedule_LocationPolar" xml:space="preserve">
+    <value>이날은 일출이나 일몰이 없습니다 · {0}</value>
+  </data>
+  <data name="Accent_blue" xml:space="preserve">
+    <value>파란색</value>
+  </data>
+  <data name="Accent_purple" xml:space="preserve">
+    <value>보라색</value>
+  </data>
+  <data name="Accent_pink" xml:space="preserve">
+    <value>분홍색</value>
+  </data>
+  <data name="Accent_red" xml:space="preserve">
+    <value>빨간색</value>
+  </data>
+  <data name="Accent_orange" xml:space="preserve">
+    <value>주황색</value>
+  </data>
+  <data name="Accent_yellow" xml:space="preserve">
+    <value>노란색</value>
+  </data>
+  <data name="Accent_green" xml:space="preserve">
+    <value>초록색</value>
+  </data>
+  <data name="Accent_teal" xml:space="preserve">
+    <value>청록색</value>
+  </data>
+  <data name="Accent_graphite" xml:space="preserve">
+    <value>흑연색</value>
+  </data>
+  <data name="Settings_Animations" xml:space="preserve">
+    <value>애니메이션</value>
+  </data>
+  <data name="Settings_AnimationsHint" xml:space="preserve">
+    <value>DispHub 창의 부드러운 스크롤과 기타 움직임.</value>
+  </data>
+  <data name="Schedule_SunsetToSunrise" xml:space="preserve">
+    <value>일몰부터 일출까지</value>
+  </data>
+  <data name="Schedule_SetHours" xml:space="preserve">
+    <value>정해진 시간</value>
+  </data>
+  <data name="Schedule_Custom" xml:space="preserve">
+    <value>사용자 지정</value>
+  </data>
+  <data name="Schedule_TurnOn" xml:space="preserve">
+    <value>밤 시작</value>
+  </data>
+  <data name="Schedule_TurnOff" xml:space="preserve">
+    <value>밤 종료</value>
+  </data>
+  <data name="Schedule_NightProfile" xml:space="preserve">
+    <value>야간 프로필</value>
+  </data>
+  <data name="Schedule_NightProfileHint" xml:space="preserve">
+    <value>밤에 사용합니다.</value>
+  </data>
+  <data name="Schedule_DayProfile" xml:space="preserve">
+    <value>주간 프로필</value>
+  </data>
+  <data name="Schedule_DayProfileHint" xml:space="preserve">
+    <value>낮에 사용합니다.</value>
+  </data>
+  <data name="Schedule_FadeHint" xml:space="preserve">
+    <value>각 변경에 걸리는 시간입니다. 천천히 바뀌면 눈이 편합니다.</value>
+  </data>
+  <data name="Schedule_TodayTitle" xml:space="preserve">
+    <value>오늘</value>
+  </data>
+  <data name="TimePicker_Hour" xml:space="preserve">
+    <value>시</value>
+  </data>
+  <data name="TimePicker_Minute" xml:space="preserve">
+    <value>분</value>
+  </data>
+  <data name="TimePicker_Period" xml:space="preserve">
+    <value>오전 또는 오후</value>
+  </data>
+  <data name="Power_Name" xml:space="preserve">
+    <value>DispHub 켜기 또는 끄기</value>
+  </data>
+  <data name="Power_TurnOff" xml:space="preserve">
+    <value>DispHub를 끕니다. 디스플레이에 원래 색이 표시됩니다.</value>
+  </data>
+  <data name="Power_TurnOn" xml:space="preserve">
+    <value>DispHub 켜기</value>
+  </data>
+  <data name="Quick_Off" xml:space="preserve">
+    <value>DispHub가 꺼져 있습니다</value>
+  </data>
+  <data name="Quick_ProfilesTooltip" xml:space="preserve">
+    <value>프로필 켜기 또는 끄기</value>
+  </data>
+  <data name="Osd_ProfilesOff" xml:space="preserve">
+    <value>프로필 꺼짐</value>
+  </data>
+  <data name="Tray_ProfilesOff" xml:space="preserve">
+    <value>DispHub · 프로필 꺼짐</value>
+  </data>
+  <data name="Profiles_StatusOff" xml:space="preserve">
+    <value>DispHub가 꺼져 있습니다. 위쪽의 전원 버튼으로 켜세요.</value>
+  </data>
+  <data name="Displays_ShowingOff" xml:space="preserve">
+    <value>원래 색 (DispHub 꺼짐)</value>
+  </data>
+  <data name="Onboarding_WelcomeTitle" xml:space="preserve">
+    <value>DispHub에 오신 것을 환영합니다</value>
+  </data>
+  <data name="Onboarding_WelcomeText" xml:space="preserve">
+    <value>모든 순간을 위한 디스플레이 프로필을 만드세요. 게임에는 더 밝고 선명하게, 저녁에는 더 따뜻하게, 또는 디스플레이의 원래 색으로. 클릭이나 키보드 단축키로 전환하거나 DispHub가 대신 전환하게 할 수 있습니다.</value>
+  </data>
+  <data name="Onboarding_TrayTitle" xml:space="preserve">
+    <value>작업 표시줄에서 DispHub 찾기</value>
+  </data>
+  <data name="Onboarding_TrayText" xml:space="preserve">
+    <value>DispHub는 알림 영역에서 실행됩니다. 아이콘이 보이지 않으면 시계 옆의 화살표를 선택한 다음, 아이콘을 작업 표시줄로 끌어 계속 표시되게 하세요.</value>
+  </data>
+  <data name="Onboarding_LeftClick" xml:space="preserve">
+    <value>왼쪽 클릭</value>
+  </data>
+  <data name="Onboarding_RightClick" xml:space="preserve">
+    <value>오른쪽 클릭</value>
+  </data>
+  <data name="Onboarding_RightClickHint" xml:space="preserve">
+    <value>프로필과 전원 버튼이 있는 메뉴를 엽니다.</value>
+  </data>
+  <data name="Onboarding_HotkeysTitle" xml:space="preserve">
+    <value>키보드 단축키 사용</value>
+  </data>
+  <data name="Onboarding_HotkeysText" xml:space="preserve">
+    <value>전체 화면 게임을 포함해 어떤 앱에서든 프로필을 전환하세요. 작은 메시지로 어떤 프로필로 전환했는지 보여 줍니다. 단축키는 설정에서 바꿀 수 있습니다.</value>
+  </data>
+  <data name="Onboarding_PowerTitle" xml:space="preserve">
+    <value>한 번에 모두 끄기</value>
+  </data>
+  <data name="Onboarding_PowerText" xml:space="preserve">
+    <value>전원 버튼으로 DispHub를 끄면 디스플레이가 원래 색으로 돌아갑니다. 다시 선택하면 멈춘 곳부터 이어집니다.</value>
+  </data>
+  <data name="Onboarding_Back" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="Onboarding_Next" xml:space="preserve">
+    <value>다음</value>
+  </data>
+  <data name="Onboarding_Done" xml:space="preserve">
+    <value>나중에</value>
+  </data>
+  <data name="Schedule_StatusDispHubOff" xml:space="preserve">
+    <value>DispHub가 꺼져 있어 일정이 대기 중입니다. 전원 버튼으로 켜세요.</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>홈</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>홈</value>
+  </data>
+  <data name="Home_Now" xml:space="preserve">
+    <value>현재 프로필</value>
+  </data>
+  <data name="Home_Off" xml:space="preserve">
+    <value>DispHub가 꺼져 있습니다</value>
+  </data>
+  <data name="Home_Original" xml:space="preserve">
+    <value>원래 색</value>
+  </data>
+  <data name="Home_ReasonOff" xml:space="preserve">
+    <value>디스플레이에 원래 색이 표시됩니다.</value>
+  </data>
+  <data name="Home_ReasonProfilesOff" xml:space="preserve">
+    <value>프로필이 꺼져 있어 디스플레이에 원래 색이 표시됩니다.</value>
+  </data>
+  <data name="Home_ReasonSchedule" xml:space="preserve">
+    <value>일정</value>
+  </data>
+  <data name="Home_ReasonScheduleUntil" xml:space="preserve">
+    <value>{0}까지 일정</value>
+  </data>
+  <data name="Home_ReasonApp" xml:space="preserve">
+    <value>{0} 사용 중</value>
+  </data>
+  <data name="Home_ReasonAppUnknown" xml:space="preserve">
+    <value>이 앱 사용 중</value>
+  </data>
+  <data name="Home_NoHotkey" xml:space="preserve">
+    <value>단축키 없음</value>
+  </data>
+  <data name="Home_Features" xml:space="preserve">
+    <value>한눈에 보기</value>
+  </data>
+  <data name="Home_Profiles" xml:space="preserve">
+    <value>프로필 {0}개</value>
+  </data>
+  <data name="Home_OneProfile" xml:space="preserve">
+    <value>프로필 1개</value>
+  </data>
+  <data name="Home_ScheduleNext" xml:space="preserve">
+    <value>다음: {0} {1}</value>
+  </data>
+  <data name="Home_NoApps" xml:space="preserve">
+    <value>추가된 앱 없음</value>
+  </data>
+  <data name="Home_Apps" xml:space="preserve">
+    <value>앱 {0}개</value>
+  </data>
+  <data name="Home_OneApp" xml:space="preserve">
+    <value>앱 1개</value>
+  </data>
+  <data name="Home_Displays" xml:space="preserve">
+    <value>디스플레이 {0}개</value>
+  </data>
+  <data name="Home_OneDisplay" xml:space="preserve">
+    <value>디스플레이 1개</value>
+  </data>
+  <data name="Home_SettingsStatus" xml:space="preserve">
+    <value>키보드 단축키, 시작, 모양</value>
+  </data>
+  <data name="Home_WhatsNew" xml:space="preserve">
+    <value>새로운 기능</value>
+  </data>
+  <data name="Home_Rate" xml:space="preserve">
+    <value>DispHub 평가하기</value>
+  </data>
+  <data name="Home_Report" xml:space="preserve">
+    <value>문제 신고</value>
+  </data>
+  <data name="Home_GitHub" xml:space="preserve">
+    <value>소스 코드</value>
+  </data>
+  <data name="Home_Version" xml:space="preserve">
+    <value>DispHub {0}</value>
+  </data>
+  <data name="Home_Tour" xml:space="preserve">
+    <value>둘러보기</value>
+  </data>
+  <data name="Tour_Skip" xml:space="preserve">
+    <value>건너뛰기</value>
+  </data>
+  <data name="Tour_Back" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="Tour_Next" xml:space="preserve">
+    <value>다음</value>
+  </data>
+  <data name="Tour_Done" xml:space="preserve">
+    <value>완료</value>
+  </data>
+  <data name="Tour_Count" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="Tour_PowerTitle" xml:space="preserve">
+    <value>DispHub 켜기 또는 끄기</value>
+  </data>
+  <data name="Tour_PowerText" xml:space="preserve">
+    <value>DispHub를 끄면 디스플레이가 원래 색으로 돌아갑니다. 다시 켜면 멈춘 곳부터 이어집니다.</value>
+  </data>
+  <data name="Tour_NowTitle" xml:space="preserve">
+    <value>현재 프로필</value>
+  </data>
+  <data name="Tour_NowText" xml:space="preserve">
+    <value>어떤 프로필이 사용 중이고 그 이유가 무엇인지 확인하세요. 직접 선택했거나, 일정이 선택했거나, 앱에 전용 프로필이 있는 경우입니다.</value>
+  </data>
+  <data name="Onboarding_Step" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="Onboarding_Tour" xml:space="preserve">
+    <value>둘러보기</value>
+  </data>
+  <data name="Search_Placeholder" xml:space="preserve">
+    <value>설정 검색</value>
+  </data>
+  <data name="Search_Page" xml:space="preserve">
+    <value>페이지</value>
+  </data>
+  <data name="Quick_NothingToAdjust" xml:space="preserve">
+    <value>조정할 프로필을 선택하세요</value>
+  </data>
+  <data name="Home_TurnProfilesOn" xml:space="preserve">
+    <value>프로필 켜기</value>
+  </data>
+  <data name="Home_ReasonSelected" xml:space="preserve">
+    <value>선택됨</value>
+  </data>
+  <data name="Home_ReasonManualUntil" xml:space="preserve">
+    <value>일정이 바뀌는 {0}까지 선택됨</value>
+  </data>
+  <data name="Home_Today" xml:space="preserve">
+    <value>오늘</value>
+  </data>
+  <data name="Home_EditSchedule" xml:space="preserve">
+    <value>일정 편집</value>
+  </data>
+  <data name="Home_NoSchedule" xml:space="preserve">
+    <value>일정</value>
+  </data>
+  <data name="Home_NoScheduleHint" xml:space="preserve">
+    <value>일몰과 일출, 또는 원하는 시간에 프로필을 자동으로 바꿉니다.</value>
+  </data>
+  <data name="Home_ScheduleNeedsPro" xml:space="preserve">
+    <value>일정이 설정되었습니다. DispHub Pro에서 실행됩니다.</value>
+  </data>
+  <data name="Home_SetUpSchedule" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="Tour_ProfilesTitle" xml:space="preserve">
+    <value>프로필</value>
+  </data>
+  <data name="Tour_ProfilesText" xml:space="preserve">
+    <value>사용할 프로필을 선택하세요. 아래에 설정이 나타나며, 세부 조정을 하고 키보드 단축키를 지정할 수 있습니다.</value>
+  </data>
+  <data name="Tour_ScheduleTitle" xml:space="preserve">
+    <value>일정</value>
+  </data>
+  <data name="Tour_ScheduleText" xml:space="preserve">
+    <value>일몰과 일출, 정해진 시간 또는 나만의 시간표에 따라 프로필을 자동으로 바꿉니다.</value>
+  </data>
+  <data name="Tour_AppsTitle" xml:space="preserve">
+    <value>앱용 프로필</value>
+  </data>
+  <data name="Tour_AppsText" xml:space="preserve">
+    <value>게임이나 앱에 전용 프로필을 지정하세요. 그 앱이 앞에 있을 때마다 DispHub가 해당 프로필을 사용합니다.</value>
+  </data>
+  <data name="Tour_HotkeysTitle" xml:space="preserve">
+    <value>키보드 단축키</value>
+  </data>
+  <data name="Tour_HotkeysText" xml:space="preserve">
+    <value>전체 화면 게임을 포함해 어떤 앱에서든 DispHub를 켜고 끄고 프로필을 전환하세요.</value>
+  </data>
+  <data name="Schedule_TomorrowAt" xml:space="preserve">
+    <value>내일 {0}</value>
+  </data>
+  <data name="Schedule_DayAt" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="Settings_PanelOpacity" xml:space="preserve">
+    <value>빠른 패널 및 메시지 불투명도</value>
+  </data>
+  <data name="Settings_PanelOpacityHint" xml:space="preserve">
+    <value>빠른 패널과 화면 메시지의 흐린 배경이 얼마나 불투명한지 정합니다. 낮을수록 뒤쪽이 더 많이 보입니다. DispHub Pro에서 사용할 수 있습니다.</value>
+  </data>
+</root>
