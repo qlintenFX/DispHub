@@ -43,3 +43,14 @@ jobs:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v5
+      # Tell Bing and the other IndexNow search engines that the pages changed, so they're crawled within hours instead
+      # of weeks (Bing's index also feeds DuckDuckGo, Copilot and ChatGPT search). The key file sits next to the pages.
+      - name: Notify IndexNow
+        continue-on-error: true
+        env:
+          KEY: e1b4c1d827b63237b9a906af76f3ae1a
+        run: |
+          grep -o '<loc>[^<]*' site/sitemap.xml | sed 's/<loc>//' | jq -R . | jq -s \
+            --arg key "$KEY" '{host: "getdisphub.com", key: $key, keyLocation: "https://getdisphub.com/\($key).txt", urlList: .}' |
+            curl -sS --fail-with-body -X POST https://api.indexnow.org/indexnow \
+              -H 'Content-Type: application/json; charset=utf-8' --data-binary @-
