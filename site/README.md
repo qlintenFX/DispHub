@@ -16,7 +16,8 @@ python -m http.server 8765 --directory site
   ramps produce.
 - `download/`: the Microsoft Store first; WinGet and building from source sit under "More download options".
 - `privacy/`: the privacy policy from `PRIVACY.md`, plus a note about the website itself. Keep the two in step.
-- `assets/img`: the app's windows at 200 % (square; the page rounds them), the icon and the social card.
+- `assets/img`: the app's windows at 200 % (square; the page rounds them), the icon and the social card. Phones and
+  small screens load the `-720` and `-1000` copies: run `python build/site-images.py` after changing a picture.
 
 Keep the copy short: a heading and one sentence per section.
 
