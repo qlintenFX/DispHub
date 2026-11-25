@@ -170,13 +170,13 @@ Ela será adicionada como um novo perfil e ativada para você ver o resultado.</
     <value>Este link não é uma predefinição válida do DispHub.</value>
   </data>
   <data name="Presets_ImportHint" xml:space="preserve">
-    <value>Cole um link compartilhado (ele começa com disphub://preset). Para compartilhar o seu, abra um perfil e clique em Compartilhar.</value>
+    <value>Cole um link compartilhado. Para compartilhar o seu, abra um perfil e clique em Compartilhar.</value>
   </data>
   <data name="Presets_ImportTitle" xml:space="preserve">
     <value>Adicionar uma predefinição a partir de um link</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
-    <value>Isso não parece um link de predefinição do DispHub. Ele deve começar com disphub://preset</value>
+    <value>Isso não parece um link de predefinição do DispHub.</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Perfis por app, agendamentos com transições, ajustes por tela e perfis ilimitados. Compra única.</value>
@@ -434,7 +434,7 @@ Você também apoia o desenvolvimento do DispHub.</value>
     <value>DispHub desativado</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Copia um link: qualquer pessoa com o DispHub pode abri-lo para adicionar este perfil.</value>
+    <value>Copia um link para este perfil. Qualquer pessoa pode abri-lo, e quem não tem o DispHub vê onde baixá-lo.</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
     <value>Desative todos os perfis, incluindo seus agendamentos e os perfis por app.</value>

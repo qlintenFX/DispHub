@@ -956,3 +956,21 @@ pre.code {
     transform: none;
   }
 }
+
+/* ---------- a shared profile (p/) ---------- */
+
+.profile .profile-values {
+  margin-top: 22px;
+  font: 600 clamp(18px, 2vw, 22px)/1.4 var(--font-display);
+  color: var(--text-1);
+}
+
+.profile .profile-values:empty {
+  display: none;
+}
+
+.profile .profile-hint {
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-3);
+}

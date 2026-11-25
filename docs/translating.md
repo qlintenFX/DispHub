@@ -16,7 +16,7 @@ named `Strings.<culture>.resx` (for example `Strings.pl.resx`, `Strings.zh-Hans.
 English, and every file present is offered in Settings automatically.
 
 1. Copy `Strings.resx` to `Strings.<culture>.resx` and translate every `<value>`. Keep the `name` attributes unchanged.
-2. Keep placeholders such as `{0}` and `{1}`, `\n` line breaks, `•` bullets, and `disphub://preset` exactly as they are.
+2. Keep placeholders such as `{0}` and `{1}`, `\n` line breaks and `•` bullets exactly as they are.
 3. Run `dotnet test --project tests/DispHub.Tests/DispHub.Tests.csproj`; the localisation tests check keys and placeholders.
 
 Weblate works from the same files and sends its changes as pull requests, so edits in either place end up together.

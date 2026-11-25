@@ -10,18 +10,25 @@ using DispHub.Core.Config;
 namespace DispHub.Core.Sharing;
 
 /// <summary>
-/// A profile shared as a link, e.g. <c>disphub://preset?name=CS2%20Vivid&amp;b=5&amp;c=5&amp;g=1.15&amp;t=6500&amp;v=70&amp;s=30</c>.
+/// A profile shared as a link, e.g. <c>https://getdisphub.com/p/?name=CS2%20Vivid&amp;b=5&amp;g=1.15&amp;v=70</c>.
+/// The web page shows the profile and opens it in DispHub through <c>disphub://preset?...</c> with the same
+/// parameters, or offers the Store to people who don't have DispHub yet, so a link works anywhere it's posted.
 /// Readable on purpose, so people can see what a link does before clicking it. Unknown parameters are ignored and
 /// values are clamped, so links from newer versions still import.
 /// </summary>
 public sealed record SharedPreset(string Name, ColorSettings Color)
 {
     public const string Scheme = "disphub";
+    public const string WebPage = "https://getdisphub.com/p/";
     private const string Host = "preset";
+    private static readonly string[] WebHosts = ["getdisphub.com", "www.getdisphub.com"];
 
-    public string ToLink()
+    /// <summary>The link to share: a web page, so it can be clicked where <c>disphub://</c> links can't.</summary>
+    public string ToLink() => WebPage + "?" + Query();
+
+    private string Query()
     {
-        var link = new StringBuilder($"{Scheme}://{Host}?name=");
+        var link = new StringBuilder("name=");
         link.Append(Uri.EscapeDataString(Name));
         ColorSettings c = Color.Clamp();
         if (c.Brightness != 0)
@@ -39,7 +46,10 @@ public sealed record SharedPreset(string Name, ColorSettings Color)
         return link.ToString();
     }
 
-    /// <summary>Parses a share link. Accepts surrounding whitespace and links pasted with or without the scheme.</summary>
+    /// <summary>
+    /// Parses a share link: the web page's or DispHub's own. Accepts surrounding whitespace and links pasted with or
+    /// without the scheme.
+    /// </summary>
     public static bool TryParse(string? text, [NotNullWhen(true)] out SharedPreset? preset)
     {
         preset = null;
@@ -47,7 +57,9 @@ public sealed record SharedPreset(string Name, ColorSettings Color)
             return false;
 
         string trimmed = text.Trim();
-        if (!trimmed.StartsWith(Scheme + "://", StringComparison.OrdinalIgnoreCase))
+        if (WebQuery(trimmed) is { } webQuery)
+            trimmed = $"{Scheme}://{Host}?{webQuery}";
+        else if (!trimmed.StartsWith(Scheme + "://", StringComparison.OrdinalIgnoreCase))
             trimmed = $"{Scheme}://{trimmed.TrimStart('/')}";
         if (!Uri.TryCreate(trimmed, UriKind.Absolute, out Uri? uri) ||
             !string.Equals(uri.Host, Host, StringComparison.OrdinalIgnoreCase))
@@ -74,6 +86,24 @@ public sealed record SharedPreset(string Name, ColorSettings Color)
             Int(query, "s", 0));
         preset = new SharedPreset(name, color.Clamp());
         return true;
+    }
+
+    /// <summary>The query of a link to the web page (<see cref="WebPage"/>), or null for any other text.</summary>
+    private static string? WebQuery(string text)
+    {
+        if (!text.Contains("://", StringComparison.Ordinal) &&
+            WebHosts.Any(host => text.StartsWith(host + "/", StringComparison.OrdinalIgnoreCase)))
+        {
+            text = "https://" + text;
+        }
+        if (!Uri.TryCreate(text, UriKind.Absolute, out Uri? uri) ||
+            (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp) ||
+            !WebHosts.Contains(uri.Host, StringComparer.OrdinalIgnoreCase) ||
+            !string.Equals(uri.AbsolutePath.TrimEnd('/'), "/p", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+        return uri.Query.TrimStart('?');
     }
 
     private static string CleanName(string? name)

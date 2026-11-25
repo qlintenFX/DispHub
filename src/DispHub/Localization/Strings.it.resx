@@ -170,13 +170,13 @@ Verrà aggiunta come nuovo profilo e attivata così puoi vederla.</value>
     <value>Questo link non è una preimpostazione DispHub valida.</value>
   </data>
   <data name="Presets_ImportHint" xml:space="preserve">
-    <value>Incolla un link condiviso (inizia con disphub://preset). Per condividere il tuo, apri un profilo e fai clic su Condividi.</value>
+    <value>Incolla un link condiviso. Per condividere il tuo, apri un profilo e fai clic su Condividi.</value>
   </data>
   <data name="Presets_ImportTitle" xml:space="preserve">
     <value>Aggiungi una preimpostazione da un link</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
-    <value>Non sembra un link di preimpostazione DispHub. Deve iniziare con disphub://preset</value>
+    <value>Non sembra un link di preimpostazione DispHub.</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Profili per app, pianificazioni con transizioni, impostazioni per schermo e profili illimitati. Acquisto unico.</value>
@@ -434,7 +434,7 @@ Inoltre sostieni lo sviluppo di DispHub.</value>
     <value>DispHub disattivato</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Copia un link: chiunque abbia DispHub può aprirlo per aggiungere questo profilo.</value>
+    <value>Copia un link a questo profilo. Chiunque può aprirlo, e chi non ha DispHub vede dove scaricarlo.</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
     <value>Disattiva tutti i profili, comprese le tue pianificazioni e i profili per app.</value>
