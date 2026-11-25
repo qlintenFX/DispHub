@@ -170,13 +170,13 @@ Deze wordt toegevoegd als nieuw profiel en meteen ingeschakeld zodat je hem kunt
     <value>Deze link is geen geldige DispHub-preset.</value>
   </data>
   <data name="Presets_ImportHint" xml:space="preserve">
-    <value>Plak een link die iemand heeft gedeeld (begint met disphub://preset). Om je eigen profiel te delen, open je het en klik je op Delen.</value>
+    <value>Plak een link die iemand heeft gedeeld. Om je eigen profiel te delen, open je het en klik je op Delen.</value>
   </data>
   <data name="Presets_ImportTitle" xml:space="preserve">
     <value>Een preset toevoegen via een link</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
-    <value>Dat lijkt geen DispHub-presetlink. Hij moet beginnen met disphub://preset</value>
+    <value>Dat lijkt geen DispHub-presetlink.</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Profielen per app, planningen met overgangen, instellingen per beeldscherm en onbeperkt profielen. Eenmalige aankoop.</value>
@@ -434,7 +434,7 @@ Je steunt er ook de ontwikkeling van DispHub mee.</value>
     <value>DispHub uit</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Kopieert een link: iedereen met DispHub kan die openen om dit profiel toe te voegen.</value>
+    <value>Kopieert een link naar dit profiel. Iedereen kan hem openen, en wie DispHub niet heeft, ziet waar je het krijgt.</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
     <value>Schakel alle profielen uit, inclusief je planning en profielen per app.</value>

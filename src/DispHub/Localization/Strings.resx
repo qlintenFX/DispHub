@@ -203,13 +203,13 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>This link isn't a valid DispHub preset.</value>
   </data>
   <data name="Presets_ImportHint" xml:space="preserve">
-    <value>Paste a link someone shared (it starts with disphub://preset). To share your own, open a profile and click Share.</value>
+    <value>Paste a link someone shared. To share your own, open a profile and click Share.</value>
   </data>
   <data name="Presets_ImportTitle" xml:space="preserve">
     <value>Add a preset from a link</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
-    <value>That doesn't look like a DispHub preset link. It should start with disphub://preset</value>
+    <value>That doesn't look like a DispHub preset link.</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Per-app profiles, schedules, shadow boost, refresh rate and HDR with your profiles, and unlimited profiles. One-time purchase.</value>
@@ -257,7 +257,7 @@ It will be added as a new profile and switched on so you can see it.</value>
     <value>This hotkey is in use by another app</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Copies a link: anyone with DispHub can open it to add this profile.</value>
+    <value>Copies a link to this profile. Anyone can open it, and people without DispHub see where to get it.</value>
   </data>
   <data name="Profiles_MoveLeft" xml:space="preserve">
     <value>Move left</value>

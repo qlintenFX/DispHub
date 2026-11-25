@@ -33,7 +33,27 @@ public sealed class SharedPresetTests
     {
         string link = new SharedPreset("Vivid", new ColorSettings(Vibrance: 70)).ToLink();
 
-        Assert.Equal("disphub://preset?name=Vivid&v=70", link);
+        Assert.Equal("https://getdisphub.com/p/?name=Vivid&v=70", link);
+    }
+
+    [Fact]
+    public void OldAppLinks_StillImport()
+    {
+        Assert.True(SharedPreset.TryParse("disphub://preset?name=Vivid&v=70", out SharedPreset? preset));
+
+        Assert.Equal(new SharedPreset("Vivid", new ColorSettings(Vibrance: 70)), preset);
+    }
+
+    [Theory]
+    [InlineData("https://getdisphub.com/p/?name=Night&t=3400")]
+    [InlineData("  http://www.getdisphub.com/p?name=Night&t=3400 ")]
+    [InlineData("getdisphub.com/p/?name=Night&t=3400")]
+    [InlineData("HTTPS://GetDispHub.com/P/?name=Night&t=3400")]
+    public void TryParse_AcceptsTheWebPage(string text)
+    {
+        Assert.True(SharedPreset.TryParse(text, out SharedPreset? preset));
+        Assert.Equal("Night", preset.Name);
+        Assert.Equal(3400, preset.Color.TemperatureK);
     }
 
     [Theory]
@@ -70,6 +90,10 @@ public sealed class SharedPresetTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("https://example.com/?name=x")]
+    [InlineData("https://example.com/p/?name=x")]
+    [InlineData("https://getdisphub.com/?name=x")]
+    [InlineData("https://getdisphub.com.evil.example/p/?name=x")]
+    [InlineData("ftp://getdisphub.com/p/?name=x")]
     [InlineData("disphub://settings?name=x")]
     public void TryParse_RejectsOtherLinks(string? text) => Assert.False(SharedPreset.TryParse(text, out _));
 }

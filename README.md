@@ -20,7 +20,7 @@
   a global hotkey or the tray menu. A small on-screen message confirms the switch without stealing focus from games.
 - **Every monitor.** Colours apply to all connected displays, and DispHub can leave chosen displays alone.
 - **Vibrance.** Saturation on NVIDIA, Intel and AMD (beta) graphics, so it also works on the built-in screen of most laptops.
-- **Templates and links.** Start a profile from a template, or share one as a `disphub://` link.
+- **Templates and links.** Start a profile from a template, or share one as a link that anyone can open.
 - **Automation.** Switch profiles while a specific app is in front (one app free, every app with Pro), and schedule
   your profiles (Pro): from sunset to sunrise, at set hours or at times you choose, with smooth fades.
 - **Safe.** Your original colours are saved before anything changes and restored when you turn DispHub off or quit,

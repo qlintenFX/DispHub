@@ -170,13 +170,13 @@ Se agregará como un perfil nuevo y se activará para que puedas verlo.</value>
     <value>Este vínculo no es un ajuste preestablecido de DispHub válido.</value>
   </data>
   <data name="Presets_ImportHint" xml:space="preserve">
-    <value>Pega un vínculo que alguien haya compartido (empieza por disphub://preset). Para compartir el tuyo, abre un perfil y haz clic en Compartir.</value>
+    <value>Pega un vínculo que alguien haya compartido. Para compartir el tuyo, abre un perfil y haz clic en Compartir.</value>
   </data>
   <data name="Presets_ImportTitle" xml:space="preserve">
     <value>Agregar un ajuste preestablecido desde un vínculo</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
-    <value>Eso no parece un vínculo de DispHub. Debe empezar por disphub://preset</value>
+    <value>Eso no parece un vínculo de DispHub.</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Perfiles por aplicación, programaciones con transiciones, ajustes por pantalla y perfiles ilimitados. Pago único.</value>
@@ -434,7 +434,7 @@ Además apoyas el desarrollo de DispHub.</value>
     <value>DispHub desactivado</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Copia un vínculo: cualquiera con DispHub puede abrirlo para agregar este perfil.</value>
+    <value>Copia un vínculo a este perfil. Cualquiera puede abrirlo, y quien no tenga DispHub verá dónde conseguirlo.</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
     <value>Desactiva todos los perfiles, incluidos tu programación y tus perfiles por aplicación.</value>

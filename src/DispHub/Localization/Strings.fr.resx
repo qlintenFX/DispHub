@@ -170,13 +170,13 @@ Il sera ajouté comme nouveau profil et activé pour que vous puissiez le voir.<
     <value>Ce lien n'est pas un préréglage DispHub valide.</value>
   </data>
   <data name="Presets_ImportHint" xml:space="preserve">
-    <value>Collez un lien partagé (il commence par disphub://preset). Pour partager le vôtre, ouvrez un profil et cliquez sur Partager.</value>
+    <value>Collez un lien partagé. Pour partager le vôtre, ouvrez un profil et cliquez sur Partager.</value>
   </data>
   <data name="Presets_ImportTitle" xml:space="preserve">
     <value>Ajouter un préréglage à partir d'un lien</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
-    <value>Ce n'est pas un lien de préréglage DispHub. Il doit commencer par disphub://preset</value>
+    <value>Ce n'est pas un lien de préréglage DispHub.</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Profils par application, planifications avec transitions, réglages par écran et profils illimités. Achat unique.</value>
@@ -434,7 +434,7 @@ Vous soutenez aussi le développement de DispHub.</value>
     <value>DispHub désactivé</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Copie un lien : toute personne disposant de DispHub peut l'ouvrir pour ajouter ce profil.</value>
+    <value>Copie un lien vers ce profil. Tout le monde peut l'ouvrir, et ceux qui n'ont pas DispHub voient où l'obtenir.</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
     <value>Désactivez tous les profils, y compris votre planification et vos profils par application.</value>

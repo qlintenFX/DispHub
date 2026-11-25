@@ -170,13 +170,13 @@ Sie wird als neues Profil hinzugefügt und eingeschaltet, damit du sie sehen kan
     <value>Dieser Link ist keine gültige DispHub-Voreinstellung.</value>
   </data>
   <data name="Presets_ImportHint" xml:space="preserve">
-    <value>Füge einen geteilten Link ein (er beginnt mit disphub://preset). Um deine eigenen zu teilen, öffne ein Profil und klicke auf „Teilen“.</value>
+    <value>Füge einen geteilten Link ein. Um deine eigenen zu teilen, öffne ein Profil und klicke auf „Teilen“.</value>
   </data>
   <data name="Presets_ImportTitle" xml:space="preserve">
     <value>Voreinstellung über einen Link hinzufügen</value>
   </data>
   <data name="Presets_InvalidLink" xml:space="preserve">
-    <value>Das sieht nicht nach einem DispHub-Link aus. Er sollte mit disphub://preset beginnen.</value>
+    <value>Das sieht nicht nach einem DispHub-Link aus.</value>
   </data>
   <data name="Pro_LongPitch" xml:space="preserve">
     <value>Profile pro App, Zeitpläne mit Übergängen, Einstellungen pro Bildschirm und unbegrenzt viele Profile. Einmalkauf.</value>
@@ -434,7 +434,7 @@ Außerdem unterstützt du damit die Entwicklung von DispHub.</value>
     <value>DispHub aus</value>
   </data>
   <data name="Profiles_LinkCopied" xml:space="preserve">
-    <value>Kopiert einen Link: Jeder mit DispHub kann ihn öffnen, um dieses Profil hinzuzufügen.</value>
+    <value>Kopiert einen Link zu diesem Profil. Jeder kann ihn öffnen, und wer DispHub nicht hat, sieht, wo es DispHub gibt.</value>
   </data>
   <data name="Profiles_PauseTooltip" xml:space="preserve">
     <value>Alle Profile ausschalten, auch deine Zeitpläne und die Profile pro App.</value>
