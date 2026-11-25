@@ -71,7 +71,9 @@
     } catch {
       copied = false;
     }
-    const el = toast(copied ? "Copied. Paste it into Terminal: <code></code>" : "Run this in Terminal: <code></code>");
+    // the page's own language, from the button
+    const said = copied ? btn.dataset.copied || "Copied. Paste it into Terminal:" : btn.dataset.run || "Run this in Terminal:";
+    const el = toast(`${said} <code></code>`);
     $("code", el).textContent = text;
   }));
 })();
