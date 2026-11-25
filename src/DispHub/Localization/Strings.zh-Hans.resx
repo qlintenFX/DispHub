@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="About_About" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="About_Community" xml:space="preserve">
+    <value>所有参与测试、翻译和分享预设的人</value>
+  </data>
+  <data name="About_CommunityHint" xml:space="preserve">
+    <value>每一次反馈和每一个预设都让 DispHub 变得更好。谢谢你。</value>
+  </data>
+  <data name="About_Contributors" xml:space="preserve">
+    <value>贡献者</value>
+  </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>已复制</value>
+  </data>
+  <data name="About_CopyDiagnostics" xml:space="preserve">
+    <value>复制诊断信息</value>
+  </data>
+  <data name="About_Credits" xml:space="preserve">
+    <value>致谢</value>
+  </data>
+  <data name="About_EditionAll" xml:space="preserve">
+    <value>DispHub (全部功能)</value>
+  </data>
+  <data name="About_EditionFree" xml:space="preserve">
+    <value>DispHub Free</value>
+  </data>
+  <data name="About_EditionTrial" xml:space="preserve">
+    <value>DispHub Pro 试用</value>
+  </data>
+  <data name="About_EditionPro" xml:space="preserve">
+    <value>DispHub Pro</value>
+  </data>
+  <data name="About_FluentFlyout" xml:space="preserve">
+    <value>FluentFlyout,作者 unchihugo</value>
+  </data>
+  <data name="About_FluentFlyoutHint" xml:space="preserve">
+    <value>一款精心打造的 Windows 工具,DispHub 的外观和手感很大程度上受它启发。</value>
+  </data>
+  <data name="About_Help" xml:space="preserve">
+    <value>帮助和反馈</value>
+  </data>
+  <data name="About_Licence" xml:space="preserve">
+    <value>DispHub 依据 GNU General Public License v3.0 开源。它把所有内容保存在你的电脑上,不发送任何遥测数据。</value>
+  </data>
+  <data name="About_Logs" xml:space="preserve">
+    <value>日志文件</value>
+  </data>
+  <data name="About_Note1" xml:space="preserve">
+    <value>你好,我是 Quinten。我做 DispHub,是因为每次想让游戏画面更好看,或者让屏幕在晚上更护眼,都得打开三个不同的控制面板。我想要一个小巧、安静、能把这件事做好,而且看起来就像是 Windows 自带的应用。</value>
+  </data>
+  <data name="About_Note2" xml:space="preserve">
+    <value>DispHub 由一个人利用业余时间用心制作。如果它让你的屏幕看起来更舒服一点,对我来说意义重大。欢迎随时在 GitHub 上提出想法和报告问题,每一条我都会看。</value>
+  </data>
+  <data name="About_NoteHeader" xml:space="preserve">
+    <value>开发者的话</value>
+  </data>
+  <data name="About_NoteSignature" xml:space="preserve">
+    <value>感谢使用 DispHub。— Quinten (qlintenFX)</value>
+  </data>
+  <data name="About_Notices" xml:space="preserve">
+    <value>第三方声明</value>
+  </data>
+  <data name="About_OpenFolder" xml:space="preserve">
+    <value>打开文件夹</value>
+  </data>
+  <data name="About_OpenGitHub" xml:space="preserve">
+    <value>打开 GitHub</value>
+  </data>
+  <data name="About_Privacy" xml:space="preserve">
+    <value>隐私</value>
+  </data>
+  <data name="About_Report" xml:space="preserve">
+    <value>报告问题或建议功能</value>
+  </data>
+  <data name="About_ReportHint" xml:space="preserve">
+    <value>请附上诊断信息,以便我们了解你的显示器和 GPU 配置。</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>源代码</value>
+  </data>
+  <data name="About_Tip" xml:space="preserve">
+    <value>打赏</value>
+  </data>
+  <data name="About_TipHint" xml:space="preserve">
+    <value>一次性的感谢,帮助 DispHub 持续开发。不会改变包含的功能。</value>
+  </data>
+  <data name="About_TipThanks" xml:space="preserve">
+    <value>谢谢</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="About_WpfUi" xml:space="preserve">
+    <value>WPF UI,来自 lepo.co,使用 unchihugo 的分支</value>
+  </data>
+  <data name="About_WpfUiHint" xml:space="preserve">
+    <value>Fluent 控件和 Mica 窗口,通过更贴近 Windows 11 的 FluentFlyout 分支实现。</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Common_GetPro" xml:space="preserve">
+    <value>获取 Pro</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Common_On" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="Window_Minimise" xml:space="preserve">
+    <value>最小化</value>
+  </data>
+  <data name="Window_Maximise" xml:space="preserve">
+    <value>最大化</value>
+  </data>
+  <data name="Window_Restore" xml:space="preserve">
+    <value>还原</value>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Default_Gaming" xml:space="preserve">
+    <value>游戏</value>
+  </data>
+  <data name="Default_Night" xml:space="preserve">
+    <value>夜间</value>
+  </data>
+  <data name="Default_Standard" xml:space="preserve">
+    <value>标准</value>
+  </data>
+  <data name="Enum_ThemePreference_Dark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="Enum_ThemePreference_Light" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="Enum_ThemePreference_System" xml:space="preserve">
+    <value>跟随系统</value>
+  </data>
+  <data name="Enum_TrayClickAction_OpenWindow" xml:space="preserve">
+    <value>打开窗口</value>
+  </data>
+  <data name="Enum_TrayClickAction_ShowProfileMenu" xml:space="preserve">
+    <value>显示配置文件菜单</value>
+  </data>
+  <data name="Hotkey_Duplicate" xml:space="preserve">
+    <value>已被另一个 DispHub 快捷键使用</value>
+  </data>
+  <data name="Hotkey_InUseElsewhere" xml:space="preserve">
+    <value>已被其他应用使用</value>
+  </data>
+  <data name="Hotkey_NeedsModifier" xml:space="preserve">
+    <value>请加上 Ctrl、Alt 或 Win</value>
+  </data>
+  <data name="Hotkey_NotSet" xml:space="preserve">
+    <value>未设置</value>
+  </data>
+  <data name="Hotkey_Recording" xml:space="preserve">
+    <value>请按下组合键…</value>
+  </data>
+  <data name="Hotkey_Refused" xml:space="preserve">
+    <value>Windows 拒绝了这个快捷键</value>
+  </data>
+  <data name="Hotkey_TypesCharacter" xml:space="preserve">
+    <value>在你的键盘上,这个组合会输入“{0}”(AltGr),请换一个</value>
+  </data>
+  <data name="Nav_About" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="Nav_Profiles" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Osd_Paused" xml:space="preserve">
+    <value>DispHub 已关闭</value>
+  </data>
+  <data name="Osd_StillRunning" xml:space="preserve">
+    <value>DispHub 仍在运行</value>
+  </data>
+  <data name="Preset_AddText" xml:space="preserve">
+    <value>{0}
+{1}
+
+它会作为新的配置文件添加并立即启用,让你看到效果。</value>
+  </data>
+  <data name="Preset_AddTitle" xml:space="preserve">
+    <value>添加这个预设?</value>
+  </data>
+  <data name="Preset_InvalidLink" xml:space="preserve">
+    <value>这个链接不是有效的 DispHub 预设。</value>
+  </data>
+  <data name="Presets_ImportHint" xml:space="preserve">
+    <value>粘贴别人分享的链接。要分享你自己的,请打开一个配置文件并点击“分享”。</value>
+  </data>
+  <data name="Presets_ImportTitle" xml:space="preserve">
+    <value>从链接添加预设</value>
+  </data>
+  <data name="Presets_InvalidLink" xml:space="preserve">
+    <value>这看起来不像 DispHub 预设链接。</value>
+  </data>
+  <data name="Pro_LongPitch" xml:space="preserve">
+    <value>按应用切换的配置文件、计划、暗部增强、随配置文件切换刷新率和 HDR,以及无限配置文件。一次性购买。</value>
+  </data>
+  <data name="Pro_ShortPitch" xml:space="preserve">
+    <value>按应用切换的配置文件、计划、暗部增强、HDR 等。一次性购买。</value>
+  </data>
+  <data name="Profiles_AllDisplays" xml:space="preserve">
+    <value>所有显示器</value>
+  </data>
+  <data name="Profiles_ApplyTo" xml:space="preserve">
+    <value>应用到</value>
+  </data>
+  <data name="Profiles_Brightness" xml:space="preserve">
+    <value>亮度</value>
+  </data>
+  <data name="Profiles_Contrast" xml:space="preserve">
+    <value>对比度</value>
+  </data>
+  <data name="Profiles_CopyName" xml:space="preserve">
+    <value>{0} 副本</value>
+  </data>
+  <data name="Profiles_Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Profiles_Displays" xml:space="preserve">
+    <value>{0} 台显示器</value>
+  </data>
+  <data name="Profiles_Duplicate" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="Profiles_FreeLimit" xml:space="preserve">
+    <value>免费版包含 {0} 个配置文件。获取 Pro 可无限创建。</value>
+  </data>
+  <data name="Profiles_Gamma" xml:space="preserve">
+    <value>伽马</value>
+  </data>
+  <data name="Profiles_Hotkey" xml:space="preserve">
+    <value>快捷键</value>
+  </data>
+  <data name="Profiles_HotkeyHint" xml:space="preserve">
+    <value>点击后按下按键。Backspace 清除。在任何地方都有效,包括游戏中。</value>
+  </data>
+  <data name="Profiles_HotkeyInUse" xml:space="preserve">
+    <value>这个快捷键已被其他应用使用</value>
+  </data>
+  <data name="Profiles_LinkCopied" xml:space="preserve">
+    <value>复制这个配置文件的链接。任何人都能打开,没有 DispHub 的人会看到下载位置。</value>
+  </data>
+  <data name="Profiles_MoveLeft" xml:space="preserve">
+    <value>左移</value>
+  </data>
+  <data name="Profiles_MoveRight" xml:space="preserve">
+    <value>右移</value>
+  </data>
+  <data name="Profiles_NamePlaceholder" xml:space="preserve">
+    <value>配置文件名称</value>
+  </data>
+  <data name="Profiles_New" xml:space="preserve">
+    <value>新建配置文件</value>
+  </data>
+  <data name="Profiles_NewName" xml:space="preserve">
+    <value>新配置文件</value>
+  </data>
+  <data name="Profiles_OneDisplay" xml:space="preserve">
+    <value>1 台显示器</value>
+  </data>
+  <data name="Profiles_PauseTooltip" xml:space="preserve">
+    <value>关闭所有配置文件,包括计划和应用配置文件。</value>
+  </data>
+  <data name="Profiles_Reset" xml:space="preserve">
+    <value>恢复原样</value>
+  </data>
+  <data name="Profiles_Share" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="Profiles_Status" xml:space="preserve">
+    <value>{0} 正在 {1} 上使用</value>
+  </data>
+  <data name="Profiles_StatusAppRule" xml:space="preserve">
+    <value>{0} 正在 {1} 上为当前应用使用</value>
+  </data>
+  <data name="Profiles_StatusManual" xml:space="preserve">
+    <value>{0} 正在 {1} 上使用,手动选择</value>
+  </data>
+  <data name="Profiles_StatusPaused" xml:space="preserve">
+    <value>配置文件已关闭。显示器显示原始颜色。</value>
+  </data>
+  <data name="Profiles_StatusSchedule" xml:space="preserve">
+    <value>{0} 正在 {1} 上使用,按计划</value>
+  </data>
+  <data name="Profiles_Temperature" xml:space="preserve">
+    <value>色温</value>
+  </data>
+  <data name="Profiles_Title" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="Profiles_UseMainSettings" xml:space="preserve">
+    <value>与其他显示器相同</value>
+  </data>
+  <data name="Profiles_Vibrance" xml:space="preserve">
+    <value>鲜艳度</value>
+  </data>
+  <data name="Profiles_VibranceHelp" xml:space="preserve">
+    <value>颜色饱和度,通过显卡驱动设置。</value>
+  </data>
+  <data name="Profiles_VibranceUnsupported" xml:space="preserve">
+    <value>鲜艳度需要由 NVIDIA、Intel 或 AMD GPU 驱动此显示器,并安装其显卡驱动。</value>
+  </data>
+  <data name="Settings_AllowFullRange" xml:space="preserve">
+    <value>允许更强的调整</value>
+  </data>
+  <data name="Settings_General" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="Settings_HotkeyFailure" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Settings_Hotkeys" xml:space="preserve">
+    <value>快捷键</value>
+  </data>
+  <data name="Settings_KeepRunning" xml:space="preserve">
+    <value>在后台运行</value>
+  </data>
+  <data name="Settings_KeepRunningHint" xml:space="preserve">
+    <value>关闭窗口后 DispHub 仍留在通知区域,快捷键和计划会继续工作。</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Settings_LanguageHint" xml:space="preserve">
+    <value>翻译经过用心制作,并由社区不断改进。</value>
+  </data>
+  <data name="Settings_LanguageRestart" xml:space="preserve">
+    <value>重新启动 DispHub 以切换语言。</value>
+  </data>
+  <data name="Settings_LanguageWindows" xml:space="preserve">
+    <value>与 Windows 相同</value>
+  </data>
+  <data name="Settings_Next" xml:space="preserve">
+    <value>下一个配置文件</value>
+  </data>
+  <data name="Settings_OsdDuration" xml:space="preserve">
+    <value>消息显示时长</value>
+  </data>
+  <data name="Settings_OsdHint" xml:space="preserve">
+    <value>配置文件变化时显示其名称,样式与快速面板相同。绝不会抢走游戏的焦点。</value>
+  </data>
+  <data name="Settings_OsdToggle" xml:space="preserve">
+    <value>屏幕消息</value>
+  </data>
+  <data name="Settings_Pause" xml:space="preserve">
+    <value>开启或关闭 DispHub</value>
+  </data>
+  <data name="Settings_PauseHint" xml:space="preserve">
+    <value>像电源按钮一样关闭 DispHub(恢复原始颜色)并重新开启。</value>
+  </data>
+  <data name="Settings_Previous" xml:space="preserve">
+    <value>上一个配置文件</value>
+  </data>
+  <data name="Settings_RestartNow" xml:space="preserve">
+    <value>立即重新启动</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>随 Windows 启动</value>
+  </data>
+  <data name="Settings_StartWithWindowsHint" xml:space="preserve">
+    <value>在通知区域安静启动并应用你的配置文件。</value>
+  </data>
+  <data name="Settings_StartupDenied" xml:space="preserve">
+    <value>Windows 不允许更改启动设置。</value>
+  </data>
+  <data name="Settings_StartupDisabledByPolicy" xml:space="preserve">
+    <value>你所在组织的策略阻止了启动应用。</value>
+  </data>
+  <data name="Settings_StartupDisabledByUser" xml:space="preserve">
+    <value>已在任务管理器中关闭。请在“设置 &gt; 应用 &gt; 启动”中重新开启。</value>
+  </data>
+  <data name="Settings_StartupUnreadable" xml:space="preserve">
+    <value>无法读取启动设置。</value>
+  </data>
+  <data name="Settings_Subtitle" xml:space="preserve">
+    <value>DispHub 的启动方式、外观和响应方式。</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="Settings_ThemeHint" xml:space="preserve">
+    <value>“跟随系统”会使用 Windows 的浅色或深色模式。</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Settings_TrayClick" xml:space="preserve">
+    <value>托盘图标</value>
+  </data>
+  <data name="Settings_TrayClickHint" xml:space="preserve">
+    <value>点击通知区域中的 DispHub 图标时打开的内容。右键单击始终显示菜单。</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>DispHub 无法启动。
+
+{0}
+
+日志: {1}</value>
+  </data>
+  <data name="Summary_Brightness" xml:space="preserve">
+    <value>亮度 {0}</value>
+  </data>
+  <data name="Summary_Contrast" xml:space="preserve">
+    <value>对比度 {0}</value>
+  </data>
+  <data name="Summary_Gamma" xml:space="preserve">
+    <value>伽马 {0}</value>
+  </data>
+  <data name="Summary_Original" xml:space="preserve">
+    <value>原始颜色</value>
+  </data>
+  <data name="Summary_Vibrance" xml:space="preserve">
+    <value>鲜艳度 {0}%</value>
+  </data>
+  <data name="Tray_Active" xml:space="preserve">
+    <value>DispHub · {0}</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Tray_MoreProfiles" xml:space="preserve">
+    <value>更多配置文件…</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>打开 DispHub</value>
+  </data>
+  <data name="Tray_Pause" xml:space="preserve">
+    <value>关闭 DispHub</value>
+  </data>
+  <data name="Tray_Paused" xml:space="preserve">
+    <value>DispHub · 已关闭</value>
+  </data>
+  <data name="Tray_Ready" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="Tray_Resume" xml:space="preserve">
+    <value>开启 DispHub</value>
+  </data>
+  <data name="Upgrade_AppRules" xml:space="preserve">
+    <value>按应用切换的配置文件</value>
+  </data>
+  <data name="Upgrade_Body" xml:space="preserve">
+    <value>{0} 是 DispHub Pro 的功能。
+
+Pro 为一次性购买,解锁:
+• 为每个应用切换配置文件,而不只是一个
+• 暗部增强,看清黑暗区域
+• 可设置显示器亮度、刷新率和 HDR 的配置文件
+• 使用电池时降低刷新率
+• 带平滑过渡的计划
+• 每台显示器使用不同设置
+• 超过 {1} 个配置文件
+
+同时也支持 DispHub 的开发。</value>
+  </data>
+  <data name="Upgrade_FailedText" xml:space="preserve">
+    <value>Microsoft Store 无法完成购买。请检查网络连接后重试。</value>
+  </data>
+  <data name="Upgrade_FailedTitle" xml:space="preserve">
+    <value>购买未完成</value>
+  </data>
+  <data name="Upgrade_MoreProfiles" xml:space="preserve">
+    <value>无限配置文件</value>
+  </data>
+  <data name="Upgrade_NotNow" xml:space="preserve">
+    <value>以后再说</value>
+  </data>
+  <data name="Upgrade_PerDisplay" xml:space="preserve">
+    <value>每台显示器使用不同设置</value>
+  </data>
+  <data name="Upgrade_Schedules" xml:space="preserve">
+    <value>计划</value>
+  </data>
+  <data name="Warning_HdrText" xml:space="preserve">
+    <value>Windows 不支持在 HDR 显示器上调整伽马,因此那里只应用鲜艳度。</value>
+  </data>
+  <data name="Warning_HdrTitle" xml:space="preserve">
+    <value>HDR 已开启</value>
+  </data>
+  <data name="Warning_LimitedText" xml:space="preserve">
+    <value>Windows 默认只允许较小的颜色调整,因此 DispHub 应用了最接近的允许版本。允许完整范围需要一次管理员批准。</value>
+  </data>
+  <data name="Warning_LimitedTitle" xml:space="preserve">
+    <value>Windows 正在限制这个配置文件</value>
+  </data>
+  <data name="Warning_RepairedText" xml:space="preserve">
+    <value>你的设置文件已损坏。DispHub 恢复了最近一份完好的副本,损坏的文件保留在旁边。</value>
+  </data>
+  <data name="Warning_RepairedTitle" xml:space="preserve">
+    <value>设置已修复</value>
+  </data>
+  <data name="Warning_ResetText" xml:space="preserve">
+    <value>有程序在不断重置显示器颜色(例如夜间模式、f.lux 或某个游戏)。DispHub 已暂停与它冲突 5 分钟。</value>
+  </data>
+  <data name="Warning_ResetTitle" xml:space="preserve">
+    <value>另一个应用正在更改你的颜色</value>
+  </data>
+  <data name="Settings_PreviewPicture" xml:space="preserve">
+    <value>预览图片</value>
+  </data>
+  <data name="Settings_PreviewPictureHint" xml:space="preserve">
+    <value>每个配置文件上的照片,以该配置文件的颜色显示。</value>
+  </data>
+  <data name="Preview_flowers" xml:space="preserve">
+    <value>野花</value>
+  </data>
+  <data name="Preview_reef" xml:space="preserve">
+    <value>珊瑚礁</value>
+  </data>
+  <data name="Preview_autumn" xml:space="preserve">
+    <value>秋日森林</value>
+  </data>
+  <data name="Preview_spring" xml:space="preserve">
+    <value>温泉</value>
+  </data>
+  <data name="Preview_canyon" xml:space="preserve">
+    <value>大峡谷</value>
+  </data>
+  <data name="Preview_sunset" xml:space="preserve">
+    <value>冬日夕阳</value>
+  </data>
+  <data name="Preview_redrock" xml:space="preserve">
+    <value>红岩拱门</value>
+  </data>
+  <data name="Preview_island" xml:space="preserve">
+    <value>海岛堡垒</value>
+  </data>
+  <data name="Preview_pebbles" xml:space="preserve">
+    <value>湖边卵石</value>
+  </data>
+  <data name="Preview_mountain" xml:space="preserve">
+    <value>雪山</value>
+  </data>
+  <data name="Preview_aurora" xml:space="preserve">
+    <value>北极光</value>
+  </data>
+  <data name="Preview_milkyway" xml:space="preserve">
+    <value>银河</value>
+  </data>
+  <data name="Preview_dunes" xml:space="preserve">
+    <value>星空沙丘</value>
+  </data>
+  <data name="Preview_cactus" xml:space="preserve">
+    <value>沙漠仙人掌</value>
+  </data>
+  <data name="Tray_StillRunningTitle" xml:space="preserve">
+    <value>DispHub 仍在运行</value>
+  </data>
+  <data name="Tray_StillRunningText" xml:space="preserve">
+    <value>它会在通知区域中让配置文件和快捷键继续工作。选择此处可将它的图标保留在任务栏上。</value>
+  </data>
+  <data name="Nav_Schedule" xml:space="preserve">
+    <value>计划</value>
+  </data>
+  <data name="Nav_Apps" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="Nav_Displays" xml:space="preserve">
+    <value>显示器</value>
+  </data>
+  <data name="Common_Off" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="Schedule_Title" xml:space="preserve">
+    <value>计划</value>
+  </data>
+  <data name="Schedule_ProHint" xml:space="preserve">
+    <value>计划需要 DispHub Pro 才能运行。你可以先在这里创建,并准确查看它会做什么。</value>
+  </data>
+  <data name="Schedule_LocationHint" xml:space="preserve">
+    <value>仅在这台电脑上用于计算日出和日落时间。</value>
+  </data>
+  <data name="Schedule_UseMyLocation" xml:space="preserve">
+    <value>使用我的位置</value>
+  </data>
+  <data name="Schedule_SearchCity" xml:space="preserve">
+    <value>搜索城市</value>
+  </data>
+  <data name="Schedule_Instant" xml:space="preserve">
+    <value>立即</value>
+  </data>
+  <data name="Schedule_LocationDenied" xml:space="preserve">
+    <value>Windows 不允许 DispHub 获取你的位置。请搜索城市,或在 Windows 设置中开启位置访问。</value>
+  </data>
+  <data name="Schedule_LocationUnavailable" xml:space="preserve">
+    <value>Windows 暂时无法确定你的位置。请改为搜索城市。</value>
+  </data>
+  <data name="Schedule_Near" xml:space="preserve">
+    <value>{0} 附近</value>
+  </data>
+  <data name="Schedule_StatusOff" xml:space="preserve">
+    <value>计划已关闭。开启后会自动切换配置文件。</value>
+  </data>
+  <data name="Schedule_StatusPro" xml:space="preserve">
+    <value>仅预览:计划需要 DispHub Pro 才能运行。</value>
+  </data>
+  <data name="Schedule_StatusRunning" xml:space="preserve">
+    <value>现在使用 {0}。{1} 将于 {2} 开始。</value>
+  </data>
+  <data name="Apps_Title" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="Apps_Subtitle" xml:space="preserve">
+    <value>某个应用在前台时自动使用指定配置文件,切换离开后回到你的常用配置文件。</value>
+  </data>
+  <data name="Apps_ProHint" xml:space="preserve">
+    <value>应用配置文件需要 DispHub Pro 才能运行。你现在就可以添加应用,升级后开始切换。</value>
+  </data>
+  <data name="Apps_LastInFront" xml:space="preserve">
+    <value>最近位于前台的应用</value>
+  </data>
+  <data name="Apps_AddThis" xml:space="preserve">
+    <value>添加此应用</value>
+  </data>
+  <data name="Apps_Rules" xml:space="preserve">
+    <value>你的应用</value>
+  </data>
+  <data name="Apps_AddApp" xml:space="preserve">
+    <value>添加应用</value>
+  </data>
+  <data name="Apps_PickTitle" xml:space="preserve">
+    <value>选择正在运行的应用</value>
+  </data>
+  <data name="Apps_Browse" xml:space="preserve">
+    <value>浏览</value>
+  </data>
+  <data name="Apps_Search" xml:space="preserve">
+    <value>搜索正在运行的应用</value>
+  </data>
+  <data name="Apps_EmptyTitle" xml:space="preserve">
+    <value>还没有应用</value>
+  </data>
+  <data name="Apps_EmptyHint" xml:space="preserve">
+    <value>添加一个游戏或应用,并选择它要使用的配置文件。</value>
+  </data>
+  <data name="Apps_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="Apps_OrderHint" xml:space="preserve">
+    <value>如果一个应用出现两次,以列表中第一条规则为准。</value>
+  </data>
+  <data name="Apps_ChooseProgram" xml:space="preserve">
+    <value>选择程序</value>
+  </data>
+  <data name="Apps_ProgramsFilter" xml:space="preserve">
+    <value>程序 (*.exe)|*.exe</value>
+  </data>
+  <data name="Apps_NothingYet" xml:space="preserve">
+    <value>暂无</value>
+  </data>
+  <data name="Apps_ForegroundRule" xml:space="preserve">
+    <value>在前台时使用 {0}</value>
+  </data>
+  <data name="Apps_ForegroundRulePro" xml:space="preserve">
+    <value>使用 DispHub Pro 时将使用 {0}</value>
+  </data>
+  <data name="Apps_ForegroundNoRule" xml:space="preserve">
+    <value>使用你的常用配置文件</value>
+  </data>
+  <data name="Displays_Title" xml:space="preserve">
+    <value>显示器</value>
+  </data>
+  <data name="Displays_BuiltIn" xml:space="preserve">
+    <value>内置显示器</value>
+  </data>
+  <data name="Displays_Subtitle" xml:space="preserve">
+    <value>已连接的显示器,以及 DispHub 在每台上显示的内容。关闭某台即可让它保持原样。</value>
+  </data>
+  <data name="Displays_Main" xml:space="preserve">
+    <value>主显示器</value>
+  </data>
+  <data name="Settings_AccentWindows" xml:space="preserve">
+    <value>与 Windows 相同</value>
+  </data>
+  <data name="Settings_TextNormal" xml:space="preserve">
+    <value>100%(正常)</value>
+  </data>
+  <data name="Settings_Appearance" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="Settings_ResetAppearance" xml:space="preserve">
+    <value>重置外观</value>
+  </data>
+  <data name="Settings_Accent" xml:space="preserve">
+    <value>强调色</value>
+  </data>
+  <data name="Settings_AccentHint" xml:space="preserve">
+    <value>用于开关、滑块和按钮。第一个颜色是 Windows 正在使用的颜色。</value>
+  </data>
+  <data name="Settings_Backdrop" xml:space="preserve">
+    <value>背景</value>
+  </data>
+  <data name="Settings_BackdropHint" xml:space="preserve">
+    <value>Mica 用壁纸的颜色为窗口着色,亚克力会模糊窗口后面的内容。除非选择“纯色”,快速面板和屏幕消息都使用亚克力。开启节能模式或关闭透明效果时,Windows 显示纯色。</value>
+  </data>
+  <data name="Settings_TextSize" xml:space="preserve">
+    <value>文字大小</value>
+  </data>
+  <data name="Settings_TextSizeHint" xml:space="preserve">
+    <value>放大或缩小 DispHub 的窗口。</value>
+  </data>
+  <data name="Settings_CompactNav" xml:space="preserve">
+    <value>紧凑菜单</value>
+  </data>
+  <data name="Settings_CompactNavHint" xml:space="preserve">
+    <value>左侧页面只显示图标。</value>
+  </data>
+  <data name="Settings_StartPage" xml:space="preserve">
+    <value>起始页</value>
+  </data>
+  <data name="Settings_StartPageHint" xml:space="preserve">
+    <value>打开窗口时显示的页面。</value>
+  </data>
+  <data name="Settings_OsdPosition" xml:space="preserve">
+    <value>消息位置</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Mica" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Enum_WindowBackdrop_MicaAlt" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Acrylic" xml:space="preserve">
+    <value>亚克力</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
+    <value>纯色</value>
+  </data>
+  <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
+    <value>左上</value>
+  </data>
+  <data name="Enum_OsdPosition_TopCenter" xml:space="preserve">
+    <value>顶部居中</value>
+  </data>
+  <data name="Enum_OsdPosition_TopRight" xml:space="preserve">
+    <value>右上</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomLeft" xml:space="preserve">
+    <value>左下</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomCenter" xml:space="preserve">
+    <value>底部居中</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomRight" xml:space="preserve">
+    <value>右下</value>
+  </data>
+  <data name="Profiles_NewHint" xml:space="preserve">
+    <value>空白、模板或链接</value>
+  </data>
+  <data name="Profiles_Blank" xml:space="preserve">
+    <value>空白配置文件</value>
+  </data>
+  <data name="Profiles_MoreTitle" xml:space="preserve">
+    <value>更多配置文件</value>
+  </data>
+  <data name="Profiles_MoreHint" xml:space="preserve">
+    <value>免费版包含 {0} 个。Pro 没有限制。</value>
+  </data>
+  <data name="Profiles_More" xml:space="preserve">
+    <value>更多</value>
+  </data>
+  <data name="Profiles_FullTitle" xml:space="preserve">
+    <value>{0} 个配置文件</value>
+  </data>
+  <data name="Profiles_FullHint" xml:space="preserve">
+    <value>DispHub 最多可保存的数量</value>
+  </data>
+  <data name="Profiles_NeedsPro" xml:space="preserve">
+    <value>为 DispHub Pro 保留</value>
+  </data>
+  <data name="Apps_FreeHint" xml:space="preserve">
+    <value>免费版可为一个应用切换配置文件。Pro 可为每个应用切换。</value>
+  </data>
+  <data name="Apps_NeedsPro" xml:space="preserve">
+    <value>使用 DispHub Pro 时切换</value>
+  </data>
+  <data name="Trial_CardTitle" xml:space="preserve">
+    <value>Pro 试用</value>
+  </data>
+  <data name="Trial_DaysLeft" xml:space="preserve">
+    <value>还可使用全部 Pro 功能 {0} 天。</value>
+  </data>
+  <data name="Trial_DayLeft" xml:space="preserve">
+    <value>全部 Pro 功能的最后一天。</value>
+  </data>
+  <data name="Trial_EndedTitle" xml:space="preserve">
+    <value>你的 Pro 试用已结束</value>
+  </data>
+  <data name="Trial_EndedUsage" xml:space="preserve">
+    <value>本周 DispHub 为你的应用切换了 {0} 次配置文件,并按计划切换了 {1} 次。购买 Pro 即可全部保留,一次性购买。</value>
+  </data>
+  <data name="Trial_EndedGeneric" xml:space="preserve">
+    <value>按应用切换的配置文件、计划、每台显示器的设置和无限配置文件都随 Pro 保留,一次性购买。</value>
+  </data>
+  <data name="Trial_EndedFree" xml:space="preserve">
+    <value>免费版保留你的前 {0} 个配置文件和一条应用规则。其余内容会保留到你升级时。</value>
+  </data>
+  <data name="Trial_ContinueFree" xml:space="preserve">
+    <value>继续使用免费版</value>
+  </data>
+  <data name="Profiles_ShadowBoost" xml:space="preserve">
+    <value>暗部增强</value>
+  </data>
+  <data name="Profiles_ShadowBoostPro" xml:space="preserve">
+    <value>暗部增强是 DispHub Pro 的功能</value>
+  </data>
+  <data name="Upgrade_ShadowBoost" xml:space="preserve">
+    <value>暗部增强</value>
+  </data>
+  <data name="Summary_Shadows" xml:space="preserve">
+    <value>暗部 +{0}</value>
+  </data>
+  <data name="Profiles_RefreshRate" xml:space="preserve">
+    <value>刷新率</value>
+  </data>
+  <data name="Profiles_RefreshHighest" xml:space="preserve">
+    <value>最高</value>
+  </data>
+  <data name="Profiles_RefreshLowest" xml:space="preserve">
+    <value>最低</value>
+  </data>
+  <data name="Profiles_RefreshRateHz" xml:space="preserve">
+    <value>{0} ({1} Hz)</value>
+  </data>
+  <data name="Profiles_Unchanged" xml:space="preserve">
+    <value>不更改</value>
+  </data>
+  <data name="Profiles_Hdr" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="Profiles_HdrOn" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="Profiles_HdrOff" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="Profiles_DisplayModesPro" xml:space="preserve">
+    <value>切换刷新率或 HDR 的配置文件是 DispHub Pro 的功能</value>
+  </data>
+  <data name="Upgrade_DisplayModes" xml:space="preserve">
+    <value>切换刷新率和 HDR</value>
+  </data>
+  <data name="Displays_LowRefreshOnBattery" xml:space="preserve">
+    <value>使用电池时降低刷新率 ({0} Hz)</value>
+  </data>
+  <data name="Displays_LowRefreshPro" xml:space="preserve">
+    <value>使用电池时降低刷新率是 DispHub Pro 的功能</value>
+  </data>
+  <data name="Profiles_MonitorBrightness" xml:space="preserve">
+    <value>屏幕亮度</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessOff" xml:space="preserve">
+    <value>保持不变</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessPro" xml:space="preserve">
+    <value>设置屏幕自身亮度的配置文件是 DispHub Pro 的功能</value>
+  </data>
+  <data name="Upgrade_MonitorBrightness" xml:space="preserve">
+    <value>设置屏幕自身的亮度</value>
+  </data>
+  <data name="Displays_MonitorBrightness" xml:space="preserve">
+    <value>屏幕亮度</value>
+  </data>
+  <data name="Profiles_FromTemplate" xml:space="preserve">
+    <value>从模板</value>
+  </data>
+  <data name="Profiles_FromLink" xml:space="preserve">
+    <value>从链接</value>
+  </data>
+  <data name="Template_vivid" xml:space="preserve">
+    <value>鲜艳</value>
+  </data>
+  <data name="Template_vividHint" xml:space="preserve">
+    <value>为照片、视频和游戏带来更丰富的色彩。</value>
+  </data>
+  <data name="Template_shadows" xml:space="preserve">
+    <value>暗部细节</value>
+  </data>
+  <data name="Template_shadowsHint" xml:space="preserve">
+    <value>提亮暗部,让阴影中的细节更容易看清。</value>
+  </data>
+  <data name="Template_film" xml:space="preserve">
+    <value>电影</value>
+  </data>
+  <data name="Template_filmHint" xml:space="preserve">
+    <value>更深的黑色和略高的对比度,适合电影和剧集。</value>
+  </data>
+  <data name="Template_evening" xml:space="preserve">
+    <value>傍晚</value>
+  </data>
+  <data name="Template_eveningHint" xml:space="preserve">
+    <value>日落后更温暖、更柔和的光线。</value>
+  </data>
+  <data name="Template_dim" xml:space="preserve">
+    <value>暗室</value>
+  </data>
+  <data name="Template_dimHint" xml:space="preserve">
+    <value>比显示器的最低亮度设置还要暗。</value>
+  </data>
+  <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
+    <value>显示快速面板</value>
+  </data>
+  <data name="Quick_Paused" xml:space="preserve">
+    <value>配置文件已关闭</value>
+  </data>
+  <data name="Quick_FromSchedule" xml:space="preserve">
+    <value>{0} · 按计划</value>
+  </data>
+  <data name="Quick_FromApp" xml:space="preserve">
+    <value>{0} · 用于此应用</value>
+  </data>
+  <data name="Quick_Active" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Quick_Adjusting" xml:space="preserve">
+    <value>正在调整 {0}</value>
+  </data>
+  <data name="Quick_Open" xml:space="preserve">
+    <value>打开 DispHub</value>
+  </data>
+  <data name="Common_LinkCopied" xml:space="preserve">
+    <value>链接已复制</value>
+  </data>
+  <data name="Settings_QuickPanelHotkey" xml:space="preserve">
+    <value>快速面板</value>
+  </data>
+  <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
+    <value>无需打开窗口即可切换配置文件、调整亮度和色温。</value>
+  </data>
+  <data name="Quick_Brightness" xml:space="preserve">
+    <value>亮度</value>
+  </data>
+  <data name="Quick_Warmth" xml:space="preserve">
+    <value>暖色</value>
+  </data>
+  <data name="Displays_Showing" xml:space="preserve">
+    <value>正在显示 {0}</value>
+  </data>
+  <data name="Displays_ShowingOriginal" xml:space="preserve">
+    <value>原始颜色(配置文件已关闭)</value>
+  </data>
+  <data name="Displays_LeftAlone" xml:space="preserve">
+    <value>DispHub 不会更改这台显示器</value>
+  </data>
+  <data name="Displays_HdrNote" xml:space="preserve">
+    <value>HDR 已开启,因此 Windows 不允许在这里更改颜色。鲜艳度仍然有效。</value>
+  </data>
+  <data name="Displays_LimitedNote" xml:space="preserve">
+    <value>Windows 默认只允许较小的颜色调整,因此这台显示器会显示强烈配置文件的柔和版本。</value>
+  </data>
+  <data name="Displays_NoVibrance" xml:space="preserve">
+    <value>这台显示器不支持鲜艳度。</value>
+  </data>
+  <data name="Displays_UseOnThis" xml:space="preserve">
+    <value>在这台显示器上使用 DispHub</value>
+  </data>
+  <data name="Schedule_Today" xml:space="preserve">
+    <value>{0}(今天)</value>
+  </data>
+  <data name="Schedule_EveryDay" xml:space="preserve">
+    <value>每天</value>
+  </data>
+  <data name="Schedule_Weekdays" xml:space="preserve">
+    <value>工作日</value>
+  </data>
+  <data name="Schedule_Weekends" xml:space="preserve">
+    <value>周末</value>
+  </data>
+  <data name="Schedule_Minutes" xml:space="preserve">
+    <value>{0} 分钟</value>
+  </data>
+  <data name="Schedule_Hours" xml:space="preserve">
+    <value>{0} 小时</value>
+  </data>
+  <data name="Schedule_HoursMinutes" xml:space="preserve">
+    <value>{0} 小时 {1} 分钟</value>
+  </data>
+  <data name="Schedule_ChangePlace" xml:space="preserve">
+    <value>更改地点</value>
+  </data>
+  <data name="Schedule_Changes" xml:space="preserve">
+    <value>切换</value>
+  </data>
+  <data name="Schedule_AddSlot" xml:space="preserve">
+    <value>添加切换</value>
+  </data>
+  <data name="Schedule_Starts" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="Schedule_Fade" xml:space="preserve">
+    <value>过渡</value>
+  </data>
+  <data name="Schedule_On" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="Schedule_AtTime" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Schedule_AtClockTime" xml:space="preserve">
+    <value>在指定时间</value>
+  </data>
+  <data name="Schedule_Sunrise" xml:space="preserve">
+    <value>日出时</value>
+  </data>
+  <data name="Schedule_Sunset" xml:space="preserve">
+    <value>日落时</value>
+  </data>
+  <data name="Schedule_Remove" xml:space="preserve">
+    <value>删除此切换</value>
+  </data>
+  <data name="Schedule_Profile" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="Schedule_NoLocation" xml:space="preserve">
+    <value>在你选择地点之前,日出为 {0},日落为 {1}。</value>
+  </data>
+  <data name="Schedule_LocationSun" xml:space="preserve">
+    <value>日出 {1},日落 {2} · {0}</value>
+  </data>
+  <data name="Schedule_LocationPolar" xml:space="preserve">
+    <value>当天没有日出或日落 · {0}</value>
+  </data>
+  <data name="Accent_blue" xml:space="preserve">
+    <value>蓝色</value>
+  </data>
+  <data name="Accent_purple" xml:space="preserve">
+    <value>紫色</value>
+  </data>
+  <data name="Accent_pink" xml:space="preserve">
+    <value>粉色</value>
+  </data>
+  <data name="Accent_red" xml:space="preserve">
+    <value>红色</value>
+  </data>
+  <data name="Accent_orange" xml:space="preserve">
+    <value>橙色</value>
+  </data>
+  <data name="Accent_yellow" xml:space="preserve">
+    <value>黄色</value>
+  </data>
+  <data name="Accent_green" xml:space="preserve">
+    <value>绿色</value>
+  </data>
+  <data name="Accent_teal" xml:space="preserve">
+    <value>青色</value>
+  </data>
+  <data name="Accent_graphite" xml:space="preserve">
+    <value>石墨色</value>
+  </data>
+  <data name="Settings_Animations" xml:space="preserve">
+    <value>动画</value>
+  </data>
+  <data name="Settings_AnimationsHint" xml:space="preserve">
+    <value>DispHub 窗口中的平滑滚动和其他动效。</value>
+  </data>
+  <data name="Schedule_SunsetToSunrise" xml:space="preserve">
+    <value>日落到日出</value>
+  </data>
+  <data name="Schedule_SetHours" xml:space="preserve">
+    <value>固定时间</value>
+  </data>
+  <data name="Schedule_Custom" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="Schedule_TurnOn" xml:space="preserve">
+    <value>夜晚开始</value>
+  </data>
+  <data name="Schedule_TurnOff" xml:space="preserve">
+    <value>夜晚结束</value>
+  </data>
+  <data name="Schedule_NightProfile" xml:space="preserve">
+    <value>夜间配置文件</value>
+  </data>
+  <data name="Schedule_NightProfileHint" xml:space="preserve">
+    <value>夜间使用。</value>
+  </data>
+  <data name="Schedule_DayProfile" xml:space="preserve">
+    <value>白天配置文件</value>
+  </data>
+  <data name="Schedule_DayProfileHint" xml:space="preserve">
+    <value>白天使用。</value>
+  </data>
+  <data name="Schedule_FadeHint" xml:space="preserve">
+    <value>每次切换所需的时间。缓慢过渡对眼睛更友好。</value>
+  </data>
+  <data name="Schedule_TodayTitle" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="TimePicker_Hour" xml:space="preserve">
+    <value>时</value>
+  </data>
+  <data name="TimePicker_Minute" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="TimePicker_Period" xml:space="preserve">
+    <value>上午或下午</value>
+  </data>
+  <data name="Power_Name" xml:space="preserve">
+    <value>开启或关闭 DispHub</value>
+  </data>
+  <data name="Power_TurnOff" xml:space="preserve">
+    <value>关闭 DispHub。显示器将显示原始颜色。</value>
+  </data>
+  <data name="Power_TurnOn" xml:space="preserve">
+    <value>开启 DispHub</value>
+  </data>
+  <data name="Quick_Off" xml:space="preserve">
+    <value>DispHub 已关闭</value>
+  </data>
+  <data name="Quick_ProfilesTooltip" xml:space="preserve">
+    <value>开启或关闭配置文件</value>
+  </data>
+  <data name="Osd_ProfilesOff" xml:space="preserve">
+    <value>配置文件已关闭</value>
+  </data>
+  <data name="Tray_ProfilesOff" xml:space="preserve">
+    <value>DispHub · 配置文件已关闭</value>
+  </data>
+  <data name="Profiles_StatusOff" xml:space="preserve">
+    <value>DispHub 已关闭。用顶部的电源按钮开启。</value>
+  </data>
+  <data name="Displays_ShowingOff" xml:space="preserve">
+    <value>原始颜色(DispHub 已关闭)</value>
+  </data>
+  <data name="Onboarding_WelcomeTitle" xml:space="preserve">
+    <value>欢迎使用 DispHub</value>
+  </data>
+  <data name="Onboarding_WelcomeText" xml:space="preserve">
+    <value>为每个时刻创建显示配置文件:玩游戏时更亮更鲜艳,傍晚更温暖,或者恢复显示器的原始颜色。点击或按快捷键即可切换,也可以让 DispHub 自动切换。</value>
+  </data>
+  <data name="Onboarding_TrayTitle" xml:space="preserve">
+    <value>在任务栏上找到 DispHub</value>
+  </data>
+  <data name="Onboarding_TrayText" xml:space="preserve">
+    <value>DispHub 在通知区域中运行。如果看不到它的图标,请选择时钟旁的箭头,然后把图标拖到任务栏上,使其始终可见。</value>
+  </data>
+  <data name="Onboarding_LeftClick" xml:space="preserve">
+    <value>左键单击</value>
+  </data>
+  <data name="Onboarding_RightClick" xml:space="preserve">
+    <value>右键单击</value>
+  </data>
+  <data name="Onboarding_RightClickHint" xml:space="preserve">
+    <value>打开包含配置文件和电源按钮的菜单。</value>
+  </data>
+  <data name="Onboarding_HotkeysTitle" xml:space="preserve">
+    <value>使用键盘快捷键</value>
+  </data>
+  <data name="Onboarding_HotkeysText" xml:space="preserve">
+    <value>在任何应用中切换配置文件,包括全屏游戏。一条小消息会显示切换到了哪个配置文件。你可以在设置中更改快捷键。</value>
+  </data>
+  <data name="Onboarding_PowerTitle" xml:space="preserve">
+    <value>一键全部关闭</value>
+  </data>
+  <data name="Onboarding_PowerText" xml:space="preserve">
+    <value>电源按钮会关闭 DispHub 并恢复显示器的原始颜色。再次选择即可从上次的地方继续。</value>
+  </data>
+  <data name="Onboarding_Back" xml:space="preserve">
+    <value>上一步</value>
+  </data>
+  <data name="Onboarding_Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="Onboarding_Done" xml:space="preserve">
+    <value>以后再说</value>
+  </data>
+  <data name="Schedule_StatusDispHubOff" xml:space="preserve">
+    <value>DispHub 已关闭,计划正在等待。用电源按钮开启。</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="Home_Now" xml:space="preserve">
+    <value>当前配置文件</value>
+  </data>
+  <data name="Home_Off" xml:space="preserve">
+    <value>DispHub 已关闭</value>
+  </data>
+  <data name="Home_Original" xml:space="preserve">
+    <value>原始颜色</value>
+  </data>
+  <data name="Home_ReasonOff" xml:space="preserve">
+    <value>显示器显示原始颜色。</value>
+  </data>
+  <data name="Home_ReasonProfilesOff" xml:space="preserve">
+    <value>配置文件已关闭,显示器显示原始颜色。</value>
+  </data>
+  <data name="Home_ReasonSchedule" xml:space="preserve">
+    <value>按计划</value>
+  </data>
+  <data name="Home_ReasonScheduleUntil" xml:space="preserve">
+    <value>按计划,直到 {0}</value>
+  </data>
+  <data name="Home_ReasonApp" xml:space="preserve">
+    <value>正在使用 {0}</value>
+  </data>
+  <data name="Home_ReasonAppUnknown" xml:space="preserve">
+    <value>正在使用此应用</value>
+  </data>
+  <data name="Home_NoHotkey" xml:space="preserve">
+    <value>无快捷键</value>
+  </data>
+  <data name="Home_Features" xml:space="preserve">
+    <value>概览</value>
+  </data>
+  <data name="Home_Profiles" xml:space="preserve">
+    <value>{0} 个配置文件</value>
+  </data>
+  <data name="Home_OneProfile" xml:space="preserve">
+    <value>1 个配置文件</value>
+  </data>
+  <data name="Home_ScheduleNext" xml:space="preserve">
+    <value>下一个: {0} {1}</value>
+  </data>
+  <data name="Home_NoApps" xml:space="preserve">
+    <value>未添加应用</value>
+  </data>
+  <data name="Home_Apps" xml:space="preserve">
+    <value>{0} 个应用</value>
+  </data>
+  <data name="Home_OneApp" xml:space="preserve">
+    <value>1 个应用</value>
+  </data>
+  <data name="Home_Displays" xml:space="preserve">
+    <value>{0} 台显示器</value>
+  </data>
+  <data name="Home_OneDisplay" xml:space="preserve">
+    <value>1 台显示器</value>
+  </data>
+  <data name="Home_SettingsStatus" xml:space="preserve">
+    <value>键盘快捷键、启动和外观</value>
+  </data>
+  <data name="Home_WhatsNew" xml:space="preserve">
+    <value>新功能</value>
+  </data>
+  <data name="Home_Rate" xml:space="preserve">
+    <value>为 DispHub 评分</value>
+  </data>
+  <data name="Home_Report" xml:space="preserve">
+    <value>报告问题</value>
+  </data>
+  <data name="Home_GitHub" xml:space="preserve">
+    <value>源代码</value>
+  </data>
+  <data name="Home_Version" xml:space="preserve">
+    <value>DispHub {0}</value>
+  </data>
+  <data name="Home_Tour" xml:space="preserve">
+    <value>开始导览</value>
+  </data>
+  <data name="Tour_Skip" xml:space="preserve">
+    <value>跳过</value>
+  </data>
+  <data name="Tour_Back" xml:space="preserve">
+    <value>上一步</value>
+  </data>
+  <data name="Tour_Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="Tour_Done" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="Tour_Count" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="Tour_PowerTitle" xml:space="preserve">
+    <value>开启或关闭 DispHub</value>
+  </data>
+  <data name="Tour_PowerText" xml:space="preserve">
+    <value>关闭 DispHub 会恢复显示器的原始颜色。重新开启即可从上次的地方继续。</value>
+  </data>
+  <data name="Tour_NowTitle" xml:space="preserve">
+    <value>当前配置文件</value>
+  </data>
+  <data name="Tour_NowText" xml:space="preserve">
+    <value>查看正在使用哪个配置文件以及原因:是你选择的、计划选择的,还是某个应用有自己的配置文件。</value>
+  </data>
+  <data name="Onboarding_Step" xml:space="preserve">
+    <value>{0}/{1}</value>
+  </data>
+  <data name="Onboarding_Tour" xml:space="preserve">
+    <value>开始导览</value>
+  </data>
+  <data name="Search_Placeholder" xml:space="preserve">
+    <value>搜索设置</value>
+  </data>
+  <data name="Search_Page" xml:space="preserve">
+    <value>页面</value>
+  </data>
+  <data name="Quick_NothingToAdjust" xml:space="preserve">
+    <value>选择一个配置文件来调整</value>
+  </data>
+  <data name="Home_TurnProfilesOn" xml:space="preserve">
+    <value>开启配置文件</value>
+  </data>
+  <data name="Home_ReasonSelected" xml:space="preserve">
+    <value>已选择</value>
+  </data>
+  <data name="Home_ReasonManualUntil" xml:space="preserve">
+    <value>已选择,直到计划在 {0} 切换</value>
+  </data>
+  <data name="Home_Today" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="Home_EditSchedule" xml:space="preserve">
+    <value>编辑计划</value>
+  </data>
+  <data name="Home_NoSchedule" xml:space="preserve">
+    <value>计划</value>
+  </data>
+  <data name="Home_NoScheduleHint" xml:space="preserve">
+    <value>在日落和日出时,或在你选择的时间自动切换配置文件。</value>
+  </data>
+  <data name="Home_ScheduleNeedsPro" xml:space="preserve">
+    <value>你的计划已设置好。它需要 DispHub Pro 才能运行。</value>
+  </data>
+  <data name="Home_SetUpSchedule" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Tour_ProfilesTitle" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="Tour_ProfilesText" xml:space="preserve">
+    <value>选择一个配置文件即可使用。它的设置显示在下方,你可以在那里微调并为它指定键盘快捷键。</value>
+  </data>
+  <data name="Tour_ScheduleTitle" xml:space="preserve">
+    <value>计划</value>
+  </data>
+  <data name="Tour_ScheduleText" xml:space="preserve">
+    <value>在日落和日出时、在固定时间或按你自己的时间表自动切换配置文件。</value>
+  </data>
+  <data name="Tour_AppsTitle" xml:space="preserve">
+    <value>应用配置文件</value>
+  </data>
+  <data name="Tour_AppsText" xml:space="preserve">
+    <value>为游戏或应用指定专属配置文件。只要该应用在前台,DispHub 就会使用它。</value>
+  </data>
+  <data name="Tour_HotkeysTitle" xml:space="preserve">
+    <value>键盘快捷键</value>
+  </data>
+  <data name="Tour_HotkeysText" xml:space="preserve">
+    <value>在任何应用中开启或关闭 DispHub 并切换配置文件,包括全屏游戏。</value>
+  </data>
+  <data name="Schedule_TomorrowAt" xml:space="preserve">
+    <value>明天 {0}</value>
+  </data>
+  <data name="Schedule_DayAt" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="Settings_PanelOpacity" xml:space="preserve">
+    <value>快速面板和消息的不透明度</value>
+  </data>
+  <data name="Settings_PanelOpacityHint" xml:space="preserve">
+    <value>快速面板和屏幕消息的模糊背景有多不透明。数值越低,越能看到后面的内容。需要 DispHub Pro。</value>
+  </data>
+</root>

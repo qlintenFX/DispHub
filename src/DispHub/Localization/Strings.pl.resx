@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="About_About" xml:space="preserve">
+    <value>Informacje</value>
+  </data>
+  <data name="About_Community" xml:space="preserve">
+    <value>Wszyscy, którzy testują, tłumaczą i udostępniają ustawienia</value>
+  </data>
+  <data name="About_CommunityHint" xml:space="preserve">
+    <value>DispHub jest lepszy z każdym zgłoszeniem i ustawieniem. Dziękuję.</value>
+  </data>
+  <data name="About_Contributors" xml:space="preserve">
+    <value>Współtwórcy</value>
+  </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>Skopiowano</value>
+  </data>
+  <data name="About_CopyDiagnostics" xml:space="preserve">
+    <value>Kopiuj diagnostykę</value>
+  </data>
+  <data name="About_Credits" xml:space="preserve">
+    <value>Podziękowania</value>
+  </data>
+  <data name="About_EditionAll" xml:space="preserve">
+    <value>DispHub (wszystkie funkcje)</value>
+  </data>
+  <data name="About_EditionFree" xml:space="preserve">
+    <value>DispHub Free</value>
+  </data>
+  <data name="About_EditionTrial" xml:space="preserve">
+    <value>DispHub Pro – wersja próbna</value>
+  </data>
+  <data name="About_EditionPro" xml:space="preserve">
+    <value>DispHub Pro</value>
+  </data>
+  <data name="About_FluentFlyout" xml:space="preserve">
+    <value>FluentFlyout autorstwa unchihugo</value>
+  </data>
+  <data name="About_FluentFlyoutHint" xml:space="preserve">
+    <value>Starannie dopracowane narzędzie dla Windows, które zainspirowało wygląd i działanie DispHub.</value>
+  </data>
+  <data name="About_Help" xml:space="preserve">
+    <value>Pomoc i opinie</value>
+  </data>
+  <data name="About_Licence" xml:space="preserve">
+    <value>DispHub jest oprogramowaniem open source na licencji GNU General Public License v3.0. Przechowuje wszystko na Twoim komputerze i nie wysyła telemetrii.</value>
+  </data>
+  <data name="About_Logs" xml:space="preserve">
+    <value>Pliki dziennika</value>
+  </data>
+  <data name="About_Note1" xml:space="preserve">
+    <value>Cześć, jestem Quinten. Stworzyłem DispHub, bo ciągle otwierałem trzy różne panele sterowania tylko po to, żeby gra wyglądała dobrze albo żeby ekran był łagodniejszy dla oczu wieczorem. Chciałem jednej małej, cichej aplikacji, która robi to porządnie i wygląda, jakby była częścią Windows.</value>
+  </data>
+  <data name="About_Note2" xml:space="preserve">
+    <value>DispHub tworzy jedna osoba, w wolnym czasie i z dużą starannością. Jeśli dzięki niemu ekran jest choć trochę przyjemniejszy, wiele to dla mnie znaczy. Pomysły i zgłoszenia błędów są zawsze mile widziane na GitHubie; czytam każde z nich.</value>
+  </data>
+  <data name="About_NoteHeader" xml:space="preserve">
+    <value>Kilka słów od twórcy</value>
+  </data>
+  <data name="About_NoteSignature" xml:space="preserve">
+    <value>Dziękuję, że korzystasz z DispHub. — Quinten (qlintenFX)</value>
+  </data>
+  <data name="About_Notices" xml:space="preserve">
+    <value>Informacje o innych firmach</value>
+  </data>
+  <data name="About_OpenFolder" xml:space="preserve">
+    <value>Otwórz folder</value>
+  </data>
+  <data name="About_OpenGitHub" xml:space="preserve">
+    <value>Otwórz GitHub</value>
+  </data>
+  <data name="About_Privacy" xml:space="preserve">
+    <value>Prywatność</value>
+  </data>
+  <data name="About_Report" xml:space="preserve">
+    <value>Zgłoś problem lub zaproponuj funkcję</value>
+  </data>
+  <data name="About_ReportHint" xml:space="preserve">
+    <value>Dołącz diagnostykę, żebyśmy widzieli Twoje ekrany i kartę graficzną.</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>Kod źródłowy</value>
+  </data>
+  <data name="About_Tip" xml:space="preserve">
+    <value>Zostaw napiwek</value>
+  </data>
+  <data name="About_TipHint" xml:space="preserve">
+    <value>Jednorazowe podziękowanie, które pomaga rozwijać DispHub. Nie zmienia zakresu funkcji.</value>
+  </data>
+  <data name="About_TipThanks" xml:space="preserve">
+    <value>Dziękuję</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Wersja</value>
+  </data>
+  <data name="About_WpfUi" xml:space="preserve">
+    <value>WPF UI od lepo.co, w wersji unchihugo</value>
+  </data>
+  <data name="About_WpfUiHint" xml:space="preserve">
+    <value>Kontrolki Fluent i okno Mica, w wersji FluentFlyout, która lepiej pasuje do Windows 11.</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Common_GetPro" xml:space="preserve">
+    <value>Kup Pro</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Common_On" xml:space="preserve">
+    <value>Wł.</value>
+  </data>
+  <data name="Window_Minimise" xml:space="preserve">
+    <value>Minimalizuj</value>
+  </data>
+  <data name="Window_Maximise" xml:space="preserve">
+    <value>Maksymalizuj</value>
+  </data>
+  <data name="Window_Restore" xml:space="preserve">
+    <value>Przywróć</value>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="Default_Gaming" xml:space="preserve">
+    <value>Gry</value>
+  </data>
+  <data name="Default_Night" xml:space="preserve">
+    <value>Noc</value>
+  </data>
+  <data name="Default_Standard" xml:space="preserve">
+    <value>Standardowy</value>
+  </data>
+  <data name="Enum_ThemePreference_Dark" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="Enum_ThemePreference_Light" xml:space="preserve">
+    <value>Jasny</value>
+  </data>
+  <data name="Enum_ThemePreference_System" xml:space="preserve">
+    <value>Systemowy</value>
+  </data>
+  <data name="Enum_TrayClickAction_OpenWindow" xml:space="preserve">
+    <value>Otwórz okno</value>
+  </data>
+  <data name="Enum_TrayClickAction_ShowProfileMenu" xml:space="preserve">
+    <value>Pokaż menu profili</value>
+  </data>
+  <data name="Hotkey_Duplicate" xml:space="preserve">
+    <value>Już używany przez inny skrót DispHub</value>
+  </data>
+  <data name="Hotkey_InUseElsewhere" xml:space="preserve">
+    <value>Używany przez inną aplikację</value>
+  </data>
+  <data name="Hotkey_NeedsModifier" xml:space="preserve">
+    <value>Dodaj Ctrl, Alt lub Win</value>
+  </data>
+  <data name="Hotkey_NotSet" xml:space="preserve">
+    <value>Nie ustawiono</value>
+  </data>
+  <data name="Hotkey_Recording" xml:space="preserve">
+    <value>Naciśnij kombinację klawiszy…</value>
+  </data>
+  <data name="Hotkey_Refused" xml:space="preserve">
+    <value>Windows odrzucił ten skrót</value>
+  </data>
+  <data name="Hotkey_TypesCharacter" xml:space="preserve">
+    <value>Ta kombinacja wpisuje na Twojej klawiaturze „{0}” (AltGr), więc wybierz inną</value>
+  </data>
+  <data name="Nav_About" xml:space="preserve">
+    <value>Informacje</value>
+  </data>
+  <data name="Nav_Profiles" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="Osd_Paused" xml:space="preserve">
+    <value>DispHub wyłączony</value>
+  </data>
+  <data name="Osd_StillRunning" xml:space="preserve">
+    <value>DispHub nadal działa</value>
+  </data>
+  <data name="Preset_AddText" xml:space="preserve">
+    <value>{0}
+{1}
+
+Zostanie dodany jako nowy profil i włączony, żebyś mógł go zobaczyć.</value>
+  </data>
+  <data name="Preset_AddTitle" xml:space="preserve">
+    <value>Dodać to ustawienie?</value>
+  </data>
+  <data name="Preset_InvalidLink" xml:space="preserve">
+    <value>Ten link nie jest prawidłowym ustawieniem DispHub.</value>
+  </data>
+  <data name="Presets_ImportHint" xml:space="preserve">
+    <value>Wklej link, który ktoś udostępnił. Aby udostępnić własny, otwórz profil i kliknij Udostępnij.</value>
+  </data>
+  <data name="Presets_ImportTitle" xml:space="preserve">
+    <value>Dodaj ustawienie z linku</value>
+  </data>
+  <data name="Presets_InvalidLink" xml:space="preserve">
+    <value>To nie wygląda na link do ustawienia DispHub.</value>
+  </data>
+  <data name="Pro_LongPitch" xml:space="preserve">
+    <value>Profile dla aplikacji, harmonogramy, rozjaśnianie cieni, odświeżanie i HDR w profilach oraz nieograniczona liczba profili. Jednorazowy zakup.</value>
+  </data>
+  <data name="Pro_ShortPitch" xml:space="preserve">
+    <value>Profile dla aplikacji, harmonogramy, rozjaśnianie cieni, HDR i więcej. Jednorazowy zakup.</value>
+  </data>
+  <data name="Profiles_AllDisplays" xml:space="preserve">
+    <value>Wszystkie ekrany</value>
+  </data>
+  <data name="Profiles_ApplyTo" xml:space="preserve">
+    <value>Zastosuj do</value>
+  </data>
+  <data name="Profiles_Brightness" xml:space="preserve">
+    <value>Jasność</value>
+  </data>
+  <data name="Profiles_Contrast" xml:space="preserve">
+    <value>Kontrast</value>
+  </data>
+  <data name="Profiles_CopyName" xml:space="preserve">
+    <value>{0} – kopia</value>
+  </data>
+  <data name="Profiles_Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="Profiles_Displays" xml:space="preserve">
+    <value>Ekrany: {0}</value>
+  </data>
+  <data name="Profiles_Duplicate" xml:space="preserve">
+    <value>Duplikuj</value>
+  </data>
+  <data name="Profiles_FreeLimit" xml:space="preserve">
+    <value>Wersja bezpłatna obejmuje profile: {0}. Kup Pro, aby mieć ich bez limitu.</value>
+  </data>
+  <data name="Profiles_Gamma" xml:space="preserve">
+    <value>Gamma</value>
+  </data>
+  <data name="Profiles_Hotkey" xml:space="preserve">
+    <value>Skrót klawiszowy</value>
+  </data>
+  <data name="Profiles_HotkeyHint" xml:space="preserve">
+    <value>Kliknij, a potem naciśnij klawisze. Backspace czyści. Działa wszędzie, także w grach.</value>
+  </data>
+  <data name="Profiles_HotkeyInUse" xml:space="preserve">
+    <value>Ten skrót jest używany przez inną aplikację</value>
+  </data>
+  <data name="Profiles_LinkCopied" xml:space="preserve">
+    <value>Kopiuje link do tego profilu. Każdy może go otworzyć, a osoby bez DispHub zobaczą, skąd go pobrać.</value>
+  </data>
+  <data name="Profiles_MoveLeft" xml:space="preserve">
+    <value>Przesuń w lewo</value>
+  </data>
+  <data name="Profiles_MoveRight" xml:space="preserve">
+    <value>Przesuń w prawo</value>
+  </data>
+  <data name="Profiles_NamePlaceholder" xml:space="preserve">
+    <value>Nazwa profilu</value>
+  </data>
+  <data name="Profiles_New" xml:space="preserve">
+    <value>Nowy profil</value>
+  </data>
+  <data name="Profiles_NewName" xml:space="preserve">
+    <value>Nowy profil</value>
+  </data>
+  <data name="Profiles_OneDisplay" xml:space="preserve">
+    <value>1 ekran</value>
+  </data>
+  <data name="Profiles_PauseTooltip" xml:space="preserve">
+    <value>Wyłącz wszystkie profile, także harmonogram i profile aplikacji.</value>
+  </data>
+  <data name="Profiles_Reset" xml:space="preserve">
+    <value>Przywróć oryginał</value>
+  </data>
+  <data name="Profiles_Share" xml:space="preserve">
+    <value>Udostępnij</value>
+  </data>
+  <data name="Profiles_Status" xml:space="preserve">
+    <value>{0} jest używany na: {1}</value>
+  </data>
+  <data name="Profiles_StatusAppRule" xml:space="preserve">
+    <value>{0} jest używany na: {1}, dla aplikacji, której używasz</value>
+  </data>
+  <data name="Profiles_StatusManual" xml:space="preserve">
+    <value>{0} jest używany na: {1}, wybrany ręcznie</value>
+  </data>
+  <data name="Profiles_StatusPaused" xml:space="preserve">
+    <value>Profile są wyłączone. Ekrany pokazują oryginalne kolory.</value>
+  </data>
+  <data name="Profiles_StatusSchedule" xml:space="preserve">
+    <value>{0} jest używany na: {1}, zgodnie z harmonogramem</value>
+  </data>
+  <data name="Profiles_Temperature" xml:space="preserve">
+    <value>Temperatura barwowa</value>
+  </data>
+  <data name="Profiles_Title" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Profiles_UseMainSettings" xml:space="preserve">
+    <value>Jak pozostałe ekrany</value>
+  </data>
+  <data name="Profiles_Vibrance" xml:space="preserve">
+    <value>Nasycenie</value>
+  </data>
+  <data name="Profiles_VibranceHelp" xml:space="preserve">
+    <value>Nasycenie kolorów, ustawiane przez sterownik karty graficznej.</value>
+  </data>
+  <data name="Profiles_VibranceUnsupported" xml:space="preserve">
+    <value>Nasycenie wymaga karty graficznej NVIDIA, Intel lub AMD obsługującej ten ekran, z zainstalowanym sterownikiem.</value>
+  </data>
+  <data name="Settings_AllowFullRange" xml:space="preserve">
+    <value>Zezwalaj na silniejsze zmiany</value>
+  </data>
+  <data name="Settings_General" xml:space="preserve">
+    <value>Ogólne</value>
+  </data>
+  <data name="Settings_HotkeyFailure" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="Settings_Hotkeys" xml:space="preserve">
+    <value>Skróty klawiszowe</value>
+  </data>
+  <data name="Settings_KeepRunning" xml:space="preserve">
+    <value>Działaj w tle</value>
+  </data>
+  <data name="Settings_KeepRunningHint" xml:space="preserve">
+    <value>Zamknięcie okna zostawia DispHub w obszarze powiadomień, więc skróty i harmonogramy nadal działają.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="Settings_LanguageHint" xml:space="preserve">
+    <value>Tłumaczenia są przygotowywane starannie i ulepszane przez społeczność.</value>
+  </data>
+  <data name="Settings_LanguageRestart" xml:space="preserve">
+    <value>Uruchom ponownie DispHub, aby zmienić język.</value>
+  </data>
+  <data name="Settings_LanguageWindows" xml:space="preserve">
+    <value>Jak w Windows</value>
+  </data>
+  <data name="Settings_Next" xml:space="preserve">
+    <value>Następny profil</value>
+  </data>
+  <data name="Settings_OsdDuration" xml:space="preserve">
+    <value>Czas wyświetlania komunikatu</value>
+  </data>
+  <data name="Settings_OsdHint" xml:space="preserve">
+    <value>Pokazuje nazwę profilu po zmianie, w stylu panelu szybkiego dostępu. Nigdy nie odbiera fokusu grom.</value>
+  </data>
+  <data name="Settings_OsdToggle" xml:space="preserve">
+    <value>Komunikat na ekranie</value>
+  </data>
+  <data name="Settings_Pause" xml:space="preserve">
+    <value>Włącz lub wyłącz DispHub</value>
+  </data>
+  <data name="Settings_PauseHint" xml:space="preserve">
+    <value>Wyłącza DispHub (oryginalne kolory) i włącza go ponownie, jak przycisk zasilania.</value>
+  </data>
+  <data name="Settings_Previous" xml:space="preserve">
+    <value>Poprzedni profil</value>
+  </data>
+  <data name="Settings_RestartNow" xml:space="preserve">
+    <value>Uruchom ponownie</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Uruchamiaj z systemem Windows</value>
+  </data>
+  <data name="Settings_StartWithWindowsHint" xml:space="preserve">
+    <value>Uruchamia się po cichu w obszarze powiadomień i stosuje Twój profil.</value>
+  </data>
+  <data name="Settings_StartupDenied" xml:space="preserve">
+    <value>Windows nie pozwolił zmienić ustawienia uruchamiania.</value>
+  </data>
+  <data name="Settings_StartupDisabledByPolicy" xml:space="preserve">
+    <value>Zasady Twojej organizacji blokują aplikacje uruchamiane przy starcie.</value>
+  </data>
+  <data name="Settings_StartupDisabledByUser" xml:space="preserve">
+    <value>Wyłączone w Menedżerze zadań. Włącz ponownie w Ustawienia &gt; Aplikacje &gt; Uruchamianie.</value>
+  </data>
+  <data name="Settings_StartupUnreadable" xml:space="preserve">
+    <value>Nie można odczytać ustawienia uruchamiania.</value>
+  </data>
+  <data name="Settings_Subtitle" xml:space="preserve">
+    <value>Jak DispHub się uruchamia, wygląda i reaguje.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Motyw</value>
+  </data>
+  <data name="Settings_ThemeHint" xml:space="preserve">
+    <value>Systemowy podąża za jasnym lub ciemnym trybem Windows.</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="Settings_TrayClick" xml:space="preserve">
+    <value>Ikona w zasobniku</value>
+  </data>
+  <data name="Settings_TrayClickHint" xml:space="preserve">
+    <value>Co otwiera kliknięcie ikony DispHub w obszarze powiadomień. Prawy przycisk zawsze pokazuje menu.</value>
+  </data>
+  <data name="Startup_Failed" xml:space="preserve">
+    <value>Nie udało się uruchomić DispHub.
+
+{0}
+
+Dzienniki: {1}</value>
+  </data>
+  <data name="Summary_Brightness" xml:space="preserve">
+    <value>Jasność {0}</value>
+  </data>
+  <data name="Summary_Contrast" xml:space="preserve">
+    <value>Kontrast {0}</value>
+  </data>
+  <data name="Summary_Gamma" xml:space="preserve">
+    <value>Gamma {0}</value>
+  </data>
+  <data name="Summary_Original" xml:space="preserve">
+    <value>Oryginalne kolory</value>
+  </data>
+  <data name="Summary_Vibrance" xml:space="preserve">
+    <value>Nasycenie {0}%</value>
+  </data>
+  <data name="Tray_Active" xml:space="preserve">
+    <value>DispHub · {0}</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Zakończ</value>
+  </data>
+  <data name="Tray_MoreProfiles" xml:space="preserve">
+    <value>Więcej profili…</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Otwórz DispHub</value>
+  </data>
+  <data name="Tray_Pause" xml:space="preserve">
+    <value>Wyłącz DispHub</value>
+  </data>
+  <data name="Tray_Paused" xml:space="preserve">
+    <value>DispHub · Wyłączony</value>
+  </data>
+  <data name="Tray_Ready" xml:space="preserve">
+    <value>Gotowy</value>
+  </data>
+  <data name="Tray_Resume" xml:space="preserve">
+    <value>Włącz DispHub</value>
+  </data>
+  <data name="Upgrade_AppRules" xml:space="preserve">
+    <value>Profile dla aplikacji</value>
+  </data>
+  <data name="Upgrade_Body" xml:space="preserve">
+    <value>{0} to część DispHub Pro.
+
+Pro to jednorazowy zakup, który odblokowuje:
+• Profile przełączane dla każdej aplikacji, nie tylko jednej
+• Rozjaśnianie cieni, by widzieć w ciemnych miejscach
+• Profile ustawiające jasność monitora, odświeżanie i HDR
+• Niższe odświeżanie na baterii
+• Harmonogramy z płynnymi przejściami
+• Osobne ustawienia dla każdego ekranu
+• Więcej profili niż {1}
+
+Wspiera też rozwój DispHub.</value>
+  </data>
+  <data name="Upgrade_FailedText" xml:space="preserve">
+    <value>Microsoft Store nie mógł dokończyć zakupu. Sprawdź połączenie i spróbuj ponownie.</value>
+  </data>
+  <data name="Upgrade_FailedTitle" xml:space="preserve">
+    <value>Zakup się nie powiódł</value>
+  </data>
+  <data name="Upgrade_MoreProfiles" xml:space="preserve">
+    <value>Nieograniczona liczba profili</value>
+  </data>
+  <data name="Upgrade_NotNow" xml:space="preserve">
+    <value>Nie teraz</value>
+  </data>
+  <data name="Upgrade_PerDisplay" xml:space="preserve">
+    <value>Osobne ustawienia dla każdego ekranu</value>
+  </data>
+  <data name="Upgrade_Schedules" xml:space="preserve">
+    <value>Harmonogramy</value>
+  </data>
+  <data name="Warning_HdrText" xml:space="preserve">
+    <value>Windows nie obsługuje zmian gammy na ekranach HDR, więc stosowane jest tam tylko nasycenie.</value>
+  </data>
+  <data name="Warning_HdrTitle" xml:space="preserve">
+    <value>HDR jest włączony</value>
+  </data>
+  <data name="Warning_LimitedText" xml:space="preserve">
+    <value>Windows domyślnie pozwala tylko na niewielkie zmiany kolorów, więc DispHub zastosował najbliższą dozwoloną wersję. Pełny zakres wymaga jednorazowej zgody administratora.</value>
+  </data>
+  <data name="Warning_LimitedTitle" xml:space="preserve">
+    <value>Windows ogranicza ten profil</value>
+  </data>
+  <data name="Warning_RepairedText" xml:space="preserve">
+    <value>Plik ustawień był uszkodzony. DispHub przywrócił ostatnią dobrą kopię; uszkodzony plik zachowano obok.</value>
+  </data>
+  <data name="Warning_RepairedTitle" xml:space="preserve">
+    <value>Ustawienia zostały naprawione</value>
+  </data>
+  <data name="Warning_ResetText" xml:space="preserve">
+    <value>Coś ciągle resetuje kolory ekranu (na przykład Oświetlenie nocne, f.lux lub gra). DispHub przestał z tym walczyć na 5 minut.</value>
+  </data>
+  <data name="Warning_ResetTitle" xml:space="preserve">
+    <value>Inna aplikacja zmienia Twoje kolory</value>
+  </data>
+  <data name="Settings_PreviewPicture" xml:space="preserve">
+    <value>Obraz podglądu</value>
+  </data>
+  <data name="Settings_PreviewPictureHint" xml:space="preserve">
+    <value>Zdjęcie na każdym profilu, pokazane w kolorach tego profilu.</value>
+  </data>
+  <data name="Preview_flowers" xml:space="preserve">
+    <value>Polne kwiaty</value>
+  </data>
+  <data name="Preview_reef" xml:space="preserve">
+    <value>Rafa koralowa</value>
+  </data>
+  <data name="Preview_autumn" xml:space="preserve">
+    <value>Jesienny las</value>
+  </data>
+  <data name="Preview_spring" xml:space="preserve">
+    <value>Gorące źródło</value>
+  </data>
+  <data name="Preview_canyon" xml:space="preserve">
+    <value>Wielki Kanion</value>
+  </data>
+  <data name="Preview_sunset" xml:space="preserve">
+    <value>Zimowy zachód słońca</value>
+  </data>
+  <data name="Preview_redrock" xml:space="preserve">
+    <value>Łuk z czerwonej skały</value>
+  </data>
+  <data name="Preview_island" xml:space="preserve">
+    <value>Fort na wyspie</value>
+  </data>
+  <data name="Preview_pebbles" xml:space="preserve">
+    <value>Kamyki w jeziorze</value>
+  </data>
+  <data name="Preview_mountain" xml:space="preserve">
+    <value>Ośnieżona góra</value>
+  </data>
+  <data name="Preview_aurora" xml:space="preserve">
+    <value>Zorza polarna</value>
+  </data>
+  <data name="Preview_milkyway" xml:space="preserve">
+    <value>Droga Mleczna</value>
+  </data>
+  <data name="Preview_dunes" xml:space="preserve">
+    <value>Wydmy pod gwiazdami</value>
+  </data>
+  <data name="Preview_cactus" xml:space="preserve">
+    <value>Kaktus na pustyni</value>
+  </data>
+  <data name="Tray_StillRunningTitle" xml:space="preserve">
+    <value>DispHub nadal działa</value>
+  </data>
+  <data name="Tray_StillRunningText" xml:space="preserve">
+    <value>Utrzymuje działanie profili i skrótów z obszaru powiadomień. Wybierz to, aby zachować jego ikonę na pasku zadań.</value>
+  </data>
+  <data name="Nav_Schedule" xml:space="preserve">
+    <value>Harmonogram</value>
+  </data>
+  <data name="Nav_Apps" xml:space="preserve">
+    <value>Aplikacje</value>
+  </data>
+  <data name="Nav_Displays" xml:space="preserve">
+    <value>Ekrany</value>
+  </data>
+  <data name="Common_Off" xml:space="preserve">
+    <value>Wył.</value>
+  </data>
+  <data name="Schedule_Title" xml:space="preserve">
+    <value>Harmonogram</value>
+  </data>
+  <data name="Schedule_ProHint" xml:space="preserve">
+    <value>Harmonogramy działają w DispHub Pro. Możesz go tu przygotować i najpierw zobaczyć, co dokładnie zrobi.</value>
+  </data>
+  <data name="Schedule_LocationHint" xml:space="preserve">
+    <value>Używane tylko na tym komputerze do obliczenia wschodu i zachodu słońca.</value>
+  </data>
+  <data name="Schedule_UseMyLocation" xml:space="preserve">
+    <value>Użyj mojej lokalizacji</value>
+  </data>
+  <data name="Schedule_SearchCity" xml:space="preserve">
+    <value>Wyszukaj miasto</value>
+  </data>
+  <data name="Schedule_Instant" xml:space="preserve">
+    <value>Natychmiast</value>
+  </data>
+  <data name="Schedule_LocationDenied" xml:space="preserve">
+    <value>Windows nie pozwolił DispHub sprawdzić Twojej lokalizacji. Wyszukaj miasto albo włącz dostęp do lokalizacji w Ustawieniach Windows.</value>
+  </data>
+  <data name="Schedule_LocationUnavailable" xml:space="preserve">
+    <value>Windows nie może teraz ustalić Twojej lokalizacji. Wyszukaj miasto.</value>
+  </data>
+  <data name="Schedule_Near" xml:space="preserve">
+    <value>W pobliżu: {0}</value>
+  </data>
+  <data name="Schedule_StatusOff" xml:space="preserve">
+    <value>Harmonogram jest wyłączony. Włącz go, aby profile przełączały się automatycznie.</value>
+  </data>
+  <data name="Schedule_StatusPro" xml:space="preserve">
+    <value>Tylko podgląd: harmonogram działa w DispHub Pro.</value>
+  </data>
+  <data name="Schedule_StatusRunning" xml:space="preserve">
+    <value>Teraz działa {0}. {1} zaczyna się {2}.</value>
+  </data>
+  <data name="Apps_Title" xml:space="preserve">
+    <value>Aplikacje</value>
+  </data>
+  <data name="Apps_Subtitle" xml:space="preserve">
+    <value>Używaj profilu automatycznie, gdy aplikacja jest na pierwszym planie, i wracaj do zwykłego profilu po przełączeniu.</value>
+  </data>
+  <data name="Apps_ProHint" xml:space="preserve">
+    <value>Profile aplikacji działają w DispHub Pro. Możesz już dodać aplikacje; zaczną się przełączać po ulepszeniu.</value>
+  </data>
+  <data name="Apps_LastInFront" xml:space="preserve">
+    <value>Ostatnia aplikacja na pierwszym planie</value>
+  </data>
+  <data name="Apps_AddThis" xml:space="preserve">
+    <value>Dodaj tę aplikację</value>
+  </data>
+  <data name="Apps_Rules" xml:space="preserve">
+    <value>Twoje aplikacje</value>
+  </data>
+  <data name="Apps_AddApp" xml:space="preserve">
+    <value>Dodaj aplikację</value>
+  </data>
+  <data name="Apps_PickTitle" xml:space="preserve">
+    <value>Wybierz uruchomioną aplikację</value>
+  </data>
+  <data name="Apps_Browse" xml:space="preserve">
+    <value>Przeglądaj</value>
+  </data>
+  <data name="Apps_Search" xml:space="preserve">
+    <value>Szukaj uruchomionych aplikacji</value>
+  </data>
+  <data name="Apps_EmptyTitle" xml:space="preserve">
+    <value>Brak aplikacji</value>
+  </data>
+  <data name="Apps_EmptyHint" xml:space="preserve">
+    <value>Dodaj grę lub aplikację i wybierz profil, którego ma używać.</value>
+  </data>
+  <data name="Apps_Remove" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="Apps_OrderHint" xml:space="preserve">
+    <value>Jeśli aplikacja występuje dwa razy, wygrywa pierwsza reguła na liście.</value>
+  </data>
+  <data name="Apps_ChooseProgram" xml:space="preserve">
+    <value>Wybierz program</value>
+  </data>
+  <data name="Apps_ProgramsFilter" xml:space="preserve">
+    <value>Programy (*.exe)|*.exe</value>
+  </data>
+  <data name="Apps_NothingYet" xml:space="preserve">
+    <value>Jeszcze nic</value>
+  </data>
+  <data name="Apps_ForegroundRule" xml:space="preserve">
+    <value>Używa profilu {0}, gdy jest na pierwszym planie</value>
+  </data>
+  <data name="Apps_ForegroundRulePro" xml:space="preserve">
+    <value>Używałaby profilu {0} z DispHub Pro</value>
+  </data>
+  <data name="Apps_ForegroundNoRule" xml:space="preserve">
+    <value>Używa Twojego zwykłego profilu</value>
+  </data>
+  <data name="Displays_Title" xml:space="preserve">
+    <value>Ekrany</value>
+  </data>
+  <data name="Displays_BuiltIn" xml:space="preserve">
+    <value>Wbudowany ekran</value>
+  </data>
+  <data name="Displays_Subtitle" xml:space="preserve">
+    <value>Podłączone ekrany i to, co DispHub na nich pokazuje. Wyłącz ekran, aby zostawić go bez zmian.</value>
+  </data>
+  <data name="Displays_Main" xml:space="preserve">
+    <value>Główny</value>
+  </data>
+  <data name="Settings_AccentWindows" xml:space="preserve">
+    <value>Jak w Windows</value>
+  </data>
+  <data name="Settings_TextNormal" xml:space="preserve">
+    <value>100% (normalny)</value>
+  </data>
+  <data name="Settings_Appearance" xml:space="preserve">
+    <value>Wygląd</value>
+  </data>
+  <data name="Settings_ResetAppearance" xml:space="preserve">
+    <value>Przywróć wygląd</value>
+  </data>
+  <data name="Settings_Accent" xml:space="preserve">
+    <value>Kolor akcentu</value>
+  </data>
+  <data name="Settings_AccentHint" xml:space="preserve">
+    <value>Używany dla przełączników, suwaków i przycisków. Pierwszy kolor to ten, którego używa Windows.</value>
+  </data>
+  <data name="Settings_Backdrop" xml:space="preserve">
+    <value>Tło</value>
+  </data>
+  <data name="Settings_BackdropHint" xml:space="preserve">
+    <value>Mica barwi okno kolorami tapety, akryl rozmywa to, co jest za nim. Panel szybkiego dostępu i komunikaty na ekranie używają akrylu, chyba że wybierzesz Jednolite. Windows pokazuje zwykły kolor, gdy włączone jest oszczędzanie energii lub wyłączone efekty przezroczystości.</value>
+  </data>
+  <data name="Settings_TextSize" xml:space="preserve">
+    <value>Rozmiar tekstu</value>
+  </data>
+  <data name="Settings_TextSizeHint" xml:space="preserve">
+    <value>Powiększa lub zmniejsza okno DispHub.</value>
+  </data>
+  <data name="Settings_CompactNav" xml:space="preserve">
+    <value>Kompaktowe menu</value>
+  </data>
+  <data name="Settings_CompactNavHint" xml:space="preserve">
+    <value>Pokazuje strony po lewej tylko jako ikony.</value>
+  </data>
+  <data name="Settings_StartPage" xml:space="preserve">
+    <value>Strona startowa</value>
+  </data>
+  <data name="Settings_StartPageHint" xml:space="preserve">
+    <value>Strona, na której otwiera się okno.</value>
+  </data>
+  <data name="Settings_OsdPosition" xml:space="preserve">
+    <value>Pozycja komunikatu</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Mica" xml:space="preserve">
+    <value>Mica</value>
+  </data>
+  <data name="Enum_WindowBackdrop_MicaAlt" xml:space="preserve">
+    <value>Mica Alt</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Acrylic" xml:space="preserve">
+    <value>Akryl</value>
+  </data>
+  <data name="Enum_WindowBackdrop_Solid" xml:space="preserve">
+    <value>Jednolite</value>
+  </data>
+  <data name="Enum_OsdPosition_TopLeft" xml:space="preserve">
+    <value>U góry po lewej</value>
+  </data>
+  <data name="Enum_OsdPosition_TopCenter" xml:space="preserve">
+    <value>U góry na środku</value>
+  </data>
+  <data name="Enum_OsdPosition_TopRight" xml:space="preserve">
+    <value>U góry po prawej</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomLeft" xml:space="preserve">
+    <value>Na dole po lewej</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomCenter" xml:space="preserve">
+    <value>Na dole na środku</value>
+  </data>
+  <data name="Enum_OsdPosition_BottomRight" xml:space="preserve">
+    <value>Na dole po prawej</value>
+  </data>
+  <data name="Profiles_NewHint" xml:space="preserve">
+    <value>Pusty, z szablonu lub z linku</value>
+  </data>
+  <data name="Profiles_Blank" xml:space="preserve">
+    <value>Pusty profil</value>
+  </data>
+  <data name="Profiles_MoreTitle" xml:space="preserve">
+    <value>Więcej profili</value>
+  </data>
+  <data name="Profiles_MoreHint" xml:space="preserve">
+    <value>Wersja bezpłatna obejmuje profile: {0}. Pro nie ma limitu.</value>
+  </data>
+  <data name="Profiles_More" xml:space="preserve">
+    <value>Więcej</value>
+  </data>
+  <data name="Profiles_FullTitle" xml:space="preserve">
+    <value>Profile: {0}</value>
+  </data>
+  <data name="Profiles_FullHint" xml:space="preserve">
+    <value>Najwięcej, ile mieści DispHub</value>
+  </data>
+  <data name="Profiles_NeedsPro" xml:space="preserve">
+    <value>Zachowany dla DispHub Pro</value>
+  </data>
+  <data name="Apps_FreeHint" xml:space="preserve">
+    <value>Wersja bezpłatna przełącza profile dla jednej aplikacji. Pro robi to dla każdej.</value>
+  </data>
+  <data name="Apps_NeedsPro" xml:space="preserve">
+    <value>Przełącza się z DispHub Pro</value>
+  </data>
+  <data name="Trial_CardTitle" xml:space="preserve">
+    <value>Wersja próbna Pro</value>
+  </data>
+  <data name="Trial_DaysLeft" xml:space="preserve">
+    <value>Pozostałe dni ze wszystkimi funkcjami Pro: {0}.</value>
+  </data>
+  <data name="Trial_DayLeft" xml:space="preserve">
+    <value>Ostatni dzień ze wszystkimi funkcjami Pro.</value>
+  </data>
+  <data name="Trial_EndedTitle" xml:space="preserve">
+    <value>Wersja próbna Pro się zakończyła</value>
+  </data>
+  <data name="Trial_EndedUsage" xml:space="preserve">
+    <value>W tym tygodniu DispHub przełączył profile dla Twoich aplikacji {0} razy i zastosował harmonogram {1} razy. Zachowaj to wszystko z Pro, jednorazowym zakupem.</value>
+  </data>
+  <data name="Trial_EndedGeneric" xml:space="preserve">
+    <value>Profile dla każdej aplikacji, harmonogramy, ustawienia dla każdego ekranu i nieograniczona liczba profili zostają w Pro, jednorazowym zakupie.</value>
+  </data>
+  <data name="Trial_EndedFree" xml:space="preserve">
+    <value>Wersja bezpłatna zachowuje Twoje pierwsze profile (liczba: {0}) i jedną regułę aplikacji. Reszta czeka, aż przejdziesz na Pro.</value>
+  </data>
+  <data name="Trial_ContinueFree" xml:space="preserve">
+    <value>Kontynuuj za darmo</value>
+  </data>
+  <data name="Profiles_ShadowBoost" xml:space="preserve">
+    <value>Rozjaśnianie cieni</value>
+  </data>
+  <data name="Profiles_ShadowBoostPro" xml:space="preserve">
+    <value>Rozjaśnianie cieni jest częścią DispHub Pro</value>
+  </data>
+  <data name="Upgrade_ShadowBoost" xml:space="preserve">
+    <value>Rozjaśnianie cieni</value>
+  </data>
+  <data name="Summary_Shadows" xml:space="preserve">
+    <value>Cienie +{0}</value>
+  </data>
+  <data name="Profiles_RefreshRate" xml:space="preserve">
+    <value>Częstotliwość odświeżania</value>
+  </data>
+  <data name="Profiles_RefreshHighest" xml:space="preserve">
+    <value>Najwyższa</value>
+  </data>
+  <data name="Profiles_RefreshLowest" xml:space="preserve">
+    <value>Najniższa</value>
+  </data>
+  <data name="Profiles_RefreshRateHz" xml:space="preserve">
+    <value>{0} ({1} Hz)</value>
+  </data>
+  <data name="Profiles_Unchanged" xml:space="preserve">
+    <value>Nie zmieniaj</value>
+  </data>
+  <data name="Profiles_Hdr" xml:space="preserve">
+    <value>HDR</value>
+  </data>
+  <data name="Profiles_HdrOn" xml:space="preserve">
+    <value>Wł.</value>
+  </data>
+  <data name="Profiles_HdrOff" xml:space="preserve">
+    <value>Wył.</value>
+  </data>
+  <data name="Profiles_DisplayModesPro" xml:space="preserve">
+    <value>Profile przełączające odświeżanie lub HDR są częścią DispHub Pro</value>
+  </data>
+  <data name="Upgrade_DisplayModes" xml:space="preserve">
+    <value>Przełączanie odświeżania i HDR</value>
+  </data>
+  <data name="Displays_LowRefreshOnBattery" xml:space="preserve">
+    <value>Niższe odświeżanie na baterii ({0} Hz)</value>
+  </data>
+  <data name="Displays_LowRefreshPro" xml:space="preserve">
+    <value>Niższe odświeżanie na baterii jest częścią DispHub Pro</value>
+  </data>
+  <data name="Profiles_MonitorBrightness" xml:space="preserve">
+    <value>Jasność ekranu</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessOff" xml:space="preserve">
+    <value>Bez zmian</value>
+  </data>
+  <data name="Profiles_MonitorBrightnessPro" xml:space="preserve">
+    <value>Profile ustawiające jasność samego ekranu są częścią DispHub Pro</value>
+  </data>
+  <data name="Upgrade_MonitorBrightness" xml:space="preserve">
+    <value>Ustawianie jasności samego ekranu</value>
+  </data>
+  <data name="Displays_MonitorBrightness" xml:space="preserve">
+    <value>Jasność ekranu</value>
+  </data>
+  <data name="Profiles_FromTemplate" xml:space="preserve">
+    <value>Z szablonu</value>
+  </data>
+  <data name="Profiles_FromLink" xml:space="preserve">
+    <value>Z linku</value>
+  </data>
+  <data name="Template_vivid" xml:space="preserve">
+    <value>Żywe</value>
+  </data>
+  <data name="Template_vividHint" xml:space="preserve">
+    <value>Bogatsze kolory do zdjęć, filmów i gier.</value>
+  </data>
+  <data name="Template_shadows" xml:space="preserve">
+    <value>Szczegóły w cieniach</value>
+  </data>
+  <data name="Template_shadowsHint" xml:space="preserve">
+    <value>Rozjaśnia ciemne miejsca, by łatwiej było dostrzec szczegóły w cieniach.</value>
+  </data>
+  <data name="Template_film" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Template_filmHint" xml:space="preserve">
+    <value>Głębsza czerń i nieco więcej kontrastu do filmów i seriali.</value>
+  </data>
+  <data name="Template_evening" xml:space="preserve">
+    <value>Wieczór</value>
+  </data>
+  <data name="Template_eveningHint" xml:space="preserve">
+    <value>Cieplejsze, łagodniejsze światło po zachodzie słońca.</value>
+  </data>
+  <data name="Template_dim" xml:space="preserve">
+    <value>Ciemny pokój</value>
+  </data>
+  <data name="Template_dimHint" xml:space="preserve">
+    <value>Ciemniej niż najniższe ustawienie jasności monitora.</value>
+  </data>
+  <data name="Enum_TrayClickAction_QuickPanel" xml:space="preserve">
+    <value>Pokaż panel szybkiego dostępu</value>
+  </data>
+  <data name="Quick_Paused" xml:space="preserve">
+    <value>Profile są wyłączone</value>
+  </data>
+  <data name="Quick_FromSchedule" xml:space="preserve">
+    <value>{0} · Według harmonogramu</value>
+  </data>
+  <data name="Quick_FromApp" xml:space="preserve">
+    <value>{0} · Dla tej aplikacji</value>
+  </data>
+  <data name="Quick_Active" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Quick_Adjusting" xml:space="preserve">
+    <value>Dostosowywanie: {0}</value>
+  </data>
+  <data name="Quick_Open" xml:space="preserve">
+    <value>Otwórz DispHub</value>
+  </data>
+  <data name="Common_LinkCopied" xml:space="preserve">
+    <value>Skopiowano link</value>
+  </data>
+  <data name="Settings_QuickPanelHotkey" xml:space="preserve">
+    <value>Panel szybkiego dostępu</value>
+  </data>
+  <data name="Settings_QuickPanelHotkeyHint" xml:space="preserve">
+    <value>Profile, jasność i ciepło barw bez otwierania okna.</value>
+  </data>
+  <data name="Quick_Brightness" xml:space="preserve">
+    <value>Jasność</value>
+  </data>
+  <data name="Quick_Warmth" xml:space="preserve">
+    <value>Ciepło</value>
+  </data>
+  <data name="Displays_Showing" xml:space="preserve">
+    <value>Pokazuje: {0}</value>
+  </data>
+  <data name="Displays_ShowingOriginal" xml:space="preserve">
+    <value>Oryginalne kolory (profile wyłączone)</value>
+  </data>
+  <data name="Displays_LeftAlone" xml:space="preserve">
+    <value>DispHub nie zmienia tego ekranu</value>
+  </data>
+  <data name="Displays_HdrNote" xml:space="preserve">
+    <value>HDR jest włączony, więc Windows nie pozwala tu zmieniać kolorów. Nasycenie nadal działa.</value>
+  </data>
+  <data name="Displays_LimitedNote" xml:space="preserve">
+    <value>Windows domyślnie pozwala tylko na niewielkie zmiany kolorów, więc ten ekran pokazuje łagodniejszą wersję mocnych profili.</value>
+  </data>
+  <data name="Displays_NoVibrance" xml:space="preserve">
+    <value>Nasycenie nie jest dostępne na tym ekranie.</value>
+  </data>
+  <data name="Displays_UseOnThis" xml:space="preserve">
+    <value>Używaj DispHub na tym ekranie</value>
+  </data>
+  <data name="Schedule_Today" xml:space="preserve">
+    <value>{0} (dziś)</value>
+  </data>
+  <data name="Schedule_EveryDay" xml:space="preserve">
+    <value>Codziennie</value>
+  </data>
+  <data name="Schedule_Weekdays" xml:space="preserve">
+    <value>Dni robocze</value>
+  </data>
+  <data name="Schedule_Weekends" xml:space="preserve">
+    <value>Weekendy</value>
+  </data>
+  <data name="Schedule_Minutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="Schedule_Hours" xml:space="preserve">
+    <value>{0} godz.</value>
+  </data>
+  <data name="Schedule_HoursMinutes" xml:space="preserve">
+    <value>{0} godz. {1} min</value>
+  </data>
+  <data name="Schedule_ChangePlace" xml:space="preserve">
+    <value>Zmień miejsce</value>
+  </data>
+  <data name="Schedule_Changes" xml:space="preserve">
+    <value>Zmiany</value>
+  </data>
+  <data name="Schedule_AddSlot" xml:space="preserve">
+    <value>Dodaj zmianę</value>
+  </data>
+  <data name="Schedule_Starts" xml:space="preserve">
+    <value>Początek</value>
+  </data>
+  <data name="Schedule_Fade" xml:space="preserve">
+    <value>Przejście</value>
+  </data>
+  <data name="Schedule_On" xml:space="preserve">
+    <value>Dni</value>
+  </data>
+  <data name="Schedule_AtTime" xml:space="preserve">
+    <value>o {0}</value>
+  </data>
+  <data name="Schedule_AtClockTime" xml:space="preserve">
+    <value>O ustalonej godzinie</value>
+  </data>
+  <data name="Schedule_Sunrise" xml:space="preserve">
+    <value>O wschodzie słońca</value>
+  </data>
+  <data name="Schedule_Sunset" xml:space="preserve">
+    <value>O zachodzie słońca</value>
+  </data>
+  <data name="Schedule_Remove" xml:space="preserve">
+    <value>Usuń tę zmianę</value>
+  </data>
+  <data name="Schedule_Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Schedule_NoLocation" xml:space="preserve">
+    <value>Wschód i zachód słońca to {0} i {1}, dopóki nie wybierzesz miejsca.</value>
+  </data>
+  <data name="Schedule_LocationSun" xml:space="preserve">
+    <value>Wschód {1}, zachód {2} · {0}</value>
+  </data>
+  <data name="Schedule_LocationPolar" xml:space="preserve">
+    <value>Brak wschodu i zachodu słońca tego dnia · {0}</value>
+  </data>
+  <data name="Accent_blue" xml:space="preserve">
+    <value>Niebieski</value>
+  </data>
+  <data name="Accent_purple" xml:space="preserve">
+    <value>Fioletowy</value>
+  </data>
+  <data name="Accent_pink" xml:space="preserve">
+    <value>Różowy</value>
+  </data>
+  <data name="Accent_red" xml:space="preserve">
+    <value>Czerwony</value>
+  </data>
+  <data name="Accent_orange" xml:space="preserve">
+    <value>Pomarańczowy</value>
+  </data>
+  <data name="Accent_yellow" xml:space="preserve">
+    <value>Żółty</value>
+  </data>
+  <data name="Accent_green" xml:space="preserve">
+    <value>Zielony</value>
+  </data>
+  <data name="Accent_teal" xml:space="preserve">
+    <value>Morski</value>
+  </data>
+  <data name="Accent_graphite" xml:space="preserve">
+    <value>Grafitowy</value>
+  </data>
+  <data name="Settings_Animations" xml:space="preserve">
+    <value>Animacje</value>
+  </data>
+  <data name="Settings_AnimationsHint" xml:space="preserve">
+    <value>Płynne przewijanie i inne efekty ruchu w oknie DispHub.</value>
+  </data>
+  <data name="Schedule_SunsetToSunrise" xml:space="preserve">
+    <value>Od zachodu do wschodu słońca</value>
+  </data>
+  <data name="Schedule_SetHours" xml:space="preserve">
+    <value>Ustalone godziny</value>
+  </data>
+  <data name="Schedule_Custom" xml:space="preserve">
+    <value>Własny</value>
+  </data>
+  <data name="Schedule_TurnOn" xml:space="preserve">
+    <value>Początek nocy</value>
+  </data>
+  <data name="Schedule_TurnOff" xml:space="preserve">
+    <value>Koniec nocy</value>
+  </data>
+  <data name="Schedule_NightProfile" xml:space="preserve">
+    <value>Profil nocny</value>
+  </data>
+  <data name="Schedule_NightProfileHint" xml:space="preserve">
+    <value>Używany w nocy.</value>
+  </data>
+  <data name="Schedule_DayProfile" xml:space="preserve">
+    <value>Profil dzienny</value>
+  </data>
+  <data name="Schedule_DayProfileHint" xml:space="preserve">
+    <value>Używany w ciągu dnia.</value>
+  </data>
+  <data name="Schedule_FadeHint" xml:space="preserve">
+    <value>Jak długo trwa każda zmiana. Powolne przejście jest łagodne dla oczu.</value>
+  </data>
+  <data name="Schedule_TodayTitle" xml:space="preserve">
+    <value>Dziś</value>
+  </data>
+  <data name="TimePicker_Hour" xml:space="preserve">
+    <value>Godzina</value>
+  </data>
+  <data name="TimePicker_Minute" xml:space="preserve">
+    <value>Minuty</value>
+  </data>
+  <data name="TimePicker_Period" xml:space="preserve">
+    <value>AM lub PM</value>
+  </data>
+  <data name="Power_Name" xml:space="preserve">
+    <value>Włącz lub wyłącz DispHub</value>
+  </data>
+  <data name="Power_TurnOff" xml:space="preserve">
+    <value>Wyłącz DispHub. Ekrany pokażą oryginalne kolory.</value>
+  </data>
+  <data name="Power_TurnOn" xml:space="preserve">
+    <value>Włącz DispHub</value>
+  </data>
+  <data name="Quick_Off" xml:space="preserve">
+    <value>DispHub jest wyłączony</value>
+  </data>
+  <data name="Quick_ProfilesTooltip" xml:space="preserve">
+    <value>Profile wł. lub wył.</value>
+  </data>
+  <data name="Osd_ProfilesOff" xml:space="preserve">
+    <value>Profile wyłączone</value>
+  </data>
+  <data name="Tray_ProfilesOff" xml:space="preserve">
+    <value>DispHub · Profile wyłączone</value>
+  </data>
+  <data name="Profiles_StatusOff" xml:space="preserve">
+    <value>DispHub jest wyłączony. Włącz go przyciskiem zasilania u góry.</value>
+  </data>
+  <data name="Displays_ShowingOff" xml:space="preserve">
+    <value>Oryginalne kolory (DispHub wyłączony)</value>
+  </data>
+  <data name="Onboarding_WelcomeTitle" xml:space="preserve">
+    <value>Witaj w DispHub</value>
+  </data>
+  <data name="Onboarding_WelcomeText" xml:space="preserve">
+    <value>Twórz profile ekranu na każdą okazję: jaśniejsze i żywsze do gier, cieplejsze na wieczór albo oryginalne kolory ekranu. Przełączaj je kliknięciem lub skrótem klawiszowym albo pozwól DispHub robić to za Ciebie.</value>
+  </data>
+  <data name="Onboarding_TrayTitle" xml:space="preserve">
+    <value>Znajdź DispHub na pasku zadań</value>
+  </data>
+  <data name="Onboarding_TrayText" xml:space="preserve">
+    <value>DispHub działa w obszarze powiadomień. Jeśli nie widzisz jego ikony, wybierz strzałkę obok zegara, a potem przeciągnij ikonę na pasek zadań, żeby była zawsze widoczna.</value>
+  </data>
+  <data name="Onboarding_LeftClick" xml:space="preserve">
+    <value>Lewy przycisk</value>
+  </data>
+  <data name="Onboarding_RightClick" xml:space="preserve">
+    <value>Prawy przycisk</value>
+  </data>
+  <data name="Onboarding_RightClickHint" xml:space="preserve">
+    <value>Otwiera menu z profilami i przyciskiem zasilania.</value>
+  </data>
+  <data name="Onboarding_HotkeysTitle" xml:space="preserve">
+    <value>Używaj skrótów klawiszowych</value>
+  </data>
+  <data name="Onboarding_HotkeysText" xml:space="preserve">
+    <value>Przełączaj profile w każdej aplikacji, także w grach na pełnym ekranie. Mały komunikat pokazuje, na który profil przełączono. Skróty możesz zmienić w Ustawieniach.</value>
+  </data>
+  <data name="Onboarding_PowerTitle" xml:space="preserve">
+    <value>Wyłącz wszystko naraz</value>
+  </data>
+  <data name="Onboarding_PowerText" xml:space="preserve">
+    <value>Przycisk zasilania wyłącza DispHub i przywraca oryginalne kolory ekranów. Wybierz go ponownie, aby wrócić do miejsca, w którym przerwano.</value>
+  </data>
+  <data name="Onboarding_Back" xml:space="preserve">
+    <value>Wstecz</value>
+  </data>
+  <data name="Onboarding_Next" xml:space="preserve">
+    <value>Dalej</value>
+  </data>
+  <data name="Onboarding_Done" xml:space="preserve">
+    <value>Nie teraz</value>
+  </data>
+  <data name="Schedule_StatusDispHubOff" xml:space="preserve">
+    <value>DispHub jest wyłączony, więc harmonogram czeka. Włącz go przyciskiem zasilania.</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Home_Now" xml:space="preserve">
+    <value>Bieżący profil</value>
+  </data>
+  <data name="Home_Off" xml:space="preserve">
+    <value>DispHub jest wyłączony</value>
+  </data>
+  <data name="Home_Original" xml:space="preserve">
+    <value>Oryginalne kolory</value>
+  </data>
+  <data name="Home_ReasonOff" xml:space="preserve">
+    <value>Ekrany pokazują oryginalne kolory.</value>
+  </data>
+  <data name="Home_ReasonProfilesOff" xml:space="preserve">
+    <value>Profile są wyłączone, więc ekrany pokazują oryginalne kolory.</value>
+  </data>
+  <data name="Home_ReasonSchedule" xml:space="preserve">
+    <value>Według harmonogramu</value>
+  </data>
+  <data name="Home_ReasonScheduleUntil" xml:space="preserve">
+    <value>Według harmonogramu do {0}</value>
+  </data>
+  <data name="Home_ReasonApp" xml:space="preserve">
+    <value>Podczas używania: {0}</value>
+  </data>
+  <data name="Home_ReasonAppUnknown" xml:space="preserve">
+    <value>Podczas używania tej aplikacji</value>
+  </data>
+  <data name="Home_NoHotkey" xml:space="preserve">
+    <value>Brak skrótu</value>
+  </data>
+  <data name="Home_Features" xml:space="preserve">
+    <value>W skrócie</value>
+  </data>
+  <data name="Home_Profiles" xml:space="preserve">
+    <value>Profile: {0}</value>
+  </data>
+  <data name="Home_OneProfile" xml:space="preserve">
+    <value>1 profil</value>
+  </data>
+  <data name="Home_ScheduleNext" xml:space="preserve">
+    <value>Następnie: {0} {1}</value>
+  </data>
+  <data name="Home_NoApps" xml:space="preserve">
+    <value>Nie dodano aplikacji</value>
+  </data>
+  <data name="Home_Apps" xml:space="preserve">
+    <value>Aplikacje: {0}</value>
+  </data>
+  <data name="Home_OneApp" xml:space="preserve">
+    <value>1 aplikacja</value>
+  </data>
+  <data name="Home_Displays" xml:space="preserve">
+    <value>Ekrany: {0}</value>
+  </data>
+  <data name="Home_OneDisplay" xml:space="preserve">
+    <value>1 ekran</value>
+  </data>
+  <data name="Home_SettingsStatus" xml:space="preserve">
+    <value>Skróty klawiszowe, uruchamianie i wygląd</value>
+  </data>
+  <data name="Home_WhatsNew" xml:space="preserve">
+    <value>Co nowego</value>
+  </data>
+  <data name="Home_Rate" xml:space="preserve">
+    <value>Oceń DispHub</value>
+  </data>
+  <data name="Home_Report" xml:space="preserve">
+    <value>Zgłoś problem</value>
+  </data>
+  <data name="Home_GitHub" xml:space="preserve">
+    <value>Kod źródłowy</value>
+  </data>
+  <data name="Home_Version" xml:space="preserve">
+    <value>DispHub {0}</value>
+  </data>
+  <data name="Home_Tour" xml:space="preserve">
+    <value>Rozpocznij przewodnik</value>
+  </data>
+  <data name="Tour_Skip" xml:space="preserve">
+    <value>Pomiń</value>
+  </data>
+  <data name="Tour_Back" xml:space="preserve">
+    <value>Wstecz</value>
+  </data>
+  <data name="Tour_Next" xml:space="preserve">
+    <value>Dalej</value>
+  </data>
+  <data name="Tour_Done" xml:space="preserve">
+    <value>Gotowe</value>
+  </data>
+  <data name="Tour_Count" xml:space="preserve">
+    <value>{0} z {1}</value>
+  </data>
+  <data name="Tour_PowerTitle" xml:space="preserve">
+    <value>Włącz lub wyłącz DispHub</value>
+  </data>
+  <data name="Tour_PowerText" xml:space="preserve">
+    <value>Wyłączenie DispHub przywraca oryginalne kolory ekranów. Włącz go ponownie, aby wrócić do miejsca, w którym przerwano.</value>
+  </data>
+  <data name="Tour_NowTitle" xml:space="preserve">
+    <value>Bieżący profil</value>
+  </data>
+  <data name="Tour_NowText" xml:space="preserve">
+    <value>Zobacz, który profil jest używany i dlaczego: wybrałeś go, zrobił to harmonogram albo aplikacja ma własny profil.</value>
+  </data>
+  <data name="Onboarding_Step" xml:space="preserve">
+    <value>{0} z {1}</value>
+  </data>
+  <data name="Onboarding_Tour" xml:space="preserve">
+    <value>Rozpocznij przewodnik</value>
+  </data>
+  <data name="Search_Placeholder" xml:space="preserve">
+    <value>Szukaj w ustawieniach</value>
+  </data>
+  <data name="Search_Page" xml:space="preserve">
+    <value>Strona</value>
+  </data>
+  <data name="Quick_NothingToAdjust" xml:space="preserve">
+    <value>Wybierz profil, aby go dostosować</value>
+  </data>
+  <data name="Home_TurnProfilesOn" xml:space="preserve">
+    <value>Włącz profile</value>
+  </data>
+  <data name="Home_ReasonSelected" xml:space="preserve">
+    <value>Wybrany</value>
+  </data>
+  <data name="Home_ReasonManualUntil" xml:space="preserve">
+    <value>Wybrany do {0}, gdy zmieni się harmonogram</value>
+  </data>
+  <data name="Home_Today" xml:space="preserve">
+    <value>Dziś</value>
+  </data>
+  <data name="Home_EditSchedule" xml:space="preserve">
+    <value>Edytuj harmonogram</value>
+  </data>
+  <data name="Home_NoSchedule" xml:space="preserve">
+    <value>Harmonogram</value>
+  </data>
+  <data name="Home_NoScheduleHint" xml:space="preserve">
+    <value>Zmieniaj profile automatycznie o zachodzie i wschodzie słońca albo o wybranych godzinach.</value>
+  </data>
+  <data name="Home_ScheduleNeedsPro" xml:space="preserve">
+    <value>Harmonogram jest gotowy. Działa w DispHub Pro.</value>
+  </data>
+  <data name="Home_SetUpSchedule" xml:space="preserve">
+    <value>Skonfiguruj</value>
+  </data>
+  <data name="Tour_ProfilesTitle" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Tour_ProfilesText" xml:space="preserve">
+    <value>Wybierz profil, aby go użyć. Jego ustawienia pojawią się poniżej, gdzie możesz go dopracować i przypisać mu skrót klawiszowy.</value>
+  </data>
+  <data name="Tour_ScheduleTitle" xml:space="preserve">
+    <value>Harmonogram</value>
+  </data>
+  <data name="Tour_ScheduleText" xml:space="preserve">
+    <value>Zmieniaj profile automatycznie o zachodzie i wschodzie słońca, o ustalonych godzinach lub według własnego planu.</value>
+  </data>
+  <data name="Tour_AppsTitle" xml:space="preserve">
+    <value>Profile dla aplikacji</value>
+  </data>
+  <data name="Tour_AppsText" xml:space="preserve">
+    <value>Daj grze lub aplikacji własny profil. DispHub używa go, gdy ta aplikacja jest na pierwszym planie.</value>
+  </data>
+  <data name="Tour_HotkeysTitle" xml:space="preserve">
+    <value>Skróty klawiszowe</value>
+  </data>
+  <data name="Tour_HotkeysText" xml:space="preserve">
+    <value>Włączaj i wyłączaj DispHub oraz przełączaj profile w każdej aplikacji, także w grach na pełnym ekranie.</value>
+  </data>
+  <data name="Schedule_TomorrowAt" xml:space="preserve">
+    <value>jutro o {0}</value>
+  </data>
+  <data name="Schedule_DayAt" xml:space="preserve">
+    <value>{0} o {1}</value>
+  </data>
+  <data name="Settings_PanelOpacity" xml:space="preserve">
+    <value>Krycie panelu i komunikatów</value>
+  </data>
+  <data name="Settings_PanelOpacityHint" xml:space="preserve">
+    <value>Jak bardzo nieprzezroczyste jest rozmyte tło panelu szybkiego dostępu i komunikatów na ekranie. Niższe wartości pokazują więcej tego, co jest pod spodem. Dostępne w DispHub Pro.</value>
+  </data>
+</root>
