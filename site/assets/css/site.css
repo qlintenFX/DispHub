@@ -723,6 +723,7 @@ h2 {
 /* ---------- closing call to action ---------- */
 
 .closing {
+  overflow-x: clip;
   text-align: center;
 }
 
@@ -750,6 +751,32 @@ h2 {
   opacity: 0.4;
   filter: blur(22px) saturate(1.5) brightness(1.15) contrast(1.2);
   transform: scale(1.25);
+}
+
+/*
+  A colour wave behind the icon (assets/js/wave-shader.js): red, green and blue lines drifting apart as they bend,
+  on a transparent canvas whose edges fade out. The heading stays over it.
+*/
+.closing .wave {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(720px, 92vw);
+  height: 180px;
+  pointer-events: none;
+  translate: -50% -50%;
+  -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent);
+  mask-image: radial-gradient(closest-side, #000 35%, transparent);
+}
+
+.closing .wave canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.closing h2 {
+  position: relative;
 }
 
 .closing p {

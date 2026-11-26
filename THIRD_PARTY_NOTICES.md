@@ -66,3 +66,7 @@ is "GAMECUBE" by yung brownie (prod. brownie.), which the producer released as f
 
 The lit planet edge under the website's hero (`site/assets/css/site.css`, `.horizon`) is adapted from
 "Pure CSS Planet glow" by Bathia (https://codepen.io/JDoe/pen/aPEWWb), a public CodePen and so MIT licensed.
+
+The colour wave behind the icon in the website's closing section (`site/assets/js/wave-shader.js`) is "WebGL Shader"
+by Ali Imam (designali-in), published on 21st.dev at https://21st.dev/@designali-in/components/web-gl-shader. Its
+shader runs on plain WebGL there; the page states no licence.
