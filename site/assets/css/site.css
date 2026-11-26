@@ -743,7 +743,7 @@ h2 {
   left: 50%;
   top: calc(var(--pad) + 38px);
   z-index: -1;
-  width: min(1300px, 170vw);
+  width: min(1000px, 140vw);
   aspect-ratio: 20 / 11;
   background: url("../img/sun-rays-1000.webp") center / contain no-repeat;
   mix-blend-mode: screen;

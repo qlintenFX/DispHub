@@ -22,7 +22,7 @@ for f in (9, 13, 19, 27, 37, 53):
 bands = (bands - bands.min()) / (bands.max() - bands.min())
 shafts = 0.28 + 0.72 * bands ** 1.4
 # each shaft reaches its own length, and they fade out as the light spreads
-reach = 360 + 200 * np.sin(a * 4 + 1.3) ** 2
+reach = 250 + 130 * np.sin(a * 4 + 1.3) ** 2
 fade = np.exp(-r / reach) * np.clip((r - 30) / 140, 0, 1)
 # they rise from behind the icon: the upper half, easing out just below the horizontal
 up = np.clip((-dy / r + 0.12) / 0.55, 0, 1) ** 1.4
@@ -35,7 +35,7 @@ warm = np.array([1.00, 0.86, 0.66], np.float32)
 # cool daylight in the shafts, warmer near the sun
 mix = np.clip(1 - r / 500, 0, 1)[..., None]
 tint = cool * (1 - mix) + warm * mix
-light = (beams * 0.42 + glow * 0.8)[..., None] * tint
+light = (beams * 0.38 + glow * 0.65)[..., None] * tint
 
 rgb = 1.0 - np.exp(-light * 1.2)
 # everything fades to black well inside the edges, so the picture has no edge on the page
