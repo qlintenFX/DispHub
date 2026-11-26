@@ -49,6 +49,7 @@
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
+      <filter id="f-night" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 0.80 0 0 0  0 0 0.56 0 0  0 0 0 1 0"/></filter>
       <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.75v11.5M7.25 10.5L12 15.25l4.75-4.75M4.75 19.75h14.5"/></symbol>
       <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 7.5L4 12l4.5 4.5M15.5 7.5L20 12l-4.5 4.5M13.5 5l-3 14"/></symbol>
       <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="4.25" width="18.5" height="15.5" rx="2.25"/><path d="M7 9.5l3 2.5-3 2.5M12.5 15h4.5"/></symbol>
@@ -78,7 +79,6 @@
 
   <main id="main">
     <section class="hero">
-      <div class="horizon" aria-hidden="true"></div>
       <div class="wrap">
         <div class="hero-copy">
           <h1 class="display">Disp<span class="gradient-text">Hub</span></h1>
@@ -90,20 +90,24 @@
             <button class="btn btn-two" type="button" data-copy="winget install 9N5183BRLX34 --source msstore" data-copied="Copié. Collez-le dans le Terminal :" data-run="Exécutez ceci dans le Terminal :"><svg><use href="#i-terminal"/></svg><span>WinGet<small data-copy-label>Installer depuis le Terminal</small></span></button>
           </div>
         </div>
+
+        <!-- the product on the horizon, switching profiles as DispHub does: the whole screen takes the profile's look -->
+        <div class="stage">
+          <div class="horizon" aria-hidden="true"></div>
+          <div class="screen">
+            <img class="look" src="../assets/img/window-profiles.webp" srcset="../assets/img/window-profiles-720.webp 720w, ../assets/img/window-profiles-1000.webp 1000w, ../assets/img/window-profiles.webp 1400w" sizes="(max-width: 1160px) 92vw, 1100px" alt="La page Profils de DispHub : Standard, Jeu, Nuit et Film, avec les curseurs de Jeu" width="1400" height="967" fetchpriority="high">
+            <img class="look look-gaming" src="../assets/img/window-profiles.webp" srcset="../assets/img/window-profiles-720.webp 720w, ../assets/img/window-profiles-1000.webp 1000w, ../assets/img/window-profiles.webp 1400w" sizes="(max-width: 1160px) 92vw, 1100px" alt="" aria-hidden="true" width="1400" height="967">
+            <img class="look look-night" src="../assets/img/window-profiles.webp" srcset="../assets/img/window-profiles-720.webp 720w, ../assets/img/window-profiles-1000.webp 1000w, ../assets/img/window-profiles.webp 1400w" sizes="(max-width: 1160px) 92vw, 1100px" alt="" aria-hidden="true" width="1400" height="967">
+          </div>
+          <div class="osd osd-cycle osd-standard" aria-hidden="true"><svg><use href="#i-monitor"/></svg><b>Standard</b></div>
+          <div class="osd osd-cycle osd-gaming" aria-hidden="true"><svg><use href="#i-monitor"/></svg><b>Gaming</b></div>
+          <div class="osd osd-cycle osd-night" aria-hidden="true"><svg><use href="#i-monitor"/></svg><b>Night</b></div>
+        </div>
       </div>
     </section>
 
     <section class="section" id="features" aria-label="Fonctionnalités">
       <div class="wrap">
-        <div class="feature">
-          <div class="feature-copy" data-reveal>
-            <span class="eyebrow">Profils</span>
-            <h2>Un rendu pour chaque moment.</h2>
-            <p>Luminosité, contraste, gamma, température de couleur et vibrance, enregistrés en profils.</p>
-          </div>
-          <img class="win" data-reveal src="../assets/img/window-profiles.webp" srcset="../assets/img/window-profiles-720.webp 720w, ../assets/img/window-profiles-1000.webp 1000w, ../assets/img/window-profiles.webp 1400w" sizes="(max-width: 860px) 92vw, 760px" alt="La page Profils de DispHub : Standard, Jeu, Nuit et Film, avec les curseurs de Jeu" width="1400" height="967" loading="lazy">
-        </div>
-
         <div class="feature flip">
           <div class="feature-copy" data-reveal>
             <span class="eyebrow">Raccourcis</span>
