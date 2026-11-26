@@ -64,6 +64,8 @@ html {
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -75,16 +77,14 @@ body {
   overflow-x: hidden;
 }
 
-/* Mica: deep navy with the brand's blue and orange light, like the Store art */
+/* the page: deep navy, a shade lighter at the top. The light comes from the horizon behind the app window. */
 body::before {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: -2;
-  background:
-    radial-gradient(60vmax 50vmax at 8% -6%, rgba(23, 88, 220, 0.42), transparent 62%),
-    radial-gradient(48vmax 40vmax at 100% 108%, rgba(232, 112, 40, 0.30), transparent 60%),
-    linear-gradient(180deg, #0a1022 0%, #070a12 60%, #0a0a10 100%);
+  pointer-events: none;
+  background: linear-gradient(180deg, #0a0f1f 0%, #080b16 40%, #070a12 100%);
 }
 
 body::after {
@@ -420,8 +420,156 @@ h2 {
 /* ---------- hero ---------- */
 
 .hero {
-  padding: clamp(40px, 7vw, 88px) 0 clamp(80px, 10vw, 140px);
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  padding: clamp(40px, 7vw, 88px) 0 0;
   text-align: center;
+}
+
+/*
+  The product stands on a planet's edge under the hero, as product sites like Linear stage theirs: the window leans
+  back in perspective and straightens as it scrolls into view, and the horizon's light rims its top edge.
+*/
+.stage {
+  position: relative;
+  margin: clamp(56px, 7vw, 96px) auto 0;
+  max-width: 1100px;
+  perspective: 1600px;
+}
+
+/*
+  The horizon, adapted from "Pure CSS Planet glow" by Bathia (https://codepen.io/JDoe/pen/aPEWWb, MIT): layered
+  box-shadows on a disc far wider than the window light its top edge, the cool glow shifted left and the warm one
+  right so the rim runs from blue to orange like DispHub's warmth slider. The band fades both ends out.
+*/
+.horizon {
+  position: absolute;
+  left: 50%;
+  top: -150px;
+  width: 100vw;
+  height: 340px;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateX(-50%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 6%, #000 30%, #000 70%, transparent 94%);
+  mask-image: linear-gradient(90deg, transparent 6%, #000 30%, #000 70%, transparent 94%);
+  animation: rim 1400ms var(--ease) 150ms both;
+}
+
+.horizon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 140px;
+  width: max(3200px, 300vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  /* transparent: box-shadows only ever paint outside the box, so the page shows through the planet unchanged */
+  box-shadow:
+    0 -1px 1px 0 rgba(255, 255, 255, 0.9),
+    -36px -3px 7px 0 rgba(70, 160, 255, 0.85),
+    36px -3px 7px 0 rgba(255, 150, 70, 0.8),
+    -56px -12px 34px 2px rgba(34, 124, 240, 0.34),
+    56px -12px 34px 2px rgba(250, 122, 44, 0.3),
+    0 -28px 70px 6px rgba(120, 170, 255, 0.09);
+}
+
+@keyframes rim {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 24px);
+  }
+}
+
+.screen {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0b0f1a;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 30px 60px -20px rgba(0, 0, 0, 0.7),
+    0 60px 140px -40px rgba(0, 0, 0, 0.8);
+  transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+}
+
+@supports (animation-timeline: view()) {
+  .screen {
+    animation: stand-up linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 45%;
+  }
+}
+
+@keyframes stand-up {
+  from {
+    transform: rotateX(24deg) scale(0.92);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.look {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/*
+  Three captures of the same window, with Gaming, Night and Standard picked, each with that profile's look on the screen
+  as DispHub gives it. Night fades in over Gaming, Standard over Night, then Standard fades out to Gaming again.
+*/
+.look-gaming {
+  filter: saturate(1.5) contrast(1.08) brightness(1.04);
+}
+
+.look-night,
+.look-standard {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: 12s var(--ease-std) infinite;
+}
+
+.look-night {
+  filter: url(#f-night) brightness(0.9);
+  animation-name: look-night;
+}
+
+.look-standard {
+  animation-name: look-standard;
+}
+
+@keyframes look-night {
+  0%, 30% { opacity: 0; }
+  36%, 64% { opacity: 1; }
+  64.01%, 100% { opacity: 0; }
+}
+
+@keyframes look-standard {
+  0%, 58% { opacity: 0; }
+  64%, 92% { opacity: 1; }
+  98%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .look-night,
+  .look-standard {
+    animation: none;
+  }
+
+  .look-night,
+  .look-standard {
+    opacity: 0;
+  }
 }
 
 /* The hero comes in by itself instead of waiting for the script, so it's on screen as soon as the page draws. */
@@ -575,14 +723,60 @@ h2 {
 /* ---------- closing call to action ---------- */
 
 .closing {
+  overflow-x: clip;
   text-align: center;
 }
 
+/*
+  The icon lit by its own colours, as Raycast lights its icons: a copy of it underneath, a little bigger, blurred,
+  saturated and faint, so the glow always matches the icon and fades with no edge.
+*/
 .closing .mark {
+  position: relative;
   width: 80px;
   height: 80px;
-  margin: 0 auto 24px;
-  filter: drop-shadow(0 12px 30px rgba(20, 140, 245, 0.35));
+  margin: 0 auto 28px;
+}
+
+.closing .mark img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.closing .mark .mark-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  filter: blur(22px) saturate(1.5) brightness(1.15) contrast(1.2);
+  transform: scale(1.25);
+}
+
+/*
+  A colour wave behind the icon (assets/js/wave-shader.js): red, green and blue lines drifting apart as they bend,
+  on a transparent canvas whose edges fade out. The heading stays over it.
+*/
+.closing .wave {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(720px, 92vw);
+  height: 180px;
+  pointer-events: none;
+  translate: -50% -50%;
+  -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent);
+  mask-image: radial-gradient(closest-side, #000 35%, transparent);
+}
+
+.closing .wave canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.closing h2 {
+  position: relative;
 }
 
 .closing p {
@@ -590,6 +784,7 @@ h2 {
   margin: 14px auto 0;
   font-size: 18px;
   color: var(--text-2);
+  text-wrap: balance;
 }
 
 /* ---------- FAQ ---------- */

@@ -49,6 +49,7 @@
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
+      <filter id="f-night" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 0.80 0 0 0  0 0 0.56 0 0  0 0 0 1 0"/></filter>
       <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.75v11.5M7.25 10.5L12 15.25l4.75-4.75M4.75 19.75h14.5"/></symbol>
       <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 7.5L4 12l4.5 4.5M15.5 7.5L20 12l-4.5 4.5M13.5 5l-3 14"/></symbol>
       <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.75" y="4.25" width="18.5" height="15.5" rx="2.25"/><path d="M7 9.5l3 2.5-3 2.5M12.5 15h4.5"/></symbol>
@@ -89,20 +90,21 @@
             <button class="btn btn-two" type="button" data-copy="winget install 9N5183BRLX34 --source msstore" data-copied="Kopiert. Füge es im Terminal ein:" data-run="Führe das im Terminal aus:"><svg><use href="#i-terminal"/></svg><span>WinGet<small data-copy-label>Im Terminal installieren</small></span></button>
           </div>
         </div>
+
+        <!-- the product on the horizon, switching profiles: Gaming, Night, Standard, each with its look on the screen -->
+        <div class="stage">
+          <div class="horizon" aria-hidden="true"></div>
+          <div class="screen">
+            <img class="look look-gaming" src="../assets/img/window-profiles.webp" srcset="../assets/img/window-profiles-720.webp 720w, ../assets/img/window-profiles-1000.webp 1000w, ../assets/img/window-profiles.webp 1400w" sizes="(max-width: 1160px) 92vw, 1100px" alt="Die Profilseite von DispHub: Standard, Gaming, Nacht und Film, mit den Reglern von Gaming" width="1400" height="967" fetchpriority="high">
+            <img class="look look-night" src="../assets/img/window-profiles-night.webp" srcset="../assets/img/window-profiles-night-720.webp 720w, ../assets/img/window-profiles-night-1000.webp 1000w, ../assets/img/window-profiles-night.webp 1400w" sizes="(max-width: 1160px) 92vw, 1100px" alt="" aria-hidden="true" width="1400" height="967" fetchpriority="low" decoding="async">
+            <img class="look look-standard" src="../assets/img/window-profiles-standard.webp" srcset="../assets/img/window-profiles-standard-720.webp 720w, ../assets/img/window-profiles-standard-1000.webp 1000w, ../assets/img/window-profiles-standard.webp 1400w" sizes="(max-width: 1160px) 92vw, 1100px" alt="" aria-hidden="true" width="1400" height="967" fetchpriority="low" decoding="async">
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="section" id="features" aria-label="Funktionen">
       <div class="wrap">
-        <div class="feature">
-          <div class="feature-copy" data-reveal>
-            <span class="eyebrow">Profile</span>
-            <h2>Ein Look für jeden Moment.</h2>
-            <p>Helligkeit, Kontrast, Gamma, Farbtemperatur und Farbintensität, als Profile gespeichert.</p>
-          </div>
-          <img class="win" data-reveal src="../assets/img/window-profiles.webp" srcset="../assets/img/window-profiles-720.webp 720w, ../assets/img/window-profiles-1000.webp 1000w, ../assets/img/window-profiles.webp 1400w" sizes="(max-width: 860px) 92vw, 760px" alt="Die Profilseite von DispHub: Standard, Gaming, Nacht und Film, mit den Reglern von Gaming" width="1400" height="967" loading="lazy">
-        </div>
-
         <div class="feature flip">
           <div class="feature-copy" data-reveal>
             <span class="eyebrow">Tastenkombinationen</span>
@@ -138,7 +140,11 @@
 
     <section class="section closing" aria-labelledby="get-head">
       <div class="wrap" data-reveal>
-        <img class="mark" src="../assets/img/icon-192.png" alt="" width="80" height="80" loading="lazy">
+        <div class="mark">
+          <div class="wave" aria-hidden="true"></div>
+          <img class="mark-glow" src="../assets/img/icon-192.png" alt="" width="80" height="80" loading="lazy" aria-hidden="true">
+          <img src="../assets/img/icon-192.png" alt="" width="80" height="80" loading="lazy">
+        </div>
         <h2 id="get-head">DispHub holen</h2>
         <p>Kostenlos im Microsoft Store, mit einer Woche Pro zum Ausprobieren. Pro ist ein einmaliges Upgrade.</p>
         <div class="cta">
@@ -193,5 +199,6 @@
   </footer>
 
   <script src="../assets/js/site.js" defer></script>
+  <script src="../assets/js/wave-shader.js" defer></script>
 </body>
 </html>

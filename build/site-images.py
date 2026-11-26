@@ -9,6 +9,8 @@ from PIL import Image
 IMG = Path("site/assets/img")
 WIDTHS = {
     "window-profiles.webp": (720, 1000),
+    "window-profiles-standard.webp": (720, 1000),
+    "window-profiles-night.webp": (720, 1000),
     "window-apps.webp": (720, 1000),
     "window-schedule.webp": (720, 1000),
     "reef-gaming.webp": (720,),
