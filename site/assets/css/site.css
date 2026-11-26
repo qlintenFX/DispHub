@@ -64,6 +64,8 @@ html {
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -75,16 +77,36 @@ body {
   overflow-x: hidden;
 }
 
-/* Mica: deep navy with the brand's blue and orange light, like the Store art */
+/*
+  The page's light changes colour temperature as you read, as DispHub does over a day: cool blue daylight falls in
+  from the top left, and the bottom of the page warms to an evening glow. Both lights are far larger than the window,
+  so no edge ever shows, and they fade on eased stops instead of straight to transparent. They scroll with the page
+  rather than sitting fixed behind it.
+*/
 body::before {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: -2;
+  pointer-events: none;
   background:
-    radial-gradient(60vmax 50vmax at 8% -6%, rgba(23, 88, 220, 0.42), transparent 62%),
-    radial-gradient(48vmax 40vmax at 100% 108%, rgba(232, 112, 40, 0.30), transparent 60%),
-    linear-gradient(180deg, #0a1022 0%, #070a12 60%, #0a0a10 100%);
+    /* daylight from the top left: a bright core and a long, soft tail, as light falls off */
+    radial-gradient(55vw 55vh at 3% -14vh,
+      rgba(86, 172, 255, 0.24) 0%, rgba(70, 150, 250, 0.15) 30%, rgba(56, 132, 240, 0.06) 62%, rgba(56, 132, 240, 0) 100%) no-repeat,
+    radial-gradient(110vw 120vh at 0% -30vh,
+      rgba(34, 104, 232, 0.40) 0%, rgba(34, 104, 232, 0.30) 16%, rgba(30, 96, 220, 0.19) 34%,
+      rgba(26, 86, 200, 0.10) 52%, rgba(22, 76, 180, 0.04) 70%, rgba(22, 76, 180, 0) 90%) no-repeat,
+    linear-gradient(118deg, rgba(56, 150, 255, 0.09) 0%, rgba(56, 150, 255, 0.03) 30%, rgba(56, 150, 255, 0) 52%) 0 0 / 100% 140vh no-repeat,
+    /* evening at the foot of the page: the same falloff in warm orange, deepening to red at the horizon */
+    radial-gradient(60vw 45vh at 72% calc(100% + 8vh),
+      rgba(255, 150, 64, 0.20) 0%, rgba(250, 132, 56, 0.12) 32%, rgba(240, 116, 48, 0.05) 64%, rgba(240, 116, 48, 0) 100%) no-repeat,
+    radial-gradient(150vw 90vh at 66% calc(100% + 16vh),
+      rgba(244, 124, 44, 0.32) 0%, rgba(240, 116, 42, 0.24) 18%, rgba(232, 104, 40, 0.15) 36%,
+      rgba(220, 92, 40, 0.07) 56%, rgba(210, 84, 40, 0.025) 74%, rgba(210, 84, 40, 0) 90%) no-repeat,
+    radial-gradient(80vw 30vh at 60% calc(100% + 6vh),
+      rgba(196, 60, 44, 0.16) 0%, rgba(196, 60, 44, 0.08) 40%, rgba(196, 60, 44, 0) 80%) no-repeat,
+    /* the navy itself, a touch warmer towards the bottom */
+    linear-gradient(180deg, #0a0f20 0%, #080c18 30%, #070a12 62%, #0c0a10 100%);
 }
 
 body::after {
