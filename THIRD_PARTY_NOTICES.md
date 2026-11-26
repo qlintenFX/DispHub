@@ -64,5 +64,9 @@ is "GAMECUBE" by yung brownie (prod. brownie.), which the producer released as f
 
 ## Website, not shipped
 
-The lit planet edge under the website's hero (`site/assets/css/site.css`, `.hero::after`) is adapted from
+The lit planet edge under the website's hero (`site/assets/css/site.css`, `.horizon`) is adapted from
 "Pure CSS Planet glow" by Bathia (https://codepen.io/JDoe/pen/aPEWWb), a public CodePen and so MIT licensed.
+
+The light rays behind the website's closing section (`site/assets/js/side-rays.js`) are SideRays from React Bits by
+David Haz (https://reactbits.dev/backgrounds/side-rays), run without React, under the MIT + Commons Clause License
+Condition v1.0, which allows it as part of a website; the licence is at the top of that file.
