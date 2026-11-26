@@ -522,18 +522,20 @@ h2 {
   height: auto;
 }
 
-/* the same window in the Gaming and Night looks, over the Standard one: the whole screen changes, as with DispHub */
-.look-gaming,
-.look-night {
+/*
+  Three captures of the same window, with Gaming, Night and Standard picked, each with that profile's look on the screen
+  as DispHub gives it. Night fades in over Gaming, Standard over Night, then Standard fades out to Gaming again.
+*/
+.look-gaming {
+  filter: saturate(1.5) contrast(1.08) brightness(1.04);
+}
+
+.look-night,
+.look-standard {
   position: absolute;
   inset: 0;
   opacity: 0;
   animation: 12s var(--ease-std) infinite;
-}
-
-.look-gaming {
-  filter: saturate(1.5) contrast(1.08) brightness(1.04);
-  animation-name: look-gaming;
 }
 
 .look-night {
@@ -541,74 +543,31 @@ h2 {
   animation-name: look-night;
 }
 
-@keyframes look-gaming {
-  0%, 33% { opacity: 0; }
-  40%, 66% { opacity: 1; }
-  74%, 100% { opacity: 0; }
+.look-standard {
+  animation-name: look-standard;
 }
 
 @keyframes look-night {
-  0%, 66% { opacity: 0; }
-  74%, 92% { opacity: 1; }
-  100% { opacity: 0; }
+  0%, 30% { opacity: 0; }
+  36%, 64% { opacity: 1; }
+  64.01%, 100% { opacity: 0; }
 }
 
-/* DispHub's own message for each switch, at the foot of the screen as in the app */
-.osd-cycle {
-  animation: 12s var(--ease) infinite both;
-}
-
-.osd-standard { animation-name: osd-standard; }
-.osd-gaming { animation-name: osd-gaming; }
-.osd-night { animation-name: osd-night; }
-
-@keyframes osd-standard {
-  0% { opacity: 0; transform: translate(-50%, 10px); }
-  3%, 18% { opacity: 1; transform: translate(-50%, 0); }
-  22%, 100% { opacity: 0; transform: translate(-50%, 0); }
-}
-
-@keyframes osd-gaming {
-  0%, 34% { opacity: 0; transform: translate(-50%, 10px); }
-  37%, 52% { opacity: 1; transform: translate(-50%, 0); }
-  56%, 100% { opacity: 0; transform: translate(-50%, 0); }
-}
-
-@keyframes osd-night {
-  0%, 67% { opacity: 0; transform: translate(-50%, 10px); }
-  70%, 85% { opacity: 1; transform: translate(-50%, 0); }
-  89%, 100% { opacity: 0; transform: translate(-50%, 0); }
-}
-
-/* on a phone the window is small, so its message is too */
-@media (max-width: 700px) {
-  .osd.osd-cycle {
-    gap: 8px;
-    padding: 8px 14px 8px 10px;
-  }
-
-  .osd.osd-cycle svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .osd.osd-cycle b {
-    font-size: 13px;
-    line-height: 18px;
-  }
+@keyframes look-standard {
+  0%, 58% { opacity: 0; }
+  64%, 92% { opacity: 1; }
+  98%, 100% { opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .screen,
-  .look-gaming,
   .look-night,
-  .osd-cycle {
+  .look-standard {
     animation: none;
   }
 
-  .look-gaming,
   .look-night,
-  .osd-cycle {
+  .look-standard {
     opacity: 0;
   }
 }
