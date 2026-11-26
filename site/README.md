@@ -14,6 +14,9 @@ python -m http.server 8765 --directory site
   GitHub, WinGet), four short feature sections with real app windows, a closing call to action and a short FAQ. The
   Hotkeys photo (`assets/img/reef-gaming.webp`) is the app's preview photo with the Gaming look DispHub's own colour
   ramps produce.
+- `de/`, `es/`, `fr/`, `it/`, `nl/`, `pt-br/`: the home page in other languages, written by
+  `python build/site-languages.py` from `index.html`. Run it after changing the home page, and add any new English text
+  to the script's table with its translations.
 - `download/`: the Microsoft Store first; WinGet and building from source sit under "More download options".
 - `privacy/`: the privacy policy from `PRIVACY.md`, plus a note about the website itself. Keep the two in step.
 - `assets/img`: the app's windows at 200 % (square; the page rounds them), the icon and the social card. Phones and

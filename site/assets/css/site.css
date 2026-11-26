@@ -974,3 +974,19 @@ pre.code {
   font-size: 14px;
   color: var(--text-3);
 }
+
+/* the home page in other languages, at the foot of each version */
+.langs {
+  flex-basis: 100%;
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.langs a {
+  color: var(--text-2);
+}
+
+.langs a[aria-current="page"] {
+  color: var(--text-1);
+  font-weight: 600;
+}
