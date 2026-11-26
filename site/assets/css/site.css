@@ -734,8 +734,8 @@ h2 {
 }
 
 /*
-  Sunbeams fan up from behind the icon, as when the sun is behind a cloud (build/site-sun.py): a picture on black,
-  screened onto the page so only its light shows. The sun is at 50% 82% of the picture, behind the icon's middle. It
+  A few soft sunbeams all round the icon, as if the sun were behind it (build/site-sun.py): a picture on black,
+  screened onto the page so only its light shows. The sun is in the picture's middle, behind the icon's middle. It
   sits outside the content, which fades in as a group that would screen it against nothing, and fades in itself.
 */
 .sun {
@@ -743,12 +743,12 @@ h2 {
   left: 50%;
   top: calc(var(--pad) + 38px);
   z-index: -1;
-  width: min(1000px, 140vw);
-  aspect-ratio: 20 / 11;
-  background: url("../img/sun-rays-1000.webp") center / contain no-repeat;
+  width: min(1000px, 150vw);
+  aspect-ratio: 3 / 2;
+  background: url("../img/sun-rays-900.webp") center / contain no-repeat;
   mix-blend-mode: screen;
   pointer-events: none;
-  translate: -50% -82%;
+  translate: -50% -50%;
 }
 
 @media (min-width: 700px) {
