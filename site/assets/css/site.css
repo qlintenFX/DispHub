@@ -723,35 +723,7 @@ h2 {
 /* ---------- closing call to action ---------- */
 
 .closing {
-  overflow-x: clip;
   text-align: center;
-}
-
-/*
-  Thin threads of light flowing behind the buttons (React Bits' Threads, assets/js/threads.js): a WebGL canvas that
-  draws only its lines and fades them out at both ends.
-*/
-.closing .cta {
-  position: relative;
-}
-
-.threads {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: -1;
-  width: min(1200px, 100vw);
-  height: 260px;
-  pointer-events: none;
-  translate: -50% -50%;
-}
-
-.threads-canvas {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 
 /*
@@ -778,41 +750,6 @@ h2 {
   opacity: 0.4;
   filter: blur(22px) saturate(1.5) brightness(1.15) contrast(1.2);
   transform: scale(1.25);
-}
-
-.closing .mark img {
-  transition: opacity 450ms var(--ease-std);
-}
-
-/*
-  The icon's entrance (assets/js/glass-reveal.js): a droplet lands, spreads into a liquid-glass tile that bends the
-  icon at its rim, then lets go. While it plays the canvas stands in for the icon; at the end they cross-fade.
-*/
-.glass-reveal {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 260px;
-  height: 260px;
-  opacity: 0;
-  pointer-events: none;
-  translate: -50% -50%;
-  transition: opacity 450ms var(--ease-std);
-}
-
-.closing .mark.is-revealing img {
-  opacity: 0;
-  transition: none;
-}
-
-.closing .mark.is-revealing .glass-reveal {
-  opacity: 1;
-  transition: none;
-}
-
-/* the heading stays over the reveal's ripple */
-.closing h2 {
-  position: relative;
 }
 
 .closing p {

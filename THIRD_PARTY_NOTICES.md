@@ -66,11 +66,3 @@ is "GAMECUBE" by yung brownie (prod. brownie.), which the producer released as f
 
 The lit planet edge under the website's hero (`site/assets/css/site.css`, `.horizon`) is adapted from
 "Pure CSS Planet glow" by Bathia (https://codepen.io/JDoe/pen/aPEWWb), a public CodePen and so MIT licensed.
-
-The threads of light behind the buttons in the website's closing section (`site/assets/js/threads.js`) are Threads
-from React Bits by David Haz (https://reactbits.dev/backgrounds/threads), run without React, under the MIT + Commons
-Clause License Condition v1.0, which allows it as part of a website; the licence is at the top of that file.
-
-The liquid-glass entrance of the icon in the website's closing section (`site/assets/js/glass-reveal.js`) is Glass Icon
-Reveal by Zanwei Guo (https://github.com/zanwei/glass-icon-reveal), MIT licensed; the licence is at the top of that
-file.
