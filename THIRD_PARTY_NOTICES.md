@@ -61,3 +61,8 @@ The colour-temperature conversion uses the published Kim et al. (2002) approxima
 
 The Microsoft Store screenshots (`store/screenshots`) and trailer use the preview photos above. The trailer's music
 is "GAMECUBE" by yung brownie (prod. brownie.), which the producer released as free for profit.
+
+## Website, not shipped
+
+The lit planet edge under the website's hero (`site/assets/css/site.css`, `.hero::after`) is adapted from
+"Pure CSS Planet glow" by Bathia (https://codepen.io/JDoe/pen/aPEWWb), a public CodePen and so MIT licensed.

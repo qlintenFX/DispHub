@@ -77,7 +77,7 @@ body {
   overflow-x: hidden;
 }
 
-/* the page: deep navy, a shade lighter at the top. The light comes from the horizon under the hero (.hero::after). */
+/* the page: deep navy, a shade lighter at the top. The light comes from the planet's edge under the hero (.hero::after). */
 body::before {
   content: "";
   position: absolute;
@@ -420,71 +420,49 @@ h2 {
 /* ---------- hero ---------- */
 
 .hero {
-  --horizon-y: calc(100% - clamp(24px, 3vw, 48px));
-  --rx: max(150vw, 1400px);
-  --ry: calc(var(--rx) * 0.34);
-  /* colour temperature, as DispHub's warmth slider: cool blue through daylight white to warm orange */
-  --temperature: linear-gradient(90deg, #2f7dff 12%, #63b8ff 34%, #dfeeff 50%, #ffc78f 64%, #ff7f2e 86%);
   position: relative;
   isolation: isolate;
-  overflow-x: clip;
-  padding: clamp(40px, 7vw, 88px) 0 clamp(96px, 12vw, 168px);
+  overflow: clip;
+  /* room for the planet's edge: its arc drops about 9vw from the middle to the sides of the window */
+  padding: clamp(40px, 7vw, 88px) 0 clamp(240px, calc(9vw + 200px), 460px);
   text-align: center;
 }
 
 /*
-  A horizon of light under the hero: the edge of a dark curve, lit from behind in the colours of DispHub's colour
-  temperature scale. ::after is the thin bright rim, ::before the bloom that rises from it. Both are bands drawn with an
-  elliptical gradient used as a mask, so nothing outside the band is ever painted.
+  A planet's edge under the hero, lit from behind: a dark disc far wider than the window whose top rises into the
+  hero's foot. Adapted from "Pure CSS Planet glow" by Bathia (https://codepen.io/JDoe/pen/aPEWWb, MIT): its layered
+  box-shadows, turned to light the top edge, with the cool glow shifted left and the warm one right so the rim runs
+  from blue to orange like DispHub's warmth slider. Short shadows fall off quickly, so they don't band.
 */
-.hero::before,
 .hero::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(var(--horizon-y) - 320px);
-  height: 480px;
+  left: 50%;
+  top: calc(100% - max(150px, calc(9vw + 70px)));
   z-index: -1;
+  width: max(3200px, 300vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* transparent: box-shadows only ever paint outside the box, so the page shows through the planet unchanged */
+  background: transparent;
+  transform: translateX(-50%);
   pointer-events: none;
-  background: var(--temperature);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
-  animation: horizon 1400ms var(--ease) 150ms both;
+  box-shadow:
+    0 -1px 1px 0 rgba(255, 255, 255, 0.9),
+    -36px -3px 7px 0 rgba(70, 160, 255, 0.85),
+    36px -3px 7px 0 rgba(255, 150, 70, 0.8),
+    -56px -12px 34px 2px rgba(34, 124, 240, 0.34),
+    56px -12px 34px 2px rgba(250, 122, 44, 0.3),
+    0 -28px 70px 6px rgba(120, 170, 255, 0.09);
+  animation: rim 1400ms var(--ease) 150ms both;
 }
 
-.hero::before {
-  opacity: 0.5;
-  -webkit-mask-image:
-    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
-      transparent calc(100% - 90px), rgba(0, 0, 0, 0.35) calc(100% - 24px), #000 100%,
-      rgba(0, 0, 0, 0.55) calc(100% + 90px), rgba(0, 0, 0, 0.22) calc(100% + 260px), transparent calc(100% + 760px)),
-    linear-gradient(90deg, transparent 4%, #000 30%, #000 70%, transparent 96%);
-  mask-image:
-    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
-      transparent calc(100% - 90px), rgba(0, 0, 0, 0.35) calc(100% - 24px), #000 100%,
-      rgba(0, 0, 0, 0.55) calc(100% + 90px), rgba(0, 0, 0, 0.22) calc(100% + 260px), transparent calc(100% + 760px)),
-    linear-gradient(90deg, transparent 4%, #000 30%, #000 70%, transparent 96%);
-}
-
-.hero::after {
-  -webkit-mask-image:
-    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
-      transparent calc(100% - 5px), #000 calc(100% - 1px), #000 100%, transparent calc(100% + 3px)),
-    linear-gradient(90deg, transparent 8%, rgba(0, 0, 0, 0.9) 36%, #000 50%, rgba(0, 0, 0, 0.9) 64%, transparent 92%);
-  mask-image:
-    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
-      transparent calc(100% - 5px), #000 calc(100% - 1px), #000 100%, transparent calc(100% + 3px)),
-    linear-gradient(90deg, transparent 8%, rgba(0, 0, 0, 0.9) 36%, #000 50%, rgba(0, 0, 0, 0.9) 64%, transparent 92%);
-}
-
-@keyframes horizon {
+@keyframes rim {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translate(-50%, 24px);
   }
 }
-
 /* The hero comes in by itself instead of waiting for the script, so it's on screen as soon as the page draws. */
 .hero-copy {
   animation: rise 700ms var(--ease) both;
