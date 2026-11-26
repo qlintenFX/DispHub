@@ -77,36 +77,14 @@ body {
   overflow-x: hidden;
 }
 
-/*
-  The page's light changes colour temperature as you read, as DispHub does over a day: cool blue daylight falls in
-  from the top left, and the bottom of the page warms to an evening glow. Both lights are far larger than the window,
-  so no edge ever shows, and they fade on eased stops instead of straight to transparent. They scroll with the page
-  rather than sitting fixed behind it.
-*/
+/* the page: deep navy, a shade lighter at the top. The light comes from the horizon under the hero (.hero::after). */
 body::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background:
-    /* daylight from the top left: a bright core and a long, soft tail, as light falls off */
-    radial-gradient(55vw 55vh at 3% -14vh,
-      rgba(86, 172, 255, 0.24) 0%, rgba(70, 150, 250, 0.15) 30%, rgba(56, 132, 240, 0.06) 62%, rgba(56, 132, 240, 0) 100%) no-repeat,
-    radial-gradient(110vw 120vh at 0% -30vh,
-      rgba(34, 104, 232, 0.40) 0%, rgba(34, 104, 232, 0.30) 16%, rgba(30, 96, 220, 0.19) 34%,
-      rgba(26, 86, 200, 0.10) 52%, rgba(22, 76, 180, 0.04) 70%, rgba(22, 76, 180, 0) 90%) no-repeat,
-    linear-gradient(118deg, rgba(56, 150, 255, 0.09) 0%, rgba(56, 150, 255, 0.03) 30%, rgba(56, 150, 255, 0) 52%) 0 0 / 100% 140vh no-repeat,
-    /* evening at the foot of the page: the same falloff in warm orange, deepening to red at the horizon */
-    radial-gradient(60vw 45vh at 72% calc(100% + 8vh),
-      rgba(255, 150, 64, 0.20) 0%, rgba(250, 132, 56, 0.12) 32%, rgba(240, 116, 48, 0.05) 64%, rgba(240, 116, 48, 0) 100%) no-repeat,
-    radial-gradient(150vw 90vh at 66% calc(100% + 16vh),
-      rgba(244, 124, 44, 0.32) 0%, rgba(240, 116, 42, 0.24) 18%, rgba(232, 104, 40, 0.15) 36%,
-      rgba(220, 92, 40, 0.07) 56%, rgba(210, 84, 40, 0.025) 74%, rgba(210, 84, 40, 0) 90%) no-repeat,
-    radial-gradient(80vw 30vh at 60% calc(100% + 6vh),
-      rgba(196, 60, 44, 0.16) 0%, rgba(196, 60, 44, 0.08) 40%, rgba(196, 60, 44, 0) 80%) no-repeat,
-    /* the navy itself, a touch warmer towards the bottom */
-    linear-gradient(180deg, #0a0f20 0%, #080c18 30%, #070a12 62%, #0c0a10 100%);
+  background: linear-gradient(180deg, #0a0f1f 0%, #080b16 40%, #070a12 100%);
 }
 
 body::after {
@@ -442,8 +420,69 @@ h2 {
 /* ---------- hero ---------- */
 
 .hero {
-  padding: clamp(40px, 7vw, 88px) 0 clamp(80px, 10vw, 140px);
+  --horizon-y: calc(100% - clamp(24px, 3vw, 48px));
+  --rx: max(150vw, 1400px);
+  --ry: calc(var(--rx) * 0.34);
+  /* colour temperature, as DispHub's warmth slider: cool blue through daylight white to warm orange */
+  --temperature: linear-gradient(90deg, #2f7dff 12%, #63b8ff 34%, #dfeeff 50%, #ffc78f 64%, #ff7f2e 86%);
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  padding: clamp(40px, 7vw, 88px) 0 clamp(96px, 12vw, 168px);
   text-align: center;
+}
+
+/*
+  A horizon of light under the hero: the edge of a dark curve, lit from behind in the colours of DispHub's colour
+  temperature scale. ::after is the thin bright rim, ::before the bloom that rises from it. Both are bands drawn with an
+  elliptical gradient used as a mask, so nothing outside the band is ever painted.
+*/
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--horizon-y) - 320px);
+  height: 480px;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--temperature);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  animation: horizon 1400ms var(--ease) 150ms both;
+}
+
+.hero::before {
+  opacity: 0.5;
+  -webkit-mask-image:
+    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
+      transparent calc(100% - 90px), rgba(0, 0, 0, 0.35) calc(100% - 24px), #000 100%,
+      rgba(0, 0, 0, 0.55) calc(100% + 90px), rgba(0, 0, 0, 0.22) calc(100% + 260px), transparent calc(100% + 760px)),
+    linear-gradient(90deg, transparent 4%, #000 30%, #000 70%, transparent 96%);
+  mask-image:
+    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
+      transparent calc(100% - 90px), rgba(0, 0, 0, 0.35) calc(100% - 24px), #000 100%,
+      rgba(0, 0, 0, 0.55) calc(100% + 90px), rgba(0, 0, 0, 0.22) calc(100% + 260px), transparent calc(100% + 760px)),
+    linear-gradient(90deg, transparent 4%, #000 30%, #000 70%, transparent 96%);
+}
+
+.hero::after {
+  -webkit-mask-image:
+    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
+      transparent calc(100% - 5px), #000 calc(100% - 1px), #000 100%, transparent calc(100% + 3px)),
+    linear-gradient(90deg, transparent 8%, rgba(0, 0, 0, 0.9) 36%, #000 50%, rgba(0, 0, 0, 0.9) 64%, transparent 92%);
+  mask-image:
+    radial-gradient(var(--rx) var(--ry) at 50% calc(320px + var(--ry)),
+      transparent calc(100% - 5px), #000 calc(100% - 1px), #000 100%, transparent calc(100% + 3px)),
+    linear-gradient(90deg, transparent 8%, rgba(0, 0, 0, 0.9) 36%, #000 50%, rgba(0, 0, 0, 0.9) 64%, transparent 92%);
+}
+
+@keyframes horizon {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
 }
 
 /* The hero comes in by itself instead of waiting for the script, so it's on screen as soon as the page draws. */
