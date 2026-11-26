@@ -726,11 +726,30 @@ h2 {
   text-align: center;
 }
 
-/* React Bits' Strands (assets/js/strands.js): warm and cool light in a glass orb, a WebGL canvas */
-.strands {
-  width: 240px;
-  height: 240px;
-  margin: -20px auto 8px;
+/*
+  The icon lit by its own colours, as Raycast lights its icons: a copy of it underneath, a little bigger, blurred,
+  saturated and faint, so the glow always matches the icon and fades with no edge.
+*/
+.closing .mark {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 28px;
+}
+
+.closing .mark img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.closing .mark .mark-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  filter: blur(22px) saturate(1.5) brightness(1.15) contrast(1.2);
+  transform: scale(1.25);
 }
 
 .closing p {
