@@ -29,6 +29,13 @@
     $$("a", nav).forEach((a) => a.addEventListener("click", () => setOpen(false)));
   }
 
+  // the hero's profile cycle waits for the visitor's first scroll, touch, pointer move or key
+  const engage = () => {
+    document.documentElement.classList.add("engaged");
+    ["scroll", "pointermove", "touchstart", "keydown", "wheel"].forEach((t) => window.removeEventListener(t, engage));
+  };
+  ["scroll", "pointermove", "touchstart", "keydown", "wheel"].forEach((t) => window.addEventListener(t, engage, { passive: true }));
+
   // entrance motion
   const reveal = $$("[data-reveal]");
   if ("IntersectionObserver" in window) {
