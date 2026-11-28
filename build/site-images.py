@@ -15,11 +15,22 @@ WIDTHS = {
     "window-schedule.webp": (720, 1000),
     "reef-gaming.webp": (720,),
 }
+# a photo hides more compression than a screenshot of the app
+QUALITY = {"reef-gaming.webp": 72}
+# the app icon at twice the sizes the pages show it: 24-28 px in the header, 64-88 px elsewhere
+ICONS = {"icon-56.webp": 56, "icon-176.webp": 176}
 
 for name, widths in WIDTHS.items():
     source = Image.open(IMG / name).convert("RGB")
     for width in widths:
         height = round(source.height * width / source.width)
         target = IMG / f"{Path(name).stem}-{width}.webp"
-        source.resize((width, height), Image.Resampling.LANCZOS).save(target, "WEBP", quality=82, method=6)
+        quality = QUALITY.get(name, 82)
+        source.resize((width, height), Image.Resampling.LANCZOS).save(target, "WEBP", quality=quality, method=6)
         print(f"{target} {width}x{height} {target.stat().st_size // 1024} KiB")
+
+icon = Image.open(IMG / "icon-192.png").convert("RGBA")
+for name, size in ICONS.items():
+    target = IMG / name
+    icon.resize((size, size), Image.Resampling.LANCZOS).save(target, "WEBP", quality=90, alpha_quality=90, method=6)
+    print(f"{target} {size}x{size} {target.stat().st_size // 1024} KiB")

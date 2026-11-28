@@ -535,7 +535,13 @@ h2 {
   position: absolute;
   inset: 0;
   opacity: 0;
-  animation: 12s var(--ease-std) infinite;
+  animation: 12s var(--ease-std) infinite paused;
+}
+
+/* the looks start changing once the visitor does something, so the page is still while it loads */
+.engaged .look-night,
+.engaged .look-standard {
+  animation-play-state: running;
 }
 
 .look-night {
